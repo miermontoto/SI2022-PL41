@@ -16,41 +16,45 @@ Un miembro de la secretaría administrativa se encarga de 'reservar' los sitios 
 
 Una vez creada, se le da difusión a la actividad para que otras personas se subscriban.
 Las personas rellenan un formulario de inscripcion.
-	- Nombre
-	- Apellidos
-	- e-mail
+- Nombre
+- Apellidos
+- e-mail
+- 
 Una persona se puede subscribir a un curso sii quedan plazas libres.
 La inscripción require que la persona abone el pago del curso.
-	- Pagos por transf.
+- Pagos por transf.
+- 
 Una vez inscrito, hay un plazo de un par de dias para realizar el pago.
 	Un miembro de la secretaría administrativa revisa los pagos recibidos y marca las inscripciones que han sido abonados.
 	En caso de que no haya sido abonado, se le realiza un aviso (no por el programa).
 	Si la cantidad de un pago no coincide con la cantidad correspondiente del curso, el programa avisa al usuario.
 	
 Presentar un listado de los cursos con 
-	- Nombre
-	- Profesor
-	- Descripción
-	- Estado
-	- Período inscripción
-	- Fecha
-	- Plazas
-	- Plazas libres
-	- BTN: Inscripciones
-		- Listado de personas inscritas
-			- Nombre
-			- Apellidos
-			- e-mail
-			- Estado
-				- Codificado por colores: { OK, SIN_PAGAR, PAGO_ERRONEO }
-	- Ingresos totales
-	- Costes totales
-	- Ganancias totales
+- Nombre
+- Profesor
+- Descripción
+- Estado
+- Período inscripción
+- Fecha
+- Plazas
+- Plazas libres
+- BTN: Inscripciones
+	- Listado de personas inscritas
+		- Nombre
+		- Apellidos
+		- e-mail
+		- Estado
+			- Codificado por colores: { OK, SIN_PAGAR, PAGO_ERRONEO }
+- Ingresos totales
+- Costes totales
+- Ganancias totales
 	
 Miembros inscritos pueden querer cancelar una inscripcion
-	- Cancelación con 7 dias naturales de antelacion del inicio --> 100% retornado
-	- Cancelación con 6 días naturales de antelación del inicio --> 50 % retornado
-	- Otherwise													--> 0  % retornado
+| Numero dias naturales previos a inicio | % retornado |
+|---|---|
+| 7 | 100 |
+| 6 | 50 | 
+| 3 | 0 |
 
 El tesorero es quien realiza todos los pagos y se puede equivocar. Permitir cancelaciones.
 
@@ -60,9 +64,9 @@ El tesorero realiza el pago.
 Secretaria administrativa anota la realizacion del pago.
 
 El sistema debe ofrecer un resumen de los ingresos y pagos de los cursos entre dos fechas específicas.
-	Un movimiento que no haya sido realizado en el intervalo de tiempo pero pertenezca a un curso que si pertenezca al intervalo se muestra
-	- Totales
-	- Finalizado o en curso
+Un movimiento que no haya sido realizado en el intervalo de tiempo pero pertenezca a un curso que si pertenezca al intervalo se muestra
+- Totales
+- Finalizado o en curso
 
 Ingresos/Gastos realizados
 |Curso|Dato|Dato|
