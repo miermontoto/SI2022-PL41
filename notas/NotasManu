@@ -1,0 +1,44 @@
+Sobre lo que vamos a hacer:
+
+
+	Proyecto para el Colegio de Ingenieros en Informática del Principado de Asturias. Es el vicedecano y necesita software para apoyar
+el proceso de impartición de cursos formación. En estos momentos surgen ideas sobre cursos y en el Colegio hay personas que son responsables de realizar este curso. Los responssbles del Colegio, determinan los contenidos y se especifican los formadores.
+Se llega a acuerdos con estos formadores. Los cursos del colegio se suelen ofrecer en sesiones de viernes de tarde o de sábados por la mañana. Lógicamente, los profesores se acuerda con ellos una remuneración. También hay que reservar
+los espacios. Esto lo hace la secretaria. Esto es la planificación previa.
+
+	Con lo que ha dicho, ya hay varias cosas. Una tarea es identificar historias de usuario en un determinado sprint. Nos va a adelantar las primeras historias.
+
+Para el primer sprint:
+
+	Restricciones impuestas por el profedor:
+
+		Sólo vamos a planificar actividades con un sólo profesor y en una sóla sesión.
+
+
+Después de la planificación de la actividad, le damos difusión a dicha actividad. Para ello, necesitamos que el software tenga una funcionalidad que permita rellenar un formulario de inscripción: Nombre, Apellidos E-Mail.
+Lógicamente, en la planificación se establece un máximo número de plazas.
+
+	Restricciones impuestas por el profesor:
+
+		Para el primer sprint, vamos a programar una pantalla interna para que la secretaria pueda inscribir a una persona.
+
+Lógicamente la inscripción requiere que la persona pague. Se hace con transferencia bancaria. ¿Cómo funciona? -> Se te da un plazo de dos días para ver las transferencias. Para ello, la secretaria, va al banco y mira las transferencias,
+anotando cómo pagado o no. Además de la fecha y la cantidad que se ha transferido a la cuenta del COIIPA. Puede suceder que llegue una cantidad diferente de la cantidad del curso. El software ha de avisar si el imposrte introducido es distinto
+al del curso. Además pueden introducirse en varios pagos si la cantidad es menor. (PARA FUTURO ->) Cuando esté confirmado el pago, el sistema quiero que envíe un e-mail. Quiero que haya para la secretaria  una lista con los cursos que indique el proceso de inscripción, las plazas libres, descripción, el profesor asignado, etc. Otra cosa que necesitamos es que la secretaria pueda acceder a una lista con los inscritos en el curso, con su fecha, estado del pago (sin pagar, mal pagado, pagado de más, lista de pagos),
+también en la lista de inscritos, tener un dato global, sobre lo que me ha costado el curso y lo que he ingresado.
+
+	Restricciones impuestas por el profesor:
+
+		En estos momentos, sólo vamos a considerar cómo gasto al profesor.
+
+Las personas que se inscriben en ese curso, pueden cancelar esa inscripción, dependiendo el momento se le devuelve todo o parte. Alguien que cancela 7 días antes, se le da el 100%. Alguien entre 3 y 6 días, se le devuelve el 50% del dinero.
+
+Para ello, hay que anotar que se ha realizado el abono al participante. A veces el tesorero se equivoca, y devuelve dinero de más. Hay que tenerlo en cuenta.
+
+A un profesor se le paga después de acabar el curso, para ello el profesor nos emite una factura, que será lo mismo que lo acordado inicialmente. La secretaria apunta la factura en el sistema. Cuando el tesorero paga la factura, Rosa, lo
+anota en el sistema. Para ellos es fundamental tener información sobre los ingresos y gastos que se han producido de forma global en los distintos cursos en un determindo periodo. Es decir, un cálculo de totales.
+
+En los informes globales, hay que tener en cuenta tanto lo planeado cómo lo ejecutado (es decir, lo que finalmente hemos gastado en el curso de formación). Para ello haremos una consulta por fechas y estás recogerán los cursos que han sido planeados en esas fechas. Pero claro, hay cursos que pueden quedar en esas fechas. 
+
+
+Muy importante hacer un ""TODAY"", es decir, un campo de texto en el que se pueda establecer la fecha de hoy.
