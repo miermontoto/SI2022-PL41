@@ -37,7 +37,7 @@
 			- si la cancelación es 3d antes o más, 50% devuelto
 			- si la cancelación es 0d antes o más, 0% devuelto
 		- devolución por transferencia por parte del tesorero
-			- el tesorero
+			- el tesorero (se puede equivocar)
 	- *<u>pagos</u>*
     	- a partir del momento que te inscribes, se da un plazo de tiempo para realizar la transferencia. (2d)
     	- si tras ese plazo no ha realizado la transferencia, se le avisa a la persona.
@@ -48,7 +48,7 @@
 	- *<u>pagos a profesores</u>*
     	- al concluir el curso
     	- se registran facturas en el sistema
-    	- el tesorero realiza la transferencia
+    	- el tesorero realiza la transferencia (se puede equivocar)
     	- tras la transferencia, se anota otra vez en el sistema
 - **economía**
 	- fundamental ingresos y gastos en un determinado periodo sobre los cursos de formación
