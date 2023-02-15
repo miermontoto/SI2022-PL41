@@ -1,0 +1,296 @@
+---
+
+excalidraw-plugin: parsed
+tags: [excalidraw]
+
+---
+==⚠  Switch to EXCALIDRAW VIEW in the MORE OPTIONS menu of this document. ⚠==
+
+
+# Text Elements
+Curso ^69wrSEbk
+
+Inscripción ^ArixwOwT
+
+1 ^XOJWuP03
+
+* ^k0VoBfYj
+
+%%
+# Drawing
+```json
+{
+	"type": "excalidraw",
+	"version": 2,
+	"source": "https://excalidraw.com",
+	"elements": [
+		{
+			"type": "rectangle",
+			"version": 45,
+			"versionNonce": 2031440167,
+			"isDeleted": false,
+			"id": "_Fr6KUnV902IN4xxqAZ98",
+			"fillStyle": "hachure",
+			"strokeWidth": 1,
+			"strokeStyle": "solid",
+			"roughness": 1,
+			"opacity": 100,
+			"angle": 0,
+			"x": -220,
+			"y": -242.25,
+			"strokeColor": "#000000",
+			"backgroundColor": "transparent",
+			"width": 135,
+			"height": 98,
+			"seed": 1009891431,
+			"groupIds": [],
+			"roundness": {
+				"type": 3
+			},
+			"boundElements": [],
+			"updated": 1676451909249,
+			"link": null,
+			"locked": false
+		},
+		{
+			"type": "rectangle",
+			"version": 47,
+			"versionNonce": 537129705,
+			"isDeleted": false,
+			"id": "EW9_IYNE-HUkAhT7JmI-4",
+			"fillStyle": "hachure",
+			"strokeWidth": 1,
+			"strokeStyle": "solid",
+			"roughness": 1,
+			"opacity": 100,
+			"angle": 0,
+			"x": 41,
+			"y": -25.25,
+			"strokeColor": "#000000",
+			"backgroundColor": "transparent",
+			"width": 170,
+			"height": 118,
+			"seed": 1249966281,
+			"groupIds": [],
+			"roundness": {
+				"type": 3
+			},
+			"boundElements": [],
+			"updated": 1676451912448,
+			"link": null,
+			"locked": false
+		},
+		{
+			"type": "text",
+			"version": 30,
+			"versionNonce": 427936969,
+			"isDeleted": false,
+			"id": "69wrSEbk",
+			"fillStyle": "hachure",
+			"strokeWidth": 1,
+			"strokeStyle": "solid",
+			"roughness": 1,
+			"opacity": 100,
+			"angle": 0,
+			"x": -193,
+			"y": -209.25,
+			"strokeColor": "#000000",
+			"backgroundColor": "transparent",
+			"width": 56,
+			"height": 25,
+			"seed": 509317001,
+			"groupIds": [],
+			"roundness": null,
+			"boundElements": [],
+			"updated": 1676452035106,
+			"link": null,
+			"locked": false,
+			"fontSize": 20,
+			"fontFamily": 1,
+			"text": "Curso",
+			"rawText": "Curso",
+			"baseline": 18,
+			"textAlign": "left",
+			"verticalAlign": "top",
+			"containerId": null,
+			"originalText": "Curso"
+		},
+		{
+			"type": "text",
+			"version": 54,
+			"versionNonce": 255527239,
+			"isDeleted": false,
+			"id": "ArixwOwT",
+			"fillStyle": "hachure",
+			"strokeWidth": 1,
+			"strokeStyle": "solid",
+			"roughness": 1,
+			"opacity": 100,
+			"angle": 0,
+			"x": 75,
+			"y": 20.75,
+			"strokeColor": "#000000",
+			"backgroundColor": "transparent",
+			"width": 100,
+			"height": 25,
+			"seed": 1870394663,
+			"groupIds": [],
+			"roundness": null,
+			"boundElements": [],
+			"updated": 1676452037547,
+			"link": null,
+			"locked": false,
+			"fontSize": 20,
+			"fontFamily": 1,
+			"text": "Inscripción",
+			"rawText": "Inscripción",
+			"baseline": 18,
+			"textAlign": "left",
+			"verticalAlign": "top",
+			"containerId": null,
+			"originalText": "Inscripción"
+		},
+		{
+			"type": "line",
+			"version": 58,
+			"versionNonce": 2040806825,
+			"isDeleted": false,
+			"id": "JTZT1cFRy-GuptrVfOjeW",
+			"fillStyle": "hachure",
+			"strokeWidth": 1,
+			"strokeStyle": "solid",
+			"roughness": 1,
+			"opacity": 100,
+			"angle": 0,
+			"x": -87,
+			"y": -155.25,
+			"strokeColor": "#000000",
+			"backgroundColor": "transparent",
+			"width": 139,
+			"height": 135,
+			"seed": 331673287,
+			"groupIds": [],
+			"roundness": {
+				"type": 2
+			},
+			"boundElements": [],
+			"updated": 1676451943499,
+			"link": null,
+			"locked": false,
+			"startBinding": null,
+			"endBinding": null,
+			"lastCommittedPoint": null,
+			"startArrowhead": null,
+			"endArrowhead": null,
+			"points": [
+				[
+					0,
+					0
+				],
+				[
+					139,
+					135
+				]
+			]
+		},
+		{
+			"type": "text",
+			"version": 3,
+			"versionNonce": 717113479,
+			"isDeleted": false,
+			"id": "XOJWuP03",
+			"fillStyle": "hachure",
+			"strokeWidth": 1,
+			"strokeStyle": "solid",
+			"roughness": 1,
+			"opacity": 100,
+			"angle": 0,
+			"x": -94,
+			"y": -136.25,
+			"strokeColor": "#000000",
+			"backgroundColor": "transparent",
+			"width": 6,
+			"height": 25,
+			"seed": 268864871,
+			"groupIds": [],
+			"roundness": null,
+			"boundElements": [],
+			"updated": 1676451946958,
+			"link": null,
+			"locked": false,
+			"fontSize": 20,
+			"fontFamily": 1,
+			"text": "1",
+			"rawText": "1",
+			"baseline": 18,
+			"textAlign": "left",
+			"verticalAlign": "top",
+			"containerId": null,
+			"originalText": "1"
+		},
+		{
+			"type": "text",
+			"version": 3,
+			"versionNonce": 35050057,
+			"isDeleted": false,
+			"id": "k0VoBfYj",
+			"fillStyle": "hachure",
+			"strokeWidth": 1,
+			"strokeStyle": "solid",
+			"roughness": 1,
+			"opacity": 100,
+			"angle": 0,
+			"x": 23,
+			"y": -20.25,
+			"strokeColor": "#000000",
+			"backgroundColor": "transparent",
+			"width": 11,
+			"height": 25,
+			"seed": 495822697,
+			"groupIds": [],
+			"roundness": null,
+			"boundElements": [],
+			"updated": 1676451950979,
+			"link": null,
+			"locked": false,
+			"fontSize": 20,
+			"fontFamily": 1,
+			"text": "*",
+			"rawText": "*",
+			"baseline": 18,
+			"textAlign": "left",
+			"verticalAlign": "top",
+			"containerId": null,
+			"originalText": "*"
+		}
+	],
+	"appState": {
+		"theme": "light",
+		"viewBackgroundColor": "#ffffff",
+		"currentItemStrokeColor": "#000000",
+		"currentItemBackgroundColor": "transparent",
+		"currentItemFillStyle": "hachure",
+		"currentItemStrokeWidth": 1,
+		"currentItemStrokeStyle": "solid",
+		"currentItemRoughness": 1,
+		"currentItemOpacity": 100,
+		"currentItemFontFamily": 1,
+		"currentItemFontSize": 20,
+		"currentItemTextAlign": "left",
+		"currentItemStartArrowhead": null,
+		"currentItemEndArrowhead": "arrow",
+		"scrollX": 393,
+		"scrollY": 481.75,
+		"zoom": {
+			"value": 1
+		},
+		"currentItemRoundness": "round",
+		"gridSize": null,
+		"colorPalette": {},
+		"currentStrokeOptions": null,
+		"previousGridSize": null
+	},
+	"files": {}
+}
+```
+%%
