@@ -10,7 +10,7 @@ los espacios. Esto lo hace la secretaria. Esto es la planificación previa.
 
 Para el primer sprint:
 
-	Restricciones:
+	Restricciones impuestas por el profedor:
 
 		Sólo vamos a planificar actividades con un sólo profesor y en una sóla sesión.
 
@@ -18,7 +18,7 @@ Para el primer sprint:
 Después de la planificación de la actividad, le damos difusión a dicha actividad. Para ello, necesitamos que el software tenga una funcionalidad que permita rellenar un formulario de inscripción: Nombre, Apellidos E-Mail.
 Lógicamente, en la planificación se establece un máximo número de plazas.
 
-	Restricciones:
+	Restricciones impuestas por el profesor:
 
 		Para el primer sprint, vamos a programar una pantalla interna para que la secretaria pueda inscribir a una persona.
 
@@ -27,7 +27,7 @@ anotando cómo pagado o no. Además de la fecha y la cantidad que se ha transfer
 al del curso. Además pueden introducirse en varios pagos si la cantidad es menor. (PARA FUTURO ->) Cuando esté confirmado el pago, el sistema quiero que envíe un e-mail. Quiero que haya para la secretaria  una lista con los cursos que indique el proceso de inscripción, las plazas libres, descripción, el profesor asignado, etc. Otra cosa que necesitamos es que la secretaria pueda acceder a una lista con los inscritos en el curso, con su fecha, estado del pago (sin pagar, mal pagado, pagado de más, lista de pagos),
 también en la lista de inscritos, tener un dato global, sobre lo que me ha costado el curso y lo que he ingresado.
 
-	Restricciones:
+	Restricciones impuestas por el profesor:
 
 		En estos momentos, sólo vamos a considerar cómo gasto al profesor.
 
