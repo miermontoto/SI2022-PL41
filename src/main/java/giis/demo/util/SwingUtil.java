@@ -14,7 +14,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  * Metodos de utilidad para interfaces de usuario con swing (poblar tablas a partir de un objeto POJO
- * que ha sido obtenido desde la base de datos, manejo de excepciones para metodos del 
+ * que ha sido obtenido desde la base de datos, manejo de excepciones para metodos del
  * controlador, autoajuste de la dimension de columnas, etc)
  */
 public class SwingUtil {
@@ -38,10 +38,10 @@ public class SwingUtil {
 			e.printStackTrace(); //NOSONAR
 			showMessage(e.toString(), "Excepcion no controlada",JOptionPane.ERROR_MESSAGE);
 		}
-	}	 
+	}
 	private static void showMessage(String message, String title, int type) {
-		//Como este metodo no recibe el contexto de la ventana de la aplicacion, 
-		//no usa el metodo estatico showMessageDialog de JOptionPane 
+		//Como este metodo no recibe el contexto de la ventana de la aplicacion,
+		//no usa el metodo estatico showMessageDialog de JOptionPane
 		//y establece la posicion para que no aparezca en el centro de la pantalla
 	    JOptionPane pane = new JOptionPane(message,type,JOptionPane.DEFAULT_OPTION);
 	    pane.setOptions(new Object[] {"ACEPTAR"}); //fija este valor para que no dependa del idioma
@@ -49,7 +49,7 @@ public class SwingUtil {
 	    d.setLocation(200,200);
 	    d.setVisible(true);
 	}
-	
+
 	/**
 	 * Ajusta todas las columnas de la tabla al tamanyo correspondiente al contenido del tablemodel
 	 */
@@ -59,7 +59,7 @@ public class SwingUtil {
 		tca.adjustColumns();
 	}
 
-	/** 
+	/**
 	 * Obtiene la key (primera columna) de la fila seleccionada en la tabla de carreras o string vacio (si no existe)
 	 */
 	public static String getSelectedKey(JTable table) {
@@ -69,8 +69,8 @@ public class SwingUtil {
 		else //no hay filas seleccionadas
 			return "";
 	}
-	
-	/** 
+
+	/**
 	 * Selecciona la fila de la tabla con la clave indicada y devuelve el valor la clave de la fila seleccionada resultante
 	 * (la misma clave o string vacio si no existe la fila)
 	 */
@@ -117,7 +117,7 @@ public class SwingUtil {
 	}
 	public static <E> TableModel getRecordModelFromPojo(E pojo, String[] colProperties) {
 		//Creacion inicial del tablemodel y dimensionamiento
-		//como solo habra dos columnas pongo una cabecera con dos valores vacios, de forma que 
+		//como solo habra dos columnas pongo una cabecera con dos valores vacios, de forma que
 		//aparezca muy reducida pero con el handler necesario para poder redimensionarla
 		TableModel tm;
 		tm=new DefaultTableModel(new String[] {"",""}, colProperties.length);
@@ -133,7 +133,7 @@ public class SwingUtil {
 			}
 		return tm;
 	}
-	
+
 	/**
 	 * Crea un Comboboxmodel a partir de una lista de objetos.
 	 * @param lst Lista de arrays de objetos de los cuales se usara el primero de cada uno de ellos para poblar el combo
@@ -146,7 +146,7 @@ public class SwingUtil {
 		}
 		return cm;
 	}
-	
-	
+
+
 
 }

@@ -1,5 +1,4 @@
 target
 .sonar
-#sqlite databases
-*.db 
-
+*.db
+.settings

@@ -19,20 +19,20 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 
 /**
- * Metodos de utilidad para simplificar las queries realizadas en las clases 
+ * Metodos de utilidad para simplificar las queries realizadas en las clases
  * que implementan la logica de negocio:
  * Se implementa como una clase abstracta para que la clase derivada implemente los detalles
  * relativos a la conexion y a la estructura de la base de datos a crear, y a la vez
  * pueda usar los metodos que se definen aqui.
- * 
+ *
  * <br>La mayoria de los metodos de utilidad utilizan apache commons-dbutils que gestiona todo el manejo
- * de resultsets, su mapeo a objetos y las excepciones permitiendo un codigo mucho mas limpio 
+ * de resultsets, su mapeo a objetos y las excepciones permitiendo un codigo mucho mas limpio
  * en las clases de la capa de negocio y DAOs.
  */
 public abstract class DbUtil {
 	/** Obtencion de la url de conexion que debe implementarse en la subclase */
 	public abstract String getUrl();
-	
+
 	/** Obtiene un objeto conexion para esta base de datos */
 	public Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(getUrl());
@@ -41,9 +41,9 @@ public abstract class DbUtil {
 	//Documentacion de apache dbutils:
 	//https://commons.apache.org/proper/commons-dbutils/apidocs/index.html
 	//https://commons.apache.org/proper/commons-dbutils/examples.html
-	
+
 	/**
-	 * Ejecuta una query sql con los parametros especificados mapeando el resultet en una lista de objetos 
+	 * Ejecuta una query sql con los parametros especificados mapeando el resultet en una lista de objetos
 	 * de la clase indicada en pojoClass;
 	 * Utiliza apache commons-dbutils para realizar el mapeo y el manejo del resto de aspectos de jdbc
 	 */
@@ -107,12 +107,12 @@ public abstract class DbUtil {
 			DbUtils.closeQuietly(conn);
 		}
 	}
-	
+
 	/**
 	 * Metodo simple para ejecutar todas las sentencias sql que se encuentran en un archivo, teniendo en cuenta:
 	 * <br/>- Cada sentencia DEBE finalizar en ; pudiendo ocupar varias lineas
 	 * <br/>- Se permiten comentarios de linea (--)
-	 * <br/>- Todas las sentencias drop se ejecutan al principio, 
+	 * <br/>- Todas las sentencias drop se ejecutan al principio,
 	 * y se ignoran los fallos en caso de que no exista la tabla (solo para drop)
 	 */
 	public void executeScript(String fileName) {
@@ -187,7 +187,7 @@ public abstract class DbUtil {
 			stmt.executeUpdate(sql);
 		} catch (SQLException e) {
 			//no causa excepcion intencionaamente
-		}		
+		}
 	}
 
 }

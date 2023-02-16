@@ -1,8 +1,18 @@
-# Proyecto SI
+# Proyecto COIIPA (SI2022-PL41)
+
+## instalar (temporal)
+1. `Maven > Update Project...`
+2. `Run As > Maven install`
+3. Esperar fallo (20s)
+4. Ejecutar SwingMain
+
+Solo funciona en JRE 1.8 (Java 8)
+
+---
+
 ## info
 - Proyecto sobre COIPA, petición por el vicedecano
 - sw para apoyar cursos de formación
-
 
 ## SI actual
 - surgen ideas de cursos → planificación de temática → definición del curso → acuerdo con profesores
@@ -52,3 +62,52 @@
     	- tras la transferencia, se anota otra vez en el sistema
 - **economía**
 	- fundamental ingresos y gastos en un determinado periodo sobre los cursos de formación
+
+## restricciones
+- solo planificar actividades que tengan un unico profesor.
+- solo planificar actividades que se realizan en una única fecha.
+- el formulario solo se rellena por un miembro de la secretaría administrativa.
+- el único coste del curso es aquel de la remuneración del profesor.
+- el único ingreso del curso es el de las inscripciones.
+
+
+## info bbdd
+**información a presentar en la lista de cursos**
+- Nombre
+- Profesor
+- Descripción
+- Estado
+- Período inscripción
+- Fecha
+- Plazas
+- Plazas libres
+- BTN: Inscripciones
+	- Listado de personas inscritas
+		- Nombre
+		- Apellidos
+		- e-mail
+		- Estado
+			- Codificado por colores: { OK, SIN_PAGAR, PAGO_ERRONEO }
+- Ingresos totales
+- Costes totales
+- Ganancias totales
+
+**Miembros inscritos pueden querer cancelar una inscripción**
+| Numero dias naturales previos a inicio | % retornado |
+|---|---|
+| 7 | 100 |
+| 6 | 50 |
+| 3 | 0 |
+
+**Ingresos/Gastos realizados**
+|Curso|Dato|Dato|
+|---|---|---|
+|A|B|C|
+
+**Ingresos/Gastos en curso (por realizar / realizados posteriores al fin del intervalo)**
+|Curso|Dato|Dato|
+|---|---|---|
+|A|B|C|
+
+### modelo de dominio
+Curso (1) --- (*) Inscripcion

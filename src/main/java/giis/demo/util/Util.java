@@ -22,11 +22,11 @@ public class Util {
 	}
 
 	/**
-	 * Serializa una lista de objetos a formato json insertando saltos de linea entre cada elemento 
+	 * Serializa una lista de objetos a formato json insertando saltos de linea entre cada elemento
 	 * para facilitar la comparacion de resultados en las pruebas utilizando jackson-databind
 	 * (opcionalmente permite obtene una representacion similar a csv).
 	 * @param pojoList Lista de objetos a serializar
-	 * @param asArray si es true codifica los diferentes campos del objeto como un array 
+	 * @param asArray si es true codifica los diferentes campos del objeto como un array
 	 * y elimina comillas para facilitar la comparacion, si es false devuelve el json completo
 	 * @return el string que representa la lista serializada
 	 */
@@ -45,7 +45,7 @@ public class Util {
 			throw new ApplicationException(e);
 		}
 	}
-	
+
 	/**
 	 * Convierte una lista de objetos a formato csv
 	 * @param pojoList Lista de objetos a serializar
@@ -67,7 +67,7 @@ public class Util {
 	 */
 	public static String pojosToCsv(List<?> pojoList, String[] fields, boolean headers, String separator, String begin, String end, String nullAs) {
 		StringBuilder sb=new StringBuilder();
-		if (headers) 
+		if (headers)
 			addPojoLineToCsv(sb,null,fields,separator,begin,end,nullAs);
 		for (int i=0; i<pojoList.size(); i++) {
 			try {
@@ -107,7 +107,7 @@ public class Util {
 		StringBuilder sb=new StringBuilder();
 		if (fields!=null)
 			addArrayLineToCsv(sb,fields,separator,begin,end);
-		for (int i=0; i<arrays.length; i++) 
+		for (int i=0; i<arrays.length; i++)
 			addArrayLineToCsv(sb,arrays[i],separator,begin,end);
 		return sb.toString();
 	}
@@ -118,8 +118,8 @@ public class Util {
 		sb.append(end);
 		sb.append("\n");
 	}
-	
-	/** 
+
+	/**
 	 * Convierte fecha repesentada como un string iso a fecha java (para conversion de entradas de tipo fecha)
 	 */
 	public static Date isoStringToDate(String isoDateString) {
@@ -129,12 +129,12 @@ public class Util {
 			throw new ApplicationException("Formato ISO incorrecto para fecha: "+isoDateString);
 		}
 	}
-	/** 
-	 * Convierte fecha java a un string formato iso (para display o uso en sql) 
+	/**
+	 * Convierte fecha java a un string formato iso (para display o uso en sql)
 	 */
 	public static String dateToIsoString(Date javaDate) {
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 		return formatter.format(javaDate);
 	}
-	
+
 }

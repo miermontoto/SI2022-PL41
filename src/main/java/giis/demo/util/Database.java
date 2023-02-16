@@ -39,23 +39,23 @@ public class Database extends DbUtil {
 	public String getUrl() {
 		return url;
 	}
-	/** 
+	/**
 	 * Creacion de una base de datos limpia a partir del script schema.sql en src/main/properties
 	 * (si onlyOnce=true solo ejecutara el script la primera vez
 	 */
 	public void createDatabase(boolean onlyOnce) {
 		//actua como singleton si onlyOnce=true: solo la primera vez que se instancia para mejorar rendimiento en pruebas
-		if (!databaseCreated || !onlyOnce) { 
+		if (!databaseCreated || !onlyOnce) {
 			executeScript(SQL_SCHEMA);
 			databaseCreated=true; //NOSONAR
 		}
 	}
-	/** 
+	/**
 	 * Carga de datos iniciales a partir del script data.sql en src/main/properties
 	 * (si onlyOnce=true solo ejecutara el script la primera vez
 	 */
 	public void loadDatabase() {
 		executeScript(SQL_LOAD);
 	}
-	
+
 }
