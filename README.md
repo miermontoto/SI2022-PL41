@@ -2,9 +2,8 @@
 
 ## instalar (temporal)
 1. `Maven > Update Project...`
-2. `Run As > Maven install`
-3. Esperar fallo (20s)
-4. Ejecutar SwingMain
+2. ???
+3. Profit
 
 Solo funciona en JRE 1.8 (Java 8)
 
