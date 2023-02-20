@@ -36,10 +36,10 @@ Solo funciona en JRE 1.8 (Java 8)
 		- sobre una persona: fecha de inscripción, lista de pagos...
 - **alumnos**
 	- *<u>inscripciones de alumnos</u>* (form)
-    	- nombre, apellidos, email
-    	- estudiar núm. plazas según curso y aulas a la hora de aceptar inscripciones.
-    	- requiere que la persona pague.
-    	- *restricción:* solo necesario proporcionar interfaces para que la secr. adm. inscriba a gente
+		- nombre, apellidos, email
+		- estudiar núm. plazas según curso y aulas a la hora de aceptar inscripciones.
+		- requiere que la persona pague.
+		- *restricción:* solo necesario proporcionar interfaces para que la secr. adm. inscriba a gente
 	- *<u>cancelar inscripciones</u>*
 		- política
 			- si la cancelación es 7d antes o más, 100% devuelto
@@ -48,17 +48,17 @@ Solo funciona en JRE 1.8 (Java 8)
 		- devolución por transferencia por parte del tesorero
 			- el tesorero (se puede equivocar)
 	- *<u>pagos</u>*
-    	- a partir del momento que te inscribes, se da un plazo de tiempo para realizar la transferencia. (2d)
-    	- si tras ese plazo no ha realizado la transferencia, se le avisa a la persona.
-    	- lo que tiene que suceder en el sw: la secr. adm. tiene que poder anotar cuándo la transferencia llega.
-    	- en el caso de que la transferencia tenga un importe diferente al precio del curso, el sw tiene que avisar.
-    	- no se reserva la plaza de manera definitiva hasta que se realice el pago.
+		- a partir del momento que te inscribes, se da un plazo de tiempo para realizar la transferencia. (2d)
+		- si tras ese plazo no ha realizado la transferencia, se le avisa a la persona.
+		- lo que tiene que suceder en el sw: la secr. adm. tiene que poder anotar cuándo la transferencia llega.
+		- en el caso de que la transferencia tenga un importe diferente al precio del curso, el sw tiene que avisar.
+		- no se reserva la plaza de manera definitiva hasta que se realice el pago.
 - **profesores**
 	- *<u>pagos a profesores</u>*
-    	- al concluir el curso
-    	- se registran facturas en el sistema
-    	- el tesorero realiza la transferencia (se puede equivocar)
-    	- tras la transferencia, se anota otra vez en el sistema
+		- al concluir el curso
+		- se registran facturas en el sistema
+		- el tesorero realiza la transferencia (se puede equivocar)
+		- tras la transferencia, se anota otra vez en el sistema
 - **economía**
 	- fundamental ingresos y gastos en un determinado periodo sobre los cursos de formación
 
@@ -68,6 +68,8 @@ Solo funciona en JRE 1.8 (Java 8)
 - el formulario solo se rellena por un miembro de la secretaría administrativa.
 - el único coste del curso es aquel de la remuneración del profesor.
 - el único ingreso del curso es el de las inscripciones.
+- se asume que todas las transferencias se realizan con el importe correcto.
+- se asume que el tesorero no se puede equivocar a la hora de realizar transferencias.
 
 
 ## info bbdd
