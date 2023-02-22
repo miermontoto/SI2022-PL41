@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-public class RegistrarPago extends JPanel {
+public class RegistrarPago extends Panel {
 
 	private static final long serialVersionUID = 1L;
 	/**
@@ -20,7 +20,8 @@ public class RegistrarPago extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public RegistrarPago() {
+	public RegistrarPago(g41.SI2022.util.SwingMain main) {
+		super(main);
 		this.setLayout(new BorderLayout());
 		
 		//TODO. Tabla inicial para mostrar.
