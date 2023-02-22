@@ -1,25 +1,43 @@
 -- Inserción de nuevos docentes
-INSERT INTO docente (nombre, apellido) VALUES
-('Ana', 'Martinez'), ('Pablo', 'Garcia'), ('Maria', 'Lopez');
+insert into docente (nombre, apellido, dni, email, telefono, direccion) values
+    ('Juan', 'Pérez', '12345678A', 'juanperez@mail.com', '111222333', 'C/ Mayor 1'),
+    ('María', 'García', '87654321B', 'mariagarcia@mail.com', '444555666', 'C/ Menor 2'),
+    ('Pedro', 'Martínez', '34567890C', 'pedromartinez@mail.com', '777888999', 'C/ Central 3');
+
 
 -- Inserción de nuevos cursos
-INSERT INTO curso (nombre, estado, start_inscr, end_inscr, plazas, docente_id) VALUES
-('Marketing Digital', 'Activo', '2022-05-01', '2022-05-31', 15, 4),
-('Diseño Gráfico', 'Cancelado', '2022-06-01', '2022-06-30', 10, 5),
-('Programación Java', 'Activo', '2022-07-01', '2022-07-31', 20, 6);
+insert into curso (nombre, descripcion, estado, start_inscr, end_inscr, plazas, ingresos_estimados, gastos_estimados, docente_id) values
+    ('Introducción a la programación en Python', 'Curso de iniciación a la programación en Python', 'En curso', '2023-03-01', '2023-03-31', 20, 500, 200, 1),
+    ('Programación avanzada en Python', 'Curso avanzado de programación en Python', 'En fase de inscripción', '2023-04-01', '2023-04-30', 15, 750, 250, 2),
+    ('Bases de datos con SQL', 'Curso sobre bases de datos con SQL', 'Cerrado', '2023-05-01', '2023-05-31', 10, 300, 150, 3);
+
 
 -- Inserción de nuevos alumnos
-INSERT INTO alumno (nombre, apellido, dni, email, telefono, direccion, birth) VALUES
-('Elena', 'Fernandez', '45678901D', 'elena@gmail.com', '666777888', 'Calle Mayor 5', '1997-12-15'),
-('Miguel', 'Sanchez', '56789012E', 'miguel@hotmail.com', '612345789', 'Calle Ancha 2', '1993-08-30'),
-('Sofia', 'Gomez', '67890123F', 'sofia@yahoo.com', '600123456', 'Calle Estrecha 3', '1995-05-12'),
-('Carlos', 'Rodriguez', '78901234G', 'carlos@outlook.com', '687654321', 'Calle Larga 4', '1991-11-02');
+insert into alumno (nombre, apellido, dni, email, telefono, direccion, birth) values
+    ('Juan', 'García', '12345678A', 'juan.garcia@gmail.com', '666555444', 'C/ Mayor, 1', '1990-02-12'),
+    ('María', 'Martínez', '87654321B', 'maria.martinez@gmail.com', '666555333', 'C/ Real, 2', '1992-06-25'),
+    ('Luis', 'Sánchez', '45678912C', 'luis.sanchez@gmail.com', '666555222', 'C/ Nueva, 3', '1995-09-03'),
+    ('Laura', 'Gómez', '12348765D', 'laura.gomez@gmail.com', '666555111', 'C/ La Paz, 4', '1987-11-18'),
+    ('Pablo', 'Rodríguez', '54321678E', 'pablo.rodriguez@gmail.com', '666555000', 'C/ del Carmen, 5', '1999-03-30'),
+    ('Ana', 'Fernández', '87651234F', 'ana.fernandez@gmail.com', '666555999', 'C/ Naranjos, 6', '2001-07-12');
 
 -- Inscripción de alumnos a cursos
-INSERT INTO inscripcion (curso_id, alumno_id) VALUES
-(1, 3), (1, 4), (2, 4), (4, 1), (5, 2),
-(3, 3), (3, 4), (3, 1), (3, 2), (1, 1),
-(2, 2), (2, 3), (2, 1), (1, 2), (1, 4);
+insert into inscripcion (fecha, coste, estado, curso_id, alumno_id) values
+    ('2022-05-15', 5000, 'Pagado', 1, 1),
+    ('2022-05-15', 5000, 'Pendiente', 1, 2),
+    ('2022-05-15', 5000, 'Pendiente', 1, 3),
+    ('2022-05-15', 5000, 'Pagado', 2, 4),
+    ('2022-05-15', 5000, 'Pendiente', 2, 5),
+    ('2022-05-15', 5000, 'Pendiente', 2, 6),
+    ('2022-06-01', 2000, 'Pagado', 3, 1),
+    ('2022-06-01', 2000, 'Pagado', 3, 3),
+    ('2022-06-01', 2000, 'Pagado', 3, 6),
+    ('2022-06-01', 2000, 'Pagado', 4, 2),
+    ('2022-06-01', 2000, 'Pendiente', 4, 4),
+    ('2022-06-01', 2000, 'Pendiente', 4, 5),
+    ('2022-06-01', 2000, 'Pendiente', 5, 1),
+    ('2022-06-01', 2000, 'Pagado', 5, 2),
+    ('2022-06-01', 2000, 'Pendiente', 5, 3);
 
 -- Asignación de docentes a cursos
 INSERT INTO docencia (remuneracion, curso_id, docente_id) VALUES

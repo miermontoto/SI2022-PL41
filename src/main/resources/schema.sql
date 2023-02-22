@@ -19,15 +19,21 @@ create table fecha (
 create table curso (
     id integer primary key autoincrement,
     nombre text not null,
+    descripcion text,
     estado text not null,
-    start_inscr date not null,
-    end_inscr date not null,
-    plazas integer not null,
+    start_inscr date,
+    end_inscr date,
+    plazas integer,
+    ingresos_estimados integer,
+    gastos_estimados integer,
     foreign key (docente_id) references docente(id)
 );
 
 create table inscripcion (
     id integer primary key autoincrement,
+    fecha date not null,
+    coste integer not null,
+    estado text not null,
     foreign key (curso_id) references curso(id),
     foreign key (alumno_id) references alumno(id)
 );
@@ -46,7 +52,11 @@ create table alumno (
 create table docente (
     id integer primary key autoincrement,
     nombre text not null,
-    apellido text not null
+    apellido text not null,
+    dni text not null,
+    email text not null,
+    telefono text not null,
+    direccion text not null,
 );
 
 create table docencia (

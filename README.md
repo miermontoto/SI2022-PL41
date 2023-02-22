@@ -28,7 +28,7 @@ Solo funciona en JRE 1.8 (Java 8)
 	- restricción "regalada": planificar actividades que tengan únicamente un profesor y que se realicen en una única fecha.
 
 ## requisitos
-- **cursos** (en planificación, en periodo de inscripción, en curso...)
+- **cursos** (en planificación, en periodo de inscripción, en curso, cancelada, finalizada)
 	- una lista de los cursos (nombre, estado, periodo de inscripcion, total plazas, plazas libres, fechas)
 		- al seleccionar la lista, poder incluir más información (descripción, profesores...)
 		- información económica sobre cursos (balance)
