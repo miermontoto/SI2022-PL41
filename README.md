@@ -28,7 +28,7 @@ Solo funciona en JRE 1.8 (Java 8)
 	- restricción "regalada": planificar actividades que tengan únicamente un profesor y que se realicen en una única fecha.
 
 ## requisitos
-- **cursos** (en planificación, en periodo de inscripción, en curso...)
+- **cursos** (en planificación, en periodo de inscripción, en curso, cancelada, finalizada)
 	- una lista de los cursos (nombre, estado, periodo de inscripcion, total plazas, plazas libres, fechas)
 		- al seleccionar la lista, poder incluir más información (descripción, profesores...)
 		- información económica sobre cursos (balance)
@@ -71,44 +71,4 @@ Solo funciona en JRE 1.8 (Java 8)
 - se asume que todas las transferencias se realizan con el importe correcto.
 - se asume que el tesorero no se puede equivocar a la hora de realizar transferencias.
 
-
-## info bbdd
-**información a presentar en la lista de cursos**
-- Nombre
-- Profesor
-- Descripción
-- Estado
-- Período inscripción
-- Fecha
-- Plazas
-- Plazas libres
-- BTN: Inscripciones
-	- Listado de personas inscritas
-		- Nombre
-		- Apellidos
-		- e-mail
-		- Estado
-			- Codificado por colores: { OK, SIN_PAGAR, PAGO_ERRONEO }
-- Ingresos totales
-- Costes totales
-- Ganancias totales
-
-**Miembros inscritos pueden querer cancelar una inscripción**
-| Numero dias naturales previos a inicio | % retornado |
-|---|---|
-| 7 | 100 |
-| 6 | 50 |
-| 3 | 0 |
-
-**Ingresos/Gastos realizados**
-|Curso|Dato|Dato|
-|---|---|---|
-|A|B|C|
-
-**Ingresos/Gastos en curso (por realizar / realizados posteriores al fin del intervalo)**
-|Curso|Dato|Dato|
-|---|---|---|
-|A|B|C|
-
-### modelo de dominio
-Curso (1) --- (*) Inscripcion
+## [modelo de dominio](src/main/resources/mod_dominio.md)

@@ -2,3 +2,4 @@ target
 .sonar
 *.db
 .settings
+.vscode
