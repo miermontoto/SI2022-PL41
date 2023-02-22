@@ -1,12 +1,11 @@
 package g41.SI2022.util;
 
 import java.awt.EventQueue;
+import javax.swing.JPanel;
 import javax.swing.JFrame;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import g41.SI2022.coiipa.*;
+import javax.swing.JTabbedPane;
+
+import g41.SI2022.coiipa.TestPanel;
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas
@@ -51,36 +50,12 @@ public class SwingMain {
 		frame.setBounds(0, 0, 287, 185);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-		JButton btnEjecutarTkrun = new JButton("Ejecutar COIIPA");
-		btnEjecutarTkrun.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// TODO: abrir pantalla principal
-			}
-		});
-		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		frame.getContentPane().add(btnEjecutarTkrun);
+		// tabs is the main content of the window. This will contain all the other GUIs.
+		JTabbedPane tabs = new JTabbedPane();
+		TestPanel testPanel = new TestPanel();
+		tabs.add("Testitle", testPanel);
 
-
-		JButton btnInicializarBaseDeDatos = new JButton("Init BBDD");
-		btnInicializarBaseDeDatos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Database db=new Database();
-				db.createDatabase(false);
-				// TODO: no está preparado todavía para la nueva estructura de la bbdd
-			}
-		});
-		frame.getContentPane().add(btnInicializarBaseDeDatos);
-
-		JButton btnCargarDatosIniciales = new JButton("Cargar datos iniciales");
-		btnCargarDatosIniciales.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Database db=new Database();
-				db.createDatabase(false);
-				db.loadDatabase();
-				// TODO: no está preparado todavía para la nueva estructura de la bbdd
-			}
-		});
-		frame.getContentPane().add(btnCargarDatosIniciales);
+		frame.add(tabs);
 	}
 
 	public JFrame getFrame() { return this.frame; }
