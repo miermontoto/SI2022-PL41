@@ -2,6 +2,7 @@ package g41.SI2022.util;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -51,7 +52,7 @@ public class SwingMain {
 		frame.setBounds(0, 0, 287, 185);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-		JButton btnEjecutarTkrun = new JButton("Ejecutar COIIPA");
+		/*JButton btnEjecutarTkrun = new JButton("Ejecutar COIIPA");
 		btnEjecutarTkrun.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// TODO: abrir pantalla principal
@@ -80,7 +81,14 @@ public class SwingMain {
 				// TODO: no está preparado todavía para la nueva estructura de la bbdd
 			}
 		});
-		frame.getContentPane().add(btnCargarDatosIniciales);
+		frame.getContentPane().add(btnCargarDatosIniciales);*/
+		
+		// tabs is the main content of the window. This will contain all the other GUIs.
+		JTabbedPane tabs = new JTabbedPane();
+		RegistrarPago registrarPago = new RegistrarPago();
+		tabs.add("Registrar un pago", registrarPago);
+		
+		frame.add(tabs);
 	}
 
 	public JFrame getFrame() { return this.frame; }
