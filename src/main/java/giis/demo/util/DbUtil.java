@@ -122,13 +122,13 @@ public abstract class DbUtil {
 		} catch (IOException e) {
 			throw new ApplicationException(e);
 		}
-		//separa las sentencias sql en dos listas, una para drop y otra para el resto pues se ejecutaran de forma diferente
+		// Separa las sentencias sql en dos listas, una para drop y otra para el resto pues se ejecutaran de forma diferente
 		List<String> batchUpdate=new ArrayList<>();
 		List<String> batchDrop=new ArrayList<>();
-		StringBuilder previousLines=new StringBuilder(); //guarda lineas anteriores al separador (;)
+		StringBuilder previousLines=new StringBuilder(); // Guarda lineas anteriores al separador (;)
 		for (String line : lines) {
 			line=line.trim();
-			if (line.length()==0 || line.startsWith("--")) //ignora lineas vacias comentarios de linea
+			if (line.length()==0 || line.startsWith("--")) // Ignora lineas vacias comentarios de linea
 				continue;
 			if (line.endsWith(";")) {
 				String sql=previousLines.toString()+line;
@@ -143,7 +143,7 @@ public abstract class DbUtil {
 				previousLines.append(line+" ");
 			}
 		}
-		//Ejecuta todas las sentencias, primero los drop (si existen)
+		// Ejecuta todas las sentencias, primero los drop (si existen)
 		if (!batchDrop.isEmpty())
 			this.executeBatchNoFail(batchDrop);
 		if (!batchUpdate.isEmpty())
@@ -165,7 +165,7 @@ public abstract class DbUtil {
 					stmt.addBatch(sql);
 				stmt.executeBatch();
 		} catch (SQLException e) {
-			//Ojo, no dejar pasar las excepciones (no limitarse a dejar el codigo autoegenerado por Eclipse con printStackTrace)
+			// Ojo, no dejar pasar las excepciones (no limitarse a dejar el codigo autoegenerado por Eclipse con printStackTrace)
 			throw new UnexpectedException(e);
 		}
 	}
