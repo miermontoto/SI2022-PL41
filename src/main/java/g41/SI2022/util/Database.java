@@ -1,4 +1,4 @@
-package giis.demo.util;
+package g41.SI2022.util;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -13,8 +13,8 @@ import org.apache.commons.dbutils.DbUtils;
 public class Database extends DbUtil {
 	// Localización de ficheros de configuracion y carga de bases de datos
 	private static final String APP_PROPERTIES = "src/main/resources/application.properties";
-	private static final String SQL_SCHEMA = "src/main/resources/test_schema.sql";
-	private static final String SQL_LOAD = "src/main/resources/test_data.sql";
+	private static final String SQL_SCHEMA = "src/main/resources/schema.sql";
+	private static final String SQL_LOAD = "src/main/resources/data.sql";
 	// Parámetros de la base de datos leidos de application.properties (base de datos local sin usuario/password)
 	private String driver;
 	private String url;
@@ -42,10 +42,10 @@ public class Database extends DbUtil {
 	 * (si onlyOnce=true solo ejecutara el script la primera vez
 	 */
 	public void createDatabase(boolean onlyOnce) {
-		// actua como singleton si onlyOnce=true: solo la primera vez que se instancia para mejorar rendimiento en pruebas
+		// Actua como singleton si onlyOnce=true: solo la primera vez que se instancia para mejorar rendimiento en pruebas
 		if (!databaseCreated || !onlyOnce) {
 			executeScript(SQL_SCHEMA);
-			databaseCreated=true; //NOSONAR
+			databaseCreated = true;
 		}
 	}
 	/**
