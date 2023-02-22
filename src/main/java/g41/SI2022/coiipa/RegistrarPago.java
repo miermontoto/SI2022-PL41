@@ -22,16 +22,20 @@ public class RegistrarPago extends JPanel {
 	 */
 	public RegistrarPago() {
 		this.setLayout(new BorderLayout());
-		this.add(new JLabel("NORTH"), BorderLayout.NORTH);
+		
+		//TODO. Tabla inicial para mostrar.
+		
+		
+		/*this.add(new JLabel("NORTH"), BorderLayout.NORTH);
 		this.add(new JLabel("EAST"), BorderLayout.EAST);
 		this.add(new JLabel("SOUTH"), BorderLayout.SOUTH);
 		this.add(new JLabel("WEST"), BorderLayout.WEST);
-		this.add(new JLabel("CENTER"), BorderLayout.CENTER);
+		this.add(new JLabel("CENTER"), BorderLayout.CENTER);*/
 		
 		tabCursos = new JTable();
 		tabCursos.setName("tabCursos");
 		tabCursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tabCursos.setDefaultEditor(Object.class, null); //readonly
+		tabCursos.setDefaultEditor(Object.class, null); //Leer sólo.
 		JScrollPane tablePanel = new JScrollPane(tabCursos);
 		//getContentPane().add(tablePanel, "cell 0 5,grow");
 	}
