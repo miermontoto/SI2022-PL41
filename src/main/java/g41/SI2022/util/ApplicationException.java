@@ -6,10 +6,6 @@ package g41.SI2022.util;
  */
 @SuppressWarnings("serial")
 public class ApplicationException extends RuntimeException {
-	public ApplicationException(Throwable e) {
-		super(e);
-	}
-	public ApplicationException(String s) {
-		super(s);
-	}
+	public ApplicationException(Throwable e) { super(e); }
+	public ApplicationException(String s) { super(s); }
 }

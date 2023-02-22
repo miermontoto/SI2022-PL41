@@ -24,9 +24,7 @@ public class SwingMain {
 				try {
 					SwingMain window = new SwingMain();
 					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				} catch (Exception e) { e.printStackTrace(); }
 			}
 		});
 	}
@@ -47,17 +45,16 @@ public class SwingMain {
 		frame.setBounds(0, 0, 640, 480);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-		// tabs is the main content of the window. This will contain all the other GUIs.
+		// Tabs are the main content of the window. This will contain all the other GUIs.
 		JTabbedPane tabs = new JTabbedPane();
 		java.util.TreeMap<String, Tab> theTabs = new java.util.TreeMap<String, Tab> ();
 
-		// vvv ONLY MODIFY THIS IN ORDER TO ADD NEW TABS vvv
+		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
 		theTabs.put("testTab", new TestPanel(this));
 
-		// ^^^ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ^^^
+		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 		
-		theTabs.forEach((name, tab) -> tabs.add(name, tab) );
-
+		theTabs.forEach((name, tab) -> tabs.add(name, tab));
 		frame.add(tabs);
 	}
 
