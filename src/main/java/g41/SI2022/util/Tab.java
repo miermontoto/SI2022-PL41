@@ -1,6 +1,4 @@
-package g41.SI2022.coiipa;
-
-import g41.SI2022.util.SwingMain;
+package g41.SI2022.util;
 
 public class Tab extends javax.swing.JPanel {
 

@@ -1,12 +1,8 @@
 package g41.SI2022.util;
 
 import java.awt.EventQueue;
-import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
-
-import g41.SI2022.coiipa.Tab;
-import g41.SI2022.coiipa.TestPanel;
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas
