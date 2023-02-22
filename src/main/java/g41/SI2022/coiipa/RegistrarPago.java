@@ -1,13 +1,13 @@
 package g41.SI2022.coiipa;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+
+import g41.SI2022.util.Tab;
 
 public class RegistrarPago extends Tab {
 
