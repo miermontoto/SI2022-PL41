@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
+import g41.SI2022.coiipa.Tab;
 import g41.SI2022.coiipa.TestPanel;
 
 /**
@@ -40,20 +41,26 @@ public class SwingMain {
 	public SwingMain() {
 		initialize();
 	}
-
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Main");
-		frame.setBounds(0, 0, 287, 185);
+		frame.setBounds(0, 0, 640, 480);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		// tabs is the main content of the window. This will contain all the other GUIs.
 		JTabbedPane tabs = new JTabbedPane();
-		TestPanel testPanel = new TestPanel();
-		tabs.add("Testitle", testPanel);
+		java.util.TreeMap<String, Tab> theTabs = new java.util.TreeMap<String, Tab> ();
+
+		// vvv ONLY MODIFY THIS IN ORDER TO ADD NEW TABS vvv
+		theTabs.put("testTab", new TestPanel(this));
+
+		// ^^^ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ^^^
+		
+		theTabs.forEach((name, tab) -> tabs.add(name, tab) );
 
 		frame.add(tabs);
 	}
