@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-public class RegistrarPago extends Panel {
+public class RegistrarPago extends Tab {
 
 	private static final long serialVersionUID = 1L;
 	/**
