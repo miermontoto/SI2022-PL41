@@ -1,0 +1,50 @@
+Profesor:
+
+	Nombre
+	Apellidos
+	DNI
+	Dirección
+
+
+
+Actividad:
+
+	Nombre
+	Objetivos de la actividad
+	Contenidos
+	Fecha de la actividad
+	Plazas vacantes de la actividad
+	Estado de la actividad.
+	Lugar de la actividad
+	Ingresos estimados
+	Gastos estimados
+	Ingresos reales
+	Gastos reales
+
+
+Contrato: ¿Asociar actividad con contrato?
+
+	Nombre del profesor
+	Coste del profesor
+	Remuneración
+
+Inscripción:
+
+	Coste
+	Fecha inscripción
+
+Alumno:
+
+	Nombre alumno
+	Apellidos alumno
+	E-Mail
+
+Contabilidad: ¿Debería ser una tabla?
+
+	Movimiento.
+	Concepto.
+
+
+
+
+
