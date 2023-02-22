@@ -5,6 +5,7 @@
 
 	<groupId>G41</groupId>
 	<artifactId>SI2022</artifactId>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>SI2022-PL41</name>
