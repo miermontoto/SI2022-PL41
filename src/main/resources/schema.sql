@@ -6,10 +6,10 @@ drop table if exists inscripcion;
 drop table if exists alumno;
 drop table if exists docente;
 drop table if exists docencia;
-drop table if exists fecha;
+drop table if exists clase;
 drop table if exists pago;
 
-create table fecha (
+create table clase (
     fecha date not null,
     location text not null,
     curso_id integer not null,
@@ -45,7 +45,7 @@ create table inscripcion (
 create table alumno (
     id integer primary key autoincrement,
     nombre text not null,
-    apellido text not null,
+    apellidos text not null,
     dni text not null,
     email text not null,
     telefono text not null,
@@ -56,7 +56,7 @@ create table alumno (
 create table docente (
     id integer primary key autoincrement,
     nombre text not null,
-    apellido text not null,
+    apellidos text not null,
     dni text not null,
     email text not null,
     telefono text not null,
