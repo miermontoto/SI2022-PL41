@@ -17,16 +17,16 @@ public class RegistrarPago extends Tab {
 	 */
 	private final JTable tabCursos;
 
-	
+
 	/**
 	 * Create the panel.
 	 */
 	public RegistrarPago(g41.SI2022.util.SwingMain main) {
 		super(main);
 		this.setLayout(new BorderLayout());
-		
+
 		// TODO: Tabla inicial para mostrar.
-		
+
 		tabCursos = new JTable();
 		tabCursos.setName("tabCursos");
 		tabCursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -34,5 +34,4 @@ public class RegistrarPago extends Tab {
 		JScrollPane tablePanel = new JScrollPane(tabCursos);
 		//getContentPane().add(tablePanel, "cell 0 5,grow");
 	}
-
 }

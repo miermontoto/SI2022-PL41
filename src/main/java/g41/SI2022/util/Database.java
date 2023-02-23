@@ -15,10 +15,12 @@ public class Database extends DbUtil {
 	private static final String APP_PROPERTIES = "src/main/resources/application.properties";
 	private static final String SQL_SCHEMA = "src/main/resources/schema.sql";
 	private static final String SQL_LOAD = "src/main/resources/data.sql";
+
 	// Parámetros de la base de datos leidos de application.properties (base de datos local sin usuario/password)
 	private String driver;
 	private String url;
 	private static boolean databaseCreated = false;
+
 
 	// Crea una instancia, leyendo los parametros de driver y url de application.properties
 	public Database() {
@@ -62,5 +64,4 @@ public class Database extends DbUtil {
 	public void loadDatabase() {
 		try { executeScript(SQL_LOAD); } catch (Exception e) { throw new ApplicationException(e); }
 	}
-
 }

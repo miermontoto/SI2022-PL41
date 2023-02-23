@@ -15,7 +15,7 @@ public class RegistrarPagoModel {
 		// TODO: todo el modelo de la BBDD
 
 		//validateNotNull(fechaInscripcion,MSG_FECHA_INSCRIPCION_NO_NULA);
-		String sql=
+		String sql =
 				"SELECT id,descr,"
 				+ " case when ?<inicio then ''" // antes de inscripcion
 				+ "   when ?<=fin then '(Abierta)'" // fase 1
