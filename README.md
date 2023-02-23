@@ -1,7 +1,7 @@
 # Proyecto COIIPA (SI2022-PL41)
-[proyecto base original](https://github.com/javiertuya/samples-test-dev)
-[redkanban](https://in2test.lsi.uniovi.es/redkanban/)
-[teams doc](https://unioviedo.sharepoint.com/sites/CV22_SistemasdeInformacinGradoenIngenieraInformticaenTecnolo-SI2022-PL41/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fsites%2FCV22%5FSistemasdeInformacinGradoenIngenieraInformticaenTecnolo%2DSI2022%2DPL41%2FDocumentos%20compartidos%2FSI2022%2DPL41&p=true&ga=1)
+| \[[proyecto base original](https://github.com/javiertuya/samples-test-dev)\] |
+\[[redkanban](https://in2test.lsi.uniovi.es/redkanban/)\] |
+\[[teams doc](https://unioviedo.sharepoint.com/sites/CV22_SistemasdeInformacinGradoenIngenieraInformticaenTecnolo-SI2022-PL41/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fsites%2FCV22%5FSistemasdeInformacinGradoenIngenieraInformticaenTecnolo%2DSI2022%2DPL41%2FDocumentos%20compartidos%2FSI2022%2DPL41&p=true&ga=1)\]
  
 ## instalar (temporal)
 1. `Maven > Update Project...`
