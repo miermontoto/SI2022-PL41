@@ -31,7 +31,7 @@ public class RegistrarPagoController {
 		
 		//Obtengo la lista de insripciones
 		List<insertapagoDTO> inscripciones=modelo.getListaInscripciones(Util.isoStringToDate("2022-05-15"));
-		TableModel tmodel=SwingUtil.getTableModelFromPojos(inscripciones, new String[] {"id", "nombre", "estado"});
+		TableModel tmodel=SwingUtil.getTableModelFromPojos(inscripciones, new String[] {"id", "coste", "estado"});
 		vista.getTableInscripciones().setModel(tmodel); //Le pongo el modelo
 		SwingUtil.autoAdjustColumns(vista.getTableInscripciones()); //Ajustamos las columnas
 		

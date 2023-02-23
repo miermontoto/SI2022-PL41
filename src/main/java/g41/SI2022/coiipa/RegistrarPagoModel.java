@@ -16,8 +16,8 @@ public class RegistrarPagoModel {
 
 		//validateNotNull(fechaInscripcion,MSG_FECHA_INSCRIPCION_NO_NULA);
 		String sql =
-				"SELECT fecha ,estado, coste"
-				+ " from inscripcion  where fecha>=? order by curso_id";
+				"SELECT id ,coste, estado"
+				+ " from inscripcion  where fecha>=? order by fecha asc";
 		String d = Util.dateToIsoString(fechaInscripcion);
 		return db.executeQueryPojo(insertapagoDTO.class, sql, d); //Statement preparado.
 	}

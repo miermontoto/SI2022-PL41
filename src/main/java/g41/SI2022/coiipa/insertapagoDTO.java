@@ -10,25 +10,29 @@ package g41.SI2022.coiipa;
  */
 public class insertapagoDTO {
 	private String id;
-	private String nombre;
+	private String coste;
 	private String estado;
 	public insertapagoDTO() {}
-	public insertapagoDTO(String rowId, String rowDescripcion, String rowEstado) {
+	public insertapagoDTO(String rowId, String rowCoste, String rowEstado) {
 		this.id=rowId;
-		this.nombre=rowDescripcion;
+		this.coste=rowCoste;
 		this.estado=rowEstado;
 	}
+	
+	
+	
+
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getNombre() {
-		return nombre;
+	public String getCoste() {
+		return coste;
 	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setCoste(String coste) {
+		this.coste = coste;
 	}
 	public String getEstado() {
 		return estado;
