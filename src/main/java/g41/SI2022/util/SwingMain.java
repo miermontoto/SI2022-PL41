@@ -51,6 +51,7 @@ public class SwingMain {
 
 		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
 		theTabs.put("testTab", new TestPanel(this));
+		theTabs.put("Registrar Curso", new g41.SI2022.coiipa.registrarCurso.RegistrarCurso(this));
 
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 		
