@@ -6,6 +6,7 @@ import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 import com.github.lgooddatepicker.components.DatePicker;
 
 import java.awt.GridLayout;
+import java.util.Date;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -17,9 +18,23 @@ public class RegistrarCurso extends g41.SI2022.util.Tab {
 	private JTextArea objetivosDescripcion;
 	private JIntegerTextField plazas;
 	private DatePicker fechaInscripcionIni, fechaInscripcionFin;
+	
+	public String getNombreCurso () { return this.nombreCurso.getText().trim(); }
+	public String getObjetivosDescripcion () { return this.objetivosDescripcion.getText().trim(); }
+	public int getPlazas () { return Integer.parseInt(this.plazas.getText().trim()); }
+	public Date getInscripcionIni () { return new Date (this.fechaInscripcionIni.getDate().toEpochDay()); }
+	public Date getInscripcionFin () { return new Date (this.fechaInscripcionFin.getDate().toEpochDay()); }
+
+	public void setNombreCurso (String nombreCurso) { this.nombreCurso.setText(nombreCurso); }
+	public void setObjetivosDescripcion (String objetivosDescripcion) { this.objetivosDescripcion.setText(objetivosDescripcion); }
+	public void setPlazas (int plazas) { this.plazas.setText(String.format("%d", Math.max(0, plazas))); }
 
 	public RegistrarCurso (g41.SI2022.util.SwingMain main) {
 		super(main);
+		this.initialize();
+	}
+	
+	private void initialize () {
 		this.setLayout(new BorderLayout(0, 0));
 		
 		JPanel centerPanel = new JPanel();
