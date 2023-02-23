@@ -18,13 +18,13 @@ import org.apache.commons.beanutils.PropertyUtils;
  * controlador, autoajuste de la dimension de columnas, etc)
  */
 public class SwingUtil {
-	
-	
+
+
 	private SwingUtil() {
 		throw new IllegalStateException("Utility class");
 	}
 
-	
+
 	/**
 	 * Ejecuta un metodo en respuesta a un evento envolviendolo en un manejador de excepciones estandar
 	 * que muestra un mensaje informativo o mensaje de error en funcion de la excepcion producida
@@ -42,13 +42,13 @@ public class SwingUtil {
 			showMessage(e.toString(), "Excepcion no controlada", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
-	
+
+
 	private static void showMessage(String message, String title, int type) {
 		/* Como este metodo no recibe el contexto de la ventana de la aplicación,
 		 * no usa el metodo estatico showMessageDialog de JOptionPane
 		 * y establece la posicion para que no aparezca en el centro de la pantalla
-		 */ 
+		 */
 	    JOptionPane pane = new JOptionPane(message, type, JOptionPane.DEFAULT_OPTION);
 	    pane.setOptions(new Object[] {"ACEPTAR"}); // Fija este valor para que no dependa del idioma
 	    JDialog d = pane.createDialog(pane, title);
@@ -56,7 +56,7 @@ public class SwingUtil {
 	    d.setVisible(true);
 	}
 
-	
+
 	/**
 	 * Ajusta todas las columnas de la tabla al tamanyo correspondiente al contenido del tablemodel
 	 */
@@ -75,7 +75,7 @@ public class SwingUtil {
 		else return ""; // No hay filas seleccionadas
 	}
 
-	
+
 	/**
 	 * Selecciona la fila de la tabla con la clave indicada y devuelve el valor la clave de la fila seleccionada resultante
 	 * (la misma clave o string vacio si no existe la fila)
@@ -88,8 +88,8 @@ public class SwingUtil {
 			}
 		return ""; // Ya no existe esta clave
 	}
-	
-	
+
+
 	/**
 	 * Crea un tablemodel a partir de una lista de objetos POJO con las columnas que se indican.
 	 * @param pojos Lista de objetos cuyos atributos se utilizaran para crear el tablemodel
@@ -118,8 +118,8 @@ public class SwingUtil {
 		}
 		return tm;
 	}
-	
-	
+
+
 	public static <E> TableModel getRecordModelFromPojo(E pojo, String[] colProperties) {
 		/* Creación inicial del tablemodel y dimensionamiento
 		 * Como solo habrá dos columnas pongo una cabecera con dos valores vacios, de forma que
@@ -139,7 +139,7 @@ public class SwingUtil {
 		return tm;
 	}
 
-	
+
 	/**
 	 * Crea un Comboboxmodel a partir de una lista de objetos.
 	 * @param lst Lista de arrays de objetos de los cuales se usara el primero de cada uno de ellos para poblar el combo
