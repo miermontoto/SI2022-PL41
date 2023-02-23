@@ -1,6 +1,8 @@
 package g41.SI2022.coiipa.registrarCurso;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.TableColumn;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 import com.github.lgooddatepicker.components.DatePicker;
@@ -67,6 +69,10 @@ public class RegistrarCurso extends g41.SI2022.util.Tab {
 		profPanel.setLayout(new BorderLayout());
 		profPanel.add(new JLabel("Profesor:"), BorderLayout.NORTH);
 		javax.swing.JTable profTable = new javax.swing.JTable();
+
+		profTable.setName("Profesor:");
+		profTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		profTable.setDefaultEditor(Object.class, null);
 
 		profPanel.add(profTable, BorderLayout.CENTER);
 		this.add(profPanel, BorderLayout.SOUTH);
