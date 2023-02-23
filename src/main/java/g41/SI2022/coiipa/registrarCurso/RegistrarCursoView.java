@@ -68,15 +68,33 @@ public class RegistrarCursoView extends g41.SI2022.util.Tab {
 		}
 		
 		add(new JLabel("Registrar Curso"), BorderLayout.NORTH);
-		
+
 		this.profTable = new JTable();
 		profTable.setName("Profesor:");
 		profTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		profTable.setDefaultEditor(Object.class, null);
+		profTable.setPreferredSize(new java.awt.Dimension (
+				this.getMain().getFrame().getWidth(), 100)
+		);
 		
-		this.add(new JScrollPane(profTable), BorderLayout.SOUTH);
-		
-		new RegistrarCursoController(new RegistrarCursoModel(), this);
+		JScrollPane sp = new JScrollPane();
+		// sp.setPreferredSize(new java.awt.Dimension(this.getMain().getFrame().getWidth(), (int) (this.getMain().getFrame().getHeight()*0.2)));
+		sp.setPreferredSize(new java.awt.Dimension(
+				this.getMain().getFrame().getWidth(), 100)
+		);
+		sp.setViewportView(profTable);
+		this.add(sp, BorderLayout.SOUTH);
+
+	}
+	
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (visible && !initialized) {
+			initialized = true;
+			new RegistrarCursoController(new RegistrarCursoModel(), this);
+		}
 	}
 
+	private boolean initialized = false;
 }
