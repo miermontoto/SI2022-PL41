@@ -5,6 +5,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumn;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
+
+import g41.SI2022.util.Tab;
+
 import com.github.lgooddatepicker.components.DatePicker;
 
 import java.awt.GridLayout;
@@ -15,7 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 
-public class RegistrarCursoView extends g41.SI2022.util.Tab {
+public class RegistrarCursoView extends Tab {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField nombreCurso;
@@ -86,15 +89,10 @@ public class RegistrarCursoView extends g41.SI2022.util.Tab {
 		this.add(sp, BorderLayout.SOUTH);
 
 	}
-	
+
 	@Override
-	public void setVisible(boolean visible) {
-		super.setVisible(visible);
-		if (visible && !initialized) {
-			initialized = true;
-			new RegistrarCursoController(new RegistrarCursoModel(), this);
-		}
+	public void initController() {
+		new RegistrarCursoController(new RegistrarCursoModel(), this);
 	}
 
-	private boolean initialized = false;
 }

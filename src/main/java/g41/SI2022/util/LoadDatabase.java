@@ -55,4 +55,9 @@ public class LoadDatabase extends Tab {
 		this.add(isFile);
 		this.add(status);
 	}
+
+	@Override
+	protected void initController() {
+		// Nothing to do
+	}
 }

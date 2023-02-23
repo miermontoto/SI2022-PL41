@@ -41,4 +41,9 @@ public class RegistrarPago extends Tab {
 		//getContentPane().add(tablePanel, "cell 0 5,grow");
 	}
 
+	@Override
+	protected void initController() {
+		// TODO Auto-generated method stub
+	}
+
 }

@@ -20,7 +20,7 @@ public class RegistrarCursoController {
 		view.getTablaProfesores().setModel(
 				SwingUtil.getTableModelFromPojos(
 						this.model.getListaProfesores(),
-						new String[] { "nombre", "apellido", "email", "direccion" }
+						new String[] { "nombre", "apellidos", "email", "direccion" }
 				)
 		);
 		SwingUtil.autoAdjustColumns(this.view.getTablaProfesores());

@@ -32,4 +32,9 @@ public class TestPanel extends Tab {
 		this.add(label, BorderLayout.CENTER);
 	}
 
+	@Override
+	protected void initController() {
+		// Instantiate the Controller and Model here
+	}
+
 }

@@ -3,17 +3,17 @@ package g41.SI2022.coiipa.registrarCurso;
 public class ProfesorDisplayDTO {
 	private String
 		id,
-		nombre, apellido,
+		nombre, apellidos,
 		dni,
 		email,
 		telefono,
 		direccion;
 	
 	public ProfesorDisplayDTO () { }
-	public ProfesorDisplayDTO (String id, String nombre, String apellido, String dni, String email, String telefono, String direccion) {
+	public ProfesorDisplayDTO (String id, String nombre, String apellidos, String dni, String email, String telefono, String direccion) {
 		this.id = id;
 		this.nombre = nombre;
-		this.apellido = apellido;
+		this.apellidos = apellidos;
 		this.dni = dni;
 		this.email = email;
 		this.telefono = telefono;
@@ -22,7 +22,7 @@ public class ProfesorDisplayDTO {
 	
 	public String getId () { return this.id; }
 	public String getNombre () { return this.nombre; }
-	public String getApellido () { return this.apellido; }
+	public String getApellidos () { return this.apellidos; }
 	public String getDni () { return this.dni; }
 	public String getEmail () { return this.email; }
 	public String getTelefono () { return this.telefono; }
@@ -30,7 +30,7 @@ public class ProfesorDisplayDTO {
 	
 	public void setId (String id) { this.id = id; }
 	public void setNombre (String nombre) { this.nombre = nombre; }
-	public void setApellido (String apellido) { this.apellido = apellido; }
+	public void setApellidos (String apellido) { this.apellidos = apellido; }
 	public void setDni (String dni) { this.dni = dni; }
 	public void setEmail (String email) { this.email = email; }
 	public void setTelefono (String telefono) { this.telefono = telefono; }
