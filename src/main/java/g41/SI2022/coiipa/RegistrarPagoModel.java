@@ -10,21 +10,15 @@ import giis.demo.util.Util;
 public class RegistrarPagoModel {
 	private Database db = new Database();
 
-	public List<CarreraDisplayDTO> getListaCursos(Date fechaInscripcion) {
+	public List<insertapagoDTO> getListaInscripciones(Date fechaInscripcion) {
 
 		// TODO: todo el modelo de la BBDD
 
 		//validateNotNull(fechaInscripcion,MSG_FECHA_INSCRIPCION_NO_NULA);
 		String sql =
-				"SELECT id,descr,"
-				+ " case when ?<inicio then ''" // antes de inscripcion
-				+ "   when ?<=fin then '(Abierta)'" // fase 1
-				+ "   when ?<fecha then '(Abierta)'" // fase 2
-				+ "   when ?=fecha then '(Abierta)'" // fase 3
-				+ "   else '' " // despues de fin carrera
-				+ " end as abierta"
-				+ " from curso  where fecha>=? order by id";
+				"SELECT fecha ,estado, coste"
+				+ " from inscripcion  where fecha>=? order by curso_id";
 		String d = Util.dateToIsoString(fechaInscripcion);
-		return db.executeQueryPojo(CarreraDisplayDTO.class, sql, d, d, d, d, d);
+		return db.executeQueryPojo(insertapagoDTO.class, sql, d); //Statement preparado.
 	}
 }

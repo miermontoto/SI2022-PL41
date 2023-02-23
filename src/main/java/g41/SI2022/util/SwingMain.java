@@ -7,6 +7,8 @@ import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
+import g41.SI2022.coiipa.RegistrarPago;
+
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas
  * de las aplicaciones de ejemplo
@@ -56,6 +58,7 @@ public class SwingMain {
 		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
 		//theTabs.put("testTab", new TestPanel(this));
 		theTabs.put("Load DB", new LoadDatabase(this));
+		theTabs.put("Registrar un pago", new RegistrarPago(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));
