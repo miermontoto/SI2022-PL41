@@ -44,15 +44,15 @@ public class Database extends DbUtil {
 
 	/**
 	 * Creación de una base de datos limpia a partir del script schema.sql en src/main/resources
-	 * (si onlyOnce=true solo ejecutara el script la primera vez
+	 * (si onlyOnce == true solo ejecutará el script la primera vez)
 	 */
-	public void createDatabase(boolean onlyOnce) {
-		// Actua como singleton si onlyOnce=true: solo la primera vez que se instancia para mejorar rendimiento en pruebas
-		if (!databaseCreated || !onlyOnce) {
+	public boolean createDatabase(boolean onlyOnce) {
+		boolean create = !onlyOnce || !databaseCreated;
+		if (create) {
 			executeScript(SQL_SCHEMA);
 			databaseCreated = true;
-			System.out.println("Database created");
-		} else System.out.println("Database already created");
+		}
+		return create;
 	}
 
 
@@ -60,10 +60,7 @@ public class Database extends DbUtil {
 	 * Carga de datos iniciales a partir del script data.sql en src/main/resources
 	 */
 	public void loadDatabase() {
-		try {
-			executeScript(SQL_LOAD);
-			System.out.println("Database loaded");
-		} catch (Exception e) { throw new ApplicationException(e); }
+		try { executeScript(SQL_LOAD); } catch (Exception e) { throw new ApplicationException(e); }
 	}
 
 }
