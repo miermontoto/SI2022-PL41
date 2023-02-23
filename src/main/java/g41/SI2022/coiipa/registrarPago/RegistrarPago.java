@@ -1,4 +1,4 @@
-package g41.SI2022.coiipa;
+package g41.SI2022.coiipa.registrarPago;
 
 import javax.swing.JScrollPane;
 
