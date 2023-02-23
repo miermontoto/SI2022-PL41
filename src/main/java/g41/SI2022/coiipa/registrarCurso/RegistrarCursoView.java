@@ -11,27 +11,31 @@ import java.awt.GridLayout;
 import java.util.Date;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 
-public class RegistrarCurso extends g41.SI2022.util.Tab {
+public class RegistrarCursoView extends g41.SI2022.util.Tab {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField nombreCurso;
 	private JTextArea objetivosDescripcion;
 	private JIntegerTextField plazas;
 	private DatePicker fechaInscripcionIni, fechaInscripcionFin;
+	private JTable profTable;
 	
 	public String getNombreCurso () { return this.nombreCurso.getText().trim(); }
 	public String getObjetivosDescripcion () { return this.objetivosDescripcion.getText().trim(); }
 	public int getPlazas () { return Integer.parseInt(this.plazas.getText().trim()); }
 	public Date getInscripcionIni () { return new Date (this.fechaInscripcionIni.getDate().toEpochDay()); }
 	public Date getInscripcionFin () { return new Date (this.fechaInscripcionFin.getDate().toEpochDay()); }
+	public JTable getTablaProfesores() { return this.profTable; }
 
 	public void setNombreCurso (String nombreCurso) { this.nombreCurso.setText(nombreCurso); }
 	public void setObjetivosDescripcion (String objetivosDescripcion) { this.objetivosDescripcion.setText(objetivosDescripcion); }
 	public void setPlazas (int plazas) { this.plazas.setText(String.format("%d", Math.max(0, plazas))); }
 
-	public RegistrarCurso (g41.SI2022.util.SwingMain main) {
+	public RegistrarCursoView (g41.SI2022.util.SwingMain main) {
 		super(main);
 		this.initialize();
 	}
@@ -65,17 +69,14 @@ public class RegistrarCurso extends g41.SI2022.util.Tab {
 		
 		add(new JLabel("Registrar Curso"), BorderLayout.NORTH);
 		
-		JPanel profPanel = new JPanel ();
-		profPanel.setLayout(new BorderLayout());
-		profPanel.add(new JLabel("Profesor:"), BorderLayout.NORTH);
-		javax.swing.JTable profTable = new javax.swing.JTable();
-
+		this.profTable = new JTable();
 		profTable.setName("Profesor:");
 		profTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		profTable.setDefaultEditor(Object.class, null);
-
-		profPanel.add(profTable, BorderLayout.CENTER);
-		this.add(profPanel, BorderLayout.SOUTH);
+		
+		this.add(new JScrollPane(profTable), BorderLayout.SOUTH);
+		
+		new RegistrarCursoController(new RegistrarCursoModel(), this);
 	}
 
 }

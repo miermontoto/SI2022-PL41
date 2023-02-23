@@ -54,8 +54,9 @@ public class SwingMain {
 		Map<String, Tab> theTabs = new TreeMap<String, Tab> ();
 
 		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
-		theTabs.put("Registrar Curso", new g41.SI2022.coiipa.registrarCurso.RegistrarCurso(this));
+		theTabs.put("Registrar Curso", new g41.SI2022.coiipa.registrarCurso.RegistrarCursoView(this));
 		theTabs.put("Load DB", new LoadDatabase(this));
+
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));
