@@ -1,6 +1,9 @@
 package g41.SI2022.util;
 
 import java.awt.EventQueue;
+import java.util.Map;
+import java.util.TreeMap;
+
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
@@ -35,26 +38,26 @@ public class SwingMain {
 	public SwingMain() {
 		initialize();
 	}
-	
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Main");
-		frame.setBounds(0, 0, 640, 480);
+		frame.setSize(640, 480);
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		// Tabs are the main content of the window. This will contain all the other GUIs.
 		JTabbedPane tabs = new JTabbedPane();
-		java.util.TreeMap<String, Tab> theTabs = new java.util.TreeMap<String, Tab> ();
+		Map<String, Tab> theTabs = new TreeMap<String, Tab> ();
 
 		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
-		theTabs.put("testTab", new TestPanel(this));
 		theTabs.put("Registrar Curso", new g41.SI2022.coiipa.registrarCurso.RegistrarCurso(this));
-
+		theTabs.put("Load DB", new LoadDatabase(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
-		
+
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));
 		frame.add(tabs);
 	}

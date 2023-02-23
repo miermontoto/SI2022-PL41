@@ -37,7 +37,7 @@ public abstract class DbUtil {
 	public Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(getUrl());
 	}
-	
+
 
 	/**
 	 * Ejecuta una query sql con los parametros especificados mapeando el resultet en una lista de objetos
@@ -45,16 +45,16 @@ public abstract class DbUtil {
 	 * Utiliza apache commons-dbutils para realizar el mapeo y el manejo del resto de aspectos de jdbc
 	 */
 	public <T> List<T> executeQueryPojo(Class<T> pojoClass, String sql, Object... params) {
-		Connection conn=null;
+		Connection conn = null;
 		try {
-			conn=this.getConnection();
+			conn = this.getConnection();
 			BeanListHandler<T> beanListHandler = new BeanListHandler<>(pojoClass);
 			QueryRunner runner = new QueryRunner();
 			return runner.query(conn, sql, beanListHandler, params);
 		} catch (SQLException e) { throw new UnexpectedException(e); } finally { DbUtils.closeQuietly(conn); }
 	}
-	
-	
+
+
 	/**
 	 * Ejecuta una query sql con los parametros especificados mapeando el resultet en una lista de arrays de objetos;
 	 * Utiliza apache commons-dbutils para relizar el mapeo y el manejo del resto de aspectos de jdbc
@@ -69,8 +69,8 @@ public abstract class DbUtil {
 			return runner.query(conn, sql, beanListHandler, params);
 		} catch (SQLException e) { throw new UnexpectedException(e); } finally { DbUtils.closeQuietly(conn); }
 	}
-	
-	
+
+
 	public List<Map<String,Object>> executeQueryMap(String sql, Object... params) {
 		Connection conn = null;
 		try {
@@ -80,8 +80,8 @@ public abstract class DbUtil {
 			return runner.query(conn, sql, beanListHandler, params);
 		} catch (SQLException e) { throw new UnexpectedException(e); } finally { DbUtils.closeQuietly(conn); }
 	}
-	
-	
+
+
 	/**
 	 * Ejecuta una sentencia sql de actualizacion con los parametros especificados;
 	 * Utiliza apache commons-dbutils para manejar todos los aspectos de jdbc
@@ -94,7 +94,7 @@ public abstract class DbUtil {
 			runner.update(conn, sql, params);
 		} catch (SQLException e) { throw new UnexpectedException(e); } finally { DbUtils.closeQuietly(conn); }
 	}
-	
+
 
 	/**
 	 * Metodo simple para ejecutar todas las sentencias sql que se encuentran en un archivo, teniendo en cuenta:
@@ -105,9 +105,9 @@ public abstract class DbUtil {
 	 */
 	public void executeScript(String fileName) {
 		List<String> lines;
-		try { lines = Files.readAllLines(Paths.get(fileName)); } 
+		try { lines = Files.readAllLines(Paths.get(fileName)); }
 		catch (IOException e) { throw new ApplicationException(e); }
-		
+
 		// Separa las sentencias sql en dos listas, una para drop y otra para el resto pues se ejecutaran de forma diferente
 		List<String> batchUpdate = new ArrayList<>();
 		List<String> batchDrop = new ArrayList<>();
@@ -120,49 +120,46 @@ public abstract class DbUtil {
 				if (line.toLowerCase().startsWith("drop")) batchDrop.add(sql); // Separa drop del resto
 				else batchUpdate.add(sql);
 				previousLines = new StringBuilder(); // Nueva linea
-			} else  previousLines.append(line + " ");
+			} else previousLines.append(line + " ");
 		}
-		
+
 		// Ejecuta todas las sentencias, primero los drop (si existen)
 		if (!batchDrop.isEmpty()) executeBatchNoFail(batchDrop);
 		if (!batchUpdate.isEmpty()) executeBatch(batchUpdate);
 	}
-	
-	
+
+
 	/**
-	 * Ejecuta un conjunto de sentencias sql de actualizacion en un unico batch
+	 * Ejecuta un conjunto de sentencias sql de actualizacion en un único batch
 	 */
-	public void executeBatch(String[] sqls) {
-		executeBatch(Arrays.asList(sqls));
-	}
-	
-	
+	public void executeBatch(String[] sqls) { executeBatch(Arrays.asList(sqls)); }
+
+
 	/**
 	 * Ejecuta un conjunto de sentencias sql de actualizacion en un unico batch
 	 */
 	public void executeBatch(List<String> sqls) {
-		try (Connection cn=DriverManager.getConnection(getUrl());
+		try (Connection cn = DriverManager.getConnection(getUrl());
 			Statement stmt = cn.createStatement()) {
 			for (String sql : sqls) stmt.addBatch(sql);
 			stmt.executeBatch();
 		} catch (SQLException e) { throw new UnexpectedException(e); }
 	}
-	
-	
+
+
 	/**
 	 * Ejecuta un conjunto de sentencias sql de actualizacion en un unico batch, sin causar excepcion cuando falla la ejecucion
 	 * (usado normalmente para borrar tablas de la bd, que fallarian si no existen)
 	 */
 	public void executeBatchNoFail(List<String> sqls) {
-		try (Connection cn=DriverManager.getConnection(getUrl());
+		try (Connection cn = DriverManager.getConnection(getUrl());
 			Statement stmt = cn.createStatement()) {
 			for (String sql : sqls) executeWithoutException(stmt,sql);
 		} catch (SQLException e) { throw new UnexpectedException(e); }
 	}
-	
-	
+
+
 	private void executeWithoutException(Statement stmt, String sql) {
 		try { stmt.executeUpdate(sql); } catch (SQLException e) { System.err.println("Excpeción SQL intencional: " + e); }
 	}
-
 }

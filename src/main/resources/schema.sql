@@ -12,9 +12,10 @@ drop table if exists pago;
 create table fecha (
     fecha date not null,
     location text not null,
+    curso_id integer not null,
     foreign key (curso_id) references curso(id),
     primary key (fecha, curso_id)
-)
+);
 
 create table curso (
     id integer primary key autoincrement,
@@ -26,6 +27,7 @@ create table curso (
     plazas integer,
     ingresos_estimados integer,
     gastos_estimados integer,
+    docente_id integer not null,
     foreign key (docente_id) references docente(id)
 );
 
@@ -34,6 +36,8 @@ create table inscripcion (
     fecha date not null,
     coste integer not null,
     estado text not null,
+    curso_id integer not null,
+    alumno_id integer not null,
     foreign key (curso_id) references curso(id),
     foreign key (alumno_id) references alumno(id)
 );
@@ -46,7 +50,7 @@ create table alumno (
     email text not null,
     telefono text not null,
     direccion text not null,
-    birth date not null,
+    birth date not null
 );
 
 create table docente (
@@ -56,19 +60,22 @@ create table docente (
     dni text not null,
     email text not null,
     telefono text not null,
-    direccion text not null,
+    direccion text not null
 );
 
 create table docencia (
     id integer primary key autoincrement,
     remuneracion integer not null,
+    curso_id integer not null,
+    docente_id integer not null,
     foreign key (curso_id) references curso(id),
-    foreign key (docente_id) references docente(id),
+    foreign key (docente_id) references docente(id)
 );
 
 create table pago (
     id integer primary key autoincrement,
     importe integer not null,
     fecha date not null,
+    inscripcion_id integer not null,
     foreign key (inscripcion_id) references inscripcion(id)
 );
