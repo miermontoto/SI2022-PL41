@@ -1,6 +1,7 @@
 package g41.SI2022.util;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.File;
 
 import java.util.Properties;
 
@@ -19,7 +20,7 @@ public class Database extends DbUtil {
 	// Parámetros de la base de datos leidos de application.properties (base de datos local sin usuario/password)
 	private String driver;
 	private String url;
-	private static boolean databaseCreated = false;
+	private static File databaseFile = null;
 
 
 	// Crea una instancia, leyendo los parametros de driver y url de application.properties
@@ -31,17 +32,12 @@ public class Database extends DbUtil {
 		url = prop.getProperty("datasource.url");
 		if (driver == null || url == null) throw new ApplicationException("Configuracion de driver y/o url no encontrada en application.properties");
 		DbUtils.loadDriver(driver);
+		databaseFile = new File(url.split(":")[2]);
 	}
 
 
-	public String getUrl() {
-		return url;
-	}
-
-
-	public boolean isCreated() {
-		return databaseCreated;
-	}
+	public String getUrl() { return url; }
+	public boolean exists() { return databaseFile.isFile(); }
 
 
 	/**
@@ -49,11 +45,8 @@ public class Database extends DbUtil {
 	 * (si onlyOnce == true solo ejecutará el script la primera vez)
 	 */
 	public boolean createDatabase(boolean onlyOnce) {
-		boolean create = !onlyOnce || !databaseCreated;
-		if (create) {
-			executeScript(SQL_SCHEMA);
-			databaseCreated = true;
-		}
+		boolean create = !onlyOnce || !this.exists();
+		if (create) executeScript(SQL_SCHEMA);
 		return create;
 	}
 
@@ -63,5 +56,11 @@ public class Database extends DbUtil {
 	 */
 	public void loadDatabase() {
 		try { executeScript(SQL_LOAD); } catch (Exception e) { throw new ApplicationException(e); }
+	}
+
+
+	public boolean deleteDatabase() {
+		if (this.exists()) return databaseFile.delete();
+		return false;
 	}
 }

@@ -20,7 +20,7 @@ public class LoadDatabase extends Tab {
 
 		JButton data = new JButton("Execute data.sql");
 		data.addActionListener(e -> {
-			if (db.isCreated()) {
+			if (db.exists()) {
 				try {
 					db.loadDatabase();
 					status.setText("Loaded data into database");
@@ -31,8 +31,28 @@ public class LoadDatabase extends Tab {
 			} else status.setText("Failed to load data (db hasn't been created yet)");
 		});
 
+		JButton delete = new JButton("Delete database");
+		delete.addActionListener(e -> {
+			if (db.exists()) {
+				try {
+					db.deleteDatabase();
+					status.setText("Database deleted");
+				} catch (Exception ex) {
+					status.setText("Failed to delete database");
+					throw new ApplicationException(ex);
+				}
+			} else status.setText("There is no database to delete");
+		});
+
+		JButton isFile = new JButton("File exists?");
+		isFile.addActionListener(e -> {
+			status.setText(db.exists() ? "Database exists" : "Database doesn't exist");
+		});
+
 		this.add(schema);
 		this.add(data);
+		this.add(delete);
+		this.add(isFile);
 		this.add(status);
 	}
 }
