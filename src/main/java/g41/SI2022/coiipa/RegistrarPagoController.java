@@ -1,8 +1,11 @@
 package g41.SI2022.coiipa;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.ComboBoxModel;
+import javax.swing.JFrame;
 import javax.swing.table.TableModel;
 
 import giis.demo.tkrun.CarreraDisplayDTO;
@@ -24,14 +27,23 @@ public class RegistrarPagoController {
 		
 		vista.getBtnNewButton().addActionListener(e -> SwingUtil.exceptionWrapper(() -> this.getListaInscripciones()));
 
+		vista.getTableInscripciones().addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+		        /*JFrame newwindow=new JFrame("New Window");
+		        newwindow.setSize(200,200);
+		        newwindow.setVisible(true);*/
+				
+				RegistrarPagoWindow rpw = new RegistrarPagoWindow();
+		    }
+		    });
 	
 	}
 	
 	public void getListaInscripciones() {
 		
 		//Obtengo la lista de insripciones
-		List<insertapagoDTO> inscripciones=modelo.getListaInscripciones(Util.isoStringToDate("2022-05-15"));
-		TableModel tmodel=SwingUtil.getTableModelFromPojos(inscripciones, new String[] {"id", "coste", "estado"});
+		List<RegistrarPagoDTO> inscripciones=modelo.getListaInscripciones(Util.isoStringToDate("2022-05-15"));
+		TableModel tmodel=SwingUtil.getTableModelFromPojos(inscripciones, new String[] {"id", "nombre", "coste", "estado"});
 		vista.getTableInscripciones().setModel(tmodel); //Le pongo el modelo
 		SwingUtil.autoAdjustColumns(vista.getTableInscripciones()); //Ajustamos las columnas
 		

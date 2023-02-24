@@ -8,13 +8,15 @@ package g41.SI2022.coiipa;
  *  - No utilizar subrayados
  * Seguir tambien estos mismos criterios en los nombres de tablas y campos de la BD
  */
-public class insertapagoDTO {
+public class RegistrarPagoDTO {
 	private String id;
+	private String nombre;
 	private String coste;
 	private String estado;
-	public insertapagoDTO() {}
-	public insertapagoDTO(String rowId, String rowCoste, String rowEstado) {
+	public RegistrarPagoDTO() {}
+	public RegistrarPagoDTO(String rowId, String rowNombre, String rowCoste, String rowEstado) {
 		this.id=rowId;
+		this.setNombre(rowNombre);
 		this.coste=rowCoste;
 		this.estado=rowEstado;
 	}
@@ -39,6 +41,12 @@ public class insertapagoDTO {
 	}
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	

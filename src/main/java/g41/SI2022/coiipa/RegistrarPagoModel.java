@@ -10,15 +10,15 @@ import giis.demo.util.Util;
 public class RegistrarPagoModel {
 	private Database db = new Database();
 
-	public List<insertapagoDTO> getListaInscripciones(Date fechaInscripcion) {
+	public List<RegistrarPagoDTO> getListaInscripciones(Date fechaInscripcion) {
 
 		// TODO: todo el modelo de la BBDD
 
 		//validateNotNull(fechaInscripcion,MSG_FECHA_INSCRIPCION_NO_NULA);
 		String sql =
-				"SELECT id ,coste, estado"
-				+ " from inscripcion  where fecha>=? order by fecha asc";
+				"SELECT insc.id , alu.nombre, insc.coste, insc.estado"
+				+ " from inscripcion insc INNER JOIN alumno alu ON insc.alumno_id=alu.id  where insc.fecha>=? order by insc.fecha asc";
 		String d = Util.dateToIsoString(fechaInscripcion);
-		return db.executeQueryPojo(insertapagoDTO.class, sql, d); //Statement preparado.
+		return db.executeQueryPojo(RegistrarPagoDTO.class, sql, d); //Statement preparado.
 	}
 }
