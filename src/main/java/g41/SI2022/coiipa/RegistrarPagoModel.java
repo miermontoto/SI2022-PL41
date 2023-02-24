@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import giis.demo.tkrun.CarreraDisplayDTO;
+import giis.demo.tkrun.CarreraEntity;
 import giis.demo.util.Database;
 import giis.demo.util.Util;
 
@@ -21,4 +22,13 @@ public class RegistrarPagoModel {
 		String d = Util.dateToIsoString(fechaInscripcion);
 		return db.executeQueryPojo(RegistrarPagoDTO.class, sql, d); //Statement preparado.
 	}
+	
+	public void insertNewPago(int idinscripcion, int cantidad, Date fechapago) {
+		
+		//validateFechasInscripcion(inicio, fin, Util.isoStringToDate(carrera.getFecha()));
+		//String sql="UPDATE carreras SET inicio=?, fin=? WHERE id=?";
+		String sql = "INSERT INTO pago ('importe', 'fecha', 'inscripcion_id') VALUES (?,?,?)";
+		db.executeUpdate(sql, idinscripcion, cantidad, Util.dateToIsoString(fechapago));
+	}
+	
 }

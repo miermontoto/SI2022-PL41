@@ -14,29 +14,43 @@ import giis.demo.util.Util;
 
 public class RegistrarPagoController {
 
-	RegistrarPago vista;
-	RegistrarPagoModel modelo;
+	RegistrarPago vista; //La vista de la pantalla principal
+	RegistrarPagoWindow vista2; //Ventanuca que se abre al darle click sobre la tabla
+	RegistrarPagoModel modelo; //El modelo de datos de la BBDD.
 	
 	public RegistrarPagoController(RegistrarPago vista, RegistrarPagoModel modelo) {
 		this.vista = vista;
 		this.modelo = modelo;
+		vista2 = new RegistrarPagoWindow();
 		inicializa();
 	}
 	
 	public void inicializa() {
 		
+		//Vista pincipal
+		
 		vista.getBtnNewButton().addActionListener(e -> SwingUtil.exceptionWrapper(() -> this.getListaInscripciones()));
 
 		vista.getTableInscripciones().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-		        /*JFrame newwindow=new JFrame("New Window");
-		        newwindow.setSize(200,200);
-		        newwindow.setVisible(true);*/
-				
-				RegistrarPagoWindow rpw = new RegistrarPagoWindow();
+
+				//vista2 = new RegistrarPagoWindow();
+				vista2.getFrame().setVisible(true);
 		    }
 		    });
+				
+		vista2.getBotonaceptar().addActionListener(e -> SwingUtil.exceptionWrapper(() -> this.inscribir()));
 	
+	}
+	
+	public void inscribir() {
+		//Obtengo el id que el usuario metió en su campo
+		
+		int idinscripcion= Integer.parseInt(vista2.getIdInscripcion());
+		System.out.println(idinscripcion); //DEBUG
+		modelo.insertNewPago(idinscripcion, 0, Util.isoStringToDate("2023-01-24"));
+		vista2.getFrame().setVisible(false); //Ponemos el frame en modo "invisible"
+		vista2.getFrame().dispose(); //Lo eliminamos de la vista.
 	}
 	
 	public void getListaInscripciones() {
