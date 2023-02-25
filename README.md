@@ -65,7 +65,7 @@ Solo funciona en JRE 1.8 (Java 8)
 - **economía**
 	- fundamental ingresos y gastos en un determinado periodo sobre los cursos de formación
 
-## restricciones
+## restricciones sprint 1
 - solo planificar actividades que tengan un unico profesor.
 - solo planificar actividades que se realizan en una única fecha.
 - el formulario solo se rellena por un miembro de la secretaría administrativa.

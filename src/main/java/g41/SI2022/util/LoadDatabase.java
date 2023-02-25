@@ -1,7 +1,10 @@
 package g41.SI2022.util;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class LoadDatabase extends Tab {
 
@@ -9,9 +12,15 @@ public class LoadDatabase extends Tab {
 
 	public LoadDatabase(SwingMain main) {
 		super(main);
+		
+		this.setLayout(new BorderLayout());
+		JPanel buttons = new JPanel ();
+		this.add(buttons, BorderLayout.NORTH);
+
 		Database db = new Database();
 
 		JLabel status = new JLabel();
+		status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
 		JButton schema = new JButton("Execute schema.sql");
 		schema.addActionListener(e -> {
@@ -49,11 +58,11 @@ public class LoadDatabase extends Tab {
 			status.setText(db.exists() ? "Database exists" : "Database doesn't exist");
 		});
 
-		this.add(schema);
-		this.add(data);
-		this.add(delete);
-		this.add(isFile);
-		this.add(status);
+		buttons.add(schema);
+		buttons.add(data);
+		buttons.add(delete);
+		buttons.add(isFile);
+		this.add(status, BorderLayout.CENTER);
 	}
 
 	@Override
