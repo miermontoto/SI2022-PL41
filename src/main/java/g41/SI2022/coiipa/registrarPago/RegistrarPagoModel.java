@@ -1,4 +1,4 @@
-package g41.SI2022.coiipa;
+package g41.SI2022.coiipa.registrarPago;
 
 import java.util.Date;
 import java.util.List;

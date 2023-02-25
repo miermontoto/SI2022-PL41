@@ -1,4 +1,4 @@
-package g41.SI2022.coiipa;
+package g41.SI2022.coiipa.registrarPago;
 
 import javax.swing.JScrollPane;
 
@@ -23,9 +23,9 @@ public class RegistrarPago extends Tab {
 	/**
 	 * @wbp.nonvisual location=41,-21
 	 */
-	
+
 	//private final JTable tabCursos;
-	
+
 
 	/**
 	 * Create the panel.
@@ -33,24 +33,24 @@ public class RegistrarPago extends Tab {
 	public RegistrarPago(SwingMain main) {
 		super(main);
 		this.setLayout(new BorderLayout());
-		
-		
+
+
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.NORTH);
-		
+
 		btnNewButton = new JButton("Cargar datos ahora");
 		panel.add(btnNewButton);
 		tableInscripciones = new JTable();
 		scrollPane = new JScrollPane(tableInscripciones); //Añado un panel de scroll
 		add(scrollPane, BorderLayout.CENTER); //Lo añado a la vista
-		
-		
+
+
 
 		// TODO: Tabla inicial para mostrar.
 
 		//getContentPane().add(tablePanel, "cell 0 5,grow");
-		
-		
+
+
 		//NO ES MVC, pero para testing, pruebo a cargar la tabla con datos
 		String [] columnas = {"Inscripción", "Nombre", "Estado"};
 		DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
@@ -62,7 +62,7 @@ public class RegistrarPago extends Tab {
 		//tableInscripciones.setDefaultEditor(Object.class, null); //Leer sólo.
 		RegistrarPagoController controlador = new RegistrarPagoController(this, new RegistrarPagoModel()); //Inicializo el controlador finalmente
 
-		
+
 	}
 
 	public JButton getBtnNewButton() {
@@ -92,4 +92,7 @@ public class RegistrarPago extends Tab {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	@Override
+	public void initController() { }
 }

@@ -64,4 +64,9 @@ public class LoadDatabase extends Tab {
 		buttons.add(isFile);
 		this.add(status, BorderLayout.CENTER);
 	}
+
+	@Override
+	protected void initController() {
+		// Nothing to do
+	}
 }

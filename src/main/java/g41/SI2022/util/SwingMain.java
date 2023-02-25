@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
-import g41.SI2022.coiipa.RegistrarPago;
+import g41.SI2022.coiipa.registrarPago.*;
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas
@@ -56,7 +56,7 @@ public class SwingMain {
 		Map<String, Tab> theTabs = new TreeMap<String, Tab> ();
 
 		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
-		//theTabs.put("testTab", new TestPanel(this));
+		theTabs.put("Registrar Curso", new g41.SI2022.coiipa.registrarCurso.RegistrarCursoView(this));
 		theTabs.put("Load DB", new LoadDatabase(this));
 		theTabs.put("Registrar un pago", new RegistrarPago(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
