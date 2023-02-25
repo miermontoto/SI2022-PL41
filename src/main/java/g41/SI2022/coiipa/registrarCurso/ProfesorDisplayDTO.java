@@ -8,8 +8,9 @@ public class ProfesorDisplayDTO {
 		email,
 		telefono,
 		direccion;
-	
+
 	public ProfesorDisplayDTO () { }
+
 	public ProfesorDisplayDTO (String id, String nombre, String apellidos, String dni, String email, String telefono, String direccion) {
 		this.id = id;
 		this.nombre = nombre;
@@ -19,7 +20,7 @@ public class ProfesorDisplayDTO {
 		this.telefono = telefono;
 		this.direccion = direccion;
 	}
-	
+
 	public String getId () { return this.id; }
 	public String getNombre () { return this.nombre; }
 	public String getApellidos () { return this.apellidos; }
@@ -27,7 +28,7 @@ public class ProfesorDisplayDTO {
 	public String getEmail () { return this.email; }
 	public String getTelefono () { return this.telefono; }
 	public String getDireccion () { return this.direccion; }
-	
+
 	public void setId (String id) { this.id = id; }
 	public void setNombre (String nombre) { this.nombre = nombre; }
 	public void setApellidos (String apellido) { this.apellidos = apellido; }
@@ -36,5 +37,5 @@ public class ProfesorDisplayDTO {
 	public void setTelefono (String telefono) { this.telefono = telefono; }
 	public void setDireccion (String direccion) { this.direccion = direccion; }
 
-	
+
 }

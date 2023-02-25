@@ -5,7 +5,7 @@ import g41.SI2022.util.Database;
 public class RegistrarCursoModel {
 
 	private Database db = new Database();
-	
+
 	public java.util.List<ProfesorDisplayDTO> getListaProfesores () {
 		String sql =
 				"SELECT nombre, apellidos, email, direccion "

@@ -2,7 +2,6 @@ package g41.SI2022.coiipa.registrarCurso;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.TableColumn;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
@@ -26,7 +25,7 @@ public class RegistrarCursoView extends Tab {
 	private JIntegerTextField plazas;
 	private DatePicker fechaInscripcionIni, fechaInscripcionFin;
 	private JTable profTable;
-	
+
 	public String getNombreCurso () { return this.nombreCurso.getText().trim(); }
 	public String getObjetivosDescripcion () { return this.objetivosDescripcion.getText().trim(); }
 	public int getPlazas () { return Integer.parseInt(this.plazas.getText().trim()); }
@@ -42,20 +41,20 @@ public class RegistrarCursoView extends Tab {
 		super(main);
 		this.initialize();
 	}
-	
+
 	private void initialize () {
 		this.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel centerPanel = new JPanel();
 		this.add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setLayout(new GridLayout(0, 2, 0, 0));
-		
+
 		centerPanel.add(new JLabel("Nombre:"));
 		centerPanel.add(this.nombreCurso = new JTextField());
-		
+
 		centerPanel.add(new JLabel("Objetivos y descripción:"));
 		centerPanel.add(this.objetivosDescripcion = new JTextArea());
-		
+
 		centerPanel.add(new JLabel("Plazas:"));
 		centerPanel.add(this.plazas = new JIntegerTextField());
 
@@ -69,7 +68,7 @@ public class RegistrarCursoView extends Tab {
 			panelInscripciones.add(new JLabel("Hasta"));
 			panelInscripciones.add(this.fechaInscripcionFin = new DatePicker());
 		}
-		
+
 		add(new JLabel("Registrar Curso"), BorderLayout.NORTH);
 
 		this.profTable = new JTable();
@@ -79,7 +78,7 @@ public class RegistrarCursoView extends Tab {
 		profTable.setPreferredSize(new java.awt.Dimension (
 				this.getMain().getFrame().getWidth(), 100)
 		);
-		
+
 		JScrollPane sp = new JScrollPane();
 		// sp.setPreferredSize(new java.awt.Dimension(this.getMain().getFrame().getWidth(), (int) (this.getMain().getFrame().getHeight()*0.2)));
 		sp.setPreferredSize(new java.awt.Dimension(

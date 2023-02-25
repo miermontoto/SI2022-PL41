@@ -7,7 +7,6 @@ import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
-import g41.SI2022.coiipa.registrarPago.*;
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas
@@ -19,6 +18,7 @@ import g41.SI2022.coiipa.registrarPago.*;
 public class SwingMain {
 
 	private JFrame frame;
+	private JTabbedPane tabs;
 
 	/**
 	 * Launch the application.
@@ -52,16 +52,19 @@ public class SwingMain {
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		// Tabs are the main content of the window. This will contain all the other GUIs.
-		JTabbedPane tabs = new JTabbedPane();
+		tabs = new JTabbedPane();
 		Map<String, Tab> theTabs = new TreeMap<String, Tab> ();
 
+		tabs.add(new Debug(this), 0);
+		tabs.setTitleAt(0, "Debug");
+
 		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
-		theTabs.put("Registrar Curso", new g41.SI2022.coiipa.registrarCurso.RegistrarCursoView(this));
-		theTabs.put("Load DB", new LoadDatabase(this));
-		theTabs.put("Registrar un pago", new RegistrarPago(this));
+		theTabs.put("Registrar curso", new g41.SI2022.coiipa.registrarCurso.RegistrarCursoView(this));
+		theTabs.put("Registrar pago", new g41.SI2022.coiipa.registrarPago.RegistrarPagoView(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));
+
 		frame.add(tabs);
 	}
 

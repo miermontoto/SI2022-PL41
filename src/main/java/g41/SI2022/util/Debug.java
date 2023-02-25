@@ -6,16 +6,18 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class LoadDatabase extends Tab {
+public class Debug extends Tab {
 
 	private static final long serialVersionUID = -4249195203893017275L;
 
-	public LoadDatabase(SwingMain main) {
+	public Debug(SwingMain main) {
 		super(main);
-		
+
 		this.setLayout(new BorderLayout());
-		JPanel buttons = new JPanel ();
-		this.add(buttons, BorderLayout.NORTH);
+		JPanel dbButtons = new JPanel ();
+		this.add(dbButtons, BorderLayout.NORTH);
+		JPanel otherButtons = new JPanel ();
+		this.add(otherButtons, BorderLayout.SOUTH);
 
 		Database db = new Database();
 
@@ -58,15 +60,24 @@ public class LoadDatabase extends Tab {
 			status.setText(db.exists() ? "Database exists" : "Database doesn't exist");
 		});
 
-		buttons.add(schema);
-		buttons.add(data);
-		buttons.add(delete);
-		buttons.add(isFile);
+		JButton close = new JButton("Close window");
+		close.addActionListener(e -> {
+			System.exit(0);
+		});
+
+		JButton refresh = new JButton("Refresh tabs");
+		// TODO: make tabs refresh somehow
+
+		dbButtons.add(schema);
+		dbButtons.add(data);
+		dbButtons.add(delete);
+		dbButtons.add(isFile);
+		otherButtons.add(refresh);
+		otherButtons.add(close);
+
 		this.add(status, BorderLayout.CENTER);
 	}
 
 	@Override
-	protected void initController() {
-		// Nothing to do
-	}
+	protected void initController() { }
 }
