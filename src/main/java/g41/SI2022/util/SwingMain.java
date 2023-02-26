@@ -44,7 +44,7 @@ public class SwingMain {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	public void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Main");
 		frame.setSize(640, 480);
@@ -61,11 +61,14 @@ public class SwingMain {
 		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
 		theTabs.put("Registrar curso", new g41.SI2022.coiipa.registrarCurso.RegistrarCursoView(this));
 		theTabs.put("Registrar pago", new g41.SI2022.coiipa.registrarPago.RegistrarPagoView(this));
+		theTabs.put("Inscribir usuario", new g41.SI2022.coiipa.inscribirUsuario.InscribirUsuarioView(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));
 
 		frame.add(tabs);
+		frame.repaint();
+		frame.revalidate();
 	}
 
 	public JFrame getFrame() { return this.frame; }
