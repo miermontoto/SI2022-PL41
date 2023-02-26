@@ -3,8 +3,8 @@ package g41.SI2022.coiipa.registrarPago;
 import java.util.Date;
 import java.util.List;
 
-import giis.demo.util.Database;
-import giis.demo.util.Util;
+import g41.SI2022.util.Database;
+import g41.SI2022.util.Util;
 
 public class RegistrarPagoModel {
 	private Database db = new Database();

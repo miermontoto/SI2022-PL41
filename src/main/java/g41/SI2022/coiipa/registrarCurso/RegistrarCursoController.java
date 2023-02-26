@@ -1,6 +1,6 @@
 package g41.SI2022.coiipa.registrarCurso;
 
-import giis.demo.util.SwingUtil;
+import g41.SI2022.util.SwingUtil;
 
 public class RegistrarCursoController {
 	private RegistrarCursoModel model;
