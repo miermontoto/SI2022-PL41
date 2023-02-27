@@ -5,6 +5,7 @@ import java.util.List;
 
 import g41.si2022.util.Database;
 import g41.si2022.util.Util;
+import giis.demo.tkrun.CarreraEntity;
 
 public class RegistrarPagoModel {
 	private Database db = new Database();
@@ -20,4 +21,19 @@ public class RegistrarPagoModel {
 		String d = Util.dateToIsoString(fechaInscripcion);
 		return db.executeQueryPojo(InsertarPagoDTO.class, sql, d); //Statement preparado.
 	}
+	
+	
+	public void registrarPago(int importe, String fecha, int idinscripcion) {
+		String sql="INSERT INTO pago (importe, fecha, inscripcion_id) VALUES(?,?,?)";
+		db.executeUpdate(sql, importe, Util.isoStringToDate(fecha), idinscripcion);
+		this.actualizarInscripcion(idinscripcion);
+		
+	}
+	
+	public void actualizarInscripcion(int id) {
+		String sql="UPDATE inscripcion SET estado=? WHERE id=?";
+		db.executeUpdate(sql, "Pagado", id);
+	}
+	
+	
 }

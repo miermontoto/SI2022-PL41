@@ -28,6 +28,9 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.CardLayout;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RegistrarPagoView extends Tab {
 
@@ -39,6 +42,9 @@ public class RegistrarPagoView extends Tab {
 	private JLabel infoidinscripcion;
 	private JLabel idinscripcion;
 	private JLabel infoquehace;
+	private JLabel lblNewLabel;
+	private JTextField insertarimporte;
+	private JButton botonpagar;
 
 	//private final JTable tabCursos;
 
@@ -52,7 +58,7 @@ public class RegistrarPagoView extends Tab {
 		
 		panel_1 = new JPanel();
 		add(panel_1, BorderLayout.EAST);
-		panel_1.setLayout(new MigLayout("", "[148px][18px][]", "[][14px][][]"));
+		panel_1.setLayout(new MigLayout("", "[131.00px][42.00px,grow][]", "[][14px][][][][][][]"));
 		
 		infoquehace = new JLabel("Insertar un nuevo pago");
 		infoquehace.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -62,10 +68,21 @@ public class RegistrarPagoView extends Tab {
 		
 		infoidinscripcion = new JLabel("Id de inscripción seleccionado: ");
 		infoidinscripcion.setVerticalAlignment(SwingConstants.TOP);
-		panel_1.add(infoidinscripcion, "cell 0 2,alignx left,aligny top");
+		panel_1.add(infoidinscripcion, "cell 0 2,alignx left,aligny center");
 		
 		idinscripcion = new JLabel("N/A");
-		panel_1.add(idinscripcion, "cell 1 2,alignx left,aligny top");
+		panel_1.add(idinscripcion, "cell 1 2,alignx right,aligny center");
+		
+		lblNewLabel = new JLabel("Introducir importe recibido (€): ");
+		panel_1.add(lblNewLabel, "cell 0 4,alignx left,aligny center");
+		
+		insertarimporte = new JTextField();
+		panel_1.add(insertarimporte, "cell 1 4,growx");
+		insertarimporte.setColumns(10);
+		
+		botonpagar = new JButton("Insertar pago");
+		
+		panel_1.add(botonpagar, "cell 0 7");
 
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.NORTH);
@@ -74,7 +91,7 @@ public class RegistrarPagoView extends Tab {
 		panel.add(botoncarga);
 		tableInscripciones = new JTable();
 		scrollPane = new JScrollPane(tableInscripciones); //Añado un panel de scroll
-		add(scrollPane); //Lo añado a la vista
+		add(scrollPane, BorderLayout.CENTER); //Lo añado a la vista
 
 		// TODO: Tabla inicial para mostrar.
 
@@ -102,6 +119,74 @@ public class RegistrarPagoView extends Tab {
 
 	public JTable getTableInscripciones() {
 		return tableInscripciones;
+	}
+
+	public JButton getBotoncarga() {
+		return botoncarga;
+	}
+
+	public void setBotoncarga(JButton botoncarga) {
+		this.botoncarga = botoncarga;
+	}
+
+	public JPanel getPanel_1() {
+		return panel_1;
+	}
+
+	public JLabel getLblNewLabel() {
+		return lblNewLabel;
+	}
+
+	public void setLblNewLabel(JLabel lblNewLabel) {
+		this.lblNewLabel = lblNewLabel;
+	}
+
+	public JTextField getInsertarimporte() {
+		return insertarimporte;
+	}
+
+	public void setInsertarimporte(JTextField insertarimporte) {
+		this.insertarimporte = insertarimporte;
+	}
+
+	public JButton getBotonpagar() {
+		return botonpagar;
+	}
+
+	public void setBotonpagar(JButton botonpagar) {
+		this.botonpagar = botonpagar;
+	}
+
+	public void setIdinscripcion(JLabel idinscripcion) {
+		this.idinscripcion = idinscripcion;
+	}
+
+	public void setPanel_1(JPanel panel_1) {
+		this.panel_1 = panel_1;
+	}
+
+	public JLabel getInfoidinscripcion() {
+		return infoidinscripcion;
+	}
+
+	public void setInfoidinscripcion(JLabel infoidinscripcion) {
+		this.infoidinscripcion = infoidinscripcion;
+	}
+
+	public JLabel getIdinscripcion() {
+		return idinscripcion;
+	}
+
+	public void setIdinscripcion(int i) {
+		this.idinscripcion.setText(Integer.toString(i));
+	}
+
+	public JLabel getInfoquehace() {
+		return infoquehace;
+	}
+
+	public void setInfoquehace(JLabel infoquehace) {
+		this.infoquehace = infoquehace;
 	}
 
 	public void setTableInscripciones(JTable tableInscripciones) {
