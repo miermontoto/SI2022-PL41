@@ -20,8 +20,18 @@ public class RegistrarPagoController {
 
 	public void inicializa() {
 		vista.getBtnNewButton().addActionListener(e -> SwingUtil.exceptionWrapper(() -> this.getListaInscripciones()));
-	}
+		
+		vista.getTableInscripciones().addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		        int fila = vista.getTableInscripciones().rowAtPoint(evt.getPoint());
+		        int columna = vista.getTableInscripciones().columnAtPoint(evt.getPoint());
+		        System.out.print(fila);
+		        
+		    }
+		});
 
+	}
 	public void getListaInscripciones() {
 
 		// Obtengo la lista de insripciones
