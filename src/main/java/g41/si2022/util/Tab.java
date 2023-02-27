@@ -1,4 +1,4 @@
-package g41.SI2022.util;
+package g41.si2022.util;
 
 public abstract class Tab extends javax.swing.JPanel {
 
@@ -18,7 +18,7 @@ public abstract class Tab extends javax.swing.JPanel {
 	public SwingMain getMain () {
 		return this.main;
 	}
-	
+
 	@Override
 	public void setVisible (boolean visible) {
 		super.setVisible(visible);

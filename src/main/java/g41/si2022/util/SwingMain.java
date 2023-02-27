@@ -1,4 +1,4 @@
-package g41.SI2022.util;
+package g41.si2022.util;
 
 import java.awt.EventQueue;
 import java.util.Map;
@@ -59,9 +59,9 @@ public class SwingMain {
 		tabs.setTitleAt(0, "Debug");
 
 		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
-		theTabs.put("Registrar curso", new g41.SI2022.coiipa.registrarCurso.RegistrarCursoView(this));
-		theTabs.put("Registrar pago", new g41.SI2022.coiipa.registrarPago.RegistrarPagoView(this));
-		theTabs.put("Inscribir usuario", new g41.SI2022.coiipa.inscribirUsuario.InscribirUsuarioView(this));
+		theTabs.put("Registrar curso", new g41.si2022.coiipa.registrar_curso.RegistrarCursoView(this));
+		theTabs.put("Registrar pago", new g41.si2022.coiipa.registrar_pago.RegistrarPagoView(this));
+		theTabs.put("Inscribir usuario", new g41.si2022.coiipa.inscribir_usuario.InscribirUsuarioView(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));

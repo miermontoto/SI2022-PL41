@@ -1,4 +1,4 @@
-package g41.SI2022.util;
+package g41.si2022.util;
 
 /**
  * Excepción producida por la aplicación antes situaciones incontroladas.

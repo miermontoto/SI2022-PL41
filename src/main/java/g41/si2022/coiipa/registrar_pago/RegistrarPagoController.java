@@ -1,11 +1,11 @@
-package g41.SI2022.coiipa.registrarPago;
+package g41.si2022.coiipa.registrar_pago;
 
 import java.util.List;
 
 import javax.swing.table.TableModel;
 
-import g41.SI2022.util.SwingUtil;
-import g41.SI2022.util.Util;
+import g41.si2022.util.SwingUtil;
+import g41.si2022.util.Util;
 
 public class RegistrarPagoController {
 

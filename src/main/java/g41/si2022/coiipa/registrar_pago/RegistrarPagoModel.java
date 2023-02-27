@@ -1,10 +1,10 @@
-package g41.SI2022.coiipa.registrarPago;
+package g41.si2022.coiipa.registrar_pago;
 
 import java.util.Date;
 import java.util.List;
 
-import g41.SI2022.util.Database;
-import g41.SI2022.util.Util;
+import g41.si2022.util.Database;
+import g41.si2022.util.Util;
 
 public class RegistrarPagoModel {
 	private Database db = new Database();

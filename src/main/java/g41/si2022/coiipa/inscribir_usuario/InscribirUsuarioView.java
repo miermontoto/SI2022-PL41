@@ -1,9 +1,9 @@
-package g41.SI2022.coiipa.inscribirUsuario;
+package g41.si2022.coiipa.inscribir_usuario;
 
 import java.awt.BorderLayout;
 
-import g41.SI2022.util.Tab;
-import g41.SI2022.util.SwingMain;
+import g41.si2022.util.SwingMain;
+import g41.si2022.util.Tab;
 
 public class InscribirUsuarioView extends Tab {
 

@@ -1,4 +1,4 @@
-package g41.SI2022.coiipa.inscribirUsuario;
+package g41.si2022.coiipa.inscribir_usuario;
 
 public class InscribirUsuarioController {
     private InscribirUsuarioModel model;

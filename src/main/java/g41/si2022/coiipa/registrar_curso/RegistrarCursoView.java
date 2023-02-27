@@ -1,11 +1,11 @@
-package g41.SI2022.coiipa.registrarCurso;
+package g41.si2022.coiipa.registrar_curso;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
-import g41.SI2022.util.Tab;
+import g41.si2022.util.Tab;
 
 import com.github.lgooddatepicker.components.DatePicker;
 
@@ -37,7 +37,7 @@ public class RegistrarCursoView extends Tab {
 	public void setObjetivosDescripcion (String objetivosDescripcion) { this.objetivosDescripcion.setText(objetivosDescripcion); }
 	public void setPlazas (int plazas) { this.plazas.setText(String.format("%d", Math.max(0, plazas))); }
 
-	public RegistrarCursoView (g41.SI2022.util.SwingMain main) {
+	public RegistrarCursoView (g41.si2022.util.SwingMain main) {
 		super(main);
 		this.initialize();
 	}

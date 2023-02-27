@@ -1,4 +1,4 @@
-package g41.SI2022.coiipa.registrarCurso;
+package g41.si2022.coiipa.registrar_curso;
 
 public class ProfesorDisplayDTO {
 	private String

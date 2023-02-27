@@ -1,6 +1,6 @@
-package g41.SI2022.coiipa.registrarCurso;
+package g41.si2022.coiipa.registrar_curso;
 
-import g41.SI2022.util.Database;
+import g41.si2022.util.Database;
 
 public class RegistrarCursoModel {
 

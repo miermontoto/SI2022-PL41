@@ -1,4 +1,4 @@
-package g41.SI2022.coiipa.registrarPago;
+package g41.si2022.coiipa.registrar_pago;
 /**
  * Cada una de las filas que muestran al usuario las carreras y su estado
  * IMPORTANTE: Cuando se usan los componentes de Apache Commons DbUtils debe

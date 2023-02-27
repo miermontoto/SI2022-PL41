@@ -1,4 +1,4 @@
-package g41.SI2022.coiipa.registrarPago;
+package g41.si2022.coiipa.registrar_pago;
 
 import javax.swing.JScrollPane;
 
@@ -7,8 +7,9 @@ import java.awt.BorderLayout;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import g41.SI2022.util.SwingMain;
-import g41.SI2022.util.Tab;
+import g41.si2022.util.SwingMain;
+import g41.si2022.util.Tab;
+
 import javax.swing.JPanel;
 import javax.swing.JButton;
 

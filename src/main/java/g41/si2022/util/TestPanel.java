@@ -1,4 +1,4 @@
-package g41.SI2022.util;
+package g41.si2022.util;
 
 import java.awt.BorderLayout;
 
@@ -12,7 +12,7 @@ public class TestPanel extends Tab {
 	/**
 	 * Create the panel.
 	 */
-	public TestPanel(g41.SI2022.util.SwingMain main) {
+	public TestPanel(g41.si2022.util.SwingMain main) {
 		super(main);
 		this.setLayout(new BorderLayout());
 		JLabel label_2 = new JLabel("NORTH");
