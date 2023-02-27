@@ -8,6 +8,7 @@ public class ProfesorDisplayDTO {
 		email,
 		telefono,
 		direccion;
+	private Double remuneracion;
 
 	public ProfesorDisplayDTO () { }
 
@@ -19,6 +20,7 @@ public class ProfesorDisplayDTO {
 		this.email = email;
 		this.telefono = telefono;
 		this.direccion = direccion;
+		this.remuneracion = null;
 	}
 
 	public String getId () { return this.id; }
@@ -28,6 +30,7 @@ public class ProfesorDisplayDTO {
 	public String getEmail () { return this.email; }
 	public String getTelefono () { return this.telefono; }
 	public String getDireccion () { return this.direccion; }
+	public Double getRemuneracion () { return this.remuneracion; }
 
 	public void setId (String id) { this.id = id; }
 	public void setNombre (String nombre) { this.nombre = nombre; }
@@ -36,6 +39,7 @@ public class ProfesorDisplayDTO {
 	public void setEmail (String email) { this.email = email; }
 	public void setTelefono (String telefono) { this.telefono = telefono; }
 	public void setDireccion (String direccion) { this.direccion = direccion; }
+	public void setRemuneracion (Double remuneracion) { this.remuneracion = remuneracion; }
 
 
 }
