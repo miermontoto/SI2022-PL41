@@ -53,7 +53,7 @@ public class SwingMain {
 
 		// Tabs are the main content of the window. This will contain all the other GUIs.
 		tabs = new JTabbedPane();
-		Map<String, Tab> theTabs = new TreeMap<String, Tab> ();
+		Map<String, Tab> theTabs = new TreeMap<String, Tab>();
 
 		tabs.add(new Debug(this), 0);
 		tabs.setTitleAt(0, "Debug");

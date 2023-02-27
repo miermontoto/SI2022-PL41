@@ -66,7 +66,6 @@ public class Debug extends Tab {
 		});
 
 		JButton refresh = new JButton("Refresh tabs");
-		// TODO: make tabs refresh somehow
 		refresh.addActionListener(e -> {
 			main.initialize();
 			status.setText("Tabs refreshed");
