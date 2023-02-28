@@ -1,14 +1,14 @@
 package g41.si2022.coiipa.dto;
 
-public class CursoDTO {
+public class CursoInscripcionDTO {
     private String nombre;
     private String plazas;
     private String start_inscr;
     private String end_inscr;
 
-    public CursoDTO() { }
+    public CursoInscripcionDTO() { }
 
-    public CursoDTO(String nombre, String plazas, String start_inscr, String end_inscr) {
+    public CursoInscripcionDTO(String nombre, String plazas, String start_inscr, String end_inscr) {
         this.nombre = nombre;
         this.plazas = plazas;
         this.start_inscr = start_inscr;

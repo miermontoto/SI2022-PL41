@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.table.TableModel;
 
-import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.coiipa.dto.CursoInscripcionDTO;
 import g41.si2022.util.SwingUtil;
 
 public class InscribirUsuarioController {
@@ -22,7 +22,7 @@ public class InscribirUsuarioController {
     }
 
     public void getListaCursos() {
-        List<CursoDTO> cursos = model.getListaCursos();
+        List<CursoInscripcionDTO> cursos = model.getListaCursos();
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas", "start_inscr", "end_inscr" });
         view.getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
