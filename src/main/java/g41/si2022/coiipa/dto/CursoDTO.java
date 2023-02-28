@@ -1,14 +1,14 @@
-package g41.si2022.coiipa.inscribir_usuario;
+package g41.si2022.coiipa.dto;
 
-public class CursoDisplayDTO {
+public class CursoDTO {
     private String nombre;
     private String plazas;
     private String start_inscr;
     private String end_inscr;
 
-    public CursoDisplayDTO() { }
+    public CursoDTO() { }
 
-    public CursoDisplayDTO(String nombre, String plazas, String start_inscr, String end_inscr) {
+    public CursoDTO(String nombre, String plazas, String start_inscr, String end_inscr) {
         this.nombre = nombre;
         this.plazas = plazas;
         this.start_inscr = start_inscr;

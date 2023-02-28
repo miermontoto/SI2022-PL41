@@ -1,6 +1,6 @@
-package g41.si2022.coiipa.registrar_curso;
+package g41.si2022.coiipa.dto;
 
-public class ProfesorDisplayDTO {
+public class ProfesorDTO {
 	private String
 		id,
 		nombre, apellidos,
@@ -9,9 +9,9 @@ public class ProfesorDisplayDTO {
 		telefono,
 		direccion;
 
-	public ProfesorDisplayDTO () { }
+	public ProfesorDTO () { }
 
-	public ProfesorDisplayDTO (String id, String nombre, String apellidos, String dni, String email, String telefono, String direccion) {
+	public ProfesorDTO (String id, String nombre, String apellidos, String dni, String email, String telefono, String direccion) {
 		this.id = id;
 		this.nombre = nombre;
 		this.apellidos = apellidos;

@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.registrar_pago;
+package g41.si2022.coiipa.dto;
 /**
  * Cada una de las filas que muestran al usuario las carreras y su estado
  * IMPORTANTE: Cuando se usan los componentes de Apache Commons DbUtils debe
@@ -8,16 +8,16 @@ package g41.si2022.coiipa.registrar_pago;
  *  - No utilizar subrayados
  * Seguir tambien estos mismos criterios en los nombres de tablas y campos de la BD
  */
-public class InsertarPagoDTO {
+public class PagoDTO {
 
 	private String id;
 	private String coste;
 	private String estado;
 
-	public InsertarPagoDTO() { }
+	public PagoDTO() { }
 
 
-	public InsertarPagoDTO(String rowId, String rowCoste, String rowEstado) {
+	public PagoDTO(String rowId, String rowCoste, String rowEstado) {
 		this.id = rowId;
 		this.coste = rowCoste;
 		this.estado = rowEstado;
