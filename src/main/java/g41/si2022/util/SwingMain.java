@@ -66,6 +66,11 @@ public class SwingMain {
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));
 
+		tabs.addChangeListener(e -> {
+			Tab tab = (Tab) tabs.getSelectedComponent();
+			if (tab != null) tab.initController();
+		});
+
 		frame.add(tabs);
 		frame.repaint();
 		frame.revalidate();
