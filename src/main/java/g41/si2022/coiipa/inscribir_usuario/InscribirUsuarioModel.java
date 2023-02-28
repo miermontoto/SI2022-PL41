@@ -10,8 +10,8 @@ public class InscribirUsuarioModel {
 
     public List<CursoDisplayDTO> getListaCursos() {
         String sql =
-                "SELECT id, nombre, plazas, start_inscr, end_inscr"
-                + " FROM curso ORDER BY id;";
+                "select nombre, plazas, start_inscr, end_inscr"
+                + " from curso order by nombre asc;";
         return db.executeQueryPojo(CursoDisplayDTO.class, sql);
     }
 

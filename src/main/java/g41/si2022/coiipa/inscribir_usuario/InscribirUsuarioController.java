@@ -22,7 +22,7 @@ public class InscribirUsuarioController {
 
     public void getListaCursos() {
         List<CursoDisplayDTO> cursos = model.getListaCursos();
-        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "id", "nombre", "plazas", "start_inscr", "end_inscr" });
+        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas", "start_inscr", "end_inscr" });
         view.getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
     }
