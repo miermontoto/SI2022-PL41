@@ -7,6 +7,8 @@ public class CursoDisplayDTO {
     private String start_inscr;
     private String end_inscr;
 
+    public CursoDisplayDTO() { }
+
     public CursoDisplayDTO(int id, String nombre, int plazas, String start_inscr, String end_inscr) {
         this.id = id;
         this.nombre = nombre;

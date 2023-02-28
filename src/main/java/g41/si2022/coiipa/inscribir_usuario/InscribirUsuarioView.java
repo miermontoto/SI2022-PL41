@@ -6,7 +6,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 import g41.si2022.util.SwingMain;
 import g41.si2022.util.Tab;
@@ -25,6 +24,7 @@ public class InscribirUsuarioView extends Tab {
     private void initialize() {
         btnCargarCursos = new JButton("Cargar cursos");
         tablaCursos = new JTable();
+        tablaCursos.setDefaultEditor(Object.class, null);
         scrollPane = new JScrollPane(tablaCursos);
         JPanel btnPanel = new JPanel();
         JPanel cursosContainer = new JPanel();
@@ -33,16 +33,11 @@ public class InscribirUsuarioView extends Tab {
         this.setLayout(new BorderLayout());
         this.add(btnPanel, BorderLayout.NORTH);
         this.add(cursosContainer, BorderLayout.CENTER);
-
-        DefaultTableModel emptyModel = new DefaultTableModel(new String[]{"id", "nombre", "plazas", "start_inscr", "end_inscr"}, 0);
-        tablaCursos.setModel(emptyModel);
         tablaCursos.setName("Cursos disponibles");
-
-
     }
 
     @Override
-    public void initController() { }
+    public void initController() { new InscribirUsuarioController(new InscribirUsuarioModel(), this); }
 
 
     public JButton getBtnCargarCursos() {
