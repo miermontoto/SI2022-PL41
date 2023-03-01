@@ -6,12 +6,12 @@
 package g41.si2022.coiipa.consultar_cursos;
 
 public class ConsultarCursosDTO {
-	// nombre, estado, plazas, start_inscr, end_inscr
+	// nombre, estado, plazas, start, end
 	private String nombre;
 	private String estado;
 	private String plazas;
-	private String start; // Debería de ser start_curso
-	private String end;   // Debería de ser end_curso
+	private String start; 
+	private String end;   
 
 	public ConsultarCursosDTO() {}
 
@@ -19,8 +19,8 @@ public class ConsultarCursosDTO {
 		this.nombre = nombre;
 		this.estado = estado;
 		this.plazas = plazas;
-		this.start = start; // Debería de ser start_curso
-		this.end = end;     // Debería de ser end_curso
+		this.start = start; 
+		this.end = end;     
 	}
 
 	public String getNombre() { return this.nombre; }
