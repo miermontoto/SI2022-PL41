@@ -3,7 +3,7 @@
 	// Hacer DTO de las inscripciones
 	// El DTO de cursos lo comparto con Mier
 
-package g41.si2022.coiipa.consultar_cursos;
+package g41.si2022.coiipa.dto;
 
 public class ConsultarCursosDTO {
 	// nombre, estado, plazas, start, end
@@ -19,8 +19,8 @@ public class ConsultarCursosDTO {
 		this.nombre = nombre;
 		this.estado = estado;
 		this.plazas = plazas;
-		this.start = start; 
-		this.end = end;     
+		this.start  = start; 
+		this.end    = end;     
 	}
 
 	public String getNombre() { return this.nombre; }

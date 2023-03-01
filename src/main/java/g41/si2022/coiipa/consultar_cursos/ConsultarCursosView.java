@@ -27,17 +27,18 @@ public class ConsultarCursosView extends Tab {
 	private void initialize() {
 		this.setLayout(new BorderLayout(1, 1));
 		
-		btnCargarDatos = new JButton("Cargar datos ahora");
+		btnCargarDatos = new JButton("Cargar cursos");
 		tablaCursos = new JTable();
 		tablaCursos.setDefaultEditor(Object.class, null);
 		
 		
 		JPanel panel1 = new JPanel();
-		panel1.add(btnCargarDatos, BorderLayout.EAST);
+		panel1.add(btnCargarDatos, BorderLayout.WEST);
 		this.add(panel1, BorderLayout.NORTH);
 		
 		
 		JPanel panel2 = new JPanel();
+		
 		
 		
 		JPanel panel3 = new JPanel();

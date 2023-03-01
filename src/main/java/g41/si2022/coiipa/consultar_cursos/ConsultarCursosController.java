@@ -23,9 +23,15 @@ public class ConsultarCursosController {
 		view.getTablaCursos().setModel(
 				SwingUtil.getTableModelFromPojos(
 						this.model.getListaCursos(),
-						new String[] { "Nombre", "Estado", "Plazas", "Inicio", "Fin" } 
+						new String[] { "nombre", "estado", "plazas", "start", "end" } 
 				)
 		);
+		 
+		String[] columnNames = { "Nombre", "Estado", "Plazas", "Inicio", "Fin" };
+		for(int i=0; i<columnNames.length; i++) {
+			view.getTablaCursos().getColumnModel().getColumn(i).setHeaderValue(columnNames[i]);
+		}
+		
 		SwingUtil.autoAdjustColumns(view.getTablaCursos());
 	}
 	
