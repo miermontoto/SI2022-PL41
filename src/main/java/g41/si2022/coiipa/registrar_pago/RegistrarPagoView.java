@@ -7,6 +7,8 @@ import java.awt.BorderLayout;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import com.github.lgooddatepicker.components.DatePicker;
+
 import g41.si2022.util.SwingMain;
 import g41.si2022.util.Tab;
 
@@ -19,10 +21,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.BoxLayout;
 import net.miginfocom.swing.MigLayout;
 import java.awt.CardLayout;
@@ -52,13 +50,18 @@ public class RegistrarPagoView extends Tab {
 	/**
 	 * Create the panel.
 	 */
+	
+	DatePicker datepicker = new DatePicker();
+	private JLabel lblNewLabel_1;
+	
 	public RegistrarPagoView(SwingMain main) {
 		super(main);
 		setLayout(new BorderLayout(0, 0));
 		
+		
 		panel_1 = new JPanel();
 		add(panel_1, BorderLayout.EAST);
-		panel_1.setLayout(new MigLayout("", "[131.00px][42.00px,grow][]", "[][14px][][][][][][]"));
+		panel_1.setLayout(new MigLayout("", "[131.00px][122.00px,grow][]", "[][14px][][][][][][][]"));
 		
 		infoquehace = new JLabel("Insertar un nuevo pago");
 		infoquehace.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -77,12 +80,17 @@ public class RegistrarPagoView extends Tab {
 		panel_1.add(lblNewLabel, "cell 0 4,alignx left,aligny center");
 		
 		insertarimporte = new JTextField();
-		panel_1.add(insertarimporte, "cell 1 4,growx");
+		panel_1.add(insertarimporte, "cell 1 4,alignx right");
 		insertarimporte.setColumns(10);
 		
+		
+		lblNewLabel_1 = new JLabel("Introducir fecha");
+		panel_1.add(lblNewLabel_1, "cell 0 6");
+		panel_1.add(datepicker, "cell 1 6,alignx right,aligny center");
+
 		botonpagar = new JButton("Insertar pago");
 		
-		panel_1.add(botonpagar, "cell 0 7");
+		panel_1.add(botonpagar, "cell 0 8");
 
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.NORTH);
