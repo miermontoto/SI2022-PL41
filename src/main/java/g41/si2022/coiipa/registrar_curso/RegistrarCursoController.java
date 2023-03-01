@@ -20,7 +20,12 @@ public class RegistrarCursoController {
 		view.getTablaProfesores().setModel(
 				SwingUtil.getTableModelFromPojos(
 						this.model.getListaProfesores(),
-						new String[] { "nombre", "apellidos", "email", "direccion" }
+						new String[] { "nombre", "apellidos", "email", "direccion", "remuneracion" },
+						new java.util.HashMap<Integer, java.util.regex.Pattern> () {
+							private static final long serialVersionUID = 1L;
+						{
+							put(4, java.util.regex.Pattern.compile("\\d+(\\.\\d+)?"));
+						}}
 				)
 		);
 		SwingUtil.autoAdjustColumns(this.view.getTablaProfesores());
