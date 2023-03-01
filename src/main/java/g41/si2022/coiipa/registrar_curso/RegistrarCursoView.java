@@ -190,11 +190,6 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	@Override
 	public void initController() {
 		new RegistrarCursoController(new RegistrarCursoModel(), this);
-		/*
-		javax.swing.table.TableColumn tc = new javax.swing.table.TableColumn ();
-		tc.setHeaderValue("Remuneracion");
-		this.profTable.addColumn(tc);
-		*/
 	}
 
 }
