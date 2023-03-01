@@ -25,7 +25,7 @@ public class RegistrarCursoView extends Tab {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField nombreCurso;
-	private JTextArea objetivosDescripcion;
+	private JTextArea objetivosDescripcion, localizacion;
 	private JIntegerTextField plazas;
 	private DatePicker fechaInscripcionIni, fechaInscripcionFin;
 	private DatePicker fechaCursoIni, fechaCursoFin;
@@ -34,6 +34,7 @@ public class RegistrarCursoView extends Tab {
 
 	public String getNombreCurso () { return this.nombreCurso.getText().trim(); }
 	public String getObjetivosDescripcion () { return this.objetivosDescripcion.getText().trim(); }
+	public String getLocalizacion () { return this.localizacion.getText(); }
 	public int getPlazas () { return Integer.parseInt(this.plazas.getText().trim()); }
 	public Date getInscripcionIni () { return new Date (this.fechaInscripcionIni.getDate().toEpochDay()); }
 	public Date getInscripcionFin () { return new Date (this.fechaInscripcionFin.getDate().toEpochDay()); }
@@ -55,6 +56,7 @@ public class RegistrarCursoView extends Tab {
 		this.setLayout(new BorderLayout(0, 0));
 
 		JPanel centerPanel = new JPanel();
+		centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 10, 10));
 		JScrollPane mainSp = new JScrollPane();
 		mainSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		mainSp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -135,6 +137,18 @@ public class RegistrarCursoView extends Tab {
 					panelInscripciones.add(this.fechaCursoFin = new DatePicker());
 				}
 			}
+		} { // Localización
+			{ // Label
+				left.gridy = 5;
+				centerPanel.add(new JLabel("Localización: "), left);
+			} { // Input
+				right.gridy = 5;
+				right.weighty = 2;
+				right.fill = GridBagConstraints.BOTH;
+				this.localizacion= new JTextArea();
+				this.localizacion.setLineWrap(true);
+				centerPanel.add(this.localizacion, right);
+			}
 		}
 
 		JPanel bottomPane = new JPanel();
@@ -158,7 +172,12 @@ public class RegistrarCursoView extends Tab {
 		bottomPane.add(this.registrarCurso, BorderLayout.SOUTH);
 
 		this.add(bottomPane, BorderLayout.SOUTH);
-		add(new JLabel("Registrar Curso"), BorderLayout.NORTH);
+		{
+			JPanel topPanel = new JPanel ();
+			topPanel.setLayout(new BorderLayout());
+			topPanel.add(new JLabel("Registrar Curso"), BorderLayout.WEST);
+			add(topPanel, BorderLayout.NORTH);
+		}
 	}
 
 	@Override
