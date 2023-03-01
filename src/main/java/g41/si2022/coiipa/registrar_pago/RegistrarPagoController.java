@@ -1,3 +1,4 @@
+// <<<<<<< HEAD
 package g41.si2022.coiipa.registrar_pago;
 
 import java.awt.event.ActionEvent;

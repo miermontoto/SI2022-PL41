@@ -16,21 +16,10 @@ import g41.si2022.util.Tab;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JTextPane;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.BoxLayout;
 import net.miginfocom.swing.MigLayout;
-import java.awt.CardLayout;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import javax.swing.JTextField;
-import java.awt.event.ActionListener;
 import java.text.NumberFormat;
-import java.awt.event.ActionEvent;
 import javax.swing.JFormattedTextField;
 
 public class RegistrarPagoView extends Tab {
