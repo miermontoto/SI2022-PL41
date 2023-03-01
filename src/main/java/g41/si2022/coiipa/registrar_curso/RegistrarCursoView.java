@@ -112,7 +112,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 				centerPanel.add(panelInscripciones, right);
 				// The PADDING JLabel is the item covered by the vertical scrollbar.
 				// If this is removed, the DatePicker button will be hardly accessible.
-				panelInscripciones.add(new JLabel("PADDING"), BorderLayout.EAST);
+				// panelInscripciones.add(new JLabel("PADDING"), BorderLayout.EAST);
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
@@ -135,7 +135,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 				centerPanel.add(panelInscripciones, right);
 				// The PADDING JLabel is the item covered by the vertical scrollbar.
 				// If this is removed, the DatePicker button will be hardly accessible.
-				panelInscripciones.add(new JLabel("PADDING"), BorderLayout.EAST);
+				// panelInscripciones.add(new JLabel("PADDING"), BorderLayout.EAST);
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);

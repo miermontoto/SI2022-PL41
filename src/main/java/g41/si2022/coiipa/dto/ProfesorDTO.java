@@ -28,5 +28,4 @@ public class ProfesorDTO {
 		this.direccion = direccion;
 		this.remuneracion = null;
 	}
-	
 }

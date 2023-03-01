@@ -27,6 +27,7 @@ public class RegistrarCursoController {
 				SwingUtil.getTableModelFromPojos(
 						this.model.getListaProfesores(),
 						new String[] { "nombre", "apellidos", "email", "direccion", "remuneracion" },
+						new String[] { "Nombre", "Apellidos", "email", "Dirección", "Remuneración" },
 						new java.util.HashMap<Integer, java.util.regex.Pattern> () {
 							private static final long serialVersionUID = 1L;
 						{

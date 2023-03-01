@@ -118,7 +118,7 @@ public class SwingUtil {
 		}
 		return tm;
 	}
-
+	
 	/**
 	 * Modificado por Alex.
 	 * 
@@ -128,17 +128,21 @@ public class SwingUtil {
 	 * @param colProperties Los nombres de atributo de los objetos (ordenados) que se incluiran en el tablemodel
 	 * (cada uno debe disponer del correspondiente getter)
 	 */
-	public static <E> TableModel getTableModelFromPojos(List<E> pojos, String[] colProperties, java.util.Map<Integer, java.util.regex.Pattern> writeableColumns) {
+	public static <E> TableModel getTableModelFromPojos(List<E> pojos, String[] colProperties,
+			String[] colNames, java.util.Map<Integer, java.util.regex.Pattern> writeableColumns) {
 		// Creación inicial del tablemodel y dimensionamiento
 		// Hay que tener en cuenta que para que la tabla pueda mostrar las columnas deberá estar dentro de un JScrollPane
 		TableModel tm;
-		if (pojos == null) return new DefaultTableModel(colProperties, 0); //solo las columnas (p.e. para inicializaciones)
-		else tm = new DefaultTableModel(colProperties, pojos.size()) {
+		if (colNames.length != colProperties.length) throw new UnexpectedException("colProperties es distinto en tamaño a colNames");
+		if (pojos == null) return new DefaultTableModel(colNames, 0); //solo las columnas (p.e. para inicializaciones)
+		else tm = new DefaultTableModel(colNames, pojos.size()) {
 			private static final long serialVersionUID = 1L;
 			
 			@Override
 			public void setValueAt(Object value, int row, int column) {
-				if (value == null ||
+				if (writeableColumns == null) super.setValueAt(value, row, column);
+				else if (value == null ||
+						value.equals("") ||
 						!writeableColumns.containsKey(column) ||
 						writeableColumns.get(column).matcher(value.toString()).matches()
 					) {
@@ -148,7 +152,7 @@ public class SwingUtil {
 
 			@Override
 			public boolean isCellEditable (int row, int column) {
-				return writeableColumns.keySet().stream().anyMatch( x -> x == column);
+				return writeableColumns == null ? false : writeableColumns.keySet().stream().anyMatch( x -> x == column);
 			}
 		};
 
