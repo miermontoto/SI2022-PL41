@@ -52,9 +52,9 @@ public class InscribirUsuarioView extends Tab {
 
 	private JPanel makeSigninPanel () {
 		this.txtNombre = new JTextField("", InscribirUsuarioView.textFieldSize);
-		this.txtApellidos = new JTextField("", InscribirUsuarioView.textFieldSize);
-		this.txtEmail = new JTextField("", InscribirUsuarioView.textFieldSize);
-		this.txtTelefono = new JTextField("", InscribirUsuarioView.textFieldSize);
+		this.txtApellidos = new JTextField();
+		this.txtEmail = new JTextField();
+		this.txtTelefono = new JTextField();
 
 		JPanel signinPanel = new JPanel();
 		signinPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(
