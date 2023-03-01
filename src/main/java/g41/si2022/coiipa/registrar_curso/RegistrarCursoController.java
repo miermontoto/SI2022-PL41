@@ -19,7 +19,7 @@ public class RegistrarCursoController {
 	}
 
 	public void initView () {
-		this.getListaProfesores();
+		SwingUtil.exceptionWrapper(() -> this.getListaProfesores());
 	}
 
 	public void getListaProfesores() {
