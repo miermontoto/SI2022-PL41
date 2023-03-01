@@ -9,7 +9,8 @@ package g41.si2022.coiipa.dto;
  * Seguir tambien estos mismos criterios en los nombres de tablas y campos de la BD
  */
 public class PagoDTO {
-
+	int id;
+	int alumno_id;
 	private String nombre;
 	private String coste;
 	private String fecha;
@@ -18,7 +19,9 @@ public class PagoDTO {
 	public PagoDTO() { }
 
 
-	public PagoDTO(String nombre, String coste, String fecha, String estado) {
+	public PagoDTO(int id, int alumno_id, String nombre, String coste, String fecha, String estado) {
+		this.id = id;
+		this.alumno_id = alumno_id;
 		this.nombre = nombre;
 		this.coste = coste;
 		this.fecha = fecha;
@@ -43,6 +46,28 @@ public class PagoDTO {
 
 	public void setCoste(String coste) {
 		this.coste = coste;
+	}
+
+
+	
+
+	public int getAlumno_id() {
+		return alumno_id;
+	}
+
+
+	public void setAlumno_id(int alumno_id) {
+		this.alumno_id = alumno_id;
+	}
+
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 

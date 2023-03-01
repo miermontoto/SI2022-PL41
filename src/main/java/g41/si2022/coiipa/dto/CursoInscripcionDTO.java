@@ -9,13 +9,15 @@ public class CursoInscripcionDTO {
     public CursoInscripcionDTO() { }
 
     public CursoInscripcionDTO(String nombre, String plazas, String start_inscr, String end_inscr) {
+
         this.nombre = nombre;
         this.plazas = plazas;
         this.start_inscr = start_inscr;
         this.end_inscr = end_inscr;
     }
 
-    public String getNombre() { return this.nombre; }
+
+	public String getNombre() { return this.nombre; }
     public String getPlazas() { return this.plazas; }
     public String getStart_inscr() { return this.start_inscr; }
     public String getEnd_inscr() { return this.end_inscr; }

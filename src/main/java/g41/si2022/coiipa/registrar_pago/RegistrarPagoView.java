@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.NumberFormatter;
 
 import com.github.lgooddatepicker.components.DatePicker;
 
@@ -28,20 +29,21 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.awt.event.ActionEvent;
+import javax.swing.JFormattedTextField;
 
 public class RegistrarPagoView extends Tab {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
 	JScrollPane scrollPane; // Panel de scroll de la tabla
-	private JButton botoncarga;
+	//private JButton botoncarga;
 	private JPanel panel_1;
 	private JLabel infonombreinscrito;
 	private JLabel nombreinscripcion;
 	private JLabel infoquehace;
 	private JLabel lblNewLabel;
-	private JTextField insertarimporte;
 	private JButton botonpagar;
 
 	//private final JTable tabCursos;
@@ -53,6 +55,7 @@ public class RegistrarPagoView extends Tab {
 	
 	DatePicker datepicker = new DatePicker();
 	private JLabel lblNewLabel_1;
+	private JFormattedTextField insertarimporte;
 	
 	public RegistrarPagoView(SwingMain main) {
 		super(main);
@@ -79,9 +82,17 @@ public class RegistrarPagoView extends Tab {
 		lblNewLabel = new JLabel("Introducir importe recibido (€): ");
 		panel_1.add(lblNewLabel, "cell 0 3,alignx left,aligny center");
 		
-		insertarimporte = new JTextField();
+		NumberFormat format = NumberFormat.getInstance();
+	    NumberFormatter formatter = new NumberFormatter(format);
+	    formatter.setValueClass(Integer.class);
+	    formatter.setMinimum(0);
+	    formatter.setMaximum(Integer.MAX_VALUE);
+	    formatter.setAllowsInvalid(true);
+	    // If you want the value to be committed on each keystroke instead of focus lost
+	    formatter.setCommitsOnValidEdit(true);
+	    
+		insertarimporte = new JFormattedTextField(formatter);
 		panel_1.add(insertarimporte, "cell 0 4,growx");
-		insertarimporte.setColumns(10);
 		
 		
 		lblNewLabel_1 = new JLabel("Introducir fecha:");
@@ -92,11 +103,11 @@ public class RegistrarPagoView extends Tab {
 				
 				panel_1.add(botonpagar, "cell 0 8");
 
-		JPanel panel = new JPanel();
-		add(panel, BorderLayout.NORTH);
+		//JPanel panel = new JPanel();
+		//add(panel, BorderLayout.NORTH);
 
-		botoncarga = new JButton("Cargar datos ahora");
-		panel.add(botoncarga);
+		//botoncarga = new JButton("Cargar datos ahora");
+		//panel.add(botoncarga);
 		tableInscripciones = new JTable();
 		scrollPane = new JScrollPane(tableInscripciones); //Añado un panel de scroll
 		add(scrollPane, BorderLayout.CENTER); //Lo añado a la vista
@@ -117,125 +128,157 @@ public class RegistrarPagoView extends Tab {
 		RegistrarPagoController controlador = new RegistrarPagoController(this, new RegistrarPagoModel()); // Inicializo el controlador finalmente
 	}
 
-	public JLabel getInfonombreinscrito() {
-		return infonombreinscrito;
-	}
 
-	public void setInfonombreinscrito(JLabel infonombreinscrito) {
-		this.infonombreinscrito = infonombreinscrito;
-	}
-
-	public JLabel getNombreinscripcion() {
-		return nombreinscripcion;
-	}
-
-	public void setNombreinscripcion(JLabel nombreinscripcion) {
-		this.nombreinscripcion = nombreinscripcion;
-	}
-
-	public JLabel getLblNewLabel_1() {
-		return lblNewLabel_1;
-	}
-
-	public void setLblNewLabel_1(JLabel lblNewLabel_1) {
-		this.lblNewLabel_1 = lblNewLabel_1;
-	}
-
-	public JButton getBtnNewButton() {
-		return botoncarga;
-	}
-
-	public void setBtnNewButton(JButton btnNewButton) {
-		this.botoncarga = btnNewButton;
-	}
 
 	public JTable getTableInscripciones() {
 		return tableInscripciones;
 	}
 
-	public JButton getBotoncarga() {
-		return botoncarga;
-	}
 
-	public void setBotoncarga(JButton botoncarga) {
-		this.botoncarga = botoncarga;
-	}
-
-	public JPanel getPanel_1() {
-		return panel_1;
-	}
-
-	public JLabel getLblNewLabel() {
-		return lblNewLabel;
-	}
-
-	public void setLblNewLabel(JLabel lblNewLabel) {
-		this.lblNewLabel = lblNewLabel;
-	}
-
-	public JTextField getInsertarimporte() {
-		return insertarimporte;
-	}
-
-	public void setInsertarimporte(JTextField insertarimporte) {
-		this.insertarimporte = insertarimporte;
-	}
-
-	public JButton getBotonpagar() {
-		return botonpagar;
-	}
-
-	public void setBotonpagar(JButton botonpagar) {
-		this.botonpagar = botonpagar;
-	}
-
-	public void setIdinscripcion(JLabel idinscripcion) {
-		this.nombreinscripcion = idinscripcion;
-	}
-
-	public void setPanel_1(JPanel panel_1) {
-		this.panel_1 = panel_1;
-	}
-
-	public JLabel getInfoidinscripcion() {
-		return infonombreinscrito;
-	}
-
-	public void setInfoidinscripcion(JLabel infoidinscripcion) {
-		this.infonombreinscrito = infoidinscripcion;
-	}
-
-	public JLabel getIdinscripcion() {
-		return nombreinscripcion;
-	}
-
-	public void setIdinscripcion(int i) {
-		this.nombreinscripcion.setText(Integer.toString(i));
-	}
-
-	public JLabel getInfoquehace() {
-		return infoquehace;
-	}
-
-	public void setInfoquehace(JLabel infoquehace) {
-		this.infoquehace = infoquehace;
-	}
 
 	public void setTableInscripciones(JTable tableInscripciones) {
 		this.tableInscripciones = tableInscripciones;
 	}
 
+
+
 	public JScrollPane getScrollPane() {
 		return scrollPane;
 	}
+
+
 
 	public void setScrollPane(JScrollPane scrollPane) {
 		this.scrollPane = scrollPane;
 	}
 
+
+
+	/*public JButton getBotoncarga() {
+		return botoncarga;
+	}
+
+
+
+	public void setBotoncarga(JButton botoncarga) {
+		this.botoncarga = botoncarga;
+	}*/
+
+
+
+	public JPanel getPanel_1() {
+		return panel_1;
+	}
+
+
+
+	public void setPanel_1(JPanel panel_1) {
+		this.panel_1 = panel_1;
+	}
+
+
+
+	public JLabel getInfonombreinscrito() {
+		return infonombreinscrito;
+	}
+
+
+
+	public void setInfonombreinscrito(JLabel infonombreinscrito) {
+		this.infonombreinscrito = infonombreinscrito;
+	}
+
+
+
+	public JLabel getNombreinscripcion() {
+		return nombreinscripcion;
+	}
+
+
+
+	public void setNombreinscripcion(JLabel nombreinscripcion) {
+		this.nombreinscripcion = nombreinscripcion;
+	}
+
+
+
+	public JLabel getInfoquehace() {
+		return infoquehace;
+	}
+
+
+
+	public void setInfoquehace(JLabel infoquehace) {
+		this.infoquehace = infoquehace;
+	}
+
+
+
+	public JLabel getLblNewLabel() {
+		return lblNewLabel;
+	}
+
+
+
+	public void setLblNewLabel(JLabel lblNewLabel) {
+		this.lblNewLabel = lblNewLabel;
+	}
+
+
+
+	public JButton getBotonpagar() {
+		return botonpagar;
+	}
+
+
+
+	public void setBotonpagar(JButton botonpagar) {
+		this.botonpagar = botonpagar;
+	}
+
+
+
+	public DatePicker getDatepicker() {
+		return datepicker;
+	}
+
+
+
+	public void setDatepicker(DatePicker datepicker) {
+		this.datepicker = datepicker;
+	}
+
+
+
+	public JLabel getLblNewLabel_1() {
+		return lblNewLabel_1;
+	}
+
+
+
+	public void setLblNewLabel_1(JLabel lblNewLabel_1) {
+		this.lblNewLabel_1 = lblNewLabel_1;
+	}
+
+
+
+	public JFormattedTextField getInsertarimporte() {
+		return insertarimporte;
+	}
+
+
+
+	public void setInsertarimporte(JFormattedTextField insertarimporte) {
+		this.insertarimporte = insertarimporte;
+	}
+
+
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+
 
 	@Override
 	public void initController() { }
