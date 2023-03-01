@@ -14,56 +14,60 @@ import javax.swing.JSeparator;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
-import g41.si2022.util.SwingMain;
 import g41.si2022.util.Tab;
 
 @Getter
 public class InscribirUsuarioView extends Tab {
 
 	private static final long serialVersionUID = 1L;
-    private JButton btnInscribir;
-    private JTable tablaCursos;
+	private static final int textFieldSize = 15;
+	private static final int panelBorder = 10;
 
-    private JTextField txtNombre;
-    private JTextField txtApellidos;
-    private JTextField txtEmail;
-    private JTextField txtTelefono;
+	private JButton btnInscribir;
+	private JTable tablaCursos;
+
+	private JTextField txtNombre;
+	private JTextField txtApellidos;
+	private JTextField txtEmail;
+	private JTextField txtTelefono;
 
 	private JTextField txtEmailLogin;
 
-    public InscribirUsuarioView(SwingMain main) {
-        super(main);
-        initialize();
-    }
+	public InscribirUsuarioView(g41.si2022.util.SwingMain main) {
+		super(main);
+		initialize();
+	}
 
-    private void initialize() {
-        this.setLayout(new BorderLayout(0, 0));
+	private void initialize() {
+		this.setLayout(new BorderLayout());
+		this.add(new JLabel("Inscripción de alumnado"), BorderLayout.NORTH);
 
-        txtNombre = new JTextField("", 25);
-        txtApellidos = new JTextField();
-        txtEmail = new JTextField();
-        txtTelefono = new JTextField();
+		JPanel mainPanel = new JPanel(new java.awt.BorderLayout());
+		mainPanel.add(this.makeSigninPanel(), BorderLayout.EAST);
+		mainPanel.add(this.makeLoginPanel(), BorderLayout.WEST);
+		mainPanel.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.CENTER);
+		this.add(mainPanel, BorderLayout.CENTER);
+		this.add(makeBottomPanel(), BorderLayout.SOUTH);
+	}
 
-		txtEmailLogin = new JTextField();
-
-        JPanel mainSp = new JPanel();
-		mainSp.setLayout(new BorderLayout());
+	private JPanel makeSigninPanel () {
+		this.txtNombre = new JTextField("", InscribirUsuarioView.textFieldSize);
+		this.txtApellidos = new JTextField("", InscribirUsuarioView.textFieldSize);
+		this.txtEmail = new JTextField("", InscribirUsuarioView.textFieldSize);
+		this.txtTelefono = new JTextField("", InscribirUsuarioView.textFieldSize);
 
 		JPanel signinPanel = new JPanel();
-		JPanel loginPanel = new JPanel(new BorderLayout());
-		loginPanel.add(this.txtEmailLogin, BorderLayout.CENTER);
-		signinPanel.setLayout(new GridLayout(0, 2));
-        mainSp.add(signinPanel, BorderLayout.WEST);
-        mainSp.add(new JSeparator(), BorderLayout.CENTER);
-        mainSp.add(loginPanel, BorderLayout.EAST);
-        this.add(mainSp, BorderLayout.CENTER);
+		signinPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(
+				InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder
+				));
+		signinPanel.setLayout(new GridLayout(0, 2)); // any rows, 2 columns
 
 		{ // Nombre
 			signinPanel.add(new JLabel("Nombre:"));
 			signinPanel.add(txtNombre);
 		} { // Apellidos
 			signinPanel.add(new JLabel("Apellidos:"));
-            signinPanel.add(txtApellidos);
+			signinPanel.add(txtApellidos);
 		} { // Email
 			signinPanel.add(new JLabel("Email:"));
 			signinPanel.add(txtEmail);
@@ -72,27 +76,45 @@ public class InscribirUsuarioView extends Tab {
 			signinPanel.add(txtTelefono);
 		}
 
-		JPanel bottomPane = new JPanel();
-		bottomPane.setLayout(new BorderLayout());
+		return signinPanel;
+	}
 
-        tablaCursos = new JTable();
-		JScrollPane sp = new JScrollPane(tablaCursos);
+	private JPanel makeLoginPanel () {
+		this.txtEmailLogin = new JTextField("", InscribirUsuarioView.textFieldSize);
+
+		JPanel loginPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		loginPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder));
+		{ // email
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.gridx = 0;
+			gbc.gridy = 0;
+			gbc.weighty = 0.4;
+			loginPanel.add(new JLabel("email:"), gbc);
+			gbc.gridx = 1;
+			loginPanel.add(this.txtEmailLogin, gbc);
+		}
+
+		return loginPanel;
+	}
+
+	private JPanel makeBottomPanel () {
+		JPanel bottomPane = new JPanel(new BorderLayout());
+
+		this.tablaCursos = new JTable();
+		JScrollPane sp = new JScrollPane(this.tablaCursos);
 
 		sp.setPreferredSize(new java.awt.Dimension(
 				this.getWidth(), 200
-		));
+				));
 
 		bottomPane.add(sp, BorderLayout.CENTER);
-        JPanel buttons = new JPanel();
-        btnInscribir = new JButton("Inscribirse");
-        buttons.add(btnInscribir);
-        bottomPane.add(new JLabel("Cursos disponibles"), BorderLayout.NORTH);
-        bottomPane.add(buttons, BorderLayout.SOUTH);
+		bottomPane.add(new JLabel("Cursos disponibles"), BorderLayout.NORTH);
+		bottomPane.add(this.btnInscribir = new JButton("Inscribirse"), BorderLayout.SOUTH);
 
-		this.add(bottomPane, BorderLayout.SOUTH);
-		this.add(new JLabel("Inscripción de alumnado"), BorderLayout.NORTH);
-    }
+		return bottomPane;
+	}
 
-    @Override
-    public void initController() { new InscribirUsuarioController(new InscribirUsuarioModel(), this); }
+	@Override
+	public void initController() { new InscribirUsuarioController(new InscribirUsuarioModel(), this); }
 }
