@@ -1,8 +1,8 @@
 package g41.si2022.coiipa.dto;
 
 public class ProfesorDTO {
+	private int id;
 	private String
-		id,
 		nombre, apellidos,
 		dni,
 		email,
@@ -14,7 +14,7 @@ public class ProfesorDTO {
 
 	public ProfesorDTO () { }
 
-	public ProfesorDTO (String id, String nombre, String apellidos, String dni, String email, String telefono, String direccion) {
+	public ProfesorDTO (int id, String nombre, String apellidos, String dni, String email, String telefono, String direccion) {
 		this.id = id;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
@@ -25,7 +25,7 @@ public class ProfesorDTO {
 		this.remuneracion = null;
 	}
 
-	public String getId () { return this.id; }
+	public int getId () { return this.id; }
 	public String getNombre () { return this.nombre; }
 	public String getApellidos () { return this.apellidos; }
 	public String getDni () { return this.dni; }
@@ -34,7 +34,7 @@ public class ProfesorDTO {
 	public String getDireccion () { return this.direccion; }
 	public Double getRemuneracion () { return this.remuneracion; }
 
-	public void setId (String id) { this.id = id; }
+	public void setId (int id) { this.id = id; }
 	public void setNombre (String nombre) { this.nombre = nombre; }
 	public void setApellidos (String apellido) { this.apellidos = apellido; }
 	public void setDni (String dni) { this.dni = dni; }

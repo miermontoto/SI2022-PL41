@@ -41,20 +41,17 @@ public class RegistrarCursoController {
 		this.model.insertCurso(
 				this.view.getName(), this.view.getObjetivosDescripcion(),
 				this.view.getInscripcionIni(), this.view.getInscripcionFin(), this.view.getCursoIni(), this.view.getCursoFin(),
-				this.view.getPlazas(), 0);
+				this.view.getPlazas(), this.getProfesor().getId());
 	}
 
-	private void getProfesor () {
+	private ProfesorDTO getProfesor () {
 		javax.swing.table.TableModel model = this.view.getTablaProfesores().getModel();
 		for (int i = 0 ; i < model.getRowCount() ; i++) {
 			if (Integer.parseUnsignedInt(
 					model.getValueAt(model.getColumnCount()-1, i).toString()) != 0) {
-				this.profesores.forEach((x) -> {
-					if (x.getNombre().equals(model.getValueAt(model.getColumnCount()-1, i))) {
-						
-					}
-				});
+				return this.profesores.get(i);
 			}
 		}
+		return null;
 	}
 }
