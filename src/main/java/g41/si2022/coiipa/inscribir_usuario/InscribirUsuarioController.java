@@ -18,7 +18,7 @@ public class InscribirUsuarioController {
     }
 
     public void initView() {
-        view.getBtnCargarCursos().addActionListener(e -> SwingUtil.exceptionWrapper(() -> getListaCursos()));
+        SwingUtil.exceptionWrapper(() -> getListaCursos());
     }
 
     public void getListaCursos() {

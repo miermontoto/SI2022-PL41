@@ -1,7 +1,7 @@
 package g41.si2022.coiipa.inscribir_usuario;
 
 import java.awt.BorderLayout;
-
+import lombok.Getter;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,10 +16,10 @@ import java.awt.GridBagConstraints;
 import g41.si2022.util.SwingMain;
 import g41.si2022.util.Tab;
 
+@Getter
 public class InscribirUsuarioView extends Tab {
 
 	private static final long serialVersionUID = 1L;
-    private JButton btnCargarCursos;
     private JButton btnInscribir;
     private JTable tablaCursos;
 
@@ -107,9 +107,7 @@ public class InscribirUsuarioView extends Tab {
 
 		bottomPane.add(sp, BorderLayout.CENTER);
         JPanel buttons = new JPanel();
-        btnCargarCursos = new JButton("Cargar cursos");
         btnInscribir = new JButton("Inscribirse");
-        buttons.add(btnCargarCursos);
         buttons.add(btnInscribir);
         bottomPane.add(new JLabel("Cursos disponibles"), BorderLayout.NORTH);
         bottomPane.add(buttons, BorderLayout.SOUTH);
@@ -118,37 +116,6 @@ public class InscribirUsuarioView extends Tab {
 		this.add(new JLabel("Inscripción de alumnado"), BorderLayout.NORTH);
     }
 
-
     @Override
     public void initController() { new InscribirUsuarioController(new InscribirUsuarioModel(), this); }
-
-
-    public JButton getBtnCargarCursos() {
-        return btnCargarCursos;
-    }
-
-    public JTable getTablaCursos() {
-        return tablaCursos;
-    }
-
-    public JButton getBtnInscribir() {
-        return btnInscribir;
-    }
-
-    public JTextField getTxtNombre() {
-        return txtNombre;
-    }
-
-    public JTextField getTxtApellidos() {
-        return txtApellidos;
-    }
-
-    public JTextField getTxtEmail() {
-        return txtEmail;
-    }
-
-    public JTextField getTxtTelefono() {
-        return txtTelefono;
-    }
-
 }
