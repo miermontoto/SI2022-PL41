@@ -37,8 +37,8 @@ public class RegistrarPagoView extends Tab {
 	JScrollPane scrollPane; // Panel de scroll de la tabla
 	private JButton botoncarga;
 	private JPanel panel_1;
-	private JLabel infoidinscripcion;
-	private JLabel idinscripcion;
+	private JLabel infonombreinscrito;
+	private JLabel nombreinscripcion;
 	private JLabel infoquehace;
 	private JLabel lblNewLabel;
 	private JTextField insertarimporte;
@@ -61,7 +61,7 @@ public class RegistrarPagoView extends Tab {
 		
 		panel_1 = new JPanel();
 		add(panel_1, BorderLayout.EAST);
-		panel_1.setLayout(new MigLayout("", "[131.00px][122.00px,grow][]", "[][14px][][][][][][][]"));
+		panel_1.setLayout(new MigLayout("", "[122.00px,grow][]", "[][14px][][][][][][][]"));
 		
 		infoquehace = new JLabel("Insertar un nuevo pago");
 		infoquehace.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -69,28 +69,28 @@ public class RegistrarPagoView extends Tab {
 		infoquehace.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_1.add(infoquehace, "cell 0 0,alignx left,aligny top");
 		
-		infoidinscripcion = new JLabel("Id de inscripción seleccionado: ");
-		infoidinscripcion.setVerticalAlignment(SwingConstants.TOP);
-		panel_1.add(infoidinscripcion, "cell 0 2,alignx left,aligny center");
+		infonombreinscrito = new JLabel("Nombre del inscrito: ");
+		infonombreinscrito.setVerticalAlignment(SwingConstants.TOP);
+		panel_1.add(infonombreinscrito, "cell 0 1,alignx left,aligny center");
 		
-		idinscripcion = new JLabel("N/A");
-		panel_1.add(idinscripcion, "cell 1 2,alignx right,aligny center");
+		nombreinscripcion = new JLabel("N/A");
+		panel_1.add(nombreinscripcion, "cell 0 2,alignx left,aligny center");
 		
 		lblNewLabel = new JLabel("Introducir importe recibido (€): ");
-		panel_1.add(lblNewLabel, "cell 0 4,alignx left,aligny center");
+		panel_1.add(lblNewLabel, "cell 0 3,alignx left,aligny center");
 		
 		insertarimporte = new JTextField();
-		panel_1.add(insertarimporte, "cell 1 4,alignx right");
+		panel_1.add(insertarimporte, "cell 0 4,growx");
 		insertarimporte.setColumns(10);
 		
 		
-		lblNewLabel_1 = new JLabel("Introducir fecha");
-		panel_1.add(lblNewLabel_1, "cell 0 6");
-		panel_1.add(datepicker, "cell 1 6,alignx right,aligny center");
-
-		botonpagar = new JButton("Insertar pago");
+		lblNewLabel_1 = new JLabel("Introducir fecha:");
+		panel_1.add(lblNewLabel_1, "cell 0 5");
+		panel_1.add(datepicker, "cell 0 6,alignx right,aligny center");
 		
-		panel_1.add(botonpagar, "cell 0 8");
+				botonpagar = new JButton("Insertar pago");
+				
+				panel_1.add(botonpagar, "cell 0 8");
 
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.NORTH);
@@ -106,15 +106,39 @@ public class RegistrarPagoView extends Tab {
 		//getContentPane().add(tablePanel, "cell 0 5,grow");
 
 		//NO ES MVC, pero para testing, pruebo a cargar la tabla con datos
-		String [] columnas = {"Inscripción", "Nombre", "Estado"};
+		String [] columnas = {"Nombre", "Fecha", "Coste", "Estado"};
 		DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
-		String [] testData = {"123", "Pepito", "SIN PAGAR"};
+		String [] testData = {"Pepito", "2022-03-01", "50", "SIN PAGAR"};
 		modelo.addRow(testData);
 		tableInscripciones.setModel(modelo);
 		tableInscripciones.setName("tabCursos");
 		//tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		//tableInscripciones.setDefaultEditor(Object.class, null); //Leer sólo.
 		RegistrarPagoController controlador = new RegistrarPagoController(this, new RegistrarPagoModel()); // Inicializo el controlador finalmente
+	}
+
+	public JLabel getInfonombreinscrito() {
+		return infonombreinscrito;
+	}
+
+	public void setInfonombreinscrito(JLabel infonombreinscrito) {
+		this.infonombreinscrito = infonombreinscrito;
+	}
+
+	public JLabel getNombreinscripcion() {
+		return nombreinscripcion;
+	}
+
+	public void setNombreinscripcion(JLabel nombreinscripcion) {
+		this.nombreinscripcion = nombreinscripcion;
+	}
+
+	public JLabel getLblNewLabel_1() {
+		return lblNewLabel_1;
+	}
+
+	public void setLblNewLabel_1(JLabel lblNewLabel_1) {
+		this.lblNewLabel_1 = lblNewLabel_1;
 	}
 
 	public JButton getBtnNewButton() {
@@ -166,7 +190,7 @@ public class RegistrarPagoView extends Tab {
 	}
 
 	public void setIdinscripcion(JLabel idinscripcion) {
-		this.idinscripcion = idinscripcion;
+		this.nombreinscripcion = idinscripcion;
 	}
 
 	public void setPanel_1(JPanel panel_1) {
@@ -174,19 +198,19 @@ public class RegistrarPagoView extends Tab {
 	}
 
 	public JLabel getInfoidinscripcion() {
-		return infoidinscripcion;
+		return infonombreinscrito;
 	}
 
 	public void setInfoidinscripcion(JLabel infoidinscripcion) {
-		this.infoidinscripcion = infoidinscripcion;
+		this.infonombreinscrito = infoidinscripcion;
 	}
 
 	public JLabel getIdinscripcion() {
-		return idinscripcion;
+		return nombreinscripcion;
 	}
 
 	public void setIdinscripcion(int i) {
-		this.idinscripcion.setText(Integer.toString(i));
+		this.nombreinscripcion.setText(Integer.toString(i));
 	}
 
 	public JLabel getInfoquehace() {

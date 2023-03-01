@@ -10,29 +10,61 @@ package g41.si2022.coiipa.dto;
  */
 public class PagoDTO {
 
-	private String id;
+	private String nombre;
 	private String coste;
+	private String fecha;
 	private String estado;
 
 	public PagoDTO() { }
 
 
-	public PagoDTO(String rowId, String rowCoste, String rowEstado) {
-		this.id = rowId;
-		this.coste = rowCoste;
-		this.estado = rowEstado;
+	public PagoDTO(String nombre, String coste, String fecha, String estado) {
+		this.nombre = nombre;
+		this.coste = coste;
+		this.fecha = fecha;
+		this.estado = estado;
 	}
 
 
-	public String getId() { return id; }
+	public String getNombre() {
+		return nombre;
+	}
 
-	public void setId(String id) { this.id = id; }
 
-	public String getCoste() { return coste; }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-	public void setCoste(String coste) { this.coste = coste; }
 
-	public String getEstado() { return estado; }
+	public String getCoste() {
+		return coste;
+	}
 
-	public void setEstado(String estado) { this.estado = estado; }
+
+	public void setCoste(String coste) {
+		this.coste = coste;
+	}
+
+
+	public String getFecha() {
+		return fecha;
+	}
+
+
+	public void setFecha(String fecha) {
+		this.fecha = fecha;
+	}
+
+
+	public String getEstado() {
+		return estado;
+	}
+
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+
+	
 }

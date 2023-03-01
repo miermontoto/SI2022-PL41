@@ -25,17 +25,23 @@ public class RegistrarPagoController {
 	}
 
 	public void inicializa() {
+		
+		//this.getListaInscripciones();
+		
 		vista.getBtnNewButton().addActionListener(e -> SwingUtil.exceptionWrapper(() -> this.getListaInscripciones()));
 
+		//Acción al darle al botón de pagar:
 		vista.getBotonpagar().addActionListener(new ActionListener() { //Botón añadir pago
 			public void actionPerformed(ActionEvent e) {
-				int idinscripcion = Integer.parseInt(vista.getIdinscripcion().getText());
+				
+				String nombreinscrito = vista.getNombreinscripcion().getText(); 
 				int importe = Integer.parseInt(vista.getInsertarimporte().getText());
-				System.out.printf("Se han pagado %s € para el id %s", importe, idinscripcion);
+				System.out.printf("Se han pagado %s € para el alumno %s", importe, nombreinscrito);
 				Date fechahoy = new Date();
 				modelo.registrarPago(importe, Util.dateToIsoString(new Date()), idinscripcion);
 				//modelo.actualizarInscripcion(idinscripcion);
-				controlador.getListaInscripciones();
+				controlador.getListaInscripciones(); //Refrescamos la tabla al terminar de inscribir a la persona
+				
 			}
 		});
 		//Acciones al pulsar la tabla
@@ -59,8 +65,10 @@ public class RegistrarPagoController {
 
 		// Obtengo la lista de insripciones
 		List<PagoDTO> inscripciones=modelo.getListaInscripciones(Util.isoStringToDate("2022-05-15"));
-		TableModel tmodel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] {"id", "coste", "estado"});
+		TableModel tmodel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] {"id", "nombre", "fecha", "coste", "estado"}); //La primera columna estará oculta
 		vista.getTableInscripciones().setModel(tmodel); // Le pongo el modelo
+		vista.getTableInscripciones().removeColumn(vista.getTableInscripciones().getColumnModel().getColumn(0));
+
 		//SwingUtil.autoAdjustColumns(vista.getTableInscripciones()); // Ajustamos las columnas
 
 		// Como se guarda la clave del ultimo elemento seleccionado, restaura la seleccion de los detalles
