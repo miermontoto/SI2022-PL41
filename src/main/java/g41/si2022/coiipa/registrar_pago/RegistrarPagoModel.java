@@ -20,13 +20,12 @@ public class RegistrarPagoModel {
 		return db.executeQueryPojo(PagoDTO.class, sql, d); //Statement preparado.
 	}
 
-	//Valores: importe del pago, fecha del pago y el idisncripción.
+	// Valores: importe del pago, fecha del pago y el idisncripción.
 	public void registrarPago(int importe, String fecha, int idinscripcion) {
 		String sql="INSERT INTO pago (importe, fecha, inscripcion_id) VALUES(?,?,?)";
 		db.executeUpdate(sql, importe, Util.isoStringToDate(fecha), idinscripcion);
 
 		this.actualizarInscripcion(idinscripcion);
-
 	}
 
 	public void actualizarInscripcion(int id) {

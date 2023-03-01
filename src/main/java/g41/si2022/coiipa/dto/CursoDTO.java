@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter @Getter @SuppressWarnings("unused")
+@Setter @Getter
 public class CursoDTO {
 
 	private String
@@ -21,7 +21,7 @@ public class CursoDTO {
 		id,
 		plazas,
 		docente_id;
-	
+
 	public CursoDTO (
 			String nombre, String descripcion, String estado,
 			Date start_inscr, Date end_inscr, Date start, Date end,
@@ -38,5 +38,4 @@ public class CursoDTO {
 		this.plazas = plazas;
 		this.docente_id = docente_id;
 	}
-	
 }

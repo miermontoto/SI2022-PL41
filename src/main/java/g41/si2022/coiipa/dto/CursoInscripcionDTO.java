@@ -3,7 +3,7 @@ package g41.si2022.coiipa.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter @Getter @SuppressWarnings("unused")
+@Setter @Getter
 public class CursoInscripcionDTO {
     private String nombre;
     private String plazas;
