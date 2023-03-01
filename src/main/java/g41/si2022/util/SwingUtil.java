@@ -118,8 +118,59 @@ public class SwingUtil {
 		}
 		return tm;
 	}
+	
+	/**
+	 * Modificado por Alex.
+	 * 
+	 * Crea un tablemodel a partir de una lista de objetos POJO con las columnas que se indican.
+	 * @param pojos Lista de objetos cuyos atributos se utilizaran para crear el tablemodel
+	 * (utiliza apache commons beanutils). Si es null solamente crea el tablemodel con las cabeceras de columna
+	 * @param colProperties Los nombres de atributo de los objetos (ordenados) que se incluiran en el tablemodel
+	 * (cada uno debe disponer del correspondiente getter)
+	 */
+	public static <E> TableModel getTableModelFromPojos(List<E> pojos, String[] colProperties,
+			String[] colNames, java.util.Map<Integer, java.util.regex.Pattern> writeableColumns) {
+		// Creación inicial del tablemodel y dimensionamiento
+		// Hay que tener en cuenta que para que la tabla pueda mostrar las columnas deberá estar dentro de un JScrollPane
+		TableModel tm;
+		if (colNames.length != colProperties.length) throw new UnexpectedException("colProperties es distinto en tamaño a colNames");
+		if (pojos == null) return new DefaultTableModel(colNames, 0); //solo las columnas (p.e. para inicializaciones)
+		else tm = new DefaultTableModel(colNames, pojos.size()) {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void setValueAt(Object value, int row, int column) {
+				if (writeableColumns == null) super.setValueAt(value, row, column);
+				else if (value == null ||
+						value.equals("") ||
+						!writeableColumns.containsKey(column) ||
+						writeableColumns.get(column).matcher(value.toString()).matches()
+					) {
+					super.setValueAt(value, row, column);
+				}
+			}
 
+			@Override
+			public boolean isCellEditable (int row, int column) {
+				return writeableColumns == null ? false : writeableColumns.keySet().stream().anyMatch( x -> x == column);
+			}
+		};
 
+		// Carga cada uno de los valores de pojos usando PropertyUtils (de apache coommons beanutils)
+		for (int i = 0; i < pojos.size(); i++) {
+			for (int j=0; j<colProperties.length; j++) {
+				try {
+					Object pojo=pojos.get(i);
+					Object value=PropertyUtils.getSimpleProperty(pojo, colProperties[j]);
+					tm.setValueAt(value, i, j);
+				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+					throw new UnexpectedException(e);
+				}
+			}
+		}
+		return tm;
+	}
+	
 	public static <E> TableModel getRecordModelFromPojo(E pojo, String[] colProperties) {
 		/* Creación inicial del tablemodel y dimensionamiento
 		 * Como solo habrá dos columnas pongo una cabecera con dos valores vacios, de forma que

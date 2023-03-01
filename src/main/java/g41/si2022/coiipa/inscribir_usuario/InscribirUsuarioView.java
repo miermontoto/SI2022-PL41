@@ -18,6 +18,7 @@ import g41.si2022.util.Tab;
 
 public class InscribirUsuarioView extends Tab {
 
+	private static final long serialVersionUID = 1L;
     private JButton btnCargarCursos;
     private JButton btnInscribir;
     private JTable tablaCursos;

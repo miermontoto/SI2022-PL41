@@ -3,17 +3,17 @@ package g41.si2022.coiipa.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter @Getter
+@Setter @Getter @SuppressWarnings("unused")
 public class PagoDTO {
-	int id;
-	int alumno_id;
+
+	private int id;
+	private int alumno_id;
 	private String nombre;
 	private String coste;
 	private String fecha;
 	private String estado;
 
 	public PagoDTO() { }
-
 
 	public PagoDTO(int id, int alumno_id, String nombre, String coste, String fecha, String estado) {
 		this.id = id;
