@@ -27,12 +27,12 @@ public class Debug extends Tab {
 		JLabel status = new JLabel();
 		status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-		JButton schema = new JButton("Run schema.sql");
+		JButton schema = new JButton("Run schema");
 		schema.addActionListener(e -> {
 			status.setText(db.createDatabase(false) ? "Database created" : "Failed to create database");
 		});
 
-		JButton data = new JButton("Run data.sql");
+		JButton data = new JButton("Load data");
 		data.addActionListener(e -> {
 			if (db.exists()) {
 				try {
