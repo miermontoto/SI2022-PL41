@@ -1,4 +1,4 @@
-package g41.SI2022.util;
+package g41.si2022.util;
 
 import java.awt.EventQueue;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class SwingMain {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	public void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Main");
 		frame.setSize(640, 480);
@@ -53,19 +53,27 @@ public class SwingMain {
 
 		// Tabs are the main content of the window. This will contain all the other GUIs.
 		tabs = new JTabbedPane();
-		Map<String, Tab> theTabs = new TreeMap<String, Tab> ();
+		Map<String, Tab> theTabs = new TreeMap<String, Tab>();
 
 		tabs.add(new Debug(this), 0);
 		tabs.setTitleAt(0, "Debug");
 
 		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
-		theTabs.put("Registrar curso", new g41.SI2022.coiipa.registrarCurso.RegistrarCursoView(this));
-		theTabs.put("Registrar pago", new g41.SI2022.coiipa.registrarPago.RegistrarPagoView(this));
+		theTabs.put("Registrar curso", new g41.si2022.coiipa.registrar_curso.RegistrarCursoView(this));
+		theTabs.put("Registrar pago", new g41.si2022.coiipa.registrar_pago.RegistrarPagoView(this));
+		theTabs.put("Inscribir usuario", new g41.si2022.coiipa.inscribir_usuario.InscribirUsuarioView(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));
 
+		tabs.addChangeListener(e -> {
+			Tab tab = (Tab) tabs.getSelectedComponent();
+			if (tab != null) tab.initController();
+		});
+
 		frame.add(tabs);
+		frame.repaint();
+		frame.revalidate();
 	}
 
 	public JFrame getFrame() { return this.frame; }

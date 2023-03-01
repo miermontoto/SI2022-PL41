@@ -1,6 +1,6 @@
-package g41.SI2022.coiipa.registrarCurso;
+package g41.si2022.coiipa.dto;
 
-public class ProfesorDisplayDTO {
+public class ProfesorDTO {
 	private String
 		id,
 		nombre, apellidos,
@@ -8,11 +8,10 @@ public class ProfesorDisplayDTO {
 		email,
 		telefono,
 		direccion;
-	private Double remuneracion;
 
-	public ProfesorDisplayDTO () { }
+	public ProfesorDTO () { }
 
-	public ProfesorDisplayDTO (String id, String nombre, String apellidos, String dni, String email, String telefono, String direccion) {
+	public ProfesorDTO (String id, String nombre, String apellidos, String dni, String email, String telefono, String direccion) {
 		this.id = id;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
@@ -20,7 +19,6 @@ public class ProfesorDisplayDTO {
 		this.email = email;
 		this.telefono = telefono;
 		this.direccion = direccion;
-		this.remuneracion = null;
 	}
 
 	public String getId () { return this.id; }
@@ -30,7 +28,6 @@ public class ProfesorDisplayDTO {
 	public String getEmail () { return this.email; }
 	public String getTelefono () { return this.telefono; }
 	public String getDireccion () { return this.direccion; }
-	public Double getRemuneracion () { return this.remuneracion; }
 
 	public void setId (String id) { this.id = id; }
 	public void setNombre (String nombre) { this.nombre = nombre; }
@@ -39,7 +36,6 @@ public class ProfesorDisplayDTO {
 	public void setEmail (String email) { this.email = email; }
 	public void setTelefono (String telefono) { this.telefono = telefono; }
 	public void setDireccion (String direccion) { this.direccion = direccion; }
-	public void setRemuneracion (Double remuneracion) { this.remuneracion = remuneracion; }
 
 
 }

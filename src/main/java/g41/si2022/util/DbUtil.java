@@ -1,4 +1,4 @@
-package g41.SI2022.util;
+package g41.si2022.util;
 
 import java.io.IOException;
 import java.nio.file.Files;

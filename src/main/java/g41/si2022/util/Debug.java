@@ -1,4 +1,4 @@
-package g41.SI2022.util;
+package g41.si2022.util;
 
 import java.awt.BorderLayout;
 
@@ -66,7 +66,10 @@ public class Debug extends Tab {
 		});
 
 		JButton refresh = new JButton("Refresh tabs");
-		// TODO: make tabs refresh somehow
+		refresh.addActionListener(e -> {
+			main.initialize();
+			status.setText("Tabs refreshed");
+		});
 
 		dbButtons.add(schema);
 		dbButtons.add(data);
