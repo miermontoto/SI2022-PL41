@@ -26,7 +26,6 @@ public class InscribirUsuarioController {
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas", "start_inscr", "end_inscr" },
         		new String[] { "Nombre", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
         view.getTablaCursos().setModel(tableModel);
-
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
     }
 }
