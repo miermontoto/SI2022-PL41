@@ -25,6 +25,10 @@ public class InscribirUsuarioController {
         List<CursoInscripcionDTO> cursos = model.getListaCursos();
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas", "start_inscr", "end_inscr" });
         view.getTablaCursos().setModel(tableModel);
+
+        String[] columnNames = { "Nombre", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr." };
+        for(int i = 0; i < columnNames.length; i++)
+            view.getTablaCursos().getColumnModel().getColumn(i).setHeaderValue(columnNames[i]);
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
     }
 }
