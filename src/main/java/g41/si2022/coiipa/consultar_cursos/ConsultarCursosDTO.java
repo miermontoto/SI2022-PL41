@@ -10,28 +10,28 @@ public class ConsultarCursosDTO {
 	private String nombre;
 	private String estado;
 	private String plazas;
-	private String start_inscr; // Debería de ser start_curso
-	private String end_inscr;   // Debería de ser end_curso
+	private String start; // Debería de ser start_curso
+	private String end;   // Debería de ser end_curso
 
 	public ConsultarCursosDTO() {}
 
-	public ConsultarCursosDTO(String nombre, String estado, String plazas, String start_inscr, String end_inscr) {
+	public ConsultarCursosDTO(String nombre, String estado, String plazas, String start, String end) {
 		this.nombre = nombre;
 		this.estado = estado;
 		this.plazas = plazas;
-		this.start_inscr = start_inscr; // Debería de ser start_curso
-		this.end_inscr = end_inscr;     // Debería de ser end_curso
+		this.start = start; // Debería de ser start_curso
+		this.end = end;     // Debería de ser end_curso
 	}
 
 	public String getNombre() { return this.nombre; }
 	public String getEstado() { return this.estado; }
 	public String getPlazas() { return this.plazas; }
-	public String getStartInscr() { return this.start_inscr; }
-	public String getEndInscr() { return this.end_inscr; }
+	public String getStartInscr() { return this.start; }
+	public String getEndInscr() { return this.end; }
 
 	public void setNombre(String nombre) { this.nombre = nombre; }
 	public void setEstado(String estado) { this.estado = estado; }
 	public void setPlazas(String plazas) { this.plazas = plazas; }
-	public void setStartInscr(String start_inscr) { this.start_inscr = start_inscr; }
-	public void setEndInscr(String end_inscr) { this.end_inscr = end_inscr; }
+	public void setStartInscr(String start) { this.start = start; }
+	public void setEndInscr(String end) { this.end = end; }
 }
