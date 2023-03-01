@@ -35,4 +35,11 @@ public class ConsultarCursosController {
 		SwingUtil.autoAdjustColumns(view.getTablaCursos());
 	}
 	
+	public void getListaInscripciones() {
+		
+		
+	}
+	
+
+	
 }

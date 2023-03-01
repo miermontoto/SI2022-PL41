@@ -15,4 +15,10 @@ public class ConsultarCursosModel {
 				+ "FROM curso";
 		return db.executeQueryPojo(ConsultarCursosDTO.class, sql);
 	}
+	
+	public List<ConsultarCursosDTO> getListaInscr() {
+		String sql = "";
+		
+		return db.executeQueryPojo(ConsultarCursosDTO.class, sql);
+	}
 }
