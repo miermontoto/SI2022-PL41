@@ -1,38 +1,26 @@
 package g41.si2022.coiipa.dto;
-/**
- * Cada una de las filas que muestran al usuario las carreras y su estado
- * IMPORTANTE: Cuando se usan los componentes de Apache Commons DbUtils debe
- * mantenerse de forma estricta el convenio de capitalización de Java:
- *  - Capitalizar todas las palabras que forman un identificador
- *    excepto la primera letra de nombres de métodos y variables.
- *  - No utilizar subrayados
- * Seguir tambien estos mismos criterios en los nombres de tablas y campos de la BD
- */
-public class PagoDTO {
 
-	private String id;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter @Getter @SuppressWarnings("unused")
+public class PagoDTO {
+	int id;
+	int alumno_id;
+	private String nombre;
 	private String coste;
+	private String fecha;
 	private String estado;
 
 	public PagoDTO() { }
 
 
-	public PagoDTO(String rowId, String rowCoste, String rowEstado) {
-		this.id = rowId;
-		this.coste = rowCoste;
-		this.estado = rowEstado;
+	public PagoDTO(int id, int alumno_id, String nombre, String coste, String fecha, String estado) {
+		this.id = id;
+		this.alumno_id = alumno_id;
+		this.nombre = nombre;
+		this.coste = coste;
+		this.fecha = fecha;
+		this.estado = estado;
 	}
-
-
-	public String getId() { return id; }
-
-	public void setId(String id) { this.id = id; }
-
-	public String getCoste() { return coste; }
-
-	public void setCoste(String coste) { this.coste = coste; }
-
-	public String getEstado() { return estado; }
-
-	public void setEstado(String estado) { this.estado = estado; }
 }
