@@ -2,6 +2,7 @@ package g41.si2022.coiipa.inscribir_usuario;
 
 import java.awt.BorderLayout;
 import lombok.Getter;
+import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,6 +29,8 @@ public class InscribirUsuarioView extends Tab {
     private JTextField txtEmail;
     private JTextField txtTelefono;
 
+	private JTextField txtEmailLogin;
+
     public InscribirUsuarioView(SwingMain main) {
         super(main);
         initialize();
@@ -41,58 +44,32 @@ public class InscribirUsuarioView extends Tab {
         txtEmail = new JTextField();
         txtTelefono = new JTextField();
 
+		txtEmailLogin = new JTextField();
+
         JPanel mainSp = new JPanel();
-        mainSp.setLayout(new BorderLayout());
+		mainSp.setLayout(new BorderLayout());
 
 		JPanel signinPanel = new JPanel();
-		signinPanel.setLayout(new GridBagLayout());
+		JPanel loginPanel = new JPanel(new BorderLayout());
+		loginPanel.add(this.txtEmailLogin, BorderLayout.CENTER);
+		signinPanel.setLayout(new GridLayout(0, 2));
         mainSp.add(signinPanel, BorderLayout.WEST);
         mainSp.add(new JSeparator(), BorderLayout.CENTER);
-		GridBagConstraints left = new GridBagConstraints();
-		GridBagConstraints right = new GridBagConstraints();
+        mainSp.add(loginPanel, BorderLayout.EAST);
         this.add(mainSp, BorderLayout.CENTER);
 
 		{ // Nombre
-			{ // Label
-				left.fill = GridBagConstraints.BOTH;
-				left.gridx = 0;
-				left.gridy = 0;
-				left.weighty = 0;
-				signinPanel.add(new JLabel("Nombre:"), left);
-			} { // Input
-				right.fill = GridBagConstraints.BOTH;
-				right.gridx = 1;
-				right.gridy = 0;
-				right.weighty = 1;
-				signinPanel.add(txtNombre, right);
-			}
+			signinPanel.add(new JLabel("Nombre:"));
+			signinPanel.add(txtNombre);
 		} { // Apellidos
-			{ // Label
-				left.gridy = 1;
-				left.weighty = 2;
-				signinPanel.add(new JLabel("Apellidos:"), left);
-			} { // Input
-				right.gridy = 1;
-				right.weighty = 2;
-                signinPanel.add(txtApellidos, right);
-            }
+			signinPanel.add(new JLabel("Apellidos:"));
+            signinPanel.add(txtApellidos);
 		} { // Email
-			{ // Label
-				left.gridy = 2;
-				left.weighty = 1;
-				signinPanel.add(new JLabel("Email:"), left);
-			} { // Input
-				right.gridy = 2;
-				signinPanel.add(txtEmail, right);
-			}
+			signinPanel.add(new JLabel("Email:"));
+			signinPanel.add(txtEmail);
 		} { // Teléfono
-			{ // Label
-				left.gridy = 3;
-				signinPanel.add(new JLabel("Teléfono (opcional):"), left);
-			} { // Input
-				right.gridy = 3;
-				signinPanel.add(txtTelefono, right);
-			}
+			signinPanel.add(new JLabel("Teléfono (opcional):"));
+			signinPanel.add(txtTelefono);
 		}
 
 		JPanel bottomPane = new JPanel();
