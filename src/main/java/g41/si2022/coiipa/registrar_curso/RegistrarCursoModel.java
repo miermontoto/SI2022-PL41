@@ -11,7 +11,7 @@ public class RegistrarCursoModel {
 
 	public java.util.List<ProfesorDTO> getListaProfesores () {
 		String sql =
-				"SELECT nombre, apellidos, email, direccion "
+				"SELECT * "
 				+ " FROM docente ORDER BY nombre";
 		return db.executeQueryPojo(ProfesorDTO.class, sql);
 	}
