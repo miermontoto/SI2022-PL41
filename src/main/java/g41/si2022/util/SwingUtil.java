@@ -75,7 +75,6 @@ public class SwingUtil {
 		else return ""; // No hay filas seleccionadas
 	}
 
-
 	/**
 	 * Selecciona la fila de la tabla con la clave indicada y devuelve el valor la clave de la fila seleccionada resultante
 	 * (la misma clave o string vacio si no existe la fila)
@@ -118,10 +117,10 @@ public class SwingUtil {
 		}
 		return tm;
 	}
-	
+
 	/**
 	 * Modificado por Alex.
-	 * 
+	 *
 	 * Crea un tablemodel a partir de una lista de objetos POJO con las columnas que se indican.
 	 * @param pojos Lista de objetos cuyos atributos se utilizaran para crear el tablemodel
 	 * (utiliza apache commons beanutils). Si es null solamente crea el tablemodel con las cabeceras de columna
@@ -137,7 +136,7 @@ public class SwingUtil {
 		if (pojos == null) return new DefaultTableModel(colNames, 0); //solo las columnas (p.e. para inicializaciones)
 		else tm = new DefaultTableModel(colNames, pojos.size()) {
 			private static final long serialVersionUID = 1L;
-			
+
 			@Override
 			public void setValueAt(Object value, int row, int column) {
 				if (writeableColumns == null) super.setValueAt(value, row, column);
@@ -170,7 +169,7 @@ public class SwingUtil {
 		}
 		return tm;
 	}
-	
+
 	public static <E> TableModel getRecordModelFromPojo(E pojo, String[] colProperties) {
 		/* Creación inicial del tablemodel y dimensionamiento
 		 * Como solo habrá dos columnas pongo una cabecera con dos valores vacios, de forma que

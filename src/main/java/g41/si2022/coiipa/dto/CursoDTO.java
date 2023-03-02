@@ -1,7 +1,5 @@
 package g41.si2022.coiipa.dto;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,21 +9,21 @@ public class CursoDTO {
 	private String
 		nombre,
 		descripcion,
-		estado;
-	private Date
+		estado,
 		start_inscr,
 		end_inscr,
 		start,
-		end;
-	private int
+		end,
 		id,
 		plazas,
 		docente_id;
 
+	public CursoDTO() { }
+
 	public CursoDTO (
 			String nombre, String descripcion, String estado,
-			Date start_inscr, Date end_inscr, Date start, Date end,
-			int id, int plazas, int docente_id
+			String start_inscr, String end_inscr, String start, String end,
+			String id, String plazas, String docente_id
 	) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -37,5 +35,13 @@ public class CursoDTO {
 		this.id = id;
 		this.plazas = plazas;
 		this.docente_id = docente_id;
+	}
+
+	public CursoDTO(String id, String nombre, String plazas, String start_inscr, String end_inscr) {
+		this.id = id;
+		this.nombre = nombre;
+		this.plazas = plazas;
+		this.start_inscr = start_inscr;
+		this.end_inscr = end_inscr;
 	}
 }
