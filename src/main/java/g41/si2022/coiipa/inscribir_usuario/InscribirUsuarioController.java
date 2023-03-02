@@ -74,24 +74,25 @@ public class InscribirUsuarioController {
     }
 
     public void manageForm() {
-        if (cursoId == null) {
-            view.getBtnInscribir().setEnabled(false);
-            return;
-        }
+        view.getBtnInscribir().setEnabled(false);
+        if (cursoId == null) return;
 
-        if (view.getRadioSignin().isSelected()) { // Signin
+        if (view.getRadioSignin().isSelected()) { // Sign-in
             if (!view.getTxtEmailLogin().getText().isEmpty()) {
                 view.getBtnInscribir().setEnabled(model.verifyAlumnoEmail(view.getTxtEmailLogin().getText()));
             }
             return;
-        } // Signup
+        }
+
+        // Sign-up
         if (view.getTxtEmail().getText().isEmpty() || view.getTxtNombre().getText().isEmpty() || view.getTxtApellidos().getText().isEmpty()
-                || !Pattern.compile(Util.EMAIL_REGEX).matcher(view.getTxtEmail().getText()).matches() ||
+                || !model.verifyAlumnoEmail(view.getTxtEmail().getText()) ||
                     (view.getTxtTelefono().getText().length() != 9 && !view.getTxtTelefono().getText().isEmpty())) {
             view.getBtnInscribir().setEnabled(false);
             return;
         }
-        view.getBtnInscribir().setEnabled(true);
+
+        view.getBtnInscribir().setEnabled(true); // If all checks were successful, enable button
     }
 
     public void updateCursoValue() {

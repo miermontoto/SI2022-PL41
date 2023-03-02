@@ -24,8 +24,9 @@ public class Util {
 	    throw new IllegalStateException("Utility class");
 	}
 
-	public static boolean veryifyDbEmail(Database db, String email, String table) {
-		return checkCount(db, email, table, "email") > 0;
+	public static boolean verifyAlumnoEmail(Database db, String email) {
+		String sql = "select count(*) from alumno where email like ?";
+		return (int) db.executeQueryArray(sql, email).get(0)[0] > 0;
 	}
 
 	public static boolean verifyStructureEmail(String email) {
@@ -33,13 +34,7 @@ public class Util {
 	}
 
 	public static boolean verifyEmail(Database db, String email, String table) {
-		return veryifyDbEmail(db, email, table) && verifyStructureEmail(email);
-	}
-
-	public static int checkCount(Database db, String match, String table, String field) {
-		String sql = "select count(*) from ? as x where x.? = '?'";
-		List<Object[]> result = db.executeQueryArray(sql, table, field, match);
-		return (int) result.get(0)[0];
+		return verifyAlumnoEmail(db, email) && verifyStructureEmail(email);
 	}
 
 	/**
