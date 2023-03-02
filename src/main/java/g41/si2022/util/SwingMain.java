@@ -7,6 +7,8 @@ import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas
@@ -24,6 +26,7 @@ public class SwingMain {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		FlatLightLaf.setup();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
