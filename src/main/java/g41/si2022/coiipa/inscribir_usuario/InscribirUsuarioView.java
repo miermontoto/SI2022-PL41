@@ -2,6 +2,7 @@ package g41.si2022.coiipa.inscribir_usuario;
 
 import java.awt.BorderLayout;
 import lombok.Getter;
+import lombok.Data;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -17,7 +18,7 @@ import java.awt.GridBagConstraints;
 
 import g41.si2022.util.Tab;
 
-@Getter
+@Data @Getter
 public class InscribirUsuarioView extends Tab {
 
 	private static final long serialVersionUID = 1L;
