@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>G41</groupId>
-	<artifactId>SI2022</artifactId>
+	<artifactId>si2022</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>SI2022-PL41</name>
+	<name>si2022-PL41</name>
 	<url>https://github.com/miermontoto/SI2022-PL41</url>
 
 	<properties>

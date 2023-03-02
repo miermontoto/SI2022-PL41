@@ -159,7 +159,8 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			width = Math.max(width, tableColumn.getPreferredWidth());
 		}
 
-		columnSizes.put(tableColumn, new Integer(tableColumn.getWidth()));
+		// columnSizes.put(tableColumn, new Integer(tableColumn.getWidth()));
+		columnSizes.put(tableColumn, tableColumn.getWidth());
 
 		table.getTableHeader().setResizingColumn(tableColumn);
 		tableColumn.setWidth(width);
@@ -353,6 +354,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	 */
 	class ColumnAction extends AbstractAction
 	{
+		private static final long serialVersionUID = 1L;
 		private boolean isSelectedColumn;
 		private boolean isAdjust;
 
@@ -395,6 +397,10 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	 */
 	class ToggleAction extends AbstractAction
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private boolean isToggleDynamic;
 		private boolean isToggleLarger;
 

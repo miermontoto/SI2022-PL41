@@ -6,6 +6,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import java.awt.event.ActionEvent;
+
 public class Debug extends Tab {
 
 	private static final long serialVersionUID = -4249195203893017275L;
@@ -24,12 +26,12 @@ public class Debug extends Tab {
 		JLabel status = new JLabel();
 		status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-		JButton schema = new JButton("Execute schema.sql");
+		JButton schema = new JButton("Run schema");
 		schema.addActionListener(e -> {
 			status.setText(db.createDatabase(false) ? "Database created" : "Failed to create database");
 		});
 
-		JButton data = new JButton("Execute data.sql");
+		JButton data = new JButton("Load data");
 		data.addActionListener(e -> {
 			if (db.exists()) {
 				try {
@@ -42,7 +44,14 @@ public class Debug extends Tab {
 			} else status.setText("Failed to load data (db hasn't been created yet)");
 		});
 
-		JButton delete = new JButton("Delete database");
+		JButton refreshDb = new JButton("⟳");
+		refreshDb.addActionListener(e -> {
+			schema.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+			data.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+			status.setText("Database regenerated");
+		});
+
+		JButton delete = new JButton("Delete");
 		delete.addActionListener(e -> {
 			if (db.exists()) {
 				try {
@@ -55,7 +64,7 @@ public class Debug extends Tab {
 			} else status.setText("There is no database to delete");
 		});
 
-		JButton isFile = new JButton("File exists?");
+		JButton isFile = new JButton("Status");
 		isFile.addActionListener(e -> {
 			status.setText(db.exists() ? "Database exists" : "Database doesn't exist");
 		});
@@ -71,6 +80,7 @@ public class Debug extends Tab {
 			status.setText("Tabs refreshed");
 		});
 
+		dbButtons.add(refreshDb);
 		dbButtons.add(schema);
 		dbButtons.add(data);
 		dbButtons.add(delete);
