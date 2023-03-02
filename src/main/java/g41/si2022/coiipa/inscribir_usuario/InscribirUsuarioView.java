@@ -42,6 +42,9 @@ public class InscribirUsuarioView extends Tab {
     private JRadioButton radioSignin;
     private JRadioButton radioSignup;
 
+	private JLabel lblSignin;
+	private JLabel lblSignup;
+
 	public InscribirUsuarioView(g41.si2022.util.SwingMain main) {
 		super(main);
 		initialize();
@@ -69,8 +72,8 @@ public class InscribirUsuarioView extends Tab {
 		radioSignup.addActionListener( e -> toggle() );
 
 		JPanel mainPanel = new JPanel(new java.awt.BorderLayout());
-		mainPanel.add(this.makeSigninPanel(), BorderLayout.EAST);
-		mainPanel.add(this.makeLoginPanel(), BorderLayout.WEST);
+		mainPanel.add(this.signupPanel(), BorderLayout.EAST);
+		mainPanel.add(this.signinPanel(), BorderLayout.WEST);
 		mainPanel.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.CENTER);
     	mainPanel.add(radioPanel, BorderLayout.NORTH);
 		this.add(mainPanel, BorderLayout.CENTER);
@@ -81,52 +84,59 @@ public class InscribirUsuarioView extends Tab {
 		txtEmailLogin.setEnabled(false);
 	}
 
-	private JPanel makeSigninPanel () {
-		this.txtNombre = new JTextField("", InscribirUsuarioView.textFieldSize);
-		this.txtApellidos = new JTextField();
-		this.txtEmail = new JTextField();
-		this.txtTelefono = new JTextField();
+	private JPanel signupPanel () {
+		txtNombre = new JTextField("", InscribirUsuarioView.textFieldSize);
+		txtApellidos = new JTextField();
+		txtEmail = new JTextField();
+		txtTelefono = new JTextField();
 
-		JPanel signinPanel = new JPanel();
-		signinPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(
+		lblSignup = new JLabel("");
+
+		JPanel signupPanel = new JPanel();
+		signupPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(
 			InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder
 		));
-		signinPanel.setLayout(new GridLayout(0, 2)); // any rows, 2 columns
+		signupPanel.setLayout(new GridLayout(0, 2)); // any rows, 2 columns
 
 		{ // Nombre
-			signinPanel.add(new JLabel("Nombre:"));
-			signinPanel.add(txtNombre);
+			signupPanel.add(new JLabel("Nombre:"));
+			signupPanel.add(txtNombre);
 		} { // Apellidos
-			signinPanel.add(new JLabel("Apellidos:"));
-			signinPanel.add(txtApellidos);
+			signupPanel.add(new JLabel("Apellidos:"));
+			signupPanel.add(txtApellidos);
 		} { // Email
-			signinPanel.add(new JLabel("Email:"));
-			signinPanel.add(txtEmail);
+			signupPanel.add(new JLabel("Email:"));
+			signupPanel.add(txtEmail);
 		} { // Teléfono
-			signinPanel.add(new JLabel("Teléfono (opcional):"));
-			signinPanel.add(txtTelefono);
+			signupPanel.add(new JLabel("Teléfono (opcional):"));
+			signupPanel.add(txtTelefono);
+		} { // Label (estado)
+			signupPanel.add(lblSignup);
 		}
 
-		return signinPanel;
+		return signupPanel;
 	}
 
-	private JPanel makeLoginPanel () {
-		this.txtEmailLogin = new JTextField("", InscribirUsuarioView.textFieldSize);
+	private JPanel signinPanel () {
+		txtEmailLogin = new JTextField("", InscribirUsuarioView.textFieldSize);
+		lblSignin = new JLabel("");
 
-		JPanel loginPanel = new JPanel(new GridBagLayout());
+		JPanel signinPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-		loginPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder));
+		signinPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder));
         { // email
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.gridx = 0;
 			gbc.gridy = 1;
 			gbc.weighty = 0.4;
-			loginPanel.add(new JLabel("email:"), gbc);
+			signinPanel.add(new JLabel("email:"), gbc);
 			gbc.gridx = 1;
-			loginPanel.add(this.txtEmailLogin, gbc);
+			signinPanel.add(txtEmailLogin, gbc);
+			gbc.gridy = -1;
+			signinPanel.add(lblSignin, gbc);
 		}
 
-		return loginPanel;
+		return signinPanel;
 	}
 
 	private JPanel makeBottomPanel () {
