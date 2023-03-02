@@ -63,24 +63,26 @@ public class RegistrarPagoController {
 		String nombreInscrito = vista.getLblNombreInscripcion().getText();
 		String importeString = vista.getTxtImporte().getText();
 
-		if(nombreInscrito != "N/A" && importeString != null && vista.getDatepicker().getDate() != null) {
+		if(nombreInscrito == "N/A" || importeString == null || vista.getDatepicker().getDate() == null) {
+			return;
+		}
 
-			// Hacemos las conversiones a Date y int
-			Date fechaPago = java.sql.Date.valueOf(vista.getDatepicker().getDate());
-			int importe = Integer.parseInt(importeString);
+		// Hacemos las conversiones a Date y int
+		Date fechaPago = java.sql.Date.valueOf(vista.getDatepicker().getDate());
+		int importe = Integer.parseInt(importeString);
 
-			// Imprimo info de deb
-			System.out.printf("Se han pagado %s € para el alumno %s , en la inscripción: %d , con fecha %s \n", importe, nombreInscrito, idInscripcion, fechaPago.toString()); //DEBUG
+		// Imprimo info de deb
+		System.out.printf("Se han pagado %s € para el alumno %s , en la inscripción: %d , con fecha %s \n", importe, nombreInscrito, idInscripcion, fechaPago.toString()); //DEBUG
 
-			// Registro en la BBDD el pago
-			modelo.registrarPago(importe, Util.dateToIsoString(fechaPago) , controlador.idInscripcion);
+		// Registro en la BBDD el pago
+		modelo.registrarPago(importe, Util.dateToIsoString(fechaPago) , controlador.idInscripcion);
 
-			// Envío un email al alumno
-			enviarEmail(idAlumno, vista.getLblNombreInscripcion().getText());
+		// Envío un email al alumno
+		enviarEmail(idAlumno, vista.getLblNombreInscripcion().getText());
 
-			// Refresco la tabla de inscripciones
-			controlador.getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
-		} else System.err.printf("ERROR, has de rellenar todos los campos \n");
+		// Refresco la tabla de inscripciones
+		controlador.getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
+
 	}
 
 	public void enviarEmail(int idalumno, String alumno){
@@ -94,7 +96,6 @@ public class RegistrarPagoController {
 	}
 
 	public void getListaInscripciones() {
-		// Obtengo la lista de insripciones
 		List<PagoDTO> inscripciones = modelo.getListaInscripciones(Util.isoStringToDate("2022-05-15"));
 		TableModel tmodel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] {"id", "alumno_id", "nombre", "fecha", "coste", "estado"}); //La primera columna estará oculta
 		vista.getTableInscripciones().setModel(tmodel); // Le pongo el modelo
