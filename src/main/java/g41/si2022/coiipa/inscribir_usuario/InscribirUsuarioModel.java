@@ -18,6 +18,6 @@ public class InscribirUsuarioModel {
     }
 
     public boolean verifyAlumnoEmail(String email) {
-        return Util.verifyEmail(db, email, "alumno");
+        return Util.verifyAlumnoEmail(db, email);
     }
 }

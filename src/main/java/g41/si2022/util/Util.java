@@ -33,7 +33,7 @@ public class Util {
 		return email.matches(EMAIL_REGEX);
 	}
 
-	public static boolean verifyEmail(Database db, String email, String table) {
+	public static boolean verifyEmail(Database db, String email) {
 		return verifyAlumnoEmail(db, email) && verifyStructureEmail(email);
 	}
 

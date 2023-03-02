@@ -86,7 +86,7 @@ public class InscribirUsuarioController {
 
         // Sign-up
         if (view.getTxtEmail().getText().isEmpty() || view.getTxtNombre().getText().isEmpty() || view.getTxtApellidos().getText().isEmpty()
-                || !model.verifyAlumnoEmail(view.getTxtEmail().getText()) ||
+                || model.verifyAlumnoEmail(view.getTxtEmail().getText()) || !Util.verifyStructureEmail(view.getTxtEmail().getText()) ||
                     (view.getTxtTelefono().getText().length() != 9 && !view.getTxtTelefono().getText().isEmpty())) {
             view.getBtnInscribir().setEnabled(false);
             return;
