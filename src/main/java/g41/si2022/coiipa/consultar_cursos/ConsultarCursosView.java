@@ -38,7 +38,7 @@ public class ConsultarCursosView extends Tab {
 		// ------------- BorderLayout -> CENTER -------------
 		JPanel centerPanel = new JPanel();
 		// Add elements
-		centerPanel.setLayout(new GridLayout());
+		centerPanel.setLayout(new GridLayout(3, 0));
 		this.add(centerPanel, BorderLayout.CENTER);
 		
 		// lblCursos + tablaCursos
