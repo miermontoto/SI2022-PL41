@@ -44,9 +44,18 @@ public class InscribirUsuarioView extends Tab {
 		initialize();
 	}
 
+    private void toggle() {
+        txtEmail.setEnabled(!txtEmail.isEnabled());
+        txtNombre.setEnabled(!txtNombre.isEnabled());
+        txtApellidos.setEnabled(!txtApellidos.isEnabled());
+        txtTelefono.setEnabled(!txtTelefono.isEnabled());
+        txtEmailLogin.setEnabled(!txtEmailLogin.isEnabled());
+    }
+
 	private void initialize() {
 		this.setLayout(new BorderLayout());
 		this.add(new JLabel("Inscripción de alumnado"), BorderLayout.NORTH);
+        btnInscribir = new JButton("Inscribirse");
 
         decideUserSelection = new ButtonGroup();
         radioSignin = new JRadioButton("Iniciar sesión");
@@ -56,6 +65,8 @@ public class InscribirUsuarioView extends Tab {
         JPanel radioPanel = new JPanel();
         radioPanel.add(radioSignin);
         radioPanel.add(radioSignup);
+        radioSignin.addActionListener( e -> toggle() );
+        radioSignup.addActionListener( e -> toggle() );
 
 		JPanel mainPanel = new JPanel(new java.awt.BorderLayout());
 		mainPanel.add(this.makeSigninPanel(), BorderLayout.EAST);
@@ -64,6 +75,10 @@ public class InscribirUsuarioView extends Tab {
         mainPanel.add(radioPanel, BorderLayout.NORTH);
 		this.add(mainPanel, BorderLayout.CENTER);
 		this.add(makeBottomPanel(), BorderLayout.SOUTH);
+
+        radioSignup.setSelected(true);
+        btnInscribir.setEnabled(false);
+        txtEmailLogin.setEnabled(false);
 	}
 
 	private JPanel makeSigninPanel () {
@@ -126,7 +141,7 @@ public class InscribirUsuarioView extends Tab {
 
 		bottomPane.add(sp, BorderLayout.CENTER);
 		bottomPane.add(new JLabel("Cursos disponibles"), BorderLayout.NORTH);
-		bottomPane.add(this.btnInscribir = new JButton("Inscribirse"), BorderLayout.SOUTH);
+		bottomPane.add(btnInscribir, BorderLayout.SOUTH);
 
 		return bottomPane;
 	}
