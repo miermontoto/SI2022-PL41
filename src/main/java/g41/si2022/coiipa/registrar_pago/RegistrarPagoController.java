@@ -1,10 +1,7 @@
 package g41.si2022.coiipa.registrar_pago;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -28,11 +25,10 @@ public class RegistrarPagoController {
 		this.initView();
 	}
 
-	int idInscripcion = 0; // Cuando seleccionamos algo en la tabla, aquí se pone el ID de esa inscripción.
-	int idAlumno = 0; // Cuando seleccionamos algo en el alumno, aquí se pone el ID de ese alumno.
+	private int idInscripcion = -1;
+	private int idAlumno = -1;
 
 	public void initView() {
-
 		// Precarga inicial de la lista de inscripciones
 		this.getListaInscripciones();
 
@@ -41,31 +37,26 @@ public class RegistrarPagoController {
         controlador.vista.getTxtImporte().setEnabled(false);
         controlador.vista.getDatepicker().setEnabled(false);
 
-		// Acción al darle al botón de pagar:
 		vista.getBtnInsertarPago().addActionListener(e -> handleInsertar());
 
-		// Acciones al pulsar la tabla
 		vista.getTableInscripciones().addMouseListener(new java.awt.event.MouseAdapter() {
 		    @Override
-		    public void mouseClicked(java.awt.event.MouseEvent evt) {
-		        int fila = vista.getTableInscripciones().rowAtPoint(evt.getPoint()); // Obtengo la fila donde se hizo click
-		        //int columna = vista.getTableInscripciones().columnAtPoint(evt.getPoint());
-
-		        // Obtengo los dos ID
-		        idInscripcion = (int) vista.getTableInscripciones().getModel().getValueAt(fila, 0); //Obtengo del modelo de la tabla el id
-		        idAlumno = (int) vista.getTableInscripciones().getModel().getValueAt(fila, 1);
-
-		        // Obtengo el nombre del alumno y lo pongo en seleccionar.
-		        String nombrealumno = (String) vista.getTableInscripciones().getModel().getValueAt(fila, 2);
-		        controlador.vista.getLblNombreInscripcion().setText(nombrealumno);
-
-		        // Habilito los campos para introducir texton y el botón del pago
-		        controlador.vista.getTxtImporte().setEnabled(true);
-		        controlador.vista.getBtnInsertarPago().setEnabled(true);
-		        controlador.vista.getDatepicker().setEnabled(true);
-		    }
+		    public void mouseReleased(java.awt.event.MouseEvent evt) { handleSelect(); }
 		});
+	}
 
+	private void handleSelect() {
+		int fila = vista.getTableInscripciones().getSelectedRow();
+		System.out.println(fila);
+
+		TableModel tempModel = vista.getTableInscripciones().getModel();
+		idInscripcion = (int) tempModel.getValueAt(fila, 0);
+		idAlumno = (int) tempModel.getValueAt(fila, 1);
+		controlador.vista.getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 2));
+
+		controlador.vista.getTxtImporte().setEnabled(true);
+		controlador.vista.getBtnInsertarPago().setEnabled(true);
+		controlador.vista.getDatepicker().setEnabled(true);
 	}
 
 	private void handleInsertar() {

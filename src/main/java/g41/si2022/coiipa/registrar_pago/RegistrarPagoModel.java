@@ -12,7 +12,7 @@ public class RegistrarPagoModel {
 
 	public List<PagoDTO> getListaInscripciones(Date fechaInscripcion) {
 
-		//validateNotNull(fechaInscripcion,MSG_FECHA_INSCRIPCION_NO_NULA);
+		//validateNotNull(fechaInscripcion, MSG_FECHA_INSCRIPCION_NO_NULA);
 		String sql =
 				"select i.id, i.alumno_id, a.nombre, c.coste, i.fecha, i.estado"
 				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
@@ -21,12 +21,11 @@ public class RegistrarPagoModel {
 		return db.executeQueryPojo(PagoDTO.class, sql, d); //Statement preparado.
 	}
 
-	// Valores: importe del pago, fecha del pago y el idisncripción.
-	public void registrarPago(int importe, String fecha, int idinscripcion) {
-		String sql="INSERT INTO pago (importe, fecha, inscripcion_id) VALUES(?,?,?)";
-		db.executeUpdate(sql, importe, Util.isoStringToDate(fecha), idinscripcion);
+	public void registrarPago(int importe, String fecha, int idInscripcion) {
+		String sql = "INSERT INTO pago (importe, fecha, inscripcion_id) VALUES(?,?,?)";
+		db.executeUpdate(sql, importe, Util.isoStringToDate(fecha), idInscripcion);
 
-		this.actualizarInscripcion(idinscripcion);
+		this.actualizarInscripcion(idInscripcion);
 	}
 
 	public void actualizarInscripcion(int id) {
