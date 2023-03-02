@@ -7,9 +7,8 @@ import javax.swing.ListSelectionModel;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
-import com.github.lgooddatepicker.components.DatePicker;
+import g41.si2022.util.BetterDatePicker;
 
-import java.util.Date;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,18 +24,22 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	private JTextField nombreCurso;
 	private JTextArea objetivosDescripcion, localizacion;
 	private JIntegerTextField plazas;
-	private DatePicker fechaInscripcionIni, fechaInscripcionFin;
-	private DatePicker fechaCursoIni, fechaCursoFin;
+	private BetterDatePicker fechaInscripcionIni, fechaInscripcionFin;
+	private BetterDatePicker fechaCursoIni, fechaCursoFin;
 	private JTable profTable;
 	private JButton registrarCurso;
 
 	public String getNombreCurso () { return this.nombreCurso.getText().trim(); }
 	public String getObjetivosDescripcion () { return this.objetivosDescripcion.getText().trim(); }
 	public int getPlazas () { return Integer.parseInt(this.plazas.getText().trim()); }
-	public String getInscripcionIni () { return this.fechaInscripcionIni.getDate().toString(); }
-	public String getInscripcionFin () { return this.fechaInscripcionFin.getDate().toString(); }
-	public String getCursoIni () { return this.fechaCursoIni.getDate().toString(); }
-	public String getCursoFin () { return this.fechaCursoFin.getDate().toString(); }
+	public String getInscripcionIniDate () { return this.fechaInscripcionIni.getDate().toString(); }
+	public BetterDatePicker getInscripcionIni () { return this.fechaInscripcionIni; }
+	public String getInscripcionFinDate () { return this.fechaInscripcionFin.getDate().toString(); }
+	public BetterDatePicker getInscripcionFin () { return this.fechaInscripcionFin; }
+	public String getCursoIniDate () { return this.fechaCursoIni.getDate().toString(); }
+	public BetterDatePicker getCursoIni () { return this.fechaCursoIni; }
+	public String getCursoFinDate () { return this.fechaCursoFin.getDate().toString(); }
+	public BetterDatePicker getCursoFin () { return this.fechaCursoFin; }
 	public JTable getTablaProfesores() { return this.profTable; }
 	public JButton getSubmitButton() { return this.registrarCurso; }
 
@@ -113,12 +116,12 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
-					panelInscDesde.add(this.fechaInscripcionIni = new DatePicker(), BorderLayout.CENTER);
+					panelInscDesde.add(this.fechaInscripcionIni = new BetterDatePicker(), BorderLayout.CENTER);
 					panelInscripciones.add(panelInscDesde, BorderLayout.WEST);
 				} { // Hasta
 					JPanel panelInscHasta = new JPanel(new BorderLayout());
 					panelInscHasta.add(new JLabel("Hasta"), BorderLayout.WEST);
-					panelInscHasta.add(this.fechaInscripcionFin = new DatePicker(), BorderLayout.CENTER);
+					panelInscHasta.add(this.fechaInscripcionFin = new BetterDatePicker(), BorderLayout.CENTER);
 					panelInscripciones.add(panelInscHasta, BorderLayout.CENTER);
 				}
 			}
@@ -133,12 +136,12 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
-					panelInscDesde.add(this.fechaCursoIni = new DatePicker(), BorderLayout.CENTER);
+					panelInscDesde.add(this.fechaCursoIni = new BetterDatePicker(), BorderLayout.CENTER);
 					panelInscripciones.add(panelInscDesde, BorderLayout.WEST);
 				} { // Hasta
 					JPanel panelInscHasta = new JPanel(new BorderLayout());
 					panelInscHasta.add(new JLabel("Hasta"), BorderLayout.WEST);
-					panelInscHasta.add(this.fechaCursoFin = new DatePicker(), BorderLayout.CENTER);
+					panelInscHasta.add(this.fechaCursoFin = new BetterDatePicker(), BorderLayout.CENTER);
 					panelInscripciones.add(panelInscHasta, BorderLayout.CENTER);
 				}
 			}

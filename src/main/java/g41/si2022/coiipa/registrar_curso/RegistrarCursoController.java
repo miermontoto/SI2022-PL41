@@ -23,12 +23,52 @@ public class RegistrarCursoController {
 	}
 
 	public void initView () {
+		// Load the profesores list
 		SwingUtil.exceptionWrapper(() -> this.getListaProfesores());
-		this.view.getSubmitButton().addActionListener(
-				(e) -> SwingUtil.exceptionWrapper(() -> {
-					this.insertCurso();
-					// System.out.println("Count of listeners: " + RegistrarCursoController.this.view.getSubmitButton().getActionListeners().length);
-				}));
+		// Load the insert curso listener
+		this.view.getSubmitButton().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> this.insertCurso()));
+		this.loadDateListeners();
+	}
+	
+	private void loadDateListeners () {
+		g41.si2022.util.BetterDatePicker
+			inscripcionIni = this.view.getInscripcionIni(),
+			inscripcionFin = this.view.getInscripcionFin(),
+			cursoIni = this.view.getCursoIni(),
+			cursoFin = this.view.getCursoFin();
+		// Load the Inscripcion Ini DatePicker listener (set Fin to next day)
+		inscripcionIni.addDateChangeListener((e) -> {
+			if (inscripcionFin.getDate() == null) {
+				inscripcionFin.setDate(e.getNewDate().plusDays(1));
+			}
+		});
+		// Load the Curso Ini DatePicker listener (set Fin to next day)
+		cursoIni.addDateChangeListener((e) -> {
+			if (cursoFin.getDate() == null) {
+				cursoFin.setDate(e.getNewDate().plusDays(1));
+			}
+		});
+		// Load the Inscripcion Fin DatePicker listener (set Fin to next day if lower than Ini)
+		inscripcionFin.addDateChangeListener((e) -> {
+			if (inscripcionIni.getDate() != null && inscripcionIni.compareTo(inscripcionFin) >= 0) {
+				inscripcionFin.setDate(inscripcionIni.getDate().plusDays(1));
+			}
+			if (cursoFin.getDate() != null && inscripcionFin.compareTo(cursoFin) >= 0) {
+				cursoFin.setDate(inscripcionFin.getDate());
+			}
+			if (cursoIni.getDate() == null) {
+				cursoIni.setDate(inscripcionFin.getDate().plusDays(1));
+			}
+		});
+		// Load the Curso Fin DatePicker listener (set Fin to next day if lower than Ini)
+		cursoFin.addDateChangeListener((e) -> {
+			if (cursoIni.getDate() != null && cursoIni.compareTo(cursoFin) >= 0) {
+				cursoFin.setDate(cursoIni.getDate().plusDays(1));
+			}
+			if (inscripcionFin.getDate() != null && inscripcionFin.compareTo(cursoFin) >= 0) {
+				inscripcionFin.setDate(cursoFin.getDate());
+			}
+		});
 	}
 
 	public void getListaProfesores() {
@@ -51,7 +91,7 @@ public class RegistrarCursoController {
 	public void insertCurso () {
 		this.model.insertCurso(
 				this.view.getNombreCurso(), this.view.getObjetivosDescripcion(),
-				this.view.getInscripcionIni(), this.view.getInscripcionFin(), this.view.getCursoIni(), this.view.getCursoFin(),
+				this.view.getInscripcionIniDate(), this.view.getInscripcionFinDate(), this.view.getCursoIniDate(), this.view.getCursoFinDate(),
 				this.view.getPlazas(), this.getProfesor()
 				.orElseThrow(() -> new g41.si2022.util.UnexpectedException("No se ha seleccionado a ningún docente."))
 				.getId());
