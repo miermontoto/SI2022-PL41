@@ -11,6 +11,7 @@ public class CursoDTO {
 		nombre,
 		descripcion,
 		estado,
+		coste,
 		start_inscr,
 		end_inscr,
 		start,
@@ -22,7 +23,7 @@ public class CursoDTO {
 	public CursoDTO() { }
 
 	public CursoDTO (
-			String nombre, String descripcion, String estado,
+			String nombre, String descripcion, String estado, String coste,
 			String start_inscr, String end_inscr, String start, String end,
 			String id, String plazas, String docente_id
 	) {
