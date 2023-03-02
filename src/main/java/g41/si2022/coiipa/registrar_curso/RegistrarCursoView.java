@@ -33,10 +33,10 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	public String getNombreCurso () { return this.nombreCurso.getText().trim(); }
 	public String getObjetivosDescripcion () { return this.objetivosDescripcion.getText().trim(); }
 	public int getPlazas () { return Integer.parseInt(this.plazas.getText().trim()); }
-	public Date getInscripcionIni () { return new Date (this.fechaInscripcionIni.getDate().toEpochDay()); }
-	public Date getInscripcionFin () { return new Date (this.fechaInscripcionFin.getDate().toEpochDay()); }
-	public Date getCursoIni () { return new Date (this.fechaCursoIni.getDate().toEpochDay()); }
-	public Date getCursoFin () { return new Date (this.fechaCursoFin.getDate().toEpochDay()); }
+	public String getInscripcionIni () { return this.fechaInscripcionIni.getDate().toString(); }
+	public String getInscripcionFin () { return this.fechaInscripcionFin.getDate().toString(); }
+	public String getCursoIni () { return this.fechaCursoIni.getDate().toString(); }
+	public String getCursoFin () { return this.fechaCursoFin.getDate().toString(); }
 	public JTable getTablaProfesores() { return this.profTable; }
 	public JButton getSubmitButton() { return this.registrarCurso; }
 
@@ -110,9 +110,6 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 				right.gridy = 3;
 				right.fill = GridBagConstraints.WEST;
 				centerPanel.add(panelInscripciones, right);
-				// The PADDING JLabel is the item covered by the vertical scrollbar.
-				// If this is removed, the DatePicker button will be hardly accessible.
-				// panelInscripciones.add(new JLabel("PADDING"), BorderLayout.EAST);
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
@@ -133,9 +130,6 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 				JPanel panelInscripciones = new JPanel(new BorderLayout());
 				right.gridy = 4;
 				centerPanel.add(panelInscripciones, right);
-				// The PADDING JLabel is the item covered by the vertical scrollbar.
-				// If this is removed, the DatePicker button will be hardly accessible.
-				// panelInscripciones.add(new JLabel("PADDING"), BorderLayout.EAST);
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
@@ -180,11 +174,11 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 		bottomPane.add(sp, BorderLayout.CENTER);
 
 		this.registrarCurso = new JButton();
-		this.registrarCurso.setText("RegistrarCurso");
+		this.registrarCurso.setText("Registrar Curso");
 		bottomPane.add(this.registrarCurso, BorderLayout.SOUTH);
 
 		this.add(bottomPane, BorderLayout.SOUTH);
-		add(new JLabel("Registrar Curso"), BorderLayout.NORTH);
+		this.add(new JLabel("Registrar Curso"), BorderLayout.NORTH);
 	}
 
 	@Override
