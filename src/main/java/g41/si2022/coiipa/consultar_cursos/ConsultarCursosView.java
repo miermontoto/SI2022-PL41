@@ -8,9 +8,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.Border;
 
 import g41.si2022.util.SwingMain;
+import g41.si2022.util.FontType;
+import g41.si2022.util.JLabelFactory;
 import g41.si2022.util.Tab;
 
 public class ConsultarCursosView extends Tab {
@@ -44,7 +45,7 @@ public class ConsultarCursosView extends Tab {
 		
 		// lblCursos + tablaCursos
 		JPanel panel2 = new JPanel();
-		JLabel lblCursos = new JLabel("Seleccionar curso:");
+		JLabel lblCursos = JLabelFactory.getLabel(FontType.subtitle, "Seleccionar curso:");
 		tablaCursos = new JTable();
 		JScrollPane scrCursos = new JScrollPane(tablaCursos);
 		tablaCursos.setDefaultEditor(Object.class, null);
@@ -56,7 +57,7 @@ public class ConsultarCursosView extends Tab {
 		
 		// lblInscr + tablaInscr
 		JPanel panel3 = new JPanel();
-		JLabel lblInscr = new JLabel("Inscripciones:");
+		JLabel lblInscr = JLabelFactory.getLabel(FontType.subtitle, "Inscripciones:");
 		JScrollPane scrInscr = new JScrollPane();
 		tablaInscr = new JTable();
 		tablaInscr.setDefaultEditor(Object.class, null);
@@ -69,7 +70,7 @@ public class ConsultarCursosView extends Tab {
 		
 		// lblBalance + tablaBalance
 		JPanel panel4 = new JPanel();
-		JLabel lblBalance = new JLabel("Balance económico:");
+		JLabel lblBalance = JLabelFactory.getLabel(FontType.subtitle, "Balance económico:");
 		JScrollPane scrBalance = new JScrollPane();
 		tablaBalance = new JTable();
 		tablaBalance.setDefaultEditor(Object.class, null);
