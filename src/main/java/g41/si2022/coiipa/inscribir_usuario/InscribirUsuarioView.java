@@ -11,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
 import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -34,6 +35,10 @@ public class InscribirUsuarioView extends Tab {
 
 	private JTextField txtEmailLogin;
 
+    private ButtonGroup decideUserSelection;
+    private JRadioButton radioSignin;
+    private JRadioButton radioSignup;
+
 	public InscribirUsuarioView(g41.si2022.util.SwingMain main) {
 		super(main);
 		initialize();
@@ -43,10 +48,20 @@ public class InscribirUsuarioView extends Tab {
 		this.setLayout(new BorderLayout());
 		this.add(new JLabel("Inscripción de alumnado"), BorderLayout.NORTH);
 
+        decideUserSelection = new ButtonGroup();
+        radioSignin = new JRadioButton("Iniciar sesión");
+        radioSignup = new JRadioButton("Registrarse");
+        decideUserSelection.add(radioSignin);
+        decideUserSelection.add(radioSignup);
+        JPanel radioPanel = new JPanel();
+        radioPanel.add(radioSignin);
+        radioPanel.add(radioSignup);
+
 		JPanel mainPanel = new JPanel(new java.awt.BorderLayout());
 		mainPanel.add(this.makeSigninPanel(), BorderLayout.EAST);
 		mainPanel.add(this.makeLoginPanel(), BorderLayout.WEST);
 		mainPanel.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.CENTER);
+        mainPanel.add(radioPanel, BorderLayout.NORTH);
 		this.add(mainPanel, BorderLayout.CENTER);
 		this.add(makeBottomPanel(), BorderLayout.SOUTH);
 	}
@@ -86,22 +101,10 @@ public class InscribirUsuarioView extends Tab {
 		JPanel loginPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		loginPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder));
-        { // login radiobutton
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.gridwidth = 2;
-            loginPanel.add(new JRadioButton("Ya tengo cuenta"), gbc);
-        } { // signup radiobutton
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            gbc.gridwidth = 2;
-            loginPanel.add(new JRadioButton("No tengo cuenta"), gbc);
-        } { // email
+        { // email
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.gridx = 0;
-			gbc.gridy = 0;
+			gbc.gridy = 1;
 			gbc.weighty = 0.4;
 			loginPanel.add(new JLabel("email:"), gbc);
 			gbc.gridx = 1;
