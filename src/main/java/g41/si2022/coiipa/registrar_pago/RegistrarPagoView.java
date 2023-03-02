@@ -78,9 +78,9 @@ public class RegistrarPagoView extends Tab {
 		panel_1.add(insertarimporte, "cell 0 4,growx");
 
 
-		lblNewLabel_1 = new JLabel("Introducir fecha:");
+		lblNewLabel_1 = new JLabel("Introducir fecha del pago:");
 		panel_1.add(lblNewLabel_1, "cell 0 5");
-		panel_1.add(datepicker, "cell 0 6,alignx right,aligny center");
+		panel_1.add(datepicker, "cell 0 6,growx,aligny center");
 
 		botonpagar = new JButton("Insertar pago");
 
@@ -97,13 +97,7 @@ public class RegistrarPagoView extends Tab {
 
 		//getContentPane().add(tablePanel, "cell 0 5,grow");
 
-		//NO ES MVC, pero para testing, pruebo a cargar la tabla con datos
-		String [] columnas = {"Nombre", "Fecha", "Coste", "Estado"};
-		DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
-		String [] testData = {"Pepito", "2022-03-01", "50", "SIN PAGAR"};
-		modelo.addRow(testData);
-		tableInscripciones.setModel(modelo);
-		tableInscripciones.setName("tabCursos");
+
 		//tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		//tableInscripciones.setDefaultEditor(Object.class, null); //Leer sólo.
 	}
