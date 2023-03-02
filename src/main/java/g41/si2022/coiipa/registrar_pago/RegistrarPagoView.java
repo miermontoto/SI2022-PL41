@@ -12,6 +12,8 @@ import com.github.lgooddatepicker.components.DatePicker;
 
 import g41.si2022.util.SwingMain;
 import g41.si2022.util.Tab;
+import g41.si2022.util.FontType;
+import g41.si2022.util.JLabelFactory;
 
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -48,11 +50,10 @@ public class RegistrarPagoView extends Tab {
 		add(panel_1, BorderLayout.EAST);
 		panel_1.setLayout(new MigLayout("", "[122.00px,grow][]", "[][14px][][][][][][][]"));
 
-		infoquehace = new JLabel("Insertar un nuevo pago");
-		infoquehace.setFont(new Font("Arial", Font.PLAIN, 14));
+		panel_1.add(infoquehace = JLabelFactory.getLabel(FontType.title, "Insertar un nuevo pago"),
+				"cell 0 0,alignx left,aligny top");
 		infoquehace.setVerticalAlignment(SwingConstants.TOP);
 		infoquehace.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_1.add(infoquehace, "cell 0 0,alignx left,aligny top");
 
 		infonombreinscrito = new JLabel("Nombre del inscrito: ");
 		infonombreinscrito.setVerticalAlignment(SwingConstants.TOP);

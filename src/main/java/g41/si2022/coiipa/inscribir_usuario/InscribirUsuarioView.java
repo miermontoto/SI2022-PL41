@@ -15,6 +15,8 @@ import javax.swing.JRadioButton;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
+import g41.si2022.util.FontType;
+import g41.si2022.util.JLabelFactory;
 import g41.si2022.util.Tab;
 
 @Getter
@@ -41,7 +43,7 @@ public class InscribirUsuarioView extends Tab {
 
 	private void initialize() {
 		this.setLayout(new BorderLayout());
-		this.add(new JLabel("Inscripción de alumnado"), BorderLayout.NORTH);
+		this.add(JLabelFactory.getLabel(FontType.title, "Inscripción de alumnado"), BorderLayout.NORTH);
 
 		JPanel mainPanel = new JPanel(new java.awt.BorderLayout());
 		mainPanel.add(this.makeSigninPanel(), BorderLayout.EAST);
@@ -122,7 +124,7 @@ public class InscribirUsuarioView extends Tab {
 				));
 
 		bottomPane.add(sp, BorderLayout.CENTER);
-		bottomPane.add(new JLabel("Cursos disponibles"), BorderLayout.NORTH);
+		bottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Cursos disponibles"), BorderLayout.NORTH);
 		bottomPane.add(this.btnInscribir = new JButton("Inscribirse"), BorderLayout.SOUTH);
 
 		return bottomPane;
