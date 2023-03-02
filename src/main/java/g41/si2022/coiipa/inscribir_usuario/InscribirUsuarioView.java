@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
+import javax.swing.JRadioButton;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -85,7 +86,19 @@ public class InscribirUsuarioView extends Tab {
 		JPanel loginPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		loginPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder));
-		{ // email
+        { // login radiobutton
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridwidth = 2;
+            loginPanel.add(new JRadioButton("Ya tengo cuenta"), gbc);
+        } { // signup radiobutton
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            gbc.gridwidth = 2;
+            loginPanel.add(new JRadioButton("No tengo cuenta"), gbc);
+        } { // email
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.gridx = 0;
 			gbc.gridy = 0;
