@@ -19,7 +19,6 @@ public class RegistrarCursoController {
 	}
 
 	public void initView () {
-		System.out.println("CUNT");
 		SwingUtil.exceptionWrapper(() -> this.getListaProfesores());
 		this.view.getSubmitButton().addActionListener(
 				(e) -> SwingUtil.exceptionWrapper(() -> {
