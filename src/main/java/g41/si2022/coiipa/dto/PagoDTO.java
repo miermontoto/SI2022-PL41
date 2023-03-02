@@ -2,8 +2,9 @@ package g41.si2022.coiipa.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Data;
 
-@Setter @Getter @SuppressWarnings("unused")
+@Setter @Getter @Data @SuppressWarnings("unused")
 public class PagoDTO {
 
 	private int id;
