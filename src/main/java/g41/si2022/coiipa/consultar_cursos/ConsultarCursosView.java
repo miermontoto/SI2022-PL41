@@ -47,12 +47,11 @@ public class ConsultarCursosView extends Tab {
 		JLabel lblCursos = new JLabel("Seleccionar curso:");
 		tablaCursos = new JTable();
 		JScrollPane scrCursos = new JScrollPane(tablaCursos);
-
 		tablaCursos.setDefaultEditor(Object.class, null);
 		// Add elements
 		panel2.setLayout(new BorderLayout());
 		panel2.add(lblCursos, BorderLayout.NORTH);
-		panel2.add(scrCursos, BorderLayout.EAST);
+		panel2.add(scrCursos, BorderLayout.CENTER);
 		centerPanel.add(panel2);
 		
 		// lblInscr + tablaInscr
