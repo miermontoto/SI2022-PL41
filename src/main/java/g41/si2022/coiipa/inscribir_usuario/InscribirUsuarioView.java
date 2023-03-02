@@ -17,6 +17,8 @@ import javax.swing.ButtonGroup;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
+import g41.si2022.util.FontType;
+import g41.si2022.util.JLabelFactory;
 import g41.si2022.util.Tab;
 
 @Data @Getter
@@ -55,31 +57,31 @@ public class InscribirUsuarioView extends Tab {
 
 	private void initialize() {
 		this.setLayout(new BorderLayout());
-		this.add(new JLabel("Inscripción de alumnado"), BorderLayout.NORTH);
-        btnInscribir = new JButton("Inscribirse");
+		this.add(JLabelFactory.getLabel(FontType.title, "Inscripción de alumnado"), BorderLayout.NORTH);
+    btnInscribir = new JButton("Inscribirse");
 
-        decideUserSelection = new ButtonGroup();
-        radioSignin = new JRadioButton("Iniciar sesión");
-        radioSignup = new JRadioButton("Registrarse");
-        decideUserSelection.add(radioSignin);
-        decideUserSelection.add(radioSignup);
-        JPanel radioPanel = new JPanel();
-        radioPanel.add(radioSignin);
-        radioPanel.add(radioSignup);
-        radioSignin.addActionListener( e -> toggle() );
-        radioSignup.addActionListener( e -> toggle() );
+    decideUserSelection = new ButtonGroup();
+    radioSignin = new JRadioButton("Iniciar sesión");
+    radioSignup = new JRadioButton("Registrarse");
+    decideUserSelection.add(radioSignin);
+    decideUserSelection.add(radioSignup);
+    JPanel radioPanel = new JPanel();
+    radioPanel.add(radioSignin);
+    radioPanel.add(radioSignup);
+    radioSignin.addActionListener( e -> toggle() );
+    radioSignup.addActionListener( e -> toggle() );
 
 		JPanel mainPanel = new JPanel(new java.awt.BorderLayout());
 		mainPanel.add(this.makeSigninPanel(), BorderLayout.EAST);
 		mainPanel.add(this.makeLoginPanel(), BorderLayout.WEST);
 		mainPanel.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.CENTER);
-        mainPanel.add(radioPanel, BorderLayout.NORTH);
+    mainPanel.add(radioPanel, BorderLayout.NORTH);
 		this.add(mainPanel, BorderLayout.CENTER);
 		this.add(makeBottomPanel(), BorderLayout.SOUTH);
 
-        radioSignup.setSelected(true);
-        btnInscribir.setEnabled(false);
-        txtEmailLogin.setEnabled(false);
+    radioSignup.setSelected(true);
+    btnInscribir.setEnabled(false);
+    txtEmailLogin.setEnabled(false);
 	}
 
 	private JPanel makeSigninPanel () {
@@ -138,10 +140,10 @@ public class InscribirUsuarioView extends Tab {
 
 		sp.setPreferredSize(new java.awt.Dimension(
 				this.getWidth(), 200
-				));
+    ));
 
 		bottomPane.add(sp, BorderLayout.CENTER);
-		bottomPane.add(new JLabel("Cursos disponibles"), BorderLayout.NORTH);
+		bottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Cursos disponibles"), BorderLayout.NORTH);
 		bottomPane.add(btnInscribir, BorderLayout.SOUTH);
 
 		return bottomPane;
