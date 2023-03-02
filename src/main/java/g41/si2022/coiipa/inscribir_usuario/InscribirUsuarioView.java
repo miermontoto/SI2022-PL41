@@ -2,7 +2,6 @@ package g41.si2022.coiipa.inscribir_usuario;
 
 import java.awt.BorderLayout;
 import lombok.Getter;
-import lombok.Data;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -10,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JSeparator;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
@@ -21,7 +21,7 @@ import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 import g41.si2022.util.Tab;
 
-@Data @Getter
+@Getter
 public class InscribirUsuarioView extends Tab {
 
 	private static final long serialVersionUID = 1L;
@@ -135,7 +135,8 @@ public class InscribirUsuarioView extends Tab {
 	private JPanel makeBottomPanel () {
 		JPanel bottomPane = new JPanel(new BorderLayout());
 
-		this.tablaCursos = new JTable();
+		tablaCursos = new JTable();
+		tablaCursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane sp = new JScrollPane(this.tablaCursos);
 
 		sp.setPreferredSize(new java.awt.Dimension(
