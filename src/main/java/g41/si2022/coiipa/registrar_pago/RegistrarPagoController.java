@@ -2,6 +2,9 @@ package g41.si2022.coiipa.registrar_pago;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -69,11 +72,16 @@ public class RegistrarPagoController {
 					// Registro en la BBDD el pago
 					modelo.registrarPago(importe, Util.dateToIsoString(fechapagod) , controlador.idinscripcionseleccionado);
 
+					//Envío un email al alumno
+					
+					enviaremail(idalumnoseleccionado, vista.getNombreinscripcion().getText());
+					
 					//Refresco la tabla de inscripciones
 					controlador.getListaInscripciones(); //Refrescamos la tabla al terminar de inscribir a la persona
 				} else System.err.printf("ERROR, has de rellenar todos los campos \n");
 			}
 		});
+		
 		// Acciones al pulsar la tabla
 
 		vista.getTableInscripciones().addMouseListener(new java.awt.event.MouseAdapter() {
@@ -96,14 +104,33 @@ public class RegistrarPagoController {
 		        controlador.vista.getBotonpagar().setEnabled(true);
 		        controlador.vista.getDatepicker().setEnabled(true);
 
-		        //controlador.idseleccionado = Integer.parseInt(idinscripcion); //Me pongo el id internamente
-		        //vista.getIdinscripcion().setText(idinscripcion);//Seleccionamos la etiqueta y le añadimos el valor
 		        //System.out.print(fila); //DEBUG
 		        //System.out.printf("ID inscripción seleccionado %d \n", idinscripcionseleccionado); //DEBUG
 		        //System.out.printf("Nombre del alumno seleccionado %s, su id es %d \n", nombrealumno, idalumnoseleccionado); //DEBUG
 		    }
 		});
 
+	}
+	
+	public void enviaremail(int idalumno, String alumno){
+		
+		String carpetadetrabajo=System.getProperty("user.dir"); //Directorio principal del programa
+
+		String target=carpetadetrabajo+"/target/"; //Calculamos el target de este proyecto
+		
+		 
+	      FileWriter escribiremail;
+		try {
+			escribiremail = new FileWriter(target + "email.txt");
+		    escribiremail.write("Hola, " + alumno + ", te escribimos para comunicarte que te has inscrito con éxito. \n");
+		    escribiremail.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+		 
 	}
 
 	public void getListaInscripciones() {
@@ -113,6 +140,7 @@ public class RegistrarPagoController {
 		vista.getTableInscripciones().setModel(tmodel); // Le pongo el modelo
 		vista.getTableInscripciones().removeColumn(vista.getTableInscripciones().getColumnModel().getColumn(0)); //Ocultamos la columna del id inscripcion
 		vista.getTableInscripciones().removeColumn(vista.getTableInscripciones().getColumnModel().getColumn(0)); //Ocultamos la columna del id alumno
+		vista.getTableInscripciones().setDefaultEditor(Object.class, null);
 
 		//SwingUtil.autoAdjustColumns(vista.getTableInscripciones()); // Ajustamos las columnas
 
