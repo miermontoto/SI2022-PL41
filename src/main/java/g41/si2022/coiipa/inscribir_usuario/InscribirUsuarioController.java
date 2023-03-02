@@ -9,14 +9,13 @@ import javax.swing.table.TableModel;
 
 import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.util.SwingUtil;
+import g41.si2022.util.Util;
 
 public class InscribirUsuarioController {
     private InscribirUsuarioModel model;
     private InscribirUsuarioView view;
     private List<CursoDTO> cursos;
     private String cursoId;
-
-    private static String regexEmail = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
     public InscribirUsuarioController(InscribirUsuarioModel m, InscribirUsuarioView v) {
         this.model = m;
@@ -41,6 +40,37 @@ public class InscribirUsuarioController {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
+
+        view.getTxtEmail().addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                SwingUtil.exceptionWrapper(() -> manageForm());
+            }
+        });
+
+        view.getTxtNombre().addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                SwingUtil.exceptionWrapper(() -> manageForm());
+            }
+        });
+
+        view.getTxtApellidos().addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                SwingUtil.exceptionWrapper(() -> manageForm());
+            }
+        });
+
+        view.getTxtTelefono().addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                SwingUtil.exceptionWrapper(() -> manageForm());
+            }
+        });
+
+        view.getRadioSignin().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageForm()));
+        view.getRadioSignup().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageForm()));
     }
 
     public void manageForm() {
@@ -49,11 +79,19 @@ public class InscribirUsuarioController {
             return;
         }
 
-        if (view.getRadioSignin().isSelected()) {
+        if (view.getRadioSignin().isSelected()) { // Signin
             if (!view.getTxtEmailLogin().getText().isEmpty()) {
-                view.getBtnInscribir().setEnabled(Pattern.compile(regexEmail).matcher(view.getTxtEmailLogin().getText()).matches());
+                view.getBtnInscribir().setEnabled(model.verifyAlumnoEmail(view.getTxtEmailLogin().getText()));
             }
+            return;
+        } // Signup
+        if (view.getTxtEmail().getText().isEmpty() || view.getTxtNombre().getText().isEmpty() || view.getTxtApellidos().getText().isEmpty()
+                || !Pattern.compile(Util.EMAIL_REGEX).matcher(view.getTxtEmail().getText()).matches() ||
+                    (view.getTxtTelefono().getText().length() != 9 && !view.getTxtTelefono().getText().isEmpty())) {
+            view.getBtnInscribir().setEnabled(false);
+            return;
         }
+        view.getBtnInscribir().setEnabled(true);
     }
 
     public void updateCursoValue() {

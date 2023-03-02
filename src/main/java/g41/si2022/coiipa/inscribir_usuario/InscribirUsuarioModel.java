@@ -4,6 +4,7 @@ import java.util.List;
 
 import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.util.Database;
+import g41.si2022.util.Util;
 
 public class InscribirUsuarioModel {
 
@@ -16,4 +17,7 @@ public class InscribirUsuarioModel {
         return db.executeQueryPojo(CursoDTO.class, sql);
     }
 
+    public boolean verifyAlumnoEmail(String email) {
+        return Util.verifyEmail(db, email, "alumno");
+    }
 }
