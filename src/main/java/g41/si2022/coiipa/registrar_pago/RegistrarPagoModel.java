@@ -14,8 +14,9 @@ public class RegistrarPagoModel {
 
 		//validateNotNull(fechaInscripcion,MSG_FECHA_INSCRIPCION_NO_NULA);
 		String sql =
-				"SELECT insc.id, insc.alumno_id, alu.nombre, insc.coste, insc.fecha, insc.estado"
-				+ " from inscripcion insc INNER JOIN alumno alu ON insc.alumno_id = alu.id  where insc.fecha>=? order by insc.fecha asc";
+				"select i.id, i.alumno_id, a.nombre, c.coste, i.fecha, i.estado"
+				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
+				+ " inner join curso as c on c.id = i.curso_id where i.fecha>=? order by i.fecha asc";
 		String d = Util.dateToIsoString(fechaInscripcion);
 		return db.executeQueryPojo(PagoDTO.class, sql, d); //Statement preparado.
 	}
