@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter @Setter
 public class InscripcionDTO {
-    public String fecha;
-    public String coste;
-    public String estado;
+    private String fecha;
+    private String coste;
+    private String estado;
 
     public InscripcionDTO() {}
 
