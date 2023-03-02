@@ -1,9 +1,9 @@
 package g41.si2022.coiipa.inscribir_usuario;
 
 import java.util.List;
-import java.util.regex.Pattern;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
 
 import javax.swing.table.TableModel;
 
@@ -69,30 +69,48 @@ public class InscribirUsuarioController {
             }
         });
 
+        view.getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageMain()));
         view.getRadioSignin().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageForm()));
         view.getRadioSignup().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageForm()));
+    }
+
+    public void manageMain() {
+        if (cursoId == null) return;
     }
 
     public void manageForm() {
         view.getBtnInscribir().setEnabled(false);
         if (cursoId == null) return;
+        String signinEmail = view.getTxtEmailLogin().getText();
+        String signupEmail = view.getTxtEmail().getText();
 
-        if (view.getRadioSignin().isSelected()) { // Sign-in
-            if (!view.getTxtEmailLogin().getText().isEmpty()) {
-                view.getBtnInscribir().setEnabled(model.verifyAlumnoEmail(view.getTxtEmailLogin().getText()));
-            }
-            return;
+        if(signinEmail.isEmpty() && signupEmail.isEmpty()) return;
+
+        view.getLblSignin().setForeground(Color.RED);
+        view.getLblSignup().setForeground(Color.RED);
+
+        boolean validEmail;
+        switch(view.getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
+            case "sign-in":
+                if (!Util.verifyEmailStructure(signinEmail)) { // Check basic structure
+                    view.getLblSignin().setText("");
+                    break;
+                }
+                validEmail = model.verifyEmail(signinEmail); // Check if email exists in database
+                view.getLblSignin().setText(validEmail ? "" : "Email desconocido");
+                view.getBtnInscribir().setEnabled(validEmail);
+                break;
+
+            case "sign-up":
+                if (!Util.verifyEmailStructure(signupEmail)) {
+                    view.getLblSignup().setText("");
+                    break;
+                }
+                validEmail = !model.verifyEmail(signupEmail); // Check if email doesn't already exist in db
+                view.getLblSignup().setText(validEmail ? "" : "Email ya registrado");
+                view.getBtnInscribir().setEnabled(validEmail);
+                break;
         }
-
-        // Sign-up
-        if (view.getTxtEmail().getText().isEmpty() || view.getTxtNombre().getText().isEmpty() || view.getTxtApellidos().getText().isEmpty()
-                || model.verifyAlumnoEmail(view.getTxtEmail().getText()) || !Util.verifyStructureEmail(view.getTxtEmail().getText()) ||
-                    (view.getTxtTelefono().getText().length() != 9 && !view.getTxtTelefono().getText().isEmpty())) {
-            view.getBtnInscribir().setEnabled(false);
-            return;
-        }
-
-        view.getBtnInscribir().setEnabled(true); // If all checks were successful, enable button
     }
 
     public void updateCursoValue() {

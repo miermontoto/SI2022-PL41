@@ -44,6 +44,7 @@ public class InscribirUsuarioView extends Tab {
 
 	private JLabel lblSignin;
 	private JLabel lblSignup;
+	private JLabel lblStatus;
 
 	public InscribirUsuarioView(g41.si2022.util.SwingMain main) {
 		super(main);
@@ -53,6 +54,8 @@ public class InscribirUsuarioView extends Tab {
     private void toggle() {
 		JTextField[] fields = {txtEmail, txtNombre, txtApellidos, txtTelefono, txtEmailLogin};
         for(JTextField field : fields) field.setEnabled(!field.isEnabled());
+		lblSignin.setText("");
+		lblSignup.setText("");
     }
 
 	private void initialize() {
@@ -65,9 +68,15 @@ public class InscribirUsuarioView extends Tab {
 		radioSignup = new JRadioButton("Registrarse");
 		decideUserSelection.add(radioSignin);
 		decideUserSelection.add(radioSignup);
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new GridLayout(1, 0));
+		topPanel.add(JLabelFactory.getLabel(FontType.subtitle, "Información del usuario"));
+
 		JPanel radioPanel = new JPanel();
 		radioPanel.add(radioSignin);
 		radioPanel.add(radioSignup);
+		topPanel.add(radioPanel);
+
 		radioSignin.addActionListener( e -> toggle() );
 		radioSignup.addActionListener( e -> toggle() );
 
@@ -75,7 +84,7 @@ public class InscribirUsuarioView extends Tab {
 		mainPanel.add(this.signupPanel(), BorderLayout.EAST);
 		mainPanel.add(this.signinPanel(), BorderLayout.WEST);
 		mainPanel.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.CENTER);
-    	mainPanel.add(radioPanel, BorderLayout.NORTH);
+    	mainPanel.add(topPanel, BorderLayout.NORTH);
 		this.add(mainPanel, BorderLayout.CENTER);
 		this.add(makeBottomPanel(), BorderLayout.SOUTH);
 
@@ -111,6 +120,7 @@ public class InscribirUsuarioView extends Tab {
 			signupPanel.add(new JLabel("Teléfono (opcional):"));
 			signupPanel.add(txtTelefono);
 		} { // Label (estado)
+			signupPanel.add(new JLabel("")); // padding
 			signupPanel.add(lblSignup);
 		}
 
@@ -150,9 +160,14 @@ public class InscribirUsuarioView extends Tab {
 				this.getWidth(), 200
     	));
 
+		JPanel inscribirPanel = new JPanel();
+		lblStatus = new JLabel("");
+		inscribirPanel.add(btnInscribir);
+		inscribirPanel.add(lblStatus);
+
 		bottomPane.add(sp, BorderLayout.CENTER);
 		bottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Cursos disponibles"), BorderLayout.NORTH);
-		bottomPane.add(btnInscribir, BorderLayout.SOUTH);
+		bottomPane.add(inscribirPanel, BorderLayout.SOUTH);
 
 		return bottomPane;
 	}

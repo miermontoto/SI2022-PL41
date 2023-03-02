@@ -24,17 +24,13 @@ public class Util {
 	    throw new IllegalStateException("Utility class");
 	}
 
-	public static boolean verifyAlumnoEmail(Database db, String email) {
+	public static boolean verifyEmailInAlumno(Database db, String email) {
 		String sql = "select count(*) from alumno where email like ?";
 		return (int) db.executeQueryArray(sql, email).get(0)[0] > 0;
 	}
 
-	public static boolean verifyStructureEmail(String email) {
+	public static boolean verifyEmailStructure(String email) {
 		return email.matches(EMAIL_REGEX);
-	}
-
-	public static boolean verifyEmail(Database db, String email) {
-		return verifyAlumnoEmail(db, email) && verifyStructureEmail(email);
 	}
 
 	/**
