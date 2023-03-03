@@ -8,14 +8,13 @@ import lombok.Data;
 public class InscripcionDTO {
 
     private String fecha;
-    private String coste;
     private String estado;
+    private String prueba;
 
     public InscripcionDTO() {}
 
     public InscripcionDTO(String fecha, String coste, String estado) {
         this.fecha = fecha;
-        this.coste = coste;
         this.estado = estado;
     }
 }

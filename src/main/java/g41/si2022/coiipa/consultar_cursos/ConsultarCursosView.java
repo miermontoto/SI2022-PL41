@@ -15,34 +15,35 @@ import g41.si2022.util.JLabelFactory;
 import g41.si2022.util.Tab;
 
 public class ConsultarCursosView extends Tab {
-	
+
 	private static final long serialVersionUID = 1L;
 	private JTable tablaCursos;
 	private JTable tablaInscr;
 	private JTable tablaBalance;
-	
+
 	public ConsultarCursosView(SwingMain main) {
 		super(main);
 		initialize();
 	}
-	
+
 	private void initialize() {
 		this.setLayout(new BorderLayout(0, 0));
-		
+
 		// ------------- BorderLayout -> NORTH -------------
 		// El botón sobra pero lo dejo porque mola
-		JButton btnCargarDatos = new JButton("Cargar cursos");
+		//JButton btnCargarDatos = new JButton("Cargar cursos");
+		// El botón no mola una mierda, te lo arranco de las manos. ~mier
 		JPanel panel1 = new JPanel();
 		// Add elements
-		panel1.add(btnCargarDatos, BorderLayout.WEST);
+		//panel1.add(btnCargarDatos, BorderLayout.WEST);
 		this.add(panel1, BorderLayout.NORTH);
-		
+
 		// ------------- BorderLayout -> CENTER -------------
 		JPanel centerPanel = new JPanel();
 		// Add elements
 		centerPanel.setLayout(new GridLayout(3, 0));
 		this.add(centerPanel, BorderLayout.CENTER);
-		
+
 		// lblCursos + tablaCursos
 		JPanel panel2 = new JPanel();
 		JLabel lblCursos = JLabelFactory.getLabel(FontType.subtitle, "Seleccionar curso:");
@@ -54,7 +55,7 @@ public class ConsultarCursosView extends Tab {
 		panel2.add(lblCursos, BorderLayout.NORTH);
 		panel2.add(scrCursos, BorderLayout.CENTER);
 		centerPanel.add(panel2);
-		
+
 		// lblInscr + tablaInscr
 		JPanel panel3 = new JPanel();
 		JLabel lblInscr = JLabelFactory.getLabel(FontType.subtitle, "Inscripciones:");
@@ -67,7 +68,7 @@ public class ConsultarCursosView extends Tab {
 		panel3.add(tablaInscr, BorderLayout.CENTER);
 		panel3.add(scrInscr, BorderLayout.EAST);
 		centerPanel.add(panel3);
-		
+
 		// lblBalance + tablaBalance
 		JPanel panel4 = new JPanel();
 		JLabel lblBalance = JLabelFactory.getLabel(FontType.subtitle, "Balance económico:");
@@ -79,14 +80,14 @@ public class ConsultarCursosView extends Tab {
 		panel4.add(lblBalance, BorderLayout.NORTH);
 		panel4.add(tablaBalance, BorderLayout.CENTER);
 		panel4.add(scrBalance, BorderLayout.EAST);
-		centerPanel.add(panel4);	
+		centerPanel.add(panel4);
 	}
 
 	@Override
 	protected void initController() { new ConsultarCursosController(new ConsultarCursosModel(), this); }
-	
+
 	public JTable getTablaCursos() { return this.tablaCursos; }
 	public JTable getTablaInscr() { return this.tablaInscr; }
 	public JTable getTablaBalance() { return this.tablaBalance; }
-	
+
 }
