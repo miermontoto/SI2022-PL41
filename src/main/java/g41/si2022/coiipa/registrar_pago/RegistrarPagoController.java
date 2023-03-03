@@ -88,6 +88,7 @@ public class RegistrarPagoController {
 		getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
 		// Si había algún error habilitado en la etiqueta, se deshabilita y mostramos éxito
 		vista.getLblError().setText("Pago insertado con éxito");
+		SwingUtil.showMessage("Pago insertado con éxito", "Registro de pagos");
 		eraseControls(false); // Entradas en blanco
 	}
 

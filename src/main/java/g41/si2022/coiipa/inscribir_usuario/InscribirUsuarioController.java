@@ -98,6 +98,7 @@ public class InscribirUsuarioController {
 
         alumno = model.getAlumnoFromEmail(email).get(0);
         model.insertInscripcion(LocalDate.now().toString(), "Pendiente", cursoId, alumno.getId());
+        SwingUtil.showMessage("Inscripción realizada con éxito", "Inscripción de alumno");
     }
 
     public void manageForm() {
