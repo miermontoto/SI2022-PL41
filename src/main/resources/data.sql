@@ -19,7 +19,9 @@ insert into alumno (nombre, apellidos, email, telefono) values
     ('Luis', 'Sánchez', 'luis.sanchez@gmail.com', ''),
     ('Laura', 'Gómez', 'laura.gomez@gmail.com', '666555111'),
     ('Pablo', 'Rodríguez', 'pablo.rodriguez@gmail.com', '666555000'),
-    ('Ana', 'Fernández', 'ana.fernandez@gmail.com', '666555999');
+    ('Ana', 'Fernández', 'ana.fernandez@gmail.com', '666555999'),
+    ('Juan', 'Mier', 'mier@mier.info', '644358905'),
+    ('Test', 'Test', 'test@test.com', '');
 
 insert into inscripcion (fecha, estado, curso_id, alumno_id) values
     ('2022-05-15', 'Pagado', 1, 1),
