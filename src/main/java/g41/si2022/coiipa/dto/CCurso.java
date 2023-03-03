@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ConsultarCursosDTO {
+public class CCurso {
 
 	private String nombre;
 	private String estado;
@@ -17,9 +17,9 @@ public class ConsultarCursosDTO {
 	private String start;
 	private String end;
 
-	public ConsultarCursosDTO() {}
+	public CCurso() {}
 
-	public ConsultarCursosDTO(String nombre, String estado, String plazas, String start, String end) {
+	public CCurso(String nombre, String estado, String plazas, String start, String end) {
 		this.nombre = nombre;
 		this.estado = estado;
 		this.plazas = plazas;

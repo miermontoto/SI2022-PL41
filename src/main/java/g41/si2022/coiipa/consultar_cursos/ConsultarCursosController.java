@@ -2,10 +2,14 @@ package g41.si2022.coiipa.consultar_cursos;
 
 import g41.si2022.util.SwingUtil;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 public class ConsultarCursosController {
 	
 	private ConsultarCursosModel model;
 	private ConsultarCursosView view;
+	private String idCurso;
 	
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
@@ -17,6 +21,11 @@ public class ConsultarCursosController {
 	public void initView() 	
 	{
 		this.getListaCursos();
+		view.getTablaCursos().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent ent) {
+				SwingUtil.exceptionWrapper(() -> getValueCurso());
+			}		});
 	}
 	
 	public void getListaCursos() {
@@ -33,6 +42,10 @@ public class ConsultarCursosController {
 		}
 		
 		SwingUtil.autoAdjustColumns(view.getTablaCursos());
+	}
+
+	public void getValueCurso() {
+		
 	}
 	
 	public void getListaInscripciones() {
