@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.Data;
 
-@Setter @Getter @Data @SuppressWarnings("unused")
+@Setter @Getter @Data
 public class PagoDTO {
 
 	private int id;

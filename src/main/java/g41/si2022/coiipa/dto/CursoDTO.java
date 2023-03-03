@@ -22,10 +22,10 @@ public class CursoDTO {
 
 	public CursoDTO() { }
 
-	public CursoDTO (
-			String nombre, String descripcion, String estado, String coste,
-			String start_inscr, String end_inscr, String start, String end,
-			String id, String plazas, String docente_id
+	public CursoDTO(
+		String nombre, String descripcion, String estado, String coste,
+		String start_inscr, String end_inscr, String start, String end,
+		String id, String plazas, String docente_id
 	) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -39,11 +39,5 @@ public class CursoDTO {
 		this.docente_id = docente_id;
 	}
 
-	public CursoDTO(String id, String nombre, String plazas, String start_inscr, String end_inscr) {
-		this.id = id;
-		this.nombre = nombre;
-		this.plazas = plazas;
-		this.start_inscr = start_inscr;
-		this.end_inscr = end_inscr;
-	}
+	public static String getSqlQuery() { return "select * from curso order by id asc"; }
 }
