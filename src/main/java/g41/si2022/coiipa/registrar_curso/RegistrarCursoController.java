@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import g41.si2022.coiipa.dto.ProfesorDTO;
+import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.SwingUtil;
 
 public class RegistrarCursoController {
@@ -14,28 +15,27 @@ public class RegistrarCursoController {
 
 	private List<ProfesorDTO> profesores;
 	private Map<String, ProfesorDTO> profesoresMap;
-	
+
 	public RegistrarCursoController (RegistrarCursoModel m, RegistrarCursoView v) {
 		this.model = m;
 		this.view = v;
-		this.profesoresMap = new HashMap<String, ProfesorDTO> ();
+		profesoresMap = new HashMap<String, ProfesorDTO> ();
 		this.initView();
 	}
 
 	public void initView () {
-		// Load the profesores list
-		SwingUtil.exceptionWrapper(() -> this.getListaProfesores());
+		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
 		// Load the insert curso listener
-		this.view.getSubmitButton().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> this.insertCurso()));
-		this.loadDateListeners();
+		view.getSubmitButton().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> insertCurso()));
+		loadDateListeners();
 	}
-	
+
 	private void loadDateListeners () {
-		g41.si2022.util.BetterDatePicker
-			inscripcionIni = this.view.getInscripcionIni(),
-			inscripcionFin = this.view.getInscripcionFin(),
-			cursoIni = this.view.getCursoIni(),
-			cursoFin = this.view.getCursoFin();
+		BetterDatePicker
+			inscripcionIni = view.getInscripcionIni(),
+			inscripcionFin = view.getInscripcionFin(),
+			cursoIni = view.getCursoIni(),
+			cursoFin = view.getCursoFin();
 		// Load the Inscripcion Ini DatePicker listener (set Fin to next day)
 		inscripcionIni.addDateChangeListener((e) -> {
 			if (inscripcionFin.getDate() == null) {
@@ -72,33 +72,33 @@ public class RegistrarCursoController {
 	}
 
 	public void getListaProfesores() {
-		this.model.getListaProfesores().stream().forEach((x) -> this.profesoresMap.put(x.getDni(), x));
+		model.getListaProfesores().stream().forEach((x) -> profesoresMap.put(x.getDni(), x));
 		view.getTablaProfesores().setModel(
 				SwingUtil.getTableModelFromPojos(
-						this.profesores = this.model.getListaProfesores(),
+						profesores = model.getListaProfesores(),
 						new String[] { "dni", "nombre", "apellidos", "email", "direccion", "remuneracion" },
 						new String[] { "DNI", "Nombre", "Apellidos", "email", "Dirección", "Remuneración" },
-						new java.util.HashMap<Integer, java.util.regex.Pattern> () {
+						new HashMap<Integer, java.util.regex.Pattern> () {
 							private static final long serialVersionUID = 1L;
-							{
-								put(5, java.util.regex.Pattern.compile("\\d+(\\.\\d+)?"));
-							}}
+							{ put(5, java.util.regex.Pattern.compile("\\d+(\\.\\d+)?")); }
+						}
 						)
 				);
-		SwingUtil.autoAdjustColumns(this.view.getTablaProfesores());
+		SwingUtil.autoAdjustColumns(view.getTablaProfesores());
 	}
 
 	public void insertCurso () {
 		this.model.insertCurso(
-				this.view.getNombreCurso(), this.view.getObjetivosDescripcion(),
-				this.view.getInscripcionIniDate(), this.view.getInscripcionFinDate(), this.view.getCursoIniDate(), this.view.getCursoFinDate(),
-				this.view.getPlazas(), this.getProfesor()
+				view.getNombreCurso(), view.getObjetivosDescripcion(),
+				(String) view.getTablaProfesores().getValueAt(view.getTablaProfesores().getSelectedRow(), 5),
+				view.getInscripcionIniDate(), view.getInscripcionFinDate(), view.getCursoIniDate(), view.getCursoFinDate(),
+				view.getPlazas(), this.getProfesor()
 				.orElseThrow(() -> new g41.si2022.util.UnexpectedException("No se ha seleccionado a ningún docente."))
 				.getId());
 	}
 
 	private Optional<ProfesorDTO> getProfesor () {
-		javax.swing.table.TableModel model = this.view.getTablaProfesores().getModel();
+		javax.swing.table.TableModel model = view.getTablaProfesores().getModel();
 		for (int i = 0 ; i < model.getRowCount() ; i++) {
 			if (model.getValueAt(i, model.getColumnCount()-1) != null) {
 				return Optional.of(this.profesoresMap.get(model.getValueAt(i, 0).toString()));
