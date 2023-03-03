@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
@@ -47,16 +48,17 @@ public class RegistrarPagoController {
 		vista.getTxtImporte().setEnabled(status);
 		vista.getDatePicker().setEnabled(status);
 	}
-	
-	private void eraseControls(boolean eliminaraviso) {
+
+	private void eraseControls(boolean eliminarAviso) {
 		vista.getLblNombreInscripcion().setText("No se ha seleccionado ningún nombre");
 		vista.getTxtImporte().setText("");
 		vista.getDatePicker().setText("");
-		if(eliminaraviso) vista.getLblError().setText("");
+		if(eliminarAviso) vista.getLblError().setText("");
+		setControls(false);
 	}
 
 	private void handleSelect() {
-		eraseControls(true); //Borramos también el aviso de pago insertado con éxito/error
+		eraseControls(true); // Borramos también el aviso de pago insertado con éxito/error
 		int fila = vista.getTableInscripciones().getSelectedRow();
 		if (fila == -1) return;
 
@@ -74,26 +76,19 @@ public class RegistrarPagoController {
 		System.out.println(importeString);
 
 		if(nombreInscrito == "No se ha seleccionado ningún nombre" || importeString == null || vista.getDatePicker().getDate() == null) {
-			
-			vista.getLblError().setText("Por favor, rellena todos los campos para continuar"); //Mostramos un error
+			vista.getLblError().setText("Por favor, rellena todos los campos para continuar"); // Se muestra un error
 			return;
-			
-		} else {
-			
-			// Hacemos las conversiones a Date y int
-			Date fechaPago = java.sql.Date.valueOf(vista.getDatePicker().getDate());
-			int importe = Integer.parseInt(importeString);
-
-			System.out.printf("Se han pagado %s € para el alumno %s, en la inscripción: %d, con fecha %s\n", importe, nombreInscrito, idInscripcion, fechaPago.toString()); //DEBUG
-			modelo.registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion); // Registro en la BBDD el pago
-			enviarEmail(idAlumno, vista.getLblNombreInscripcion().getText()); // Envío un email al alumno
-			getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
-			//Si había algún error habilitado en la etiqueta, lo deshabilitamos y mostramos éxito
-			vista.getLblError().setText("Pago insertado con éxito");
-			//Ponemos las entradas en blanco
-			eraseControls(false);
-			
 		}
+
+		Date fechaPago = java.sql.Date.valueOf(vista.getDatePicker().getDate());
+		int importe = Integer.parseInt(importeString);
+
+		modelo.registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion); // Registro en la BBDD el pago
+		enviarEmail(idAlumno, vista.getLblNombreInscripcion().getText()); // Envío un email al alumno
+		getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
+		// Si había algún error habilitado en la etiqueta, se deshabilita y mostramos éxito
+		vista.getLblError().setText("Pago insertado con éxito");
+		eraseControls(false); // Entradas en blanco
 	}
 
 	public void enviarEmail(int idalumno, String alumno){
@@ -108,21 +103,17 @@ public class RegistrarPagoController {
 
 	public void getListaInscripciones() {
 		JTable table = vista.getTableInscripciones();
-		TableModel tmodel; //Modelo de la tabla a inicializar según checkbox
+		TableModel tmodel; // Modelo de la tabla a inicializar según checkbox
+		List<PagoDTO> inscripciones;
 		if(vista.getChkAll().isSelected()) {
-			
-			List<PagoDTO> inscripcionesAll = modelo.getListaInscripcionesCompleta(Util.isoStringToDate("2022-05-15"));
-			tmodel = SwingUtil.getTableModelFromPojos(inscripcionesAll, new String[] { "id", "alumno_id", "nombre", "fecha", "coste", "estado" }); //La primera columna estará oculta
-		
+			inscripciones = modelo.getListaInscripcionesCompleta(Util.isoStringToDate("2022-05-15"));
 		} else {
-			
-			List<PagoDTO> inscripcionesPagadas = modelo.getListaInscripcionesPagadas(Util.isoStringToDate("2022-05-15"));
-			tmodel = SwingUtil.getTableModelFromPojos(inscripcionesPagadas, new String[] { "id", "alumno_id", "nombre", "fecha", "coste", "estado" }); //La primera columna estará oculta
-		
+			inscripciones = modelo.getListaInscripcionesSinPagar(Util.isoStringToDate("2022-05-15"));
 		}
-		
+
+		tmodel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] { "id", "alumno_id", "nombre", "fecha", "coste", "estado" }); //La primera columna estará oculta
 		table.setModel(tmodel);
-		
+
 		// Ocultar foreign keys de la tabla
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		table.removeColumn(table.getColumnModel().getColumn(0));
