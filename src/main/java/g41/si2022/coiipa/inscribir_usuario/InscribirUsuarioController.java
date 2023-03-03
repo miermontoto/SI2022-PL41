@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.awt.Color;
 
-import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
 import g41.si2022.coiipa.dto.AlumnoDTO;
@@ -99,7 +98,6 @@ public class InscribirUsuarioController {
 
         alumno = model.getAlumnoFromEmail(email).get(0);
         model.insertInscripcion(LocalDate.now().toString(), "Pendiente", cursoId, alumno.getId());
-        SwingUtil.showMessage("Inscripción realizada con éxito", "Inscripción de alumno", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void manageForm() {

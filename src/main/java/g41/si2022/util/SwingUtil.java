@@ -19,9 +19,11 @@ import org.apache.commons.beanutils.PropertyUtils;
  */
 public class SwingUtil {
 
+
 	private SwingUtil() {
 		throw new IllegalStateException("Utility class");
 	}
+
 
 	/**
 	 * Ejecuta un metodo en respuesta a un evento envolviendolo en un manejador de excepciones estandar
@@ -41,7 +43,8 @@ public class SwingUtil {
 		}
 	}
 
-	public static void showMessage(String message, String title, int type) {
+
+	private static void showMessage(String message, String title, int type) {
 		/* Como este metodo no recibe el contexto de la ventana de la aplicación,
 		 * no usa el metodo estatico showMessageDialog de JOptionPane
 		 * y establece la posicion para que no aparezca en el centro de la pantalla
@@ -52,6 +55,7 @@ public class SwingUtil {
 	    d.setLocation(200,200);
 	    d.setVisible(true);
 	}
+
 
 	/**
 	 * Ajusta todas las columnas de la tabla al tamanyo correspondiente al contenido del tablemodel
@@ -83,6 +87,7 @@ public class SwingUtil {
 			}
 		return ""; // Ya no existe esta clave
 	}
+
 
 	/**
 	 * Crea un tablemodel a partir de una lista de objetos POJO con las columnas que se indican.
