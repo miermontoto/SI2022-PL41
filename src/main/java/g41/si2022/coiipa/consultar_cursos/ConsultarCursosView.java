@@ -2,8 +2,7 @@ package g41.si2022.coiipa.consultar_cursos;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-
-import javax.swing.JButton;
+import lombok.Getter;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,6 +11,7 @@ import javax.swing.JTable;
 import g41.si2022.util.SwingMain;
 import g41.si2022.util.Tab;
 
+@Getter
 public class ConsultarCursosView extends Tab {
 
 	private static final long serialVersionUID = 1L;
@@ -32,6 +32,7 @@ public class ConsultarCursosView extends Tab {
 		//JButton btnCargarDatos = new JButton("Cargar cursos");
 		// El botón no mola una mierda, te lo arranco de las manos. ~mier
 		// ahora estoy triste. ~rubennmg
+		// no pasa nada, el botón te observa desde los cielos y te quiere. ~mier
 		JPanel panel1 = new JPanel();
 		// Add elements
 		//panel1.add(btnCargarDatos, BorderLayout.WEST);
@@ -82,9 +83,4 @@ public class ConsultarCursosView extends Tab {
 
 	@Override
 	protected void initController() { new ConsultarCursosController(new ConsultarCursosModel(), this); }
-
-	public JTable getTablaCursos() { return this.tablaCursos; }
-	public JTable getTablaInscr() { return this.tablaInscr; }
-	public JTable getTablaBalance() { return this.tablaBalance; }
-
 }
