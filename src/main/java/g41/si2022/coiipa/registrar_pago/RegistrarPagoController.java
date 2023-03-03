@@ -28,8 +28,8 @@ public class RegistrarPagoController {
 		this.initView();
 	}
 
-	private int idInscripcion = -1;
-	private int idAlumno = -1;
+	private String idInscripcion = null;
+	private String idAlumno = null;
 
 	public void initView() {
 		getListaInscripciones(); // Precarga inicial de la lista de inscripciones
@@ -63,8 +63,8 @@ public class RegistrarPagoController {
 		if (fila == -1) return;
 
 		TableModel tempModel = vista.getTableInscripciones().getModel();
-		idInscripcion = (int) tempModel.getValueAt(fila, 0);
-		idAlumno = (int) tempModel.getValueAt(fila, 1);
+		idInscripcion = (String) tempModel.getValueAt(fila, 0);
+		idAlumno = (String) tempModel.getValueAt(fila, 1);
 		vista.getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 2));
 
 		setControls(true);
@@ -72,34 +72,23 @@ public class RegistrarPagoController {
 
 	private void handleInsertar() {
 		String nombreInscrito = vista.getLblNombreInscripcion().getText();
-		String importeString = vista.getTxtImporte().getText();
-		System.out.println(importeString);
+		String importe = vista.getTxtImporte().getText();
 
-		if(nombreInscrito == "No se ha seleccionado ningún nombre" || importeString == null || vista.getDatePicker().getDate() == null) {
+		if(nombreInscrito == "No se ha seleccionado ningún nombre" || importe == null || vista.getDatePicker().getDate() == null) {
 			vista.getLblError().setText("Por favor, rellena todos los campos para continuar"); // Se muestra un error
 			return;
 		}
 
+		String email = modelo.getEmailAlumno(idAlumno);
 		Date fechaPago = java.sql.Date.valueOf(vista.getDatePicker().getDate());
-		int importe = Integer.parseInt(importeString);
 
 		modelo.registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion); // Registro en la BBDD el pago
-		enviarEmail(idAlumno, vista.getLblNombreInscripcion().getText()); // Envío un email al alumno
+		Util.sendEmail(email, "COIIPA: pago registrado", "Su pago ha sido registrado correctamente."); // Envío un email al alumno
 		getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
 		// Si había algún error habilitado en la etiqueta, se deshabilita y mostramos éxito
 		vista.getLblError().setText("Pago insertado con éxito");
 		SwingUtil.showMessage("Pago insertado con éxito", "Registro de pagos");
 		eraseControls(false); // Entradas en blanco
-	}
-
-	public void enviarEmail(int idalumno, String alumno){
-		String directory = System.getProperty("user.dir"); // Directorio principal del programa
-		String target = directory + "/target/"; // Calculamos el target de este proyecto
-
-		try (FileWriter fw = new FileWriter(target + "email.txt")) {
-		    fw.write("Hola, " + alumno + ", te escribimos para comunicarte que te has inscrito con éxito. \n");
-		    fw.close();
-		} catch (IOException e) { throw new ApplicationException(e); }
 	}
 
 	public void getListaInscripciones() {

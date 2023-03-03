@@ -7,8 +7,8 @@ import lombok.Data;
 @Setter @Getter @Data
 public class PagoDTO {
 
-	private int id;
-	private int alumno_id;
+	private String id;
+	private String alumno_id;
 	private String nombre;
 	private String coste;
 	private String fecha;
@@ -16,7 +16,7 @@ public class PagoDTO {
 
 	public PagoDTO() { }
 
-	public PagoDTO(int id, int alumno_id, String nombre, String coste, String fecha, String estado) {
+	public PagoDTO(String id, String alumno_id, String nombre, String coste, String fecha, String estado) {
 		this.id = id;
 		this.alumno_id = alumno_id;
 		this.nombre = nombre;

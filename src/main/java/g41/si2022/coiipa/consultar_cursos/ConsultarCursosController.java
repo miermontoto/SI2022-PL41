@@ -20,13 +20,13 @@ public class ConsultarCursosController {
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
 		this.model = m;
-		view = v;
+		this.view = v;
 		initView();
 	}
 
 	public void initView()
 	{
-		this.getListaCursos();
+		getListaCursos();
 		view.getTablaCursos().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent ent) {
@@ -60,6 +60,5 @@ public class ConsultarCursosController {
 				new String[] { "Fecha de inscripción", "Estado"}, null);
 		view.getTablaInscr().setModel(tableModel);
 		SwingUtil.autoAdjustColumns(view.getTablaInscr());
-
 	}
 }

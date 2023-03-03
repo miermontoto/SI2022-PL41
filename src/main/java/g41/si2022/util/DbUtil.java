@@ -38,7 +38,6 @@ public abstract class DbUtil {
 		return DriverManager.getConnection(getUrl());
 	}
 
-
 	/**
 	 * Ejecuta una query sql con los parametros especificados mapeando el resultet en una lista de objetos
 	 * de la clase indicada en pojoClass;
@@ -53,7 +52,6 @@ public abstract class DbUtil {
 			return runner.query(conn, sql, beanListHandler, params);
 		} catch (SQLException e) { throw new UnexpectedException(e); } finally { DbUtils.closeQuietly(conn); }
 	}
-
 
 	/**
 	 * Ejecuta una query sql con los parametros especificados mapeando el resultet en una lista de arrays de objetos;
@@ -81,7 +79,6 @@ public abstract class DbUtil {
 		} catch (SQLException e) { throw new UnexpectedException(e); } finally { DbUtils.closeQuietly(conn); }
 	}
 
-
 	/**
 	 * Ejecuta una sentencia sql de actualizacion con los parametros especificados;
 	 * Utiliza apache commons-dbutils para manejar todos los aspectos de jdbc
@@ -94,7 +91,6 @@ public abstract class DbUtil {
 			runner.update(conn, sql, params);
 		} catch (SQLException e) { throw new UnexpectedException(e); } finally { DbUtils.closeQuietly(conn); }
 	}
-
 
 	/**
 	 * Metodo simple para ejecutar todas las sentencias sql que se encuentran en un archivo, teniendo en cuenta:
@@ -128,12 +124,10 @@ public abstract class DbUtil {
 		if (!batchUpdate.isEmpty()) executeBatch(batchUpdate);
 	}
 
-
 	/**
 	 * Ejecuta un conjunto de sentencias sql de actualizacion en un único batch
 	 */
 	public void executeBatch(String[] sqls) { executeBatch(Arrays.asList(sqls)); }
-
 
 	/**
 	 * Ejecuta un conjunto de sentencias sql de actualizacion en un unico batch
@@ -146,7 +140,6 @@ public abstract class DbUtil {
 		} catch (SQLException e) { throw new UnexpectedException(e); }
 	}
 
-
 	/**
 	 * Ejecuta un conjunto de sentencias sql de actualizacion en un unico batch, sin causar excepcion cuando falla la ejecucion
 	 * (usado normalmente para borrar tablas de la bd, que fallarian si no existen)
@@ -157,7 +150,6 @@ public abstract class DbUtil {
 			for (String sql : sqls) executeWithoutException(stmt,sql);
 		} catch (SQLException e) { throw new UnexpectedException(e); }
 	}
-
 
 	private void executeWithoutException(Statement stmt, String sql) {
 		try { stmt.executeUpdate(sql); } catch (SQLException e) { System.err.println("Excpeción SQL intencional: " + e); }
