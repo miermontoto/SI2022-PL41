@@ -5,9 +5,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
 
+import javax.swing.JOptionPane;
+
 import g41.si2022.coiipa.dto.ProfesorDTO;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.SwingUtil;
+import g41.si2022.util.UnexpectedException;
 
 public class RegistrarCursoController {
 	private RegistrarCursoModel model;
@@ -88,13 +91,13 @@ public class RegistrarCursoController {
 	}
 
 	public void insertCurso () {
-		this.model.insertCurso(
+		model.insertCurso(
 				view.getNombreCurso(), view.getObjetivosDescripcion(),
 				(String) view.getTablaProfesores().getValueAt(view.getTablaProfesores().getSelectedRow(), 5),
 				view.getInscripcionIniDate(), view.getInscripcionFinDate(), view.getCursoIniDate(), view.getCursoFinDate(),
-				view.getPlazas(), this.getProfesor()
-				.orElseThrow(() -> new g41.si2022.util.UnexpectedException("No se ha seleccionado a ningún docente."))
-				.getId());
+				view.getPlazas(),
+				this.getProfesor().orElseThrow(() -> new UnexpectedException("No se ha seleccionado a ningún docente.")).getId());
+		SwingUtil.showMessage("Curso registrado con éxito", "Registro de cursos", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private Optional<ProfesorDTO> getProfesor () {
