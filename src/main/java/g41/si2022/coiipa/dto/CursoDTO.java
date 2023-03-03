@@ -2,14 +2,16 @@ package g41.si2022.coiipa.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Data;
 
-@Setter @Getter
+@Setter @Getter @Data
 public class CursoDTO {
 
 	private String
 		nombre,
 		descripcion,
 		estado,
+		coste,
 		start_inscr,
 		end_inscr,
 		start,
@@ -21,7 +23,7 @@ public class CursoDTO {
 	public CursoDTO() { }
 
 	public CursoDTO (
-			String nombre, String descripcion, String estado,
+			String nombre, String descripcion, String estado, String coste,
 			String start_inscr, String end_inscr, String start, String end,
 			String id, String plazas, String docente_id
 	) {

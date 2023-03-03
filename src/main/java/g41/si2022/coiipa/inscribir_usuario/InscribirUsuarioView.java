@@ -9,8 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JSeparator;
 import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -36,96 +38,136 @@ public class InscribirUsuarioView extends Tab {
 
 	private JTextField txtEmailLogin;
 
+    private ButtonGroup decideUserSelection;
+    private JRadioButton radioSignin;
+    private JRadioButton radioSignup;
+
+	private JLabel lblSignin;
+	private JLabel lblSignup;
+	private JLabel lblStatus;
+
 	public InscribirUsuarioView(g41.si2022.util.SwingMain main) {
 		super(main);
 		initialize();
 	}
 
+    private void toggle() {
+		JTextField[] fields = {txtEmail, txtNombre, txtApellidos, txtTelefono, txtEmailLogin};
+        for(JTextField field : fields) field.setEnabled(!field.isEnabled());
+		lblSignin.setText("");
+		lblSignup.setText("");
+    }
+
 	private void initialize() {
 		this.setLayout(new BorderLayout());
 		this.add(JLabelFactory.getLabel(FontType.title, "Inscripción de alumnado"), BorderLayout.NORTH);
+		btnInscribir = new JButton("Inscribirse");
+
+		decideUserSelection = new ButtonGroup();
+		radioSignin = new JRadioButton("Iniciar sesión");
+		radioSignup = new JRadioButton("Registrarse");
+		decideUserSelection.add(radioSignin);
+		decideUserSelection.add(radioSignup);
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new GridLayout(1, 0));
+		topPanel.add(JLabelFactory.getLabel(FontType.subtitle, "Información del usuario"));
+
+		JPanel radioPanel = new JPanel();
+		radioPanel.add(radioSignin);
+		radioPanel.add(radioSignup);
+		topPanel.add(radioPanel);
+
+		radioSignin.addActionListener( e -> toggle() );
+		radioSignup.addActionListener( e -> toggle() );
 
 		JPanel mainPanel = new JPanel(new java.awt.BorderLayout());
-		mainPanel.add(this.makeSigninPanel(), BorderLayout.EAST);
-		mainPanel.add(this.makeLoginPanel(), BorderLayout.WEST);
+		mainPanel.add(this.signupPanel(), BorderLayout.EAST);
+		mainPanel.add(this.signinPanel(), BorderLayout.WEST);
 		mainPanel.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.CENTER);
+    	mainPanel.add(topPanel, BorderLayout.NORTH);
 		this.add(mainPanel, BorderLayout.CENTER);
 		this.add(makeBottomPanel(), BorderLayout.SOUTH);
+
+		radioSignup.setSelected(true);
+		btnInscribir.setEnabled(false);
+		txtEmailLogin.setEnabled(false);
 	}
 
-	private JPanel makeSigninPanel () {
-		this.txtNombre = new JTextField("", InscribirUsuarioView.textFieldSize);
-		this.txtApellidos = new JTextField();
-		this.txtEmail = new JTextField();
-		this.txtTelefono = new JTextField();
+	private JPanel signupPanel () {
+		txtNombre = new JTextField("", InscribirUsuarioView.textFieldSize);
+		txtApellidos = new JTextField();
+		txtEmail = new JTextField();
+		txtTelefono = new JTextField();
 
-		JPanel signinPanel = new JPanel();
-		signinPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(
-				InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder
-				));
-		signinPanel.setLayout(new GridLayout(0, 2)); // any rows, 2 columns
+		lblSignup = new JLabel("");
+
+		JPanel signupPanel = new JPanel();
+		signupPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(
+			InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder
+		));
+		signupPanel.setLayout(new GridLayout(0, 2)); // any rows, 2 columns
 
 		{ // Nombre
-			signinPanel.add(new JLabel("Nombre:"));
-			signinPanel.add(txtNombre);
+			signupPanel.add(new JLabel("Nombre:"));
+			signupPanel.add(txtNombre);
 		} { // Apellidos
-			signinPanel.add(new JLabel("Apellidos:"));
-			signinPanel.add(txtApellidos);
+			signupPanel.add(new JLabel("Apellidos:"));
+			signupPanel.add(txtApellidos);
 		} { // Email
-			signinPanel.add(new JLabel("Email:"));
-			signinPanel.add(txtEmail);
+			signupPanel.add(new JLabel("Email:"));
+			signupPanel.add(txtEmail);
 		} { // Teléfono
-			signinPanel.add(new JLabel("Teléfono (opcional):"));
-			signinPanel.add(txtTelefono);
+			signupPanel.add(new JLabel("Teléfono (opcional):"));
+			signupPanel.add(txtTelefono);
+		} { // Label (estado)
+			signupPanel.add(new JLabel("")); // padding
+			signupPanel.add(lblSignup);
+		}
+
+		return signupPanel;
+	}
+
+	private JPanel signinPanel () {
+		txtEmailLogin = new JTextField("", InscribirUsuarioView.textFieldSize);
+		lblSignin = new JLabel("");
+
+		JPanel signinPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		signinPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder));
+        { // email
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.gridx = 0;
+			gbc.gridy = 1;
+			gbc.weighty = 0.4;
+			signinPanel.add(new JLabel("email:"), gbc);
+			gbc.gridx = 1;
+			signinPanel.add(txtEmailLogin, gbc);
+			gbc.gridy = -1;
+			signinPanel.add(lblSignin, gbc);
 		}
 
 		return signinPanel;
 	}
 
-	private JPanel makeLoginPanel () {
-		this.txtEmailLogin = new JTextField("", InscribirUsuarioView.textFieldSize);
-
-		JPanel loginPanel = new JPanel(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		loginPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(InscribirUsuarioView.panelBorder, 10, 10, InscribirUsuarioView.panelBorder));
-        { // login radiobutton
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.gridwidth = 2;
-            loginPanel.add(new JRadioButton("Ya tengo cuenta"), gbc);
-        } { // signup radiobutton
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            gbc.gridwidth = 2;
-            loginPanel.add(new JRadioButton("No tengo cuenta"), gbc);
-        } { // email
-			gbc.fill = GridBagConstraints.HORIZONTAL;
-			gbc.gridx = 0;
-			gbc.gridy = 0;
-			gbc.weighty = 0.4;
-			loginPanel.add(new JLabel("email:"), gbc);
-			gbc.gridx = 1;
-			loginPanel.add(this.txtEmailLogin, gbc);
-		}
-
-		return loginPanel;
-	}
-
 	private JPanel makeBottomPanel () {
 		JPanel bottomPane = new JPanel(new BorderLayout());
 
-		this.tablaCursos = new JTable();
+		tablaCursos = new JTable();
+		tablaCursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane sp = new JScrollPane(this.tablaCursos);
 
 		sp.setPreferredSize(new java.awt.Dimension(
 				this.getWidth(), 200
-				));
+    	));
+
+		JPanel inscribirPanel = new JPanel();
+		lblStatus = new JLabel("");
+		inscribirPanel.add(btnInscribir);
+		inscribirPanel.add(lblStatus);
 
 		bottomPane.add(sp, BorderLayout.CENTER);
 		bottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Cursos disponibles"), BorderLayout.NORTH);
-		bottomPane.add(this.btnInscribir = new JButton("Inscribirse"), BorderLayout.SOUTH);
+		bottomPane.add(inscribirPanel, BorderLayout.SOUTH);
 
 		return bottomPane;
 	}

@@ -2,8 +2,9 @@ package g41.si2022.coiipa.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Data;
 
-@Setter @Getter
+@Setter @Getter @Data
 public class ProfesorDTO {
 	private int id;
 	private String
