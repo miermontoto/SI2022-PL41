@@ -56,8 +56,8 @@ public class ConsultarCursosController {
 
 	public void getListaInscripciones(String idCurso) {
 		inscripciones = model.getListaInscr(idCurso);
-		TableModel tableModel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] { "fecha", "coste", "estado" },
-				new String[] { "Fecha de inscripción", "Coste", "Estado"}, null);
+		TableModel tableModel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] { "fecha", "estado" },
+				new String[] { "Fecha de inscripción", "Estado"}, null);
 		view.getTablaInscr().setModel(tableModel);
 		SwingUtil.autoAdjustColumns(view.getTablaInscr());
 	}
