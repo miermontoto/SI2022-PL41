@@ -19,14 +19,20 @@ public abstract class Tab extends javax.swing.JPanel {
 		return this.main;
 	}
 
+	/*
+	// For some obscure reason, the initController method is called when clicking on the tab
+	// Therefore, keeping the initController call in the setVisible method as well will make it so it is ran twice
+	// This should not happen
 	@Override
 	public void setVisible (boolean visible) {
 		super.setVisible(visible);
 		if (visible && !isInitializedController) {
+			System.out.println("TAB");
 			this.isInitializedController = true;
 			this.initController();
 		}
 	}
+	*/
 
 	protected abstract void initController();
 }

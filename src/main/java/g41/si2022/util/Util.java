@@ -1,9 +1,12 @@
 package g41.si2022.util;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +20,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Utilidades varias con metodos generales de serializacion, conversion a csv y conversion de fechas
  */
 public class Util {
+
+	public static final String EMAIL_REGEX = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+
 	private Util() {
 	    throw new IllegalStateException("Utility class");
+	}
+
+	public static boolean verifyEmailInAlumno(Database db, String email) {
+		String sql = "select count(*) from alumno where email like ?";
+		return (int) db.executeQueryArray(sql, email).get(0)[0] > 0;
+	}
+
+	public static boolean verifyEmailStructure(String email) {
+		return email.matches(EMAIL_REGEX);
 	}
 
 	/**
@@ -36,14 +51,21 @@ public class Util {
 			if (asArray) {
 		        mapper.configOverride(pojoClass).setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.ARRAY));
 		        String value=mapper.writeValueAsString(pojoList);
-		    	return value.replace("],", "],\n").replace("\"", ""); //con saltos de linea y sin comillas
-				//otra alternativa es utilizar las clases especificas para csv que suministra Jackson (jackson-dataformat-csv)
+		    	return value.replace("],", "],\n").replace("\"", ""); // Con saltos de linea y sin comillas
+				// Otra alternativa es utilizar las clases especificas para csv que suministra Jackson (jackson-dataformat-csv)
 			} else {
-				return mapper.writeValueAsString(pojoList).replaceAll("},", "},\n"); //con saltos de linea
+				return mapper.writeValueAsString(pojoList).replaceAll("},", "},\n"); // Con saltos de linea
 			}
 		} catch (JsonProcessingException e) {
 			throw new ApplicationException(e);
 		}
+	}
+
+	public static void sendEmail(String address, String subject, String content) {
+		try(FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + address + ".txt")) {
+			fw.write("["+subject+","+LocalDateTime.now()+"] "+content+"\n");
+			fw.close();
+		} catch (IOException e) { throw new ApplicationException(e); }
 	}
 
 	/**

@@ -9,6 +9,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import g41.si2022.util.SwingMain;
+import g41.si2022.util.FontType;
+import g41.si2022.util.JLabelFactory;
 import g41.si2022.util.Tab;
 
 @Getter
@@ -46,7 +48,7 @@ public class ConsultarCursosView extends Tab {
 
 		// lblCursos + tablaCursos
 		JPanel panel2 = new JPanel();
-		JLabel lblCursos = new JLabel("Seleccionar curso:");
+		JLabel lblCursos = JLabelFactory.getLabel(FontType.subtitle, "Seleccionar curso:");
 		tablaCursos = new JTable();
 		JScrollPane scrCursos = new JScrollPane(tablaCursos);
 		tablaCursos.setDefaultEditor(Object.class, null);
