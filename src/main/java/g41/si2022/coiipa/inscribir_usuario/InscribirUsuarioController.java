@@ -21,7 +21,7 @@ public class InscribirUsuarioController {
 
     public InscribirUsuarioController(InscribirUsuarioModel m, InscribirUsuarioView v) {
         this.model = m;
-        this.view = v;
+        view = v;
         cursoId = null;
         this.initView();
     }

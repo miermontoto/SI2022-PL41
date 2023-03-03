@@ -39,7 +39,7 @@ public class CarrerasController {
 		//view.getBtnTablaCarreras().addActionListener(e -> getListaCarreras());
 		//ademas invoco el metodo que responde al listener en el exceptionWrapper para que se encargue de las excepciones
 		view.getBtnTablaCarreras().addActionListener(e -> SwingUtil.exceptionWrapper(() -> getListaCarreras()));
-	
+
 		//En el caso del mouse listener (para detectar seleccion de una fila) no es un interfaz funcional puesto que tiene varios metodos
 		//ver discusion: https://stackoverflow.com/questions/21833537/java-8-lambda-expressions-what-about-multiple-methods-in-nested-class
 		view.getTablaCarreras().addMouseListener(new MouseAdapter() {
@@ -51,18 +51,18 @@ public class CarrerasController {
 			}
 		});
 	}
-	
+
 	public void initView() {
-		//Inicializa la fecha de hoy a un valor que permitira mostrar carreras en diferentes fases 
+		//Inicializa la fecha de hoy a un valor que permitira mostrar carreras en diferentes fases
 		//y actualiza los datos de la vista
 		view.setFechaHoy("2016-11-10");
 		this.getListaCarreras();
-		
+
 		//Abre la ventana (sustituye al main generado por WindowBuilder)
-		view.getFrame().setVisible(true); 
+		view.getFrame().setVisible(true);
 	}
 	/**
-	 * La obtencion de la lista de carreras solo necesita obtener la lista de objetos del modelo 
+	 * La obtencion de la lista de carreras solo necesita obtener la lista de objetos del modelo
 	 * y usar metodo de SwingUtil para crear un tablemodel que se asigna finalmente a la tabla.
 	 */
 	public void getListaCarreras() {
@@ -70,7 +70,7 @@ public class CarrerasController {
 		TableModel tmodel=SwingUtil.getTableModelFromPojos(carreras, new String[] {"id", "descr", "estado"});
 		view.getTablaCarreras().setModel(tmodel);
 		SwingUtil.autoAdjustColumns(view.getTablaCarreras());
-		
+
 		//Como se guarda la clave del ultimo elemento seleccionado, restaura la seleccion de los detalles
 		this.restoreDetail();
 
@@ -87,9 +87,9 @@ public class CarrerasController {
 		//Utiliza la ultimo valor de la clave (que se reiniciara si ya no existe en la tabla)
 		this.lastSelectedKey=SwingUtil.selectAndGetSelectedKey(view.getTablaCarreras(), this.lastSelectedKey);
 		//Si hay clave para seleccionar en la tabla muestra el detalle, si no, lo reinicia
-		if ("".equals(this.lastSelectedKey)) { 
+		if ("".equals(this.lastSelectedKey)) {
 			view.setDescuentoNoAplicable();
-			view.getDetalleCarrera().setModel(new DefaultTableModel());		
+			view.getDetalleCarrera().setModel(new DefaultTableModel());
 		} else {
 			this.updateDetail();
 		}
@@ -102,17 +102,17 @@ public class CarrerasController {
 		//Obtiene la clave seleccinada y la guarda para recordar la seleccion en futuras interacciones
 		this.lastSelectedKey=SwingUtil.getSelectedKey(view.getTablaCarreras());
 		int idCarrera=Integer.parseInt(this.lastSelectedKey);
-		
+
 		//Detalle de descuento/recargo:
 		//Controla excepcion porque el modelo causa excepcion cuando no se puede calcular el descuento
 		//y debe indicarse esto en la vista para evitar mostrar datos falsos que se veian antes
-		try { 
+		try {
 			int descuento=model.getDescuentoRecargo(idCarrera, Util.isoStringToDate(view.getFechaHoy()));
 			view.setDescuento(String.valueOf(descuento));
 		} catch (ApplicationException e) {
 			view.setDescuentoNoAplicable();
 		}
-		
+
 		//Detalles de la carrera seleccionada
 		CarreraEntity carrera=model.getCarrera(idCarrera);
 		TableModel tmodel=SwingUtil.getRecordModelFromPojo(carrera, new String[] {"id", "inicio", "fin", "fecha", "descr"});

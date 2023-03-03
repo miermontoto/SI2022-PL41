@@ -20,7 +20,7 @@ public class ConsultarCursosController {
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
 		this.model = m;
-		this.view = v;
+		view = v;
 		initView();
 	}
 
