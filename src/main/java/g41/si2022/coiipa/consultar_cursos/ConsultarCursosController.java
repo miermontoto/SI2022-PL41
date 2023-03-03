@@ -16,8 +16,7 @@ public class ConsultarCursosController {
 
 	private List<CursoDTO> cursos;
 	private List<InscripcionDTO> inscripciones;
-	private String idCurso;
-  
+
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
 		this.model = m;
@@ -48,7 +47,6 @@ public class ConsultarCursosController {
 	public void getValueCurso() {
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
-				idCurso = curso.getId();
 				getListaInscripciones(curso.getId());
 				return;
 			}
