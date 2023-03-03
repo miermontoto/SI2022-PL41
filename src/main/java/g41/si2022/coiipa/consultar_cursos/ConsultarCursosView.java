@@ -33,6 +33,7 @@ public class ConsultarCursosView extends Tab {
 		// El botón sobra pero lo dejo porque mola
 		//JButton btnCargarDatos = new JButton("Cargar cursos");
 		// El botón no mola una mierda, te lo arranco de las manos. ~mier
+		// ahora estoy triste. ~rubennmg
 		JPanel panel1 = new JPanel();
 		// Add elements
 		//panel1.add(btnCargarDatos, BorderLayout.WEST);
@@ -58,28 +59,26 @@ public class ConsultarCursosView extends Tab {
 
 		// lblInscr + tablaInscr
 		JPanel panel3 = new JPanel();
-		JLabel lblInscr = JLabelFactory.getLabel(FontType.subtitle, "Inscripciones:");
-		JScrollPane scrInscr = new JScrollPane();
+		JLabel lblInscr = new JLabel("Inscripciones:");
 		tablaInscr = new JTable();
+		JScrollPane scrInscr = new JScrollPane(tablaInscr);
 		tablaInscr.setDefaultEditor(Object.class, null);
 		// Add elements
 		panel3.setLayout(new BorderLayout());
 		panel3.add(lblInscr, BorderLayout.NORTH);
-		panel3.add(tablaInscr, BorderLayout.CENTER);
-		panel3.add(scrInscr, BorderLayout.EAST);
+		panel3.add(scrInscr, BorderLayout.CENTER);
 		centerPanel.add(panel3);
 
 		// lblBalance + tablaBalance
 		JPanel panel4 = new JPanel();
-		JLabel lblBalance = JLabelFactory.getLabel(FontType.subtitle, "Balance económico:");
-		JScrollPane scrBalance = new JScrollPane();
+		JLabel lblBalance = new JLabel("Balance económico:");
 		tablaBalance = new JTable();
+		JScrollPane scrBalance = new JScrollPane(tablaBalance);
 		tablaBalance.setDefaultEditor(Object.class, null);
 		// Add elements
 		panel4.setLayout(new BorderLayout());
 		panel4.add(lblBalance, BorderLayout.NORTH);
-		panel4.add(tablaBalance, BorderLayout.CENTER);
-		panel4.add(scrBalance, BorderLayout.EAST);
+		panel4.add(scrBalance, BorderLayout.CENTER);
 		centerPanel.add(panel4);
 	}
 
