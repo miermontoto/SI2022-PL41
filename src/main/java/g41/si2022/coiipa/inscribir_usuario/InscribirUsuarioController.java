@@ -3,10 +3,12 @@ package g41.si2022.coiipa.inscribir_usuario;
 import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
 import java.awt.Color;
 
 import javax.swing.table.TableModel;
 
+import g41.si2022.coiipa.dto.AlumnoDTO;
 import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.util.SwingUtil;
 import g41.si2022.util.Util;
@@ -76,6 +78,26 @@ public class InscribirUsuarioController {
 
     public void manageMain() {
         if (cursoId == null) return;
+
+        String email = "";
+        AlumnoDTO alumno;
+        switch (view.getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
+            case "sign-in":
+                email = view.getTxtEmailLogin().getText();
+                break;
+            case "sign-up":
+                email = view.getTxtEmail().getText();
+                model.insertAlumno(
+                    view.getTxtNombre().getText(),
+                    view.getTxtApellidos().getText(),
+                    view.getTxtEmail().getText(),
+                    view.getTxtTelefono().getText()
+                );
+                break;
+        }
+
+        alumno = model.getAlumnoFromEmail(email).get(0);
+        model.insertInscripcion(LocalDate.now().toString(), "Pendiente", cursoId, alumno.getId());
     }
 
     public void manageForm() {
