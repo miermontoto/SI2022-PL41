@@ -34,7 +34,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 
 	public String getNombreCurso () { return this.nombreCurso.getText().trim(); }
 	public String getObjetivosDescripcion () { return this.objetivosDescripcion.getText().trim(); }
-	public int getPlazas () { return Integer.parseInt(this.plazas.getText().trim()); }
+	public String getPlazas () { return this.plazas.getText().trim(); }
 	public String getInscripcionIniDate () { return this.fechaInscripcionIni.getDate().toString(); }
 	public BetterDatePicker getInscripcionIni () { return this.fechaInscripcionIni; }
 	public String getInscripcionFinDate () { return this.fechaInscripcionFin.getDate().toString(); }
