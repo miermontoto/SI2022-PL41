@@ -89,7 +89,6 @@ public class RegistrarPagoController {
 		// Si había algún error habilitado en la etiqueta, se deshabilita y mostramos éxito
 		vista.getLblError().setText("Pago insertado con éxito");
 		eraseControls(false); // Entradas en blanco
-		SwingUtil.showMessage("Pago insertado con éxito", "Registro de pagos", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public void enviarEmail(int idalumno, String alumno){
