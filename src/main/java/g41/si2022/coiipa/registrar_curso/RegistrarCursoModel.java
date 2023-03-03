@@ -11,24 +11,24 @@ public class RegistrarCursoModel {
 
 	public java.util.List<ProfesorDTO> getListaProfesores () {
 		String sql =
-				"SELECT nombre, apellidos, email, direccion "
+				"SELECT * "
 				+ " FROM docente ORDER BY nombre";
 		return db.executeQueryPojo(ProfesorDTO.class, sql);
 	}
-	
+
 	public void insertCurso (
 			String nombre, String descripcion,
-			Date inscrStart, Date inscrEnd, Date start, Date end,
+			String inscrStart, String inscrEnd, String start, String end,
 			int plazas, int docenteId
 	) {
+		System.out.println("Executing INSERT CURSO");
 		String sql =
 				"INSERT INTO curso (nombre, descripcion, inscr_start, inscr_end, start, end, plazas, docente_id) "
 				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-		db.executeUpdate(sql, 
+		db.executeUpdate(sql,
 			nombre, descripcion,
 			inscrStart, inscrEnd, start, end,
 			plazas, docenteId
 		);
 	}
-
 }
