@@ -111,18 +111,18 @@ public class RegistrarPagoController {
 		TableModel tmodel; //Modelo de la tabla a inicializar según checkbox
 		if(vista.getChkAll().isSelected()) {
 			
-		List<PagoDTO> inscripcionesAll = modelo.getListaInscripcionesCompleta(Util.isoStringToDate("2022-05-15"));
-		tmodel = SwingUtil.getTableModelFromPojos(inscripcionesAll, new String[] { "id", "alumno_id", "nombre", "fecha", "coste", "estado" }); //La primera columna estará oculta
+			List<PagoDTO> inscripcionesAll = modelo.getListaInscripcionesCompleta(Util.isoStringToDate("2022-05-15"));
+			tmodel = SwingUtil.getTableModelFromPojos(inscripcionesAll, new String[] { "id", "alumno_id", "nombre", "fecha", "coste", "estado" }); //La primera columna estará oculta
 		
 		} else {
 			
-		List<PagoDTO> inscripcionesPagadas = modelo.getListaInscripcionesPagadas(Util.isoStringToDate("2022-05-15"));
-		tmodel = SwingUtil.getTableModelFromPojos(inscripcionesPagadas, new String[] { "id", "alumno_id", "nombre", "fecha", "coste", "estado" }); //La primera columna estará oculta
+			List<PagoDTO> inscripcionesPagadas = modelo.getListaInscripcionesPagadas(Util.isoStringToDate("2022-05-15"));
+			tmodel = SwingUtil.getTableModelFromPojos(inscripcionesPagadas, new String[] { "id", "alumno_id", "nombre", "fecha", "coste", "estado" }); //La primera columna estará oculta
 		
 		}
 		
 		table.setModel(tmodel);
-
+		
 		// Ocultar foreign keys de la tabla
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		table.removeColumn(table.getColumnModel().getColumn(0));
