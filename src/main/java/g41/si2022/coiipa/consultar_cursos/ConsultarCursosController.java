@@ -13,10 +13,11 @@ public class ConsultarCursosController {
 
 	private ConsultarCursosModel model;
 	private ConsultarCursosView view;
+
 	private List<CursoDTO> cursos;
 	private List<InscripcionDTO> inscripciones;
 	private String idCurso;
-
+  
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
 		this.model = m;
@@ -31,6 +32,7 @@ public class ConsultarCursosController {
 			@Override
 			public void mouseReleased(MouseEvent ent) {
 				SwingUtil.exceptionWrapper(() -> getValueCurso());
+
 			}
 		});
 	}
@@ -60,5 +62,6 @@ public class ConsultarCursosController {
 				new String[] { "Fecha de inscripción", "Estado"}, null);
 		view.getTablaInscr().setModel(tableModel);
 		SwingUtil.autoAdjustColumns(view.getTablaInscr());
+
 	}
 }

@@ -35,6 +35,7 @@ public class ConsultarCursosView extends Tab {
 		// El botón no mola una mierda, te lo arranco de las manos. ~mier
 		// ahora estoy triste. ~rubennmg
 		// no pasa nada, el botón te observa desde los cielos y te quiere. ~mier
+
 		JPanel panel1 = new JPanel();
 		// Add elements
 		//panel1.add(btnCargarDatos, BorderLayout.WEST);
