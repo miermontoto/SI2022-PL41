@@ -21,8 +21,12 @@ import g41.si2022.util.Tab;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 import javax.swing.JCheckBox;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.table.DefaultTableModel;
 
 @Getter
+
 public class InsertarDevolucionView extends Tab {
 
 	private static final long serialVersionUID = 1L;
@@ -31,13 +35,14 @@ public class InsertarDevolucionView extends Tab {
 	private JPanel formPanel;
 	private JLabel lblNombreInscripcion;
 	private JLabel lblTitulo;
-	private JButton btnInsertarPago;
+	private JButton btnCancelarInscripcion;
 
 	private DatePicker datePicker;
 	private JFormattedTextField txtImporte;
 	private JLabel lblError;
 	private JPanel panel;
 	private JCheckBox chkAll;
+	private JLabel lblImporteDevuelto;
 
 	public InsertarDevolucionView(SwingMain main) {
 		super(main);
@@ -56,6 +61,7 @@ public class InsertarDevolucionView extends Tab {
 		this.add(formPanel, BorderLayout.EAST);
 
 		lblTitulo = JLabelFactory.getLabel(FontType.title, "Insertar un nuevo pago");
+		lblTitulo.setText("Cancelar inscripción:");
 
 		formPanel.add(lblTitulo, "cell 0 0,growx,aligny top");
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
@@ -63,29 +69,33 @@ public class InsertarDevolucionView extends Tab {
 		
 				JLabel label = new JLabel("Nombre del inscrito: ");
 				formPanel.add(label, "cell 0 1,alignx left,aligny center");
-		lblNombreInscripcion = new JLabel("No se ha selecciona ningún nombre");
+		lblNombreInscripcion = new JLabel("No se ha seleccionado ningún nombre");
 		formPanel.add(lblNombreInscripcion, "cell 0 2,alignx left,aligny center");
-		JLabel label_1 = new JLabel("Introducir importe recibido (€): ");
-		formPanel.add(label_1, "cell 0 3,alignx left,aligny center");
-		formPanel.add(new JLabel("Introducir fecha del pago:"), "cell 0 5");
+		JLabel lblFecha = new JLabel("Seleccionar fecha de hoy:");
+		formPanel.add(lblFecha, "cell 0 3");
 
-	    NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
-	    formatter.setValueClass(Integer.class);
-	    formatter.setMinimum(0);
-	    formatter.setMaximum(Integer.MAX_VALUE);
-	    formatter.setAllowsInvalid(true);
-	    formatter.setCommitsOnValidEdit(false);
-
-		formPanel.add(txtImporte = new JFormattedTextField(formatter), "cell 0 4,growx");
-		formPanel.add(datePicker = new DatePicker(), "cell 0 6,growx,aligny center");
+		formPanel.add(datePicker = new DatePicker(), "cell 0 4,growx,aligny center");
+				JLabel lblImporteADevolver = new JLabel("Importe a devolver:");
+				formPanel.add(lblImporteADevolver, "cell 0 5,alignx left,aligny center");
+				
+				lblImporteDevuelto = new JLabel("");
+				formPanel.add(lblImporteDevuelto, "cell 0 6");
 		
-				btnInsertarPago = new JButton("Insertar pago");
-				formPanel.add(btnInsertarPago, "cell 0 8");
+				btnCancelarInscripcion = new JButton("Cancelar inscripción");
+				formPanel.add(btnCancelarInscripcion, "cell 0 8");
 		
 		lblError = new JLabel("");
 		formPanel.add(lblError, "cell 0 10");
 		tableInscripciones = new JTable();
-		this.add(new JScrollPane(tableInscripciones), BorderLayout.CENTER);
+		tableInscripciones.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+			}
+		));
+		JScrollPane scrollPane_1 = new JScrollPane(tableInscripciones);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		this.add(scrollPane_1, BorderLayout.WEST);
 
 		tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableInscripciones.setDefaultEditor(Object.class, null);
