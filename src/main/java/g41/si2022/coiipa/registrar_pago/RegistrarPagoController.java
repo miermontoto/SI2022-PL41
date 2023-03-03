@@ -1,11 +1,8 @@
 package g41.si2022.coiipa.registrar_pago;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
@@ -15,7 +12,6 @@ import java.awt.event.MouseAdapter;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.util.SwingUtil;
 import g41.si2022.util.Util;
-import g41.si2022.util.ApplicationException;
 
 public class RegistrarPagoController {
 
