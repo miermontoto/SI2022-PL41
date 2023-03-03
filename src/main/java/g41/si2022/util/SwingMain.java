@@ -7,6 +7,8 @@ import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas
@@ -24,6 +26,7 @@ public class SwingMain {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		FlatLightLaf.setup();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -62,6 +65,7 @@ public class SwingMain {
 		theTabs.put("Registrar curso", new g41.si2022.coiipa.registrar_curso.RegistrarCursoView(this));
 		theTabs.put("Registrar pago", new g41.si2022.coiipa.registrar_pago.RegistrarPagoView(this));
 		theTabs.put("Inscribir usuario", new g41.si2022.coiipa.inscribir_usuario.InscribirUsuarioView(this));
+		theTabs.put("Consultar cursos", new g41.si2022.coiipa.consultar_cursos.ConsultarCursosView(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));

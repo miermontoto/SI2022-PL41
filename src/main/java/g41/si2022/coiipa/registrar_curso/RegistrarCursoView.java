@@ -7,6 +7,9 @@ import javax.swing.ListSelectionModel;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
+import g41.si2022.util.FontType;
+import g41.si2022.util.JLabelFactory;
+
 import g41.si2022.util.BetterDatePicker;
 
 import java.awt.BorderLayout;
@@ -65,6 +68,9 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 		centerPanel.setLayout(new GridBagLayout());
 		GridBagConstraints left = new GridBagConstraints();
 		GridBagConstraints right = new GridBagConstraints();
+
+		// Título
+		mainSp.setColumnHeaderView(JLabelFactory.getLabel(FontType.subtitle, "Información sobre el curso"));
 
 		{ // Nombre del curso
 			{ // Label
@@ -150,7 +156,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 				left.gridy = 5;
 				centerPanel.add(new JLabel("Localizacion:"), left);
 			}
-			{ // Input 
+			{ // Input
 				right.gridy = 5;
 				right.fill = GridBagConstraints.BOTH;
 				this.localizacion = new JTextArea();
@@ -162,6 +168,9 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 
 		JPanel bottomPane = new JPanel();
 		bottomPane.setLayout(new BorderLayout());
+
+		bottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar profesor"), BorderLayout.NORTH);
+
 		JScrollPane sp = new JScrollPane();
 
 		sp.setPreferredSize(new java.awt.Dimension(
@@ -181,7 +190,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 		bottomPane.add(this.registrarCurso, BorderLayout.SOUTH);
 
 		this.add(bottomPane, BorderLayout.SOUTH);
-		this.add(new JLabel("Registrar Curso"), BorderLayout.NORTH);
+		add(new JLabel("Registrar Curso"), BorderLayout.NORTH);
 	}
 
 	@Override
