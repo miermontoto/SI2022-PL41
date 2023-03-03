@@ -29,7 +29,7 @@ public class RegistrarPagoModel {
 	}
 
 	public void actualizarInscripcion(int id) {
-		String sql="UPDATE inscripcion SET estado=? WHERE id=?";
+		String sql = "UPDATE inscripcion SET estado=? WHERE id=?";
 		db.executeUpdate(sql, "Pagado", id);
 	}
 }

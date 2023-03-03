@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JTable;
 import javax.swing.table.TableModel;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.util.SwingUtil;
@@ -16,12 +20,10 @@ public class RegistrarPagoController {
 
 	private RegistrarPagoView vista;
 	private RegistrarPagoModel modelo;
-	private RegistrarPagoController controlador;
 
 	public RegistrarPagoController(RegistrarPagoView vista, RegistrarPagoModel modelo) {
 		this.vista = vista;
 		this.modelo = modelo;
-		this.controlador = this;
 		this.initView();
 	}
 
@@ -29,60 +31,49 @@ public class RegistrarPagoController {
 	private int idAlumno = -1;
 
 	public void initView() {
-		// Precarga inicial de la lista de inscripciones
-		this.getListaInscripciones();
-
-		// Inicio la vista con todo deshabilitado
-		vista.getBtnInsertarPago().setEnabled(false);
-        controlador.vista.getTxtImporte().setEnabled(false);
-        controlador.vista.getDatepicker().setEnabled(false);
+		getListaInscripciones(); // Precarga inicial de la lista de inscripciones
+		setControls(false); // Inicio la vista con todo deshabilitado
 
 		vista.getBtnInsertarPago().addActionListener(e -> handleInsertar());
-
-		vista.getTableInscripciones().addMouseListener(new java.awt.event.MouseAdapter() {
+		vista.getTableInscripciones().addMouseListener(new MouseAdapter() {
 		    @Override
-		    public void mouseReleased(java.awt.event.MouseEvent evt) { handleSelect(); }
+		    public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
+	}
+
+	private void setControls(boolean status) {
+		vista.getBtnInsertarPago().setEnabled(status);
+		vista.getTxtImporte().setEnabled(status);
+		vista.getDatePicker().setEnabled(status);
 	}
 
 	private void handleSelect() {
 		int fila = vista.getTableInscripciones().getSelectedRow();
-		System.out.println(fila);
+		if (fila == -1) return;
 
 		TableModel tempModel = vista.getTableInscripciones().getModel();
 		idInscripcion = (int) tempModel.getValueAt(fila, 0);
 		idAlumno = (int) tempModel.getValueAt(fila, 1);
-		controlador.vista.getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 2));
+		vista.getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 2));
 
-		controlador.vista.getTxtImporte().setEnabled(true);
-		controlador.vista.getBtnInsertarPago().setEnabled(true);
-		controlador.vista.getDatepicker().setEnabled(true);
+		setControls(true);
 	}
 
 	private void handleInsertar() {
 		String nombreInscrito = vista.getLblNombreInscripcion().getText();
 		String importeString = vista.getTxtImporte().getText();
+		System.out.println(importeString);
 
-		if(nombreInscrito == "N/A" || importeString == null || vista.getDatepicker().getDate() == null) {
-			return;
-		}
+		if(nombreInscrito == "N/A" || importeString == null || vista.getDatePicker().getDate() == null) return;
 
 		// Hacemos las conversiones a Date y int
-		Date fechaPago = java.sql.Date.valueOf(vista.getDatepicker().getDate());
+		Date fechaPago = java.sql.Date.valueOf(vista.getDatePicker().getDate());
 		int importe = Integer.parseInt(importeString);
 
-		// Imprimo info de deb
-		System.out.printf("Se han pagado %s € para el alumno %s , en la inscripción: %d , con fecha %s \n", importe, nombreInscrito, idInscripcion, fechaPago.toString()); //DEBUG
-
-		// Registro en la BBDD el pago
-		modelo.registrarPago(importe, Util.dateToIsoString(fechaPago) , controlador.idInscripcion);
-
-		// Envío un email al alumno
-		enviarEmail(idAlumno, vista.getLblNombreInscripcion().getText());
-
-		// Refresco la tabla de inscripciones
-		controlador.getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
-
+		System.out.printf("Se han pagado %s € para el alumno %s, en la inscripción: %d, con fecha %s\n", importe, nombreInscrito, idInscripcion, fechaPago.toString()); //DEBUG
+		modelo.registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion); // Registro en la BBDD el pago
+		enviarEmail(idAlumno, vista.getLblNombreInscripcion().getText()); // Envío un email al alumno
+		getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
 	}
 
 	public void enviarEmail(int idalumno, String alumno){
@@ -96,13 +87,16 @@ public class RegistrarPagoController {
 	}
 
 	public void getListaInscripciones() {
+		JTable table = vista.getTableInscripciones();
 		List<PagoDTO> inscripciones = modelo.getListaInscripciones(Util.isoStringToDate("2022-05-15"));
-		TableModel tmodel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] {"id", "alumno_id", "nombre", "fecha", "coste", "estado"}); //La primera columna estará oculta
-		vista.getTableInscripciones().setModel(tmodel); // Le pongo el modelo
-		vista.getTableInscripciones().removeColumn(vista.getTableInscripciones().getColumnModel().getColumn(0)); //Ocultamos la columna del id inscripcion
-		vista.getTableInscripciones().removeColumn(vista.getTableInscripciones().getColumnModel().getColumn(0)); //Ocultamos la columna del id alumno
-		vista.getTableInscripciones().setDefaultEditor(Object.class, null);
+		TableModel tmodel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] { "id", "alumno_id", "nombre", "fecha", "coste", "estado" }); //La primera columna estará oculta
+		table.setModel(tmodel);
 
-		SwingUtil.autoAdjustColumns(vista.getTableInscripciones()); // Ajustamos las columnas
+		// Ocultar foreign keys de la tabla
+		table.removeColumn(table.getColumnModel().getColumn(0));
+		table.removeColumn(table.getColumnModel().getColumn(0));
+		table.setDefaultEditor(Object.class, null); // Deshabilitar edición
+
+		SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas
 	}
 }

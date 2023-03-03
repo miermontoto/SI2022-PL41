@@ -32,42 +32,38 @@ public class RegistrarPagoView extends Tab {
 	private JLabel lblTitulo;
 	private JButton btnInsertarPago;
 
-	DatePicker datepicker = new DatePicker();
+	private DatePicker datePicker;
 	private JFormattedTextField txtImporte;
 
 	public RegistrarPagoView(SwingMain main) {
 		super(main);
+		formPanel = new JPanel();
 		this.setLayout(new BorderLayout(0, 0));
 
-		formPanel = new JPanel();
 		formPanel.setLayout(new MigLayout("", "[122.00px,grow][]", "[][14px][][][][][][][]"));
-		add(formPanel, BorderLayout.EAST);
+		this.add(formPanel, BorderLayout.EAST);
 
-		formPanel.add(lblTitulo = JLabelFactory.getLabel(FontType.title, "Insertar un nuevo pago"),
-				"cell 0 0,alignx left,aligny top");
+		lblTitulo = JLabelFactory.getLabel(FontType.title, "Insertar un nuevo pago");
+		lblNombreInscripcion = new JLabel("N/A");
+
+		formPanel.add(lblTitulo, "cell 0 0,alignx left,aligny top");
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 
 		formPanel.add(new JLabel("Nombre del inscrito: "), "cell 0 1,alignx left,aligny center");
-
-		lblNombreInscripcion = new JLabel("N/A");
+		formPanel.add(new JLabel("Introducir importe recibido (€): "), "cell 0 3,alignx left,aligny center");
+		formPanel.add(new JLabel("Introducir fecha del pago:"), "cell 0 5");
 		formPanel.add(lblNombreInscripcion, "cell 0 2,alignx left,aligny center");
 
-		formPanel.add(new JLabel("Introducir importe recibido (€): "), "cell 0 3,alignx left,aligny center");
-
-		NumberFormat format = NumberFormat.getInstance();
-	    NumberFormatter formatter = new NumberFormatter(format);
-	    formatter.setValueClass(Integer.class);
+	    NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
+	    //formatter.setValueClass(Float.class);
 	    formatter.setMinimum(0);
-	    formatter.setMaximum(Integer.MAX_VALUE);
+	    formatter.setMaximum(Float.MAX_VALUE);
 	    formatter.setAllowsInvalid(true);
-	    formatter.setCommitsOnValidEdit(true);
+	    formatter.setCommitsOnValidEdit(false);
 
-		txtImporte = new JFormattedTextField(formatter);
-		formPanel.add(txtImporte, "cell 0 4,growx");
-
-		formPanel.add(new JLabel("Introducir fecha del pago:"), "cell 0 5");
-		formPanel.add(datepicker, "cell 0 6,growx,aligny center");
+		formPanel.add(txtImporte = new JFormattedTextField(formatter), "cell 0 4,growx");
+		formPanel.add(datePicker = new DatePicker(), "cell 0 6,growx,aligny center");
 
 		btnInsertarPago = new JButton("Insertar pago");
 
