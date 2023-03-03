@@ -15,7 +15,7 @@ public class RegistrarCursoModel {
 				+ " FROM docente ORDER BY nombre";
 		return db.executeQueryPojo(ProfesorDTO.class, sql);
 	}
-	
+
 	public void insertCurso (
 			String nombre, String descripcion,
 			String inscrStart, String inscrEnd, String start, String end,
@@ -23,13 +23,12 @@ public class RegistrarCursoModel {
 	) {
 		System.out.println("Executing INSERT CURSO");
 		String sql =
-				"INSERT INTO curso (nombre, descripcion, start_inscr, end_inscr, start, end, plazas, docente_id, estado) "
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'INSCR_SIN_ABRIR');"; // INSCR_SIN_ABRIR may change later on
-		db.executeUpdate(sql, 
+				"INSERT INTO curso (nombre, descripcion, inscr_start, inscr_end, start, end, plazas, docente_id) "
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+		db.executeUpdate(sql,
 			nombre, descripcion,
 			inscrStart, inscrEnd, start, end,
 			plazas, docenteId
 		);
 	}
-
 }

@@ -20,8 +20,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Utilidades varias con metodos generales de serializacion, conversion a csv y conversion de fechas
  */
 public class Util {
+
+	public static final String EMAIL_REGEX = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+
 	private Util() {
 	    throw new IllegalStateException("Utility class");
+	}
+
+	public static boolean verifyEmailInAlumno(Database db, String email) {
+		String sql = "select count(*) from alumno where email like ?";
+		return (int) db.executeQueryArray(sql, email).get(0)[0] > 0;
+	}
+
+	public static boolean verifyEmailStructure(String email) {
+		return email.matches(EMAIL_REGEX);
 	}
 
 	/**
