@@ -27,6 +27,9 @@ public class Debug extends Tab {
 		JLabel status = new JLabel();
 		status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
+		today = new BetterDatePicker();
+		today.setDateToToday();
+
 		JButton schema = new JButton("Run schema");
 		schema.addActionListener(e -> {
 			status.setText(db.createDatabase(false) ? "Database created" : "Failed to create database");
@@ -87,6 +90,7 @@ public class Debug extends Tab {
 		dbButtons.add(delete);
 		dbButtons.add(isFile);
 		otherButtons.add(refresh);
+		otherButtons.add(today);
 		otherButtons.add(close);
 
 		this.add(status, BorderLayout.CENTER);
