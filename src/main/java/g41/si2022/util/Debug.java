@@ -1,16 +1,17 @@
 package g41.si2022.util;
 
 import java.awt.BorderLayout;
-
+import lombok.Getter;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import java.awt.event.ActionEvent;
 
+@Getter
 public class Debug extends Tab {
 
 	private static final long serialVersionUID = -4249195203893017275L;
+	private BetterDatePicker today;
 
 	public Debug(SwingMain main) {
 		super(main);
