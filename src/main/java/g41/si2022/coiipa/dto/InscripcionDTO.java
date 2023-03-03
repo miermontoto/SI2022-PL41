@@ -12,8 +12,10 @@ public class InscripcionDTO {
 
     public InscripcionDTO() {}
 
-    public InscripcionDTO(String fecha, String coste, String estado) {
+    public InscripcionDTO(String fecha, String estado) {
         this.fecha = fecha;
         this.estado = estado;
     }
+
+    public static String getSqlQuery() { return "select * from inscripcion order by id asc"; }
 }
