@@ -3,8 +3,6 @@ package g41.si2022.coiipa.registrar_curso;
 import g41.si2022.coiipa.dto.ProfesorDTO;
 import g41.si2022.util.Database;
 
-import java.util.Date;
-
 public class RegistrarCursoModel {
 
 	private Database db = new Database();
@@ -23,8 +21,8 @@ public class RegistrarCursoModel {
 	) {
 		System.out.println("Executing INSERT CURSO");
 		String sql =
-				"INSERT INTO curso (nombre, descripcion, inscr_start, inscr_end, start, end, plazas, docente_id) "
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+				"INSERT INTO curso (nombre, descripcion, start_inscr, end_inscr, start, end, plazas, docente_id, estado) "
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'INSCR_SIN_ABRIR');";
 		db.executeUpdate(sql,
 			nombre, descripcion,
 			inscrStart, inscrEnd, start, end,
