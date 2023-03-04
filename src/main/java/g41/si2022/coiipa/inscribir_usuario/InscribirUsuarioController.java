@@ -3,9 +3,12 @@ package g41.si2022.coiipa.inscribir_usuario;
 import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.awt.Color;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
 import g41.si2022.coiipa.dto.AlumnoDTO;
@@ -36,37 +39,37 @@ public class InscribirUsuarioController {
             }
         });
 
-        view.getTxtEmailLogin().addKeyListener(new java.awt.event.KeyAdapter() {
+        view.getTxtEmailLogin().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
 
-        view.getTxtEmail().addKeyListener(new java.awt.event.KeyAdapter() {
+        view.getTxtEmail().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
 
-        view.getTxtNombre().addKeyListener(new java.awt.event.KeyAdapter() {
+        view.getTxtNombre().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
 
-        view.getTxtApellidos().addKeyListener(new java.awt.event.KeyAdapter() {
+        view.getTxtApellidos().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
 
-        view.getTxtTelefono().addKeyListener(new java.awt.event.KeyAdapter() {
+        view.getTxtTelefono().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
@@ -98,6 +101,7 @@ public class InscribirUsuarioController {
 
         alumno = model.getAlumnoFromEmail(email).get(0);
         model.insertInscripcion(LocalDate.now().toString(), "Pendiente", cursoId, alumno.getId());
+        getListaCursos();
         SwingUtil.showMessage("Inscripción realizada con éxito", "Inscripción de alumno");
     }
 
@@ -137,19 +141,23 @@ public class InscribirUsuarioController {
     }
 
     public void updateCursoValue() {
+        cursoId = null;
         for (CursoDTO curso : cursos) {
             if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
+                if (curso.getPlazas_libres().equals("0")) {
+                    SwingUtil.showMessage("No quedan plazas libres para este curso", "Inscripción de alumno", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 cursoId = curso.getId();
                 return;
             }
         }
-        cursoId = null;
     }
 
     public void getListaCursos() {
         cursos = model.getListaCursos(view.getMain().getToday().toString());
-        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas", "start_inscr", "end_inscr" },
-        		new String[] { "Nombre", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
+        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas_libres", "start_inscr", "end_inscr" },
+        		new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
         view.getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
     }
