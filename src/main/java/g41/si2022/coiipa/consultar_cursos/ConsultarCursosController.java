@@ -17,7 +17,7 @@ public class ConsultarCursosController {
 
 	private List<CursoDTO> cursos;
 	private List<InscripcionDTO> inscripciones;
-	private List<DocenciaDTO> gastos;
+	private double gastos;
 	private double ingresosEstimados;
 	private double ingresosReales;
 	private String balanceEstimado;
@@ -63,7 +63,7 @@ public class ConsultarCursosController {
 	public void balance() {
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
-				gastos = model.getListaGastos(curso.getId());
+				gastos = model.getGastos(curso.getId());
 				ingresosEstimados = model.getIngresosEstimados(curso.getId());
 				return;
 			}
