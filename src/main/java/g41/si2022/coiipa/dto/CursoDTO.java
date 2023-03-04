@@ -18,6 +18,7 @@ public class CursoDTO {
 		end,
 		id,
 		plazas,
+		plazas_libres,
 		docente_id;
 
 	public CursoDTO() { }
@@ -36,6 +37,24 @@ public class CursoDTO {
 		this.end = end;
 		this.id = id;
 		this.plazas = plazas;
+		this.docente_id = docente_id;
+	}
+
+	public CursoDTO(
+		String nombre, String descripcion, String estado, String coste,
+		String start_inscr, String end_inscr, String start, String end,
+		String id, String plazas, String plazas_libres, String docente_id
+	) {
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.estado = estado;
+		this.start_inscr = start_inscr;
+		this.end_inscr = end_inscr;
+		this.start = start;
+		this.end = end;
+		this.id = id;
+		this.plazas = plazas;
+		this.plazas_libres = plazas_libres;
 		this.docente_id = docente_id;
 	}
 

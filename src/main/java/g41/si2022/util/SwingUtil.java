@@ -43,7 +43,6 @@ public class SwingUtil {
 		}
 	}
 
-
 	public static void showMessage(String message, String title, int type) {
 		/* Como este metodo no recibe el contexto de la ventana de la aplicación,
 		 * no usa el metodo estatico showMessageDialog de JOptionPane
@@ -57,9 +56,8 @@ public class SwingUtil {
 	}
 
 	public static void showMessage(String message, String title) {
-		showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
+	    showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
-
 
 	/**
 	 * Ajusta todas las columnas de la tabla al tamanyo correspondiente al contenido del tablemodel
