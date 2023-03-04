@@ -41,10 +41,10 @@ public class InscribirUsuarioModel {
         db.executeUpdate(sql, nombre, apellidos, email, telefono);
     }
 
-    public void insertInscripcion(String fecha, String estado, String curso_id, String alumno_id) {
-        String sql = "insert into inscripcion (fecha, estado, curso_id, alumno_id)"
-            + " values (?, ?, ?, ?)";
-        db.executeUpdate(sql, fecha, estado, curso_id, alumno_id);
+    public void insertInscripcion(String fecha, String curso_id, String alumno_id) {
+        String sql = "insert into inscripcion (fecha, curso_id, alumno_id)"
+            + " values (?, ?, ?)";
+        db.executeUpdate(sql, fecha, curso_id, alumno_id);
     }
 
     public boolean verifyEmail(String email) {
