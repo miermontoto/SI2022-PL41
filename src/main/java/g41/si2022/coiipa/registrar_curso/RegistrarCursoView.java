@@ -34,6 +34,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 
 	public String getNombreCurso () { return this.nombreCurso.getText().trim(); }
 	public String getObjetivosDescripcion () { return this.objetivosDescripcion.getText().trim(); }
+	public JTextArea getObjetivosDescripcionTextArea () { return this.objetivosDescripcion; }
 	public String getPlazas () { return this.plazas.getText().trim(); }
 	public String getInscripcionIniDate () { return this.fechaInscripcionIni.getDate().toString(); }
 	public BetterDatePicker getInscripcionIni () { return this.fechaInscripcionIni; }
@@ -45,6 +46,8 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	public BetterDatePicker getCursoFin () { return this.fechaCursoFin; }
 	public JTable getTablaProfesores() { return this.profTable; }
 	public JButton getSubmitButton() { return this.registrarCurso; }
+	public JTextArea getLocalizacionTextArea () { return this.localizacion; }
+	public String getLocalizacion () { return this.localizacion.getText(); }
 
 	public void setNombreCurso (String nombreCurso) { this.nombreCurso.setText(nombreCurso); }
 	public void setObjetivosDescripcion (String objetivosDescripcion) { this.objetivosDescripcion.setText(objetivosDescripcion); }
@@ -122,13 +125,17 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
-					panelInscDesde.add(this.fechaInscripcionIni = new BetterDatePicker(), BorderLayout.CENTER);
+					panelInscDesde.add(new JPanel(), BorderLayout.CENTER);
+					panelInscDesde.add(this.fechaInscripcionIni = new BetterDatePicker(), BorderLayout.EAST);
 					panelInscripciones.add(panelInscDesde, BorderLayout.WEST);
+				} {
+					panelInscripciones.add(new JPanel(), BorderLayout.CENTER);
 				} { // Hasta
 					JPanel panelInscHasta = new JPanel(new BorderLayout());
 					panelInscHasta.add(new JLabel("Hasta"), BorderLayout.WEST);
-					panelInscHasta.add(this.fechaInscripcionFin = new BetterDatePicker(), BorderLayout.CENTER);
-					panelInscripciones.add(panelInscHasta, BorderLayout.CENTER);
+					panelInscHasta.add(new JPanel(), BorderLayout.CENTER);
+					panelInscHasta.add(this.fechaInscripcionFin = new BetterDatePicker(), BorderLayout.EAST);
+					panelInscripciones.add(panelInscHasta, BorderLayout.EAST);
 				}
 			}
 		} { // Curso
@@ -138,17 +145,22 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 			} { // Input
 				JPanel panelInscripciones = new JPanel(new BorderLayout());
 				right.gridy = 4;
+				right.fill = GridBagConstraints.WEST;
 				centerPanel.add(panelInscripciones, right);
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
-					panelInscDesde.add(this.fechaCursoIni = new BetterDatePicker(), BorderLayout.CENTER);
+					panelInscDesde.add(new JPanel(), BorderLayout.CENTER);
+					panelInscDesde.add(this.fechaCursoIni = new BetterDatePicker(), BorderLayout.EAST);
 					panelInscripciones.add(panelInscDesde, BorderLayout.WEST);
+				} {
+					panelInscripciones.add(new JPanel(), BorderLayout.CENTER);
 				} { // Hasta
 					JPanel panelInscHasta = new JPanel(new BorderLayout());
 					panelInscHasta.add(new JLabel("Hasta"), BorderLayout.WEST);
-					panelInscHasta.add(this.fechaCursoFin = new BetterDatePicker(), BorderLayout.CENTER);
-					panelInscripciones.add(panelInscHasta, BorderLayout.CENTER);
+					panelInscHasta.add(new JPanel(), BorderLayout.CENTER);
+					panelInscHasta.add(this.fechaCursoFin = new BetterDatePicker(), BorderLayout.EAST);
+					panelInscripciones.add(panelInscHasta, BorderLayout.EAST);
 				}
 			}
 		} { // Localizacion
