@@ -1,6 +1,7 @@
 package g41.si2022.util;
 
 import java.time.LocalDate;
+import g41.si2022.coiipa.dto.PagoDTO;
 
 public class StateUtilities {
 
@@ -29,4 +30,21 @@ public class StateUtilities {
 		}
 	}
 	
+	/**
+	 * Returns the InscripcionState for a given Course and student.
+	 * 
+	 * @param curso Course that is being paid.
+	 * @param pagos Payments of this student and this course.
+	 * @return State of the inscription
+	 */
+	public static InscripcionState getInscripcionState (Double coste, java.util.List<PagoDTO> pagos) {
+		double paid = 0;
+		for (PagoDTO p : pagos) {
+			paid += Double.parseDouble(p.getImporte());
+		}
+		System.out.printf("Paid %f Coste %f\n", paid, coste);
+		if (paid != coste) return InscripcionState.PENDIENTE;
+		return InscripcionState.PAGADA;
+	}
+
 }
