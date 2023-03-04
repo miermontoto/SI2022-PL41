@@ -147,7 +147,7 @@ public class InscribirUsuarioController {
     }
 
     public void getListaCursos() {
-        cursos = model.getListaCursos();
+        cursos = model.getListaCursos(view.getMain().getToday().toString());
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas", "start_inscr", "end_inscr" },
         		new String[] { "Nombre", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
         view.getTablaCursos().setModel(tableModel);

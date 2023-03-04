@@ -78,18 +78,11 @@ public class Debug extends Tab {
 			System.exit(0);
 		});
 
-		JButton refresh = new JButton("Refresh tabs");
-		refresh.addActionListener(e -> {
-			main.initialize();
-			status.setText("Tabs refreshed");
-		});
-
 		dbButtons.add(refreshDb);
 		dbButtons.add(schema);
 		dbButtons.add(data);
 		dbButtons.add(delete);
 		dbButtons.add(isFile);
-		otherButtons.add(refresh);
 		otherButtons.add(today);
 		otherButtons.add(close);
 
