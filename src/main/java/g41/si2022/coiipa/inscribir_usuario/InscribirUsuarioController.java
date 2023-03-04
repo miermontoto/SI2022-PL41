@@ -102,6 +102,7 @@ public class InscribirUsuarioController {
         alumno = model.getAlumnoFromEmail(email).get(0);
         model.insertInscripcion(LocalDate.now().toString(), "Pendiente", cursoId, alumno.getId());
         getListaCursos();
+        Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(view.getTablaCursos()) + " ha sido realizada con éxito.");
         SwingUtil.showMessage("Inscripción realizada con éxito", "Inscripción de alumno");
     }
 
