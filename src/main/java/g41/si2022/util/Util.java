@@ -16,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import g41.si2022.coiipa.dto.PagoDTO;
+
 /**
  * Utilidades varias con metodos generales de serializacion, conversion a csv y conversion de fechas
  */
@@ -158,5 +160,23 @@ public class Util {
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 		return formatter.format(javaDate);
 	}
+	
+	/**
+	 * Returns the InscripcionState for a given Course and student.
+	 * 
+	 * @param curso Course that is being paid.
+	 * @param pagos Payments of this student and this course.
+	 * @return State of the inscription
+	 */
+	public static InscripcionState getInscripcionState (Double coste, List<PagoDTO> pagos) {
+		double paid = 0;
+		for (PagoDTO p : pagos) {
+			paid += Double.parseDouble(p.getImporte());
+		}
+		System.out.printf("Paid %f Coste %f\n", paid, coste);
+		if (paid != coste) return InscripcionState.PENDIENTE;
+		return InscripcionState.PAGADA;
+	}
+	
 
 }
