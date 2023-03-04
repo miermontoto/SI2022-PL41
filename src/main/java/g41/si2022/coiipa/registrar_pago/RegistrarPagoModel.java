@@ -26,7 +26,6 @@ public class RegistrarPagoModel {
 				+ " inner join curso as c on c.id = i.curso_id "
 				+ " left join pago as pa on pa.inscripcion_id = i.id "
 				+ " where i.fecha<=? group by i.id order by i.fecha asc ";
-		System.out.print(sql);
 		return db.executeQueryPojo(InscripcionDTO.class, sql, date);
 	}
 	
