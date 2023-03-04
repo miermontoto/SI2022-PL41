@@ -2,8 +2,13 @@ package g41.si2022.coiipa.registrar_curso;
 
 import java.util.List;
 import java.util.Map;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Optional;
+
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 import g41.si2022.coiipa.dto.ProfesorDTO;
 import g41.si2022.util.BetterDatePicker;
@@ -13,8 +18,12 @@ public class RegistrarCursoController {
 	private RegistrarCursoModel model;
 	private RegistrarCursoView view;
 
-	private List<ProfesorDTO> profesores;
 	private Map<String, ProfesorDTO> profesoresMap;
+	private final java.util.function.Supplier <List<ProfesorDTO>> sup = () -> {
+		java.util.ArrayList<ProfesorDTO> out = new java.util.ArrayList<ProfesorDTO> ();
+		out.addAll(RegistrarCursoController.this.profesoresMap.values());
+		return out;
+	};
 
 	public RegistrarCursoController (RegistrarCursoModel m, RegistrarCursoView v) {
 		this.model = m;
@@ -28,16 +37,64 @@ public class RegistrarCursoController {
 		// Load the insert curso listener
 		view.getSubmitButton().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> insertCurso()));
 		loadDateListeners();
+		loadTableListeners();
+		loadTextAreaListeners();
+	}
+
+	private void loadTextAreaListeners () {
+		java.awt.event.KeyAdapter ka = new java.awt.event.KeyAdapter () {
+			@Override
+			public void keyPressed (KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					e.consume();
+					KeyboardFocusManager fm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+					fm.focusNextComponent();
+				}
+			}
+		};
+		this.view.getObjetivosDescripcionTextArea().addKeyListener(ka);
+		this.view.getLocalizacionTextArea().addKeyListener(ka);
+	}
+
+	private void loadTableListeners () {
+		view.getTablaProfesores().getModel().addTableModelListener(new TableModelListener () {
+
+			private final javax.swing.JTable tabla = RegistrarCursoController.this.view.getTablaProfesores();
+
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				RegistrarCursoController.this.profesoresMap
+				.get(this.tabla.getValueAt(e.getFirstRow(), 0).toString())
+				.setRemuneracion(this.tabla.getValueAt(e.getFirstRow(), e.getColumn()).toString());
+			}
+
+		});
+		view.getTablaProfesores().getModel().addTableModelListener(new TableModelListener () {
+
+			private final javax.swing.JTable tabla = RegistrarCursoController.this.view.getTablaProfesores();
+
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				RegistrarCursoController.this.profesoresMap
+				.get(this.tabla.getValueAt(e.getFirstRow(), 0).toString())
+				.setRemuneracion(this.tabla.getValueAt(e.getFirstRow(), e.getColumn()).toString());
+			}
+
+		});
 	}
 
 	private void loadDateListeners () {
 		BetterDatePicker
-			inscripcionIni = view.getInscripcionIni(),
-			inscripcionFin = view.getInscripcionFin(),
-			cursoIni = view.getCursoIni(),
-			cursoFin = view.getCursoFin();
+		inscripcionIni = view.getInscripcionIni(),
+		inscripcionFin = view.getInscripcionFin(),
+		cursoIni = view.getCursoIni(),
+		cursoFin = view.getCursoFin();
 		// Load the Inscripcion Ini DatePicker listener (set Fin to next day)
 		inscripcionIni.addDateChangeListener((e) -> {
+			// Query on #20879
+			if (inscripcionIni.compareTo(this.view.getMain().getTodayPicker()) < 0) {
+				inscripcionIni.setDate(this.view.getMain().getToday());
+			}
 			if (inscripcionFin.getDate() == null) {
 				inscripcionFin.setDate(e.getNewDate().plusDays(1));
 			}
@@ -75,7 +132,7 @@ public class RegistrarCursoController {
 		model.getListaProfesores().stream().forEach((x) -> profesoresMap.put(x.getDni(), x));
 		view.getTablaProfesores().setModel(
 				SwingUtil.getTableModelFromPojos(
-						profesores = model.getListaProfesores(),
+						this.sup.get(),
 						new String[] { "dni", "nombre", "apellidos", "email", "direccion", "remuneracion" },
 						new String[] { "DNI", "Nombre", "Apellidos", "email", "Dirección", "Remuneración" },
 						new HashMap<Integer, java.util.regex.Pattern> () {
@@ -88,13 +145,16 @@ public class RegistrarCursoController {
 	}
 
 	public void insertCurso () {
+		Optional<ProfesorDTO> profesorElegido = this.getProfesor();
+		if (!profesorElegido.isPresent()) {
+			throw new g41.si2022.util.UnexpectedException("No se ha seleccionado a ningún docente.");
+		}
 		this.model.insertCurso(
 				view.getNombreCurso(), view.getObjetivosDescripcion(),
-				(String) view.getTablaProfesores().getValueAt(view.getTablaProfesores().getSelectedRow(), 5),
+				profesorElegido.get().getRemuneracion(), // El unico coste del curso es la remuneracion del unico profesor
 				view.getInscripcionIniDate(), view.getInscripcionFinDate(), view.getCursoIniDate(), view.getCursoFinDate(),
-				view.getPlazas(), this.getProfesor()
-				.orElseThrow(() -> new g41.si2022.util.UnexpectedException("No se ha seleccionado a ningún docente."))
-				.getId());
+				view.getPlazas(), view.getLocalizacion(),
+				profesorElegido.get().getId()); // El curso solo tiene un profesor
 		SwingUtil.showMessage("Curso registrado con éxito.", "Registro de cursos");
 	}
 

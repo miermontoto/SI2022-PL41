@@ -85,4 +85,5 @@ public class SwingMain {
 	public JFrame getFrame() { return this.frame; }
 
 	public LocalDate getToday() { return ((Debug) this.tabs.getComponentAt(0)).getToday().getDate();}
+	public BetterDatePicker getTodayPicker() { return ((Debug) this.tabs.getComponentAt(0)).getToday();}
 }
