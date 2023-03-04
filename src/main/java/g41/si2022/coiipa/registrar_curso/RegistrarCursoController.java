@@ -40,7 +40,7 @@ public class RegistrarCursoController {
 		loadTableListeners();
 		loadTextAreaListeners();
 	}
-	
+
 	private void loadTextAreaListeners () {
 		java.awt.event.KeyAdapter ka = new java.awt.event.KeyAdapter () {
 			@Override
@@ -146,7 +146,7 @@ public class RegistrarCursoController {
 
 	public void insertCurso () {
 		Optional<ProfesorDTO> profesorElegido = this.getProfesor();
-		if (profesorElegido.isEmpty()) {
+		if (!profesorElegido.isPresent()) {
 			throw new g41.si2022.util.UnexpectedException("No se ha seleccionado a ningún docente.");
 		}
 		this.model.insertCurso(
