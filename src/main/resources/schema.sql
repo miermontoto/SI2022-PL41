@@ -27,7 +27,6 @@ create table curso (
 create table inscripcion (
     id integer primary key autoincrement,
     fecha date not null,
-    estado text not null,
     curso_id integer not null,
     alumno_id integer not null,
     foreign key (curso_id) references curso(id),
