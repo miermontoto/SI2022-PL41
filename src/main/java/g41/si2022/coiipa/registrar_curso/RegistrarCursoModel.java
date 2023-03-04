@@ -15,17 +15,17 @@ public class RegistrarCursoModel {
 	}
 
 	public void insertCurso (
-			String nombre, String descripcion,
+			String nombre, String descripcion, String coste,
 			String inscrStart, String inscrEnd, String start, String end,
-			int plazas, int docenteId
+			String plazas, String docenteId
 	) {
 		System.out.println("Executing INSERT CURSO");
 		String sql =
-				"INSERT INTO curso (nombre, descripcion, start_inscr, end_inscr, start, end, plazas, docente_id, estado) "
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'INSCR_SIN_ABRIR');";
+				"INSERT INTO curso (nombre, descripcion, estado, start_inscr, end_inscr, start, end, plazas, docente_id, estado) "
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		db.executeUpdate(sql,
-			nombre, descripcion,
-			inscrStart, inscrEnd, start, end,
+			nombre, descripcion, "En planificación",
+			coste, inscrStart, inscrEnd, start, end,
 			plazas, docenteId
 		);
 	}

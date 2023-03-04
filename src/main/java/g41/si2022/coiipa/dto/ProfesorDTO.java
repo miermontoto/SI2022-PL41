@@ -6,20 +6,19 @@ import lombok.Data;
 
 @Setter @Getter @Data
 public class ProfesorDTO {
-	private int id;
 	private String
 		nombre, apellidos,
-		dni,
+		dni, id,
 		email,
 		telefono,
+		remuneracion,
 		direccion;
 	// La remuneracion es por curso, es neceasaria para que se pueda
 	// generar la columa extra en la JTable de RegistrarCurso
-	private Double remuneracion;
 
 	public ProfesorDTO() { }
 
-	public ProfesorDTO (int id, String nombre, String apellidos, String dni, String email, String telefono, String direccion) {
+	public ProfesorDTO (String id, String nombre, String apellidos, String dni, String email, String telefono, String direccion) {
 		this.id = id;
 		this.nombre = nombre;
 		this.apellidos = apellidos;

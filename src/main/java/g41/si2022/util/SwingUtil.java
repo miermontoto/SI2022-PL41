@@ -56,6 +56,9 @@ public class SwingUtil {
 	    d.setVisible(true);
 	}
 
+	public static void showMessage(String message, String title) {
+	    showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
+	}
 
 	/**
 	 * Ajusta todas las columnas de la tabla al tamanyo correspondiente al contenido del tablemodel
