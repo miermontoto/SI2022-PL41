@@ -12,9 +12,10 @@ public class InscribirUsuarioModel {
     private Database db = new Database();
 
     public List<CursoDTO> getListaCursos(String date) {
-        String sql = "select *, c.plazas -"
-        + " (select count(*) from inscripcion as i where i.curso_id = c.id) as plazas_libres"
-        + " from curso as c where start_inscr <= ? and end_inscr >= ?";
+        String sql = "select *, (c.plazas -"
+        + " (select count(*) from inscripcion as i where i.curso_id = c.id)"
+        //+ " (select count(*) from cancelada as ca where ca.curso_id = c.id)"
+        + ") as plazas_libres from curso as c where start_inscr <= ? and end_inscr >= ?";
         return db.executeQueryPojo(CursoDTO.class, sql, date, date);
     }
 
@@ -26,6 +27,11 @@ public class InscribirUsuarioModel {
         String sql = "select id, nombre, apellidos, email, telefono"
             + " from alumno where email like ?;";
         return db.executeQueryPojo(AlumnoDTO.class, sql, email);
+    }
+
+    public boolean checkAlumnoInCurso(String alumno_id, String curso_id) {
+        String sql = "select count(*) from inscripcion where alumno_id = ? and curso_id = ?";
+        return db.executeQueryArray(sql, alumno_id, curso_id).get(0)[0] != "0";
     }
 
     public void insertAlumno(String nombre, String apellidos, String email, String telefono) {

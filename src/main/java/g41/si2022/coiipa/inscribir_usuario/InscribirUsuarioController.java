@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.awt.Color;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
@@ -100,6 +101,10 @@ public class InscribirUsuarioController {
         }
 
         alumno = model.getAlumnoFromEmail(email).get(0);
+        if(model.checkAlumnoInCurso(alumno.getId(), cursoId)) {
+            SwingUtil.showMessage("Ya está inscrito en este curso", "Inscripción de alumno", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         model.insertInscripcion(LocalDate.now().toString(), "Pendiente", cursoId, alumno.getId());
         getListaCursos();
         Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(view.getTablaCursos()) + " ha sido realizada con éxito.");
@@ -117,16 +122,16 @@ public class InscribirUsuarioController {
         view.getLblSignin().setForeground(Color.RED);
         view.getLblSignup().setForeground(Color.RED);
 
-        boolean validEmail;
+        boolean validEmail = false;
+        JLabel target = null;
         switch(view.getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
             case "sign-in":
+                target = view.getLblSignin();
                 if (!Util.verifyEmailStructure(signinEmail)) { // Check basic structure
-                    view.getLblSignin().setText("");
+                    target.setText("");
                     break;
                 }
                 validEmail = model.verifyEmail(signinEmail); // Check if email exists in database
-                view.getLblSignin().setText(validEmail ? "" : "Email desconocido");
-                view.getBtnInscribir().setEnabled(validEmail);
                 break;
 
             case "sign-up":
@@ -135,10 +140,10 @@ public class InscribirUsuarioController {
                     break;
                 }
                 validEmail = !model.verifyEmail(signupEmail); // Check if email doesn't already exist in db
-                view.getLblSignup().setText(validEmail ? "" : "Email ya registrado");
-                view.getBtnInscribir().setEnabled(validEmail);
                 break;
         }
+        target.setText(validEmail ? "" : "Email desconocido");
+        view.getBtnInscribir().setEnabled(validEmail);
     }
 
     public void updateCursoValue() {
