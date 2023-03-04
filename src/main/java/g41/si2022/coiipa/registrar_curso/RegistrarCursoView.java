@@ -122,13 +122,17 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
-					panelInscDesde.add(this.fechaInscripcionIni = new BetterDatePicker(), BorderLayout.CENTER);
+					panelInscDesde.add(new JPanel(), BorderLayout.CENTER);
+					panelInscDesde.add(this.fechaInscripcionIni = new BetterDatePicker(), BorderLayout.EAST);
 					panelInscripciones.add(panelInscDesde, BorderLayout.WEST);
+				} {
+					panelInscripciones.add(new JPanel(), BorderLayout.CENTER);
 				} { // Hasta
 					JPanel panelInscHasta = new JPanel(new BorderLayout());
 					panelInscHasta.add(new JLabel("Hasta"), BorderLayout.WEST);
-					panelInscHasta.add(this.fechaInscripcionFin = new BetterDatePicker(), BorderLayout.CENTER);
-					panelInscripciones.add(panelInscHasta, BorderLayout.CENTER);
+					panelInscHasta.add(new JPanel(), BorderLayout.CENTER);
+					panelInscHasta.add(this.fechaInscripcionFin = new BetterDatePicker(), BorderLayout.EAST);
+					panelInscripciones.add(panelInscHasta, BorderLayout.EAST);
 				}
 			}
 		} { // Curso
@@ -138,17 +142,22 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 			} { // Input
 				JPanel panelInscripciones = new JPanel(new BorderLayout());
 				right.gridy = 4;
+				right.fill = GridBagConstraints.WEST;
 				centerPanel.add(panelInscripciones, right);
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
-					panelInscDesde.add(this.fechaCursoIni = new BetterDatePicker(), BorderLayout.CENTER);
+					panelInscDesde.add(new JPanel(), BorderLayout.CENTER);
+					panelInscDesde.add(this.fechaCursoIni = new BetterDatePicker(), BorderLayout.EAST);
 					panelInscripciones.add(panelInscDesde, BorderLayout.WEST);
+				} {
+					panelInscripciones.add(new JPanel(), BorderLayout.CENTER);
 				} { // Hasta
 					JPanel panelInscHasta = new JPanel(new BorderLayout());
 					panelInscHasta.add(new JLabel("Hasta"), BorderLayout.WEST);
-					panelInscHasta.add(this.fechaCursoFin = new BetterDatePicker(), BorderLayout.CENTER);
-					panelInscripciones.add(panelInscHasta, BorderLayout.CENTER);
+					panelInscHasta.add(new JPanel(), BorderLayout.CENTER);
+					panelInscHasta.add(this.fechaCursoFin = new BetterDatePicker(), BorderLayout.EAST);
+					panelInscripciones.add(panelInscHasta, BorderLayout.EAST);
 				}
 			}
 		} { // Localizacion
