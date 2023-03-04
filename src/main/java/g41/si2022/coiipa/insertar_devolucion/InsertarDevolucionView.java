@@ -24,6 +24,7 @@ import javax.swing.JCheckBox;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.FlowLayout;
 
 
 @Getter
@@ -51,12 +52,12 @@ public class InsertarDevolucionView extends Tab {
 		
 		panel = new JPanel();
 		add(panel, BorderLayout.NORTH);
-		panel.setLayout(new BorderLayout(0, 0));
-		datePickerActual = new DatePicker();
-		panel.add(datePickerActual, BorderLayout.EAST);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		lblNewLabel = new JLabel("Seleccionar fecha actual");
-		panel.add(lblNewLabel, BorderLayout.WEST);
+		lblNewLabel = new JLabel("Seleccionar fecha actual: ");
+		panel.add(lblNewLabel);
+		datePickerActual = new DatePicker();
+		panel.add(datePickerActual);
 
 		formPanel.setLayout(new MigLayout("", "[122.00px,grow][]", "[28.00,top][20.00px,center][21.00][22.00][22.00][][][][][][]"));
 		this.add(formPanel, BorderLayout.EAST);
@@ -72,13 +73,13 @@ public class InsertarDevolucionView extends Tab {
 				formPanel.add(label, "cell 0 1,alignx left,aligny center");
 		lblNombreInscripcion = new JLabel("No se ha seleccionado ningún nombre");
 		formPanel.add(lblNombreInscripcion, "cell 0 2,alignx left,aligny center");
-
 		
-		JLabel lblImporteADevolver = new JLabel("Importe a devolver:");
-		formPanel.add(lblImporteADevolver, "cell 0 5,alignx left,aligny center");
+				
+				JLabel lblImporteADevolver = new JLabel("Importe a devolver:");
+				formPanel.add(lblImporteADevolver, "cell 0 4,alignx left,aligny center");
 				
 		lblImporteDevuelto = new JLabel("");
-		formPanel.add(lblImporteDevuelto, "cell 0 6");
+		formPanel.add(lblImporteDevuelto, "cell 0 5");
 		
 		btnCancelarInscripcion = new JButton("Cancelar inscripción");
 		formPanel.add(btnCancelarInscripcion, "cell 0 8");
@@ -89,8 +90,9 @@ public class InsertarDevolucionView extends Tab {
 		
 		//JScrollPane que contiene tabla de inscripciones
 		JScrollPane scrollPane_1 = new JScrollPane(tableInscripciones);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		this.add(scrollPane_1, BorderLayout.WEST);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		this.add(scrollPane_1, BorderLayout.CENTER);
 
 		tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableInscripciones.setDefaultEditor(Object.class, null);
