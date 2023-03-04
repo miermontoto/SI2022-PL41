@@ -17,14 +17,14 @@ public class RegistrarCursoModel {
 	public void insertCurso (
 			String nombre, String descripcion, String coste,
 			String inscrStart, String inscrEnd, String start, String end,
-			String plazas, String docenteId
+			String plazas, String localizacion, String docenteId
 			) {
 		String sql =
-				"INSERT INTO curso (nombre, descripcion, estado, coste, start_inscr, end_inscr, plazas, start, end, docente_id) "
-						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				"INSERT INTO curso (nombre, descripcion, estado, coste, start_inscr, end_inscr, plazas, start, end, localizacion, docente_id) "
+						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		db.executeUpdate(sql,
 				nombre, descripcion, "En planificación", coste,
-				inscrStart, inscrEnd, plazas, start, end, docenteId
+				inscrStart, inscrEnd, plazas, start, end, localizacion, docenteId
 				);
 	}
 }

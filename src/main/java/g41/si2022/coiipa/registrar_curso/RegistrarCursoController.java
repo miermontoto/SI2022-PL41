@@ -2,6 +2,8 @@ package g41.si2022.coiipa.registrar_curso;
 
 import java.util.List;
 import java.util.Map;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -35,6 +37,38 @@ public class RegistrarCursoController {
 		// Load the insert curso listener
 		view.getSubmitButton().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> insertCurso()));
 		loadDateListeners();
+		loadTableListeners();
+		loadTextAreaListeners();
+	}
+	
+	private void loadTextAreaListeners () {
+		java.awt.event.KeyAdapter ka = new java.awt.event.KeyAdapter () {
+			@Override
+			public void keyPressed (KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					e.consume();
+					KeyboardFocusManager fm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+					fm.focusNextComponent();
+				}
+			}
+		};
+		this.view.getObjetivosDescripcionTextArea().addKeyListener(ka);
+		this.view.getLocalizacionTextArea().addKeyListener(ka);
+	}
+
+	private void loadTableListeners () {
+		view.getTablaProfesores().getModel().addTableModelListener(new TableModelListener () {
+
+			private final javax.swing.JTable tabla = RegistrarCursoController.this.view.getTablaProfesores();
+
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				RegistrarCursoController.this.profesoresMap
+				.get(this.tabla.getValueAt(e.getFirstRow(), 0).toString())
+				.setRemuneracion(this.tabla.getValueAt(e.getFirstRow(), e.getColumn()).toString());
+			}
+
+		});
 		view.getTablaProfesores().getModel().addTableModelListener(new TableModelListener () {
 
 			private final javax.swing.JTable tabla = RegistrarCursoController.this.view.getTablaProfesores();
@@ -90,8 +124,6 @@ public class RegistrarCursoController {
 		});
 	}
 
-
-
 	public void getListaProfesores() {
 		model.getListaProfesores().stream().forEach((x) -> profesoresMap.put(x.getDni(), x));
 		view.getTablaProfesores().setModel(
@@ -117,7 +149,7 @@ public class RegistrarCursoController {
 				view.getNombreCurso(), view.getObjetivosDescripcion(),
 				profesorElegido.get().getRemuneracion(), // El unico coste del curso es la remuneracion del unico profesor
 				view.getInscripcionIniDate(), view.getInscripcionFinDate(), view.getCursoIniDate(), view.getCursoFinDate(),
-				view.getPlazas(),
+				view.getPlazas(), view.getLocalizacion(),
 				profesorElegido.get().getId()); // El curso solo tiene un profesor
 		SwingUtil.showMessage("Curso registrado con éxito.", "Registro de cursos");
 	}

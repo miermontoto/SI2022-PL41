@@ -34,6 +34,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 
 	public String getNombreCurso () { return this.nombreCurso.getText().trim(); }
 	public String getObjetivosDescripcion () { return this.objetivosDescripcion.getText().trim(); }
+	public JTextArea getObjetivosDescripcionTextArea () { return this.objetivosDescripcion; }
 	public String getPlazas () { return this.plazas.getText().trim(); }
 	public String getInscripcionIniDate () { return this.fechaInscripcionIni.getDate().toString(); }
 	public BetterDatePicker getInscripcionIni () { return this.fechaInscripcionIni; }
@@ -45,6 +46,8 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	public BetterDatePicker getCursoFin () { return this.fechaCursoFin; }
 	public JTable getTablaProfesores() { return this.profTable; }
 	public JButton getSubmitButton() { return this.registrarCurso; }
+	public JTextArea getLocalizacionTextArea () { return this.localizacion; }
+	public String getLocalizacion () { return this.localizacion.getText(); }
 
 	public void setNombreCurso (String nombreCurso) { this.nombreCurso.setText(nombreCurso); }
 	public void setObjetivosDescripcion (String objetivosDescripcion) { this.objetivosDescripcion.setText(objetivosDescripcion); }
