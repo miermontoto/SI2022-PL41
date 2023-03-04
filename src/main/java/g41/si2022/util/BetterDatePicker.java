@@ -10,5 +10,5 @@ public class BetterDatePicker extends DatePicker implements Comparable<DatePicke
 	public int compareTo(DatePicker o) {
 		return (int) (this.getDate().toEpochDay() - o.getDate().toEpochDay());
 	}
-	
+
 }
