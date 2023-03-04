@@ -44,7 +44,7 @@ public class SwingUtil {
 	}
 
 
-	private static void showMessage(String message, String title, int type) {
+	public static void showMessage(String message, String title, int type) {
 		/* Como este metodo no recibe el contexto de la ventana de la aplicación,
 		 * no usa el metodo estatico showMessageDialog de JOptionPane
 		 * y establece la posicion para que no aparezca en el centro de la pantalla
@@ -54,6 +54,10 @@ public class SwingUtil {
 	    JDialog d = pane.createDialog(pane, title);
 	    d.setLocation(200,200);
 	    d.setVisible(true);
+	}
+
+	public static void showMessage(String message, String title) {
+		showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 

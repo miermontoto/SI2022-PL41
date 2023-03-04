@@ -1,16 +1,17 @@
 package g41.si2022.util;
 
 import java.awt.BorderLayout;
-
+import lombok.Getter;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import java.awt.event.ActionEvent;
 
+@Getter
 public class Debug extends Tab {
 
 	private static final long serialVersionUID = -4249195203893017275L;
+	private BetterDatePicker today;
 
 	public Debug(SwingMain main) {
 		super(main);
@@ -25,6 +26,9 @@ public class Debug extends Tab {
 
 		JLabel status = new JLabel();
 		status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+		today = new BetterDatePicker();
+		today.setDateToToday();
 
 		JButton schema = new JButton("Run schema");
 		schema.addActionListener(e -> {
@@ -74,18 +78,12 @@ public class Debug extends Tab {
 			System.exit(0);
 		});
 
-		JButton refresh = new JButton("Refresh tabs");
-		refresh.addActionListener(e -> {
-			main.initialize();
-			status.setText("Tabs refreshed");
-		});
-
 		dbButtons.add(refreshDb);
 		dbButtons.add(schema);
 		dbButtons.add(data);
 		dbButtons.add(delete);
 		dbButtons.add(isFile);
-		otherButtons.add(refresh);
+		otherButtons.add(today);
 		otherButtons.add(close);
 
 		this.add(status, BorderLayout.CENTER);

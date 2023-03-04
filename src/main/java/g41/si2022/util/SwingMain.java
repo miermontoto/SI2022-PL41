@@ -1,6 +1,7 @@
 package g41.si2022.util;
 
 import java.awt.EventQueue;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -64,6 +65,7 @@ public class SwingMain {
 		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
 		theTabs.put("Registrar curso", new g41.si2022.coiipa.registrar_curso.RegistrarCursoView(this));
 		theTabs.put("Registrar pago", new g41.si2022.coiipa.registrar_pago.RegistrarPagoView(this));
+		theTabs.put("Registrar devolución", new g41.si2022.coiipa.insertar_devolucion.InsertarDevolucionView(this));
 		theTabs.put("Inscribir usuario", new g41.si2022.coiipa.inscribir_usuario.InscribirUsuarioView(this));
 		theTabs.put("Consultar cursos", new g41.si2022.coiipa.consultar_cursos.ConsultarCursosView(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
@@ -82,4 +84,5 @@ public class SwingMain {
 
 	public JFrame getFrame() { return this.frame; }
 
+	public LocalDate getToday() { return ((Debug) this.tabs.getComponentAt(0)).getToday().getDate();}
 }
