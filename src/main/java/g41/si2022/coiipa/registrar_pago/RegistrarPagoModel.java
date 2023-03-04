@@ -19,6 +19,7 @@ public class RegistrarPagoModel {
 				+ " a.nombre as alumno_nombre, "
 				+ " c.coste as curso_coste, "
 				+ " c.nombre as curso_nombre, "
+				+ " i.curso_id as inscripcion_curso_id, "
 				+ " i.fecha as inscripcion_fecha"
 				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
 				+ " inner join curso as c on c.id = i.curso_id where i.fecha<=? order by i.fecha asc";
