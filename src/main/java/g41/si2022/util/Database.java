@@ -35,10 +35,8 @@ public class Database extends DbUtil {
 		databaseFile = new File(url.split(":")[2]);
 	}
 
-
 	public String getUrl() { return url; }
 	public boolean exists() { return databaseFile.isFile(); }
-
 
 	/**
 	 * Creación de una base de datos limpia a partir del script schema.sql en src/main/resources
@@ -50,14 +48,12 @@ public class Database extends DbUtil {
 		return create;
 	}
 
-
 	/**
 	 * Carga de datos iniciales a partir del script data.sql en src/main/resources
 	 */
 	public void loadDatabase() {
 		try { executeScript(SQL_LOAD); } catch (Exception e) { throw new ApplicationException(e); }
 	}
-
 
 	public boolean deleteDatabase() {
 		if (this.exists()) return databaseFile.delete();

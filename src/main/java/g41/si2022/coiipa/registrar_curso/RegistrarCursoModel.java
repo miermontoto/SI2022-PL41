@@ -3,8 +3,6 @@ package g41.si2022.coiipa.registrar_curso;
 import g41.si2022.coiipa.dto.ProfesorDTO;
 import g41.si2022.util.Database;
 
-import java.util.Date;
-
 public class RegistrarCursoModel {
 
 	private Database db = new Database();

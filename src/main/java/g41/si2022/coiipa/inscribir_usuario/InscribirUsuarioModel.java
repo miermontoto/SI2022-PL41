@@ -11,6 +11,11 @@ public class InscribirUsuarioModel {
 
     private Database db = new Database();
 
+    public List<CursoDTO> getListaCursos(String date) {
+        String sql = "select * from curso where start_inscr <= ? and end_inscr >= ?";
+        return db.executeQueryPojo(CursoDTO.class, sql, date, date);
+    }
+
     public List<CursoDTO> getListaCursos() {
         return db.executeQueryPojo(CursoDTO.class, CursoDTO.getSqlQuery());
     }
