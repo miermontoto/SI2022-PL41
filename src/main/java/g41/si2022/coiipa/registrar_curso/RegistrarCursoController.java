@@ -91,6 +91,10 @@ public class RegistrarCursoController {
 		cursoFin = view.getCursoFin();
 		// Load the Inscripcion Ini DatePicker listener (set Fin to next day)
 		inscripcionIni.addDateChangeListener((e) -> {
+			// Query on #20879
+			if (inscripcionIni.compareTo(this.view.getMain().getTodayPicker()) < 0) {
+				inscripcionIni.setDate(this.view.getMain().getToday());
+			}
 			if (inscripcionFin.getDate() == null) {
 				inscripcionFin.setDate(e.getNewDate().plusDays(1));
 			}
