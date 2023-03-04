@@ -16,18 +16,17 @@ public class ConsultarCursosController {
 
 	private List<CursoDTO> cursos;
 	private List<InscripcionDTO> inscripciones;
-	private String idCurso;
-  
+
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
 		this.model = m;
-		view = v;
+		this.view = v;
 		initView();
 	}
 
 	public void initView()
 	{
-		this.getListaCursos();
+		getListaCursos();
 		view.getTablaCursos().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent ent) {
@@ -48,7 +47,6 @@ public class ConsultarCursosController {
 	public void getValueCurso() {
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
-				idCurso = curso.getId();
 				getListaInscripciones(curso.getId());
 				return;
 			}
@@ -62,6 +60,5 @@ public class ConsultarCursosController {
 				new String[] { "Fecha de inscripción", "Estado"}, null);
 		view.getTablaInscr().setModel(tableModel);
 		SwingUtil.autoAdjustColumns(view.getTablaInscr());
-
 	}
 }

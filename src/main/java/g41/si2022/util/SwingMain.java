@@ -1,6 +1,7 @@
 package g41.si2022.util;
 
 import java.awt.EventQueue;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -83,4 +84,5 @@ public class SwingMain {
 
 	public JFrame getFrame() { return this.frame; }
 
+	public LocalDate getToday() { return ((Debug) this.tabs.getComponentAt(0)).getToday().getDate();}
 }

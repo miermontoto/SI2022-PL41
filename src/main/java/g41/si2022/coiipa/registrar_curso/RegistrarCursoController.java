@@ -95,6 +95,7 @@ public class RegistrarCursoController {
 				view.getPlazas(), this.getProfesor()
 				.orElseThrow(() -> new g41.si2022.util.UnexpectedException("No se ha seleccionado a ningún docente."))
 				.getId());
+		SwingUtil.showMessage("Curso registrado con éxito.", "Registro de cursos");
 	}
 
 	private Optional<ProfesorDTO> getProfesor () {
