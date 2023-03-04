@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import g41.si2022.util.SwingMain;
 import g41.si2022.util.FontType;
@@ -19,7 +20,6 @@ public class ConsultarCursosView extends Tab {
 	private static final long serialVersionUID = 1L;
 	private JTable tablaCursos;
 	private JTable tablaInscr;
-	private JTable tablaBalance;
 
 	public ConsultarCursosView(SwingMain main) {
 		super(main);
@@ -31,10 +31,11 @@ public class ConsultarCursosView extends Tab {
 
 		// ------------- BorderLayout -> NORTH -------------
 		// El botón sobra pero lo dejo porque mola
-		//JButton btnCargarDatos = new JButton("Cargar cursos");
+		// JButton btnCargarDatos = new JButton("Cargar cursos");
 		// El botón no mola una mierda, te lo arranco de las manos. ~mier
 		// ahora estoy triste. ~rubennmg
 		// no pasa nada, el botón te observa desde los cielos y te quiere. ~mier
+		// ya no es lo mismo, estoy enfadado. ~rubennmg
 
 		JPanel panel1 = new JPanel();
 		// Add elements
@@ -73,14 +74,25 @@ public class ConsultarCursosView extends Tab {
 
 		// lblBalance + tablaBalance
 		JPanel panel4 = new JPanel();
-		JLabel lblBalance = new JLabel("Balance económico:");
-		tablaBalance = new JTable();
-		JScrollPane scrBalance = new JScrollPane(tablaBalance);
-		tablaBalance.setDefaultEditor(Object.class, null);
-		// Add elements
 		panel4.setLayout(new BorderLayout());
+		JLabel lblBalance = new JLabel("Balance económico:");
+		JLabel lblGastos = new JLabel("Gastos");
+		JTextField txtGastos = new JTextField();
+		JLabel lblIngrEst = new JLabel("Ingresos estimados:");
+		JTextField txtIngrEst = new JTextField();
+		JLabel lblIngrReales = new JLabel("Ingresos reales:");
+		JTextField txtIngrReales = new JTextField();
+		JPanel panel5 = new JPanel();
+		panel5.setLayout(new GridLayout());
+		// Add elements
+		panel5.add(lblGastos);
+		panel5.add(txtGastos);
+		panel5.add(lblIngrEst);
+		panel5.add(txtIngrEst);
+		panel5.add(lblIngrReales);
+		panel5.add(txtIngrReales);
 		panel4.add(lblBalance, BorderLayout.NORTH);
-		panel4.add(scrBalance, BorderLayout.CENTER);
+		panel4.add(panel5, BorderLayout.CENTER);
 		centerPanel.add(panel4);
 	}
 

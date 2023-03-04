@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.consultar_cursos;
 
 import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.coiipa.dto.DocenciaDTO;
 import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.util.SwingUtil;
 import java.awt.event.MouseAdapter;
@@ -16,6 +17,11 @@ public class ConsultarCursosController {
 
 	private List<CursoDTO> cursos;
 	private List<InscripcionDTO> inscripciones;
+	private double gastos;
+	private double ingresosEstimados;
+	private double ingresosReales;
+	private String balanceEstimado;
+	private String balanceReal;
 
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
@@ -31,7 +37,7 @@ public class ConsultarCursosController {
 			@Override
 			public void mouseReleased(MouseEvent ent) {
 				SwingUtil.exceptionWrapper(() -> getValueCurso());
-
+				SwingUtil.exceptionWrapper(() -> balance());
 			}
 		});
 	}
@@ -54,11 +60,26 @@ public class ConsultarCursosController {
         throw new ApplicationException("Curso seleccionado desconocido");
 	}
 
+	public void balance() {
+		for (CursoDTO curso : cursos) {
+			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
+				gastos = model.getGastos(curso.getId());
+				ingresosEstimados = model.getIngresosEstimados(curso.getId());
+				return;
+			}
+		}
+		throw new ApplicationException("Curso seleccionado desconocido");
+	}
+
 	public void getListaInscripciones(String idCurso) {
 		inscripciones = model.getListaInscr(idCurso);
 		TableModel tableModel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] { "fecha", "estado" },
 				new String[] { "Fecha de inscripción", "Estado"}, null);
 		view.getTablaInscr().setModel(tableModel);
 		SwingUtil.autoAdjustColumns(view.getTablaInscr());
+	}
+
+	public void getListaBalance() {
+
 	}
 }
