@@ -18,7 +18,10 @@ public class CursoDTO {
 		end,
 		id,
 		plazas,
-		docente_id;
+		docente_id,
+		ingresos, // Annadido por ConsultarIngresosGastos
+		gastos, // Annadido por ConsultarIngresosGastos
+		balance; // Annadido por ConsultarIngresosGastos
 
 	public CursoDTO() { }
 
