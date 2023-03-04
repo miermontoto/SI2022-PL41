@@ -20,10 +20,10 @@ public class RegistrarCursoModel {
 			String plazas, String localizacion, String docenteId
 			) {
 		String sql =
-				"INSERT INTO curso (nombre, descripcion, estado, coste, start_inscr, end_inscr, plazas, start, end, localizacion, docente_id) "
-						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				"INSERT INTO curso (nombre, descripcion, coste, start_inscr, end_inscr, plazas, start, end, localizacion, docente_id) "
+						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		db.executeUpdate(sql,
-				nombre, descripcion, "En planificación", coste,
+				nombre, descripcion, coste,
 				inscrStart, inscrEnd, plazas, start, end, localizacion, docenteId
 				);
 	}
