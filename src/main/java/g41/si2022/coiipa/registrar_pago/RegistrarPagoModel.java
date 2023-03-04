@@ -12,7 +12,7 @@ public class RegistrarPagoModel {
 
 	public List<PagoDTO> getInscripciones(String date) {
 		String sql =
-				"select i.id, i.alumno_id, a.nombre, c.coste, i.fecha, i.estado"
+				"select i.id, i.alumno_id, a.nombre, c.coste, i.fecha"
 				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
 				+ " inner join curso as c on c.id = i.curso_id where i.fecha<=? order by i.fecha asc";
 		return db.executeQueryPojo(PagoDTO.class, sql, date);
@@ -20,9 +20,10 @@ public class RegistrarPagoModel {
 
 	public List<PagoDTO> getInscripcionesPendientes(String date) {
 		String sql =
-				"select i.id, i.alumno_id, a.nombre, c.coste, i.fecha, i.estado"
+				"select i.id, i.alumno_id, a.nombre, c.coste, i.fecha"
 				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
-				+ " inner join curso as c on c.id = i.curso_id where i.fecha<=? and i.estado!='Pagado' order by i.fecha asc";
+				+ " inner join curso as c on c.id = i.curso_id"
+				+ " where i.fecha<=? order by i.fecha asc";
 		return db.executeQueryPojo(PagoDTO.class, sql, date);
 	}
 
