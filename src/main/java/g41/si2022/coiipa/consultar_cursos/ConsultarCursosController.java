@@ -1,6 +1,5 @@
 package g41.si2022.coiipa.consultar_cursos;
 
-import g41.si2022.coiipa.dto.CCursoDTO;
 import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.util.SwingUtil;
@@ -11,62 +10,58 @@ import javax.swing.table.TableModel;
 import g41.si2022.util.ApplicationException;
 
 public class ConsultarCursosController {
-	
+
 	private ConsultarCursosModel model;
 	private ConsultarCursosView view;
-	private List<CCursoDTO> cursos;
+
+	private List<CursoDTO> cursos;
 	private List<InscripcionDTO> inscripciones;
-	private String idCurso = "1";
-	
+	private String idCurso;
+  
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
 		this.model = m;
-		this.view = v;
+		view = v;
 		initView();
 	}
-	
-	public void initView() 	
+
+	public void initView()
 	{
 		this.getListaCursos();
 		view.getTablaCursos().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent ent) {
 				SwingUtil.exceptionWrapper(() -> getValueCurso());
-			}		
+
+			}
 		});
-		this.getListaInscripciones();
 	}
-	
+
 	public void getListaCursos() {
 		cursos = model.getListaCursos();
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "estado", "plazas", "start", "end" },
-        		new String[] { "Nombre", "Estado", "  Plazas  ", "Fecha inicio curso", "Fecha fin curso" }, null);
+        		new String[] { "Nombre", "Estado", "Plazas", "Fecha ini. curso", "Fecha fin curso" }, null);
         view.getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
 	}
 
 	public void getValueCurso() {
-		for (CCursoDTO curso : cursos) {
+		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
-				idCurso = curso.getNombre();
+				idCurso = curso.getId();
+				getListaInscripciones(curso.getId());
 				return;
 			}
 		}
-		
-		this.getListaInscripciones();
-		
         throw new ApplicationException("Curso seleccionado desconocido");
 	}
 
-	public void getListaInscripciones() {
-		inscripciones = model.getListaInscr();
-		TableModel tableModel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] { "fecha", "coste", "estado" },
-				new String[] { "Fecha de inscripción", "Coste", "Estado"}, null);
+	public void getListaInscripciones(String idCurso) {
+		inscripciones = model.getListaInscr(idCurso);
+		TableModel tableModel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] { "fecha", "estado" },
+				new String[] { "Fecha de inscripción", "Estado"}, null);
 		view.getTablaInscr().setModel(tableModel);
 		SwingUtil.autoAdjustColumns(view.getTablaInscr());
-	}
 
-	public String getIdCurso() {
-		return this.idCurso;
 	}
 }
