@@ -18,7 +18,8 @@ public class ConsultarCursosController {
 	private List<CursoDTO> cursos;
 	private List<InscripcionDTO> inscripciones;
 	private List<DocenciaDTO> gastos;
-	private List<> ingresos;
+	private double ingresosEstimados;
+	private double ingresosReales;
 
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
@@ -34,7 +35,8 @@ public class ConsultarCursosController {
 			@Override
 			public void mouseReleased(MouseEvent ent) {
 				SwingUtil.exceptionWrapper(() -> getValueCurso());
-
+				SwingUtil.exceptionWrapper(() -> getGastos());
+				SwingUtil.exceptionWrapper(() -> getIngresosEstimados(););
 			}
 		});
 	}
@@ -57,11 +59,12 @@ public class ConsultarCursosController {
         throw new ApplicationException("Curso seleccionado desconocido");
 	}
 
-	public List<DocenciaDTO> getGastos() {
+	public void balance() {
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
 				gastos = model.getListaGastos(curso.getId());
-				return gastos;
+				ingresosEstimados = model.getIngresosEstimados(curso.getId());
+				return;
 			}
 		}
 		throw new ApplicationException("Curso seleccionado desconocido");
@@ -73,5 +76,9 @@ public class ConsultarCursosController {
 				new String[] { "Fecha de inscripción", "Estado"}, null);
 		view.getTablaInscr().setModel(tableModel);
 		SwingUtil.autoAdjustColumns(view.getTablaInscr());
+	}
+
+	public void getListaBalance() {
+
 	}
 }

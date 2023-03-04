@@ -13,7 +13,7 @@ public class ConsultarCursosModel {
 	private Database db = new Database();
 
 	public List<CursoDTO> getListaCursos() {
-		
+
 		return db.executeQueryPojo(CursoDTO.class, CursoDTO.getSqlQuery());
 	}
 
@@ -25,8 +25,14 @@ public class ConsultarCursosModel {
 	}
 
 	public List<DocenciaDTO> getListaGastos(String idCurso) {
-		String sql = "SELECT remuneracion * from docencia where curso_id = ?";
+		String sql = "SELECT remuneracion from docencia where curso_id = ?";
 
 		return db.executeQueryPojo(DocenciaDTO.class, sql, idCurso);
 	}
+
+	public double getIngresosEstimados(String idCurso) {
+		String sql = "SELECT coste * plazas as ingrEst from curso where id = ?";
+
+		return Double.parseDouble((String) db.executeQueryArray(sql, idCurso).get(0)[0]);
+	} 
 }

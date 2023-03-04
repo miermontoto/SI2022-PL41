@@ -31,10 +31,11 @@ public class ConsultarCursosView extends Tab {
 
 		// ------------- BorderLayout -> NORTH -------------
 		// El botón sobra pero lo dejo porque mola
-		//JButton btnCargarDatos = new JButton("Cargar cursos");
+		// JButton btnCargarDatos = new JButton("Cargar cursos");
 		// El botón no mola una mierda, te lo arranco de las manos. ~mier
 		// ahora estoy triste. ~rubennmg
 		// no pasa nada, el botón te observa desde los cielos y te quiere. ~mier
+		// ya no es lo mismo, estoy enfadado. ~rubennmg
 
 		JPanel panel1 = new JPanel();
 		// Add elements
