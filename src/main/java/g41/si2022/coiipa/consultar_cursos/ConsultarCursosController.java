@@ -17,9 +17,9 @@ public class ConsultarCursosController {
 
 	private List<CursoDTO> cursos;
 	private List<InscripcionDTO> inscripciones;
-	private double gastos;
-	private double ingresosEstimados;
-	private double ingresosReales;
+	private String gastos;
+	private String ingresosEstimados;
+	private String ingresosReales;
 	private String balanceEstimado;
 	private String balanceReal;
 
@@ -65,6 +65,14 @@ public class ConsultarCursosController {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
 				gastos = model.getGastos(curso.getId());
 				ingresosEstimados = model.getIngresosEstimados(curso.getId());
+				String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Integer.parseInt(gastos));
+				StringBuilder sb = new StringBuilder();
+				sb.append("<html><body>");
+				sb.append("<p><b>Gastos:</b> " + gastos + "€");
+				sb.append("<p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
+				sb.append("<p><b>Balance estimado:</b> " + balanceEstimado + "€");
+				sb.append("</body></html>");
+				view.getLblEconomicInfo().setText(sb.toString());
 				return;
 			}
 		}
