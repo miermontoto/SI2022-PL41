@@ -20,6 +20,8 @@ public class ConsultarCursosController {
 	private List<DocenciaDTO> gastos;
 	private double ingresosEstimados;
 	private double ingresosReales;
+	private String balanceEstimado;
+	private String balanceReal;
 
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
@@ -35,8 +37,7 @@ public class ConsultarCursosController {
 			@Override
 			public void mouseReleased(MouseEvent ent) {
 				SwingUtil.exceptionWrapper(() -> getValueCurso());
-				SwingUtil.exceptionWrapper(() -> getGastos());
-				SwingUtil.exceptionWrapper(() -> getIngresosEstimados(););
+				SwingUtil.exceptionWrapper(() -> balance());
 			}
 		});
 	}
