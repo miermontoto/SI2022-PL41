@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.consultar_cursos;
 
 import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.coiipa.dto.DocenciaDTO;
 import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.util.SwingUtil;
 import java.awt.event.MouseAdapter;
@@ -16,6 +17,8 @@ public class ConsultarCursosController {
 
 	private List<CursoDTO> cursos;
 	private List<InscripcionDTO> inscripciones;
+	private List<DocenciaDTO> gastos;
+	private List<> ingresos;
 
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
 	{
@@ -52,6 +55,16 @@ public class ConsultarCursosController {
 			}
 		}
         throw new ApplicationException("Curso seleccionado desconocido");
+	}
+
+	public List<DocenciaDTO> getGastos() {
+		for (CursoDTO curso : cursos) {
+			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
+				gastos = model.getListaGastos(curso.getId());
+				return gastos;
+			}
+		}
+		throw new ApplicationException("Curso seleccionado desconocido");
 	}
 
 	public void getListaInscripciones(String idCurso) {
