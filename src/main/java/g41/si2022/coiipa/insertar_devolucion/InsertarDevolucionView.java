@@ -25,8 +25,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
 
-@Getter
 
+@Getter
 public class InsertarDevolucionView extends Tab {
 
 	private static final long serialVersionUID = 1L;
@@ -37,12 +37,12 @@ public class InsertarDevolucionView extends Tab {
 	private JLabel lblTitulo;
 	private JButton btnCancelarInscripcion;
 
-	private DatePicker datePicker;
+	private DatePicker datePickerActual;
 	private JFormattedTextField txtImporte;
 	private JLabel lblError;
 	private JPanel panel;
-	private JCheckBox chkAll;
 	private JLabel lblImporteDevuelto;
+	private JLabel lblNewLabel;
 
 	public InsertarDevolucionView(SwingMain main) {
 		super(main);
@@ -52,10 +52,11 @@ public class InsertarDevolucionView extends Tab {
 		panel = new JPanel();
 		add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
+		datePickerActual = new DatePicker();
+		panel.add(datePickerActual, BorderLayout.EAST);
 		
-		chkAll = new JCheckBox("Ver todas las inscripciones");
-		chkAll.setHorizontalAlignment(SwingConstants.LEFT);
-		panel.add(chkAll);
+		lblNewLabel = new JLabel("Seleccionar fecha actual");
+		panel.add(lblNewLabel, BorderLayout.WEST);
 
 		formPanel.setLayout(new MigLayout("", "[122.00px,grow][]", "[28.00,top][20.00px,center][21.00][22.00][22.00][][][][][][]"));
 		this.add(formPanel, BorderLayout.EAST);
@@ -71,28 +72,22 @@ public class InsertarDevolucionView extends Tab {
 				formPanel.add(label, "cell 0 1,alignx left,aligny center");
 		lblNombreInscripcion = new JLabel("No se ha seleccionado ningún nombre");
 		formPanel.add(lblNombreInscripcion, "cell 0 2,alignx left,aligny center");
-		JLabel lblFecha = new JLabel("Seleccionar fecha de hoy:");
-		formPanel.add(lblFecha, "cell 0 3");
 
-		formPanel.add(datePicker = new DatePicker(), "cell 0 4,growx,aligny center");
-				JLabel lblImporteADevolver = new JLabel("Importe a devolver:");
-				formPanel.add(lblImporteADevolver, "cell 0 5,alignx left,aligny center");
-				
-				lblImporteDevuelto = new JLabel("");
-				formPanel.add(lblImporteDevuelto, "cell 0 6");
 		
-				btnCancelarInscripcion = new JButton("Cancelar inscripción");
-				formPanel.add(btnCancelarInscripcion, "cell 0 8");
+		JLabel lblImporteADevolver = new JLabel("Importe a devolver:");
+		formPanel.add(lblImporteADevolver, "cell 0 5,alignx left,aligny center");
+				
+		lblImporteDevuelto = new JLabel("");
+		formPanel.add(lblImporteDevuelto, "cell 0 6");
+		
+		btnCancelarInscripcion = new JButton("Cancelar inscripción");
+		formPanel.add(btnCancelarInscripcion, "cell 0 8");
 		
 		lblError = new JLabel("");
 		formPanel.add(lblError, "cell 0 10");
 		tableInscripciones = new JTable();
-		tableInscripciones.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-			}
-		));
+		
+		//JScrollPane que contiene tabla de inscripciones
 		JScrollPane scrollPane_1 = new JScrollPane(tableInscripciones);
 		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.add(scrollPane_1, BorderLayout.WEST);
