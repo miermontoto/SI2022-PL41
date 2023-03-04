@@ -33,6 +33,12 @@ create table inscripcion (
     foreign key (alumno_id) references alumno(id)
 );
 
+create table inscripcioncancelada (
+	id integer primary key autoincrement,
+	inscripcion_id integer not null,
+	foreign key (inscripcion_id) references inscripcion(id)
+);
+
 create table alumno (
     id integer primary key autoincrement,
     nombre text not null,

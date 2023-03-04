@@ -42,57 +42,53 @@ public class RegistrarPagoView extends Tab {
 	public RegistrarPagoView(SwingMain main) {
 		super(main);
 		formPanel = new JPanel();
-		setLayout(new MigLayout("", "[214px][236px]", "[23px][357px]"));
-
+		this.setLayout(new BorderLayout(0, 0));
+		
 		panel = new JPanel();
-		this.add(panel, "cell 0 0 2 1,growx,aligny top");
+		add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
-
+		
 		chkAll = new JCheckBox("Ver todas las inscripciones");
 		chkAll.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(chkAll);
 
-		tableInscripciones = new JTable();
-		tableInscripciones.setFillsViewportHeight(true);
-		this.add(new JScrollPane(tableInscripciones), "cell 0 1,grow");
-
-		tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableInscripciones.setDefaultEditor(Object.class, null);
-		
-		
 		formPanel.setLayout(new MigLayout("", "[122.00px,grow][]", "[28.00,top][20.00px,center][21.00][22.00][22.00][][][][][][]"));
-		this.add(formPanel, "cell 1 1,alignx left,growy");
+		this.add(formPanel, BorderLayout.EAST);
 
 		lblTitulo = JLabelFactory.getLabel(FontType.title, "Insertar un nuevo pago");
 
 		formPanel.add(lblTitulo, "cell 0 0,growx,aligny top");
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-
-		JLabel label = new JLabel("Nombre del inscrito: ");
-		formPanel.add(label, "cell 0 1,alignx left,aligny center");
+		
+				JLabel label = new JLabel("Nombre del inscrito: ");
+				formPanel.add(label, "cell 0 1,alignx left,aligny center");
 		lblNombreInscripcion = new JLabel("No se ha selecciona ningún nombre");
 		formPanel.add(lblNombreInscripcion, "cell 0 2,alignx left,aligny center");
 		JLabel label_1 = new JLabel("Introducir importe recibido (€): ");
 		formPanel.add(label_1, "cell 0 3,alignx left,aligny center");
 		formPanel.add(new JLabel("Introducir fecha del pago:"), "cell 0 5");
 
-		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
-		formatter.setValueClass(Integer.class);
-		formatter.setMinimum(0);
-		formatter.setMaximum(Integer.MAX_VALUE);
-		formatter.setAllowsInvalid(true);
-		formatter.setCommitsOnValidEdit(false);
+	    NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
+	    formatter.setValueClass(Integer.class);
+	    formatter.setMinimum(0);
+	    formatter.setMaximum(Integer.MAX_VALUE);
+	    formatter.setAllowsInvalid(true);
+	    formatter.setCommitsOnValidEdit(false);
 
 		formPanel.add(txtImporte = new JFormattedTextField(formatter), "cell 0 4,growx");
 		formPanel.add(datePicker = new DatePicker(), "cell 0 6,growx,aligny center");
-
-		btnInsertarPago = new JButton("Insertar pago");
-		formPanel.add(btnInsertarPago, "cell 0 8");
-
+		
+				btnInsertarPago = new JButton("Insertar pago");
+				formPanel.add(btnInsertarPago, "cell 0 8");
+		
 		lblError = new JLabel("");
 		formPanel.add(lblError, "cell 0 10");
-		
+		tableInscripciones = new JTable();
+		this.add(new JScrollPane(tableInscripciones), BorderLayout.CENTER);
+
+		tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableInscripciones.setDefaultEditor(Object.class, null);
 	}
 
 	@Override

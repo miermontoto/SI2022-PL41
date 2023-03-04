@@ -35,8 +35,7 @@ public class InsertarDevolucionController {
 	public void initView() {
 
 		//Establecemos la fecha a hoy
-		vista.getDatePickerActual().setDateToToday();
-		vista.getDatePickerActual().setText(Util.dateToIsoString(new Date()));
+
 
 		getListaInscripciones(); // Precarga inicial de la lista de inscripciones
 		setControls(false); // Inicio la vista con todo deshabilitado
@@ -46,7 +45,6 @@ public class InsertarDevolucionController {
 			@Override
 			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
-		vista.getDatePickerActual().addDateChangeListener(e -> getListaInscripciones()); //Detectamos el cambio de fecha
 	}
 
 	private void setControls(boolean status) {
@@ -73,7 +71,7 @@ public class InsertarDevolucionController {
 
 		Double costeCurso = Double.valueOf((String) tempModel.getValueAt(fila,  3));
 
-		Date fechaActual = Date.from(vista.getDatePickerActual().getDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		Date fechaActual = Date.from(vista.getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		Date fechaCurso = Util.isoStringToDate((String) tempModel.getValueAt(fila, 5));
 
 		//Calculamos el número de días que quedan
@@ -136,17 +134,18 @@ public class InsertarDevolucionController {
 		//Obtengo la tabla de inscripciones
 		JTable table = vista.getTableInscripciones();
 		TableModel tmodel; //Modelo de la tabla
-		Date fechaPago = java.sql.Date.valueOf(vista.getDatePickerActual().getDate()); //Obtenemos la fecha "actual"
+		Date fechaActual = Date.from(vista.getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-		List<cancelacionDTO> inscripcionesAll = modelo.getListaInscripciones(fechaPago);
-		tmodel = SwingUtil.getTableModelFromPojos(inscripcionesAll, new String[] { "id", "alumno_id", "nombre", "coste", "nombre_curso", "inicio_curso" }); //La primera columna estará oculta
+		List<cancelacionDTO> inscripcionesAll = modelo.getListaInscripciones(fechaActual);
+		//tmodel = SwingUtil.getTableModelFromPojos(inscripcionesAll, new String[] { "id", "alumno_id", "nombre", "coste", "nombre_curso", "inicio_curso" }); //La primera columna estará oculta
+		table.setModel(SwingUtil.getTableModelFromPojos(
+				inscripcionesAll,
+				new String[] { "id", "alumno_id", "nombre", "coste", "nombre_curso", "inicio_curso"},	//La primera columna estará oculta
+				new String[] { "ID", "ID Alumno", "Nombre curso", "Coste", "Nombre curso", "Fecha de inicio"},
+				null
+				)); 
 
-
-
-
-		table.setModel(tmodel);
 		// Ocultar foreign keys de la tabla
-		table.removeColumn(table.getColumnModel().getColumn(0));
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		table.setDefaultEditor(Object.class, null); // Deshabilitar edición
 

@@ -37,27 +37,14 @@ public class InsertarDevolucionView extends Tab {
 	private JLabel lblNombreInscripcion;
 	private JLabel lblTitulo;
 	private JButton btnCancelarInscripcion;
-
-	private DatePicker datePickerActual;
 	private JFormattedTextField txtImporte;
 	private JLabel lblError;
-	private JPanel panel;
 	private JLabel lblImporteDevuelto;
-	private JLabel lblNewLabel;
 
 	public InsertarDevolucionView(SwingMain main) {
 		super(main);
 		formPanel = new JPanel();
 		this.setLayout(new BorderLayout(0, 0));
-		
-		panel = new JPanel();
-		add(panel, BorderLayout.NORTH);
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		lblNewLabel = new JLabel("Seleccionar fecha actual: ");
-		panel.add(lblNewLabel);
-		datePickerActual = new DatePicker();
-		panel.add(datePickerActual);
 
 		formPanel.setLayout(new MigLayout("", "[122.00px,grow][]", "[28.00,top][20.00px,center][21.00][22.00][22.00][][][][][][]"));
 		this.add(formPanel, BorderLayout.EAST);
@@ -69,14 +56,14 @@ public class InsertarDevolucionView extends Tab {
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		
-				JLabel label = new JLabel("Nombre del inscrito: ");
-				formPanel.add(label, "cell 0 1,alignx left,aligny center");
+		JLabel label = new JLabel("Nombre del inscrito: ");
+		formPanel.add(label, "cell 0 1,alignx left,aligny center");
 		lblNombreInscripcion = new JLabel("No se ha seleccionado ningún nombre");
 		formPanel.add(lblNombreInscripcion, "cell 0 2,alignx left,aligny center");
 		
 				
-				JLabel lblImporteADevolver = new JLabel("Importe a devolver:");
-				formPanel.add(lblImporteADevolver, "cell 0 4,alignx left,aligny center");
+		JLabel lblImporteADevolver = new JLabel("Importe a devolver:");
+		formPanel.add(lblImporteADevolver, "cell 0 4,alignx left,aligny center");
 				
 		lblImporteDevuelto = new JLabel("");
 		formPanel.add(lblImporteDevuelto, "cell 0 5");
@@ -90,8 +77,8 @@ public class InsertarDevolucionView extends Tab {
 		
 		//JScrollPane que contiene tabla de inscripciones
 		JScrollPane scrollPane_1 = new JScrollPane(tableInscripciones);
-		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.add(scrollPane_1, BorderLayout.CENTER);
 
 		tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
