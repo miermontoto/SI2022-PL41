@@ -174,7 +174,8 @@ public class Util {
 			paid += Double.parseDouble(p.getImporte());
 		}
 		System.out.printf("Paid %f Coste %f\n", paid, coste);
-		if (paid != coste) return InscripcionState.PENDIENTE;
+		if (paid > coste) return InscripcionState.EXCESO;
+		if (paid < coste) return InscripcionState.PENDIENTE;
 		return InscripcionState.PAGADA;
 	}
 	
