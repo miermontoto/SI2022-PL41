@@ -7,6 +7,7 @@ import javax.swing.JTable;
 import java.util.List;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.CursoState;
@@ -36,9 +37,15 @@ public class ConsultarIngresosGastosController {
 	 * @return Data set with extra data added
 	 */
 	private List<CursoDTO> fillOtherData (List<CursoDTO> data) {
-		data.forEach((x) -> {
-			x.setBalance(String.format("%d", (Integer.parseInt(x.getIngresos()) - Integer.parseInt(x.getGastos()))));
-		});
+		Iterator<CursoDTO> otherData = this.model.getCursosBalance().iterator();
+		Iterator<CursoDTO> mainData = data.iterator();
+		while (otherData.hasNext() && mainData.hasNext()) {
+			CursoDTO currentMain = mainData.next();
+			CursoDTO currentOther = otherData.next();
+			currentMain.setIngresos(currentOther.getIngresos());
+			currentMain.setGastos(currentOther.getGastos());
+			currentMain.setBalance(currentOther.getBalance());
+		}
 		return data;
 	}
 	
@@ -66,7 +73,7 @@ public class ConsultarIngresosGastosController {
 			output.addAll(this.cursos);
 		} else { // If the CB has chosen something else, the entries are filtered
 			this.cursos.forEach((x) -> {
-				if (selectedItem.equals(StateUtilities.getCursoState(x, this.view.getMain().getToday()))) {
+				if (selectedItem.equals(x.getEstado())) {
 					output.add(x);
 				}
 			});
@@ -96,9 +103,11 @@ public class ConsultarIngresosGastosController {
 		this.cursos = new ArrayList<CursoDTO> ();
 		this.initView();
 	}
-
+	
 	private void initView () {
-		this.cursos = this.model.getCursosList();
+		// this.cursos = this.model.getCursosList();
+		this.cursos = this.model.getCursosBalance();
+		this.cursos.forEach((x) -> x.setEstado(StateUtilities.getCursoState(x, this.view.getMain().getToday())));
 		this.loadComboBox();
 		this.loadTable();
 		this.loadDateListeners();
