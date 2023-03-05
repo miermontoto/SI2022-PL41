@@ -15,10 +15,4 @@ public class GestionarCursosModel {
         return db.executeQueryPojo(CursoDTO.class, null, CursoDTO.getSqlQuery());
     }   
 
-    public List<CursoDTO> getDatosCursoActivo(String idCurso)
-    {
-        String sql ="";
-
-        return;
-    }
 }

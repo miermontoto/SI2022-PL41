@@ -3,9 +3,12 @@ package g41.si2022.coiipa.gestionar_cursos;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.swing.table.TableModel;
+
 import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.util.CursoState;
 import g41.si2022.util.StateUtilities;
+import g41.si2022.util.SwingUtil;
 
 public class GestionarCursosController {
 
@@ -47,11 +50,13 @@ public class GestionarCursosController {
             CursoState estadoCurso = StateUtilities.getCursoState(curso, today);
 
             if (estadoCurso == CursoState.EN_CURSO)
-            {
                 cursosActivos.add(curso);
-            }
-
-            
         }
+        // ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ 
+        // ¿Cómo añadir estado y plazas vacantes?
+        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosActivos, new String[] { "nombre", "start_inscr", "end_inscr", "plazas", "start" },
+        new String[] { "Nombre", "Inicio de inscripciones", "Fin de inscripciones", "Plazas (no vacantes)", "Inicio del curso" }, null);
+        view.getTablaCursos().setModel(tableModel);
+        SwingUtil.autoAdjustColumns(view.getTablaCursos());
     }
 }
