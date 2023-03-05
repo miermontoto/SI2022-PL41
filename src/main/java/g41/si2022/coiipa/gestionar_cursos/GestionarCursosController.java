@@ -12,6 +12,7 @@ public class GestionarCursosController {
     private GestionarCursosModel model;
     private GestionarCursosView view;
     private List<CursoDTO> cursos;
+    private List<CursoDTO> cursosActivos;
 
 
     /*              NO BORRAR (de momento)                  */
@@ -47,9 +48,10 @@ public class GestionarCursosController {
 
             if (estadoCurso == CursoState.EN_CURSO)
             {
-
+                cursosActivos.add(curso);
             }
 
+            
         }
     }
 }

@@ -10,8 +10,15 @@ public class GestionarCursosModel {
     private Database db = new Database();
 
     // Query to get all (active) courses
-    public List<CursoDTO> getListaCursos() {
-        
+    public List<CursoDTO> getListaCursos() 
+    {    
         return db.executeQueryPojo(CursoDTO.class, null, CursoDTO.getSqlQuery());
+    }   
+
+    public List<CursoDTO> getDatosCursoActivo(String idCurso)
+    {
+        String sql ="";
+
+        return;
     }
 }
