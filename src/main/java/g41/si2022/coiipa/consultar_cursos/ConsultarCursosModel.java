@@ -26,28 +26,28 @@ public class ConsultarCursosModel {
 
 	public String getGastos(String idCurso) {
 		String sql = "SELECT remuneracion FROM docencia WHERE curso_id = ?";
-		
+
 		try {
 			return String.valueOf((int) db.executeQueryArray(sql, idCurso).get(0)[0]);
 		} catch (IndexOutOfBoundsException ioob) {return "-";}
 	}
 
 	public String getCosteCurso(String idCurso) {
-		String sql = "SELECT coste FROM curso where curso_id = ?";
+		String sql = "SELECT coste FROM curso where id = ?";
 
 		return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
 	}
 
 	public String getIngresosEstimados(String idCurso) {
 		String sql = "SELECT coste * plazas as ingrEst from curso WHERE id = ?";
-		
+
 		return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
 	}
 
 	public List<PagoDTO> getListaPagos(String idCurso) {
 		String sql = "SELECT * FROM pago "
 					 + "INNER JOIN inscripcion ON pago.inscripcion_id = inscripcion.id "
-					 + "INNER JOIN curso ON inscripcion.curso_id = curso.id"
+					 + "INNER JOIN curso ON inscripcion.curso_id = curso.id "
 					 + "WHERE curso.id = ?" ;
 
 		return db.executeQueryPojo(PagoDTO.class, sql, idCurso);
