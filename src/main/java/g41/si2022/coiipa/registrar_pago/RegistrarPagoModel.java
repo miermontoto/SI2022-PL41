@@ -3,6 +3,8 @@ package g41.si2022.coiipa.registrar_pago;
 import java.util.Date;
 import java.util.List;
 
+import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.util.Database;
 import g41.si2022.util.Util;
@@ -10,32 +12,52 @@ import g41.si2022.util.Util;
 public class RegistrarPagoModel {
 	private Database db = new Database();
 
-	public List<PagoDTO> getInscripciones(String date) {
+	public List<InscripcionDTO> getInscripciones(String date) {
 		String sql =
-				"select i.id, i.alumno_id, a.nombre, c.coste, i.fecha, i.estado"
+				"select i.id as inscripcion_id, "
+				+ " i.alumno_id as inscripcion_alumno_id, "
+				+ " a.nombre as alumno_nombre, "
+				+ " c.coste as curso_coste, "
+				+ " sum(pa.importe) as inscripcion_pagado, "
+				+ " c.nombre as curso_nombre, "
+				+ " i.curso_id as inscripcion_curso_id, "
+				+ " i.fecha as inscripcion_fecha"
 				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
-				+ " inner join curso as c on c.id = i.curso_id where i.fecha<=? order by i.fecha asc";
-		return db.executeQueryPojo(PagoDTO.class, sql, date);
+				+ " inner join curso as c on c.id = i.curso_id "
+				+ " left join pago as pa on pa.inscripcion_id = i.id "
+				+ " where i.fecha<=? and c.start >=? group by i.id order by i.fecha asc ";
+		return db.executeQueryPojo(InscripcionDTO.class, sql, date, date);
+	}
+	
+	public CursoDTO getCurso (String id) {
+		String sql = 
+				" SELECT * "
+				+ " FROM curso "
+				+ " WHERE curso.id = ?";
+		return db.executeQueryPojo(CursoDTO.class, sql, id).get(0);
 	}
 
-	public List<PagoDTO> getInscripcionesPendientes(String date) {
+	public List<PagoDTO> getPagos () {
 		String sql =
-				"select i.id, i.alumno_id, a.nombre, c.coste, i.fecha, i.estado"
-				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
-				+ " inner join curso as c on c.id = i.curso_id where i.fecha<=? and i.estado!='Pagado' order by i.fecha asc";
-		return db.executeQueryPojo(PagoDTO.class, sql, date);
+				"SELECT * "
+				+ " FROM pago "
+				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id ";
+		return db.executeQueryPojo(PagoDTO.class, sql);
+	}
+	
+	public List<PagoDTO> getPagos (String alumnoId, String cursoId) {
+		String sql =
+				"SELECT * "
+				+ " FROM pago "
+				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id "
+				+ " WHERE inscripcion.alumno_id = ? "
+				+ " AND inscripcion.curso_id = ?";
+		return db.executeQueryPojo(PagoDTO.class, sql, alumnoId, cursoId);
 	}
 
 	public void registrarPago(String importe, String fecha, String idInscripcion) {
 		String sql = "INSERT INTO pago (importe, fecha, inscripcion_id) VALUES(?,?,?)";
-		db.executeUpdate(sql, importe, Util.isoStringToDate(fecha), idInscripcion);
-
-		this.actualizarInscripcion(idInscripcion);
-	}
-
-	public void actualizarInscripcion(String id) {
-		String sql = "UPDATE inscripcion SET estado=? WHERE id=?";
-		db.executeUpdate(sql, "Pagado", id);
+		db.executeUpdate(sql, importe, fecha, idInscripcion);
 	}
 
 	public String getEmailAlumno(String idAlumno) {

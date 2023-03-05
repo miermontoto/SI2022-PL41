@@ -18,16 +18,5 @@ public class ProfesorDTO {
 
 	public ProfesorDTO() { }
 
-	public ProfesorDTO(String id, String nombre, String apellidos, String dni, String email, String telefono, String direccion, String remuneracion) {
-		this.id = id;
-		this.nombre = nombre;
-		this.apellidos = apellidos;
-		this.dni = dni;
-		this.email = email;
-		this.telefono = telefono;
-		this.direccion = direccion;
-		this.remuneracion = remuneracion;
-	}
-
 	public static String getSqlQuery() { return "select * from docente order by apellidos asc"; }
 }
