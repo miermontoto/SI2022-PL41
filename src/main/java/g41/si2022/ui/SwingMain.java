@@ -10,6 +10,11 @@ import javax.swing.JTabbedPane;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
+import g41.si2022.coiipa.consultar_cursos.ConsultarCursosView;
+import g41.si2022.coiipa.consultar_ingresos_gastos.ConsultarIngresosGastosView;
+import g41.si2022.coiipa.inscribir_usuario.InscribirUsuarioView;
+import g41.si2022.coiipa.registrar_curso.RegistrarCursoView;
+import g41.si2022.coiipa.registrar_pago.RegistrarPagoView;
 import g41.si2022.util.BetterDatePicker;
 
 
@@ -24,6 +29,7 @@ public class SwingMain {
 
 	private JFrame frame;
 	private JTabbedPane tabs;
+	private Debug debugTab;
 
 	/**
 	 * Launch the application.
@@ -60,26 +66,37 @@ public class SwingMain {
 
 		// Tabs are the main content of the window. This will contain all the other GUIs.
 		tabs = new JTabbedPane();
-		Map<String, Tab> theTabs = new TreeMap<String, Tab>();
+		Map<String, JTabbedPane> theTabs = new TreeMap<>();
 
-		tabs.add(new Debug(this), 0);
-		tabs.setTitleAt(0, "Debug");
+		JTabbedPane other = new JTabbedPane();
+		JTabbedPane secretaria = new JTabbedPane();
+		JTabbedPane responsable = new JTabbedPane();
+		JTabbedPane profesional = new JTabbedPane();
 
-		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
-		theTabs.put("Registrar curso", new g41.si2022.coiipa.registrar_curso.RegistrarCursoView(this));
-		theTabs.put("Registrar pago", new g41.si2022.coiipa.registrar_pago.RegistrarPagoView(this));
-		theTabs.put("Registrar devolución", new g41.si2022.coiipa.insertar_devolucion.InsertarDevolucionView(this));
-		theTabs.put("Inscribir usuario", new g41.si2022.coiipa.inscribir_usuario.InscribirUsuarioView(this));
-		theTabs.put("Consultar cursos", new g41.si2022.coiipa.consultar_cursos.ConsultarCursosView(this));
-		theTabs.put("Consultar Ingresos y Gastos", new g41.si2022.coiipa.consultar_ingresos_gastos.ConsultarIngresosGastosView(this));
-		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
+		JTabbedPane[] allTabs = {other, secretaria, responsable, profesional};
+
+		other.add("Debug", new Debug(this));
+		secretaria.add("Registrar pagos", new RegistrarPagoView(this));
+		secretaria.add("Consultar cursos", new ConsultarCursosView(this));
+		responsable.add("Registrar curso", new RegistrarCursoView(this));
+		responsable.add("Consultar balance", new ConsultarIngresosGastosView(this));
+		profesional.add("Inscribirse", new InscribirUsuarioView(this));
+
+		theTabs.put("Otros", other);
+		theTabs.put("Secretaria administrativa", secretaria);
+		theTabs.put("Responsable de formación", responsable);
+		theTabs.put("Profesional (alumno)", profesional);
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));
 
-		tabs.addChangeListener(e -> {
-			Tab tab = (Tab) tabs.getSelectedComponent();
-			if (tab != null) tab.initController();
-		});
+		for(JTabbedPane t : allTabs) {
+			t.addChangeListener(e -> {
+				Tab tab = (Tab) t.getSelectedComponent();
+				if (tab != null) tab.initController();
+			});
+		}
+
+		debugTab = (Debug) other.getComponentAt(0);
 
 		frame.add(tabs);
 		frame.repaint();
@@ -88,6 +105,6 @@ public class SwingMain {
 
 	public JFrame getFrame() { return this.frame; }
 
-	public LocalDate getToday() { return ((Debug) this.tabs.getComponentAt(0)).getToday().getDate();}
-	public BetterDatePicker getTodayPicker() { return ((Debug) this.tabs.getComponentAt(0)).getToday();}
+	public LocalDate getToday() { return getTodayPicker().getDate(); }
+	public BetterDatePicker getTodayPicker() { return debugTab.getToday(); }
 }
