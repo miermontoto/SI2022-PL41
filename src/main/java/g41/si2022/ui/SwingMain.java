@@ -2,13 +2,13 @@ package g41.si2022.ui;
 
 import java.awt.EventQueue;
 import java.time.LocalDate;
-import java.util.Map;
-import java.util.TreeMap;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
+import javax.swing.JPanel;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import lombok.Getter;
 
 import g41.si2022.util.BetterDatePicker;
 
@@ -20,10 +20,12 @@ import g41.si2022.util.BetterDatePicker;
  * No sigue MVC pues es solamente temporal para que durante el desarrollo se tenga posibilidad
  * de realizar acciones de inicializacion
  */
+@Getter
 public class SwingMain {
 
 	private JFrame frame;
-	private JTabbedPane tabs;
+	private JPanel mainPanel;
+	private BetterDatePicker today;
 
 	/**
 	 * Launch the application.
@@ -58,36 +60,30 @@ public class SwingMain {
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-		// Tabs are the main content of the window. This will contain all the other GUIs.
-		tabs = new JTabbedPane();
-		Map<String, Tab> theTabs = new TreeMap<String, Tab>();
+		mainPanel = new JPanel();
 
-		tabs.add(new Debug(this), 0);
-		tabs.setTitleAt(0, "Debug");
+		JButton btnResponsable = new JButton("Responsable de formación");
+		JButton btnSecretaria = new JButton("Secretaria administrativa");
+		JButton btnProfesional = new JButton("Profesional (alumnado)");
 
-		// ↓↓↓ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↓↓↓
-		theTabs.put("Registrar curso", new g41.si2022.coiipa.registrar_curso.RegistrarCursoView(this));
-		theTabs.put("Registrar pago", new g41.si2022.coiipa.registrar_pago.RegistrarPagoView(this));
-		theTabs.put("Registrar devolución", new g41.si2022.coiipa.insertar_devolucion.InsertarDevolucionView(this));
-		theTabs.put("Inscribir usuario", new g41.si2022.coiipa.inscribir_usuario.InscribirUsuarioView(this));
-		theTabs.put("Consultar cursos", new g41.si2022.coiipa.consultar_cursos.ConsultarCursosView(this));
-		theTabs.put("Consultar Ingresos y Gastos", new g41.si2022.coiipa.consultar_ingresos_gastos.ConsultarIngresosGastosView(this));
-		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
+		today = new BetterDatePicker();
+		today.setDateToToday();
+		mainPanel.add(today);
+		mainPanel.add(btnResponsable);
+		mainPanel.add(btnSecretaria);
+		mainPanel.add(btnProfesional);
 
-		theTabs.forEach((name, tab) -> tabs.add(name, tab));
+		btnProfesional.addActionListener(e -> new TabsProfesional(this));
+		btnResponsable.addActionListener(e -> new TabsResponsable(this));
+		btnSecretaria.addActionListener(e -> new TabsSecretaria(this));
 
-		tabs.addChangeListener(e -> {
-			Tab tab = (Tab) tabs.getSelectedComponent();
-			if (tab != null) tab.initController();
-		});
-
-		frame.add(tabs);
+		frame.add(mainPanel);
 		frame.repaint();
 		frame.revalidate();
 	}
 
 	public JFrame getFrame() { return this.frame; }
 
-	public LocalDate getToday() { return ((Debug) this.tabs.getComponentAt(0)).getToday().getDate();}
-	public BetterDatePicker getTodayPicker() { return ((Debug) this.tabs.getComponentAt(0)).getToday();}
+	public LocalDate getToday() { return this.today.getDate();}
+	public BetterDatePicker getTodayPicker() { return this.today;}
 }
