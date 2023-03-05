@@ -17,17 +17,18 @@ public class ConsultarIngresosGastosModel {
 		String sql = 
 				"SELECT docencia.remuneracion as gastos, "
 				+ " SUM(pago.importe) as ingresos "
-				+ " ,ingresos - gastos as balance " // This is messing up. FIXME
+				+ " ,docencia.remuneracion - SUM(pago.importe) as balance "
 				+ " ,curso.nombre "
 				+ " ,curso.start_inscr "
 				+ " ,curso.end_inscr "
 				+ " ,curso.start "
 				+ " ,curso.end "
-				+ " FROM docencia "
-				+ " INNER JOIN curso ON curso.id = docencia.curso_id "
-				+ " INNER JOIN inscripcion ON inscripcion.curso_id = curso.id "
-				+ " INNER JOIN pago ON pago.inscripcion_id = inscripcion.id "
+				+ " FROM curso "
+				+ " LEFT JOIN docencia ON curso.id = docencia.curso_id " // Change for INNER JOIN. To do this, INSERT INTO docencia when creating a new course
+				+ " LEFT JOIN inscripcion ON inscripcion.curso_id = curso.id "
+				+ " LEFT JOIN pago ON pago.inscripcion_id = inscripcion.id "
 				+ " GROUP BY (curso.id)";
 		return db.executeQueryPojo(CursoDTO.class, sql);
 	}
+
 }
