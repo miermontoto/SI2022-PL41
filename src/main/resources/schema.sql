@@ -35,6 +35,8 @@ create table inscripcion (
 
 create table inscripcioncancelada (
 	id integer primary key autoincrement,
+	importedevuelto integer not null,
+	fechacancelacion date not null,
 	inscripcion_id integer not null,
 	foreign key (inscripcion_id) references inscripcion(id)
 );

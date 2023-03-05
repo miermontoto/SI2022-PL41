@@ -1,9 +1,11 @@
 package g41.si2022.coiipa.registrar_curso;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.text.NumberFormatter;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
@@ -15,6 +17,9 @@ import g41.si2022.util.BetterDatePicker;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -29,6 +34,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	private JIntegerTextField plazas;
 	private BetterDatePicker fechaInscripcionIni, fechaInscripcionFin;
 	private BetterDatePicker fechaCursoIni, fechaCursoFin;
+	private JTextField coste;
 	private JTable profTable;
 	private JButton registrarCurso;
 
@@ -44,6 +50,8 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	public BetterDatePicker getCursoIni () { return this.fechaCursoIni; }
 	public String getCursoFinDate () { return this.fechaCursoFin.getDate().toString(); }
 	public BetterDatePicker getCursoFin () { return this.fechaCursoFin; }
+	public String getCoste () { return this.coste.getText(); }
+	public JTextField getCosteTextField () { return this.coste; }
 	public JTable getTablaProfesores() { return this.profTable; }
 	public JButton getSubmitButton() { return this.registrarCurso; }
 	public JTextArea getLocalizacionTextArea () { return this.localizacion; }
@@ -167,14 +175,22 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 			{ // Label
 				left.gridy = 5;
 				centerPanel.add(new JLabel("Localizacion:"), left);
-			}
-			{ // Input
+			} { // Input
 				right.gridy = 5;
 				right.fill = GridBagConstraints.BOTH;
 				this.localizacion = new JTextArea();
 				this.localizacion.setLineWrap(true);
 				this.localizacion.setRows(2);
 				centerPanel.add(this.localizacion, right);
+			}
+		} { // Coste
+			{ // Label
+				left.gridy = 6;
+				centerPanel.add(new JLabel("Coste Inscripción:"), left);
+			} { // Input
+				right.gridy = 6;
+				right.fill = GridBagConstraints.BOTH;
+				centerPanel.add(this.coste = new JTextField(), right);
 			}
 		}
 
