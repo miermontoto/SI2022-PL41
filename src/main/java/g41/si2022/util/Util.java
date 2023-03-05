@@ -78,6 +78,7 @@ public class Util {
 	public static String pojosToCsv(List<?> pojoList, String[] fields) {
 		return pojosToCsv(pojoList,fields,false,",","","","");
 	}
+
 	/**
 	 * Convierte una lista de objetos a formato csv con varios parametros para personalizar el aspecto
 	 * @param pojoList Lista de objetos a serializar
@@ -104,6 +105,7 @@ public class Util {
 		}
 		return sb.toString();
 	}
+
 	private static void addPojoLineToCsv(StringBuilder sb, Map<String, String> objectAsMap, String[] fields, String separator, String begin, String end, String nullAs) {
 		sb.append(begin);
 		for (int j=0; j<fields.length; j++) {
@@ -123,6 +125,7 @@ public class Util {
 	public static String arraysToCsv(String[][] arrays) {
 		return arraysToCsv(arrays,null,",","","");
 	}
+
 	/**
 	 * Convierte un array bidimensional de strings a csv permitiendo parametrizacion
 	 * (usado para comparaciones del ui con AssertJ Swing y JBehave)
@@ -153,6 +156,7 @@ public class Util {
 			throw new ApplicationException("Formato ISO incorrecto para fecha: "+isoDateString);
 		}
 	}
+
 	/**
 	 * Convierte fecha java a un string formato iso (para display o uso en sql)
 	 */
@@ -160,23 +164,4 @@ public class Util {
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
 		return formatter.format(javaDate);
 	}
-	
-	/**
-	 * Returns the InscripcionState for a given Course and student.
-	 * 
-	 * @param curso Course that is being paid.
-	 * @param pagos Payments of this student and this course.
-	 * @return State of the inscription
-	 */
-	public static InscripcionState getInscripcionState (Double coste, List<PagoDTO> pagos) {
-		double paid = 0;
-		for (PagoDTO p : pagos) {
-			paid += Double.parseDouble(p.getImporte());
-		}
-		if (paid > coste) return InscripcionState.EXCESO;
-		if (paid < coste) return InscripcionState.PENDIENTE;
-		return InscripcionState.PAGADA;
-	}
-	
-
 }

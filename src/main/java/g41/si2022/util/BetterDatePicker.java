@@ -8,6 +8,17 @@ public class BetterDatePicker extends DatePicker implements Comparable<DatePicke
 
 	@Override
 	public int compareTo(DatePicker o) {
+		boolean thisIsNull = this.getDate() == null;
+		boolean oIsNull = o.getDate() == null;
+		if (thisIsNull && oIsNull) {
+			return 0;
+		}
+		if (thisIsNull) {
+			return -1;
+		}
+		if (oIsNull) {
+			return 1;
+		}
 		return (int) (this.getDate().toEpochDay() - o.getDate().toEpochDay());
 	}
 

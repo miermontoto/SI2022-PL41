@@ -52,6 +52,7 @@ public class SwingMain {
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
 		frame.setSize(640, 480);
+		// frame.setSize(640*2, 480*2);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,6 +69,7 @@ public class SwingMain {
 		theTabs.put("Registrar devolución", new g41.si2022.coiipa.insertar_devolucion.InsertarDevolucionView(this));
 		theTabs.put("Inscribir usuario", new g41.si2022.coiipa.inscribir_usuario.InscribirUsuarioView(this));
 		theTabs.put("Consultar cursos", new g41.si2022.coiipa.consultar_cursos.ConsultarCursosView(this));
+		theTabs.put("Consultar Ingresos y Gastos", new g41.si2022.coiipa.consultar_ingresos_gastos.ConsultarIngresosGastosView(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));
