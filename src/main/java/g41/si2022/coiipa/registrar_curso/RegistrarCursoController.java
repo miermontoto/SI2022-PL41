@@ -3,7 +3,9 @@ package g41.si2022.coiipa.registrar_curso;
 import java.util.List;
 import java.util.Map;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -39,6 +41,36 @@ public class RegistrarCursoController {
 		loadDateListeners();
 		loadTableListeners();
 		loadTextAreaListeners();
+		this.view.getCosteTextField().addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
+			public void keyPressed (KeyEvent e) {
+				if (!Character.isDigit(e.getKeyChar()) && e.getKeyChar() != '.') {
+					javax.swing.JTextField tf = RegistrarCursoController.this.view.getCosteTextField();
+					if (tf.getText().length() > 1) {
+						tf.setText(tf.getText().substring(0, tf.getText().length()-1));
+					} else {
+						tf.setText("");
+					}
+				}
+			}
+		});
+		this.view.getCosteTextField().addFocusListener(new java.awt.event.FocusListener() {
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				javax.swing.JTextField tf = RegistrarCursoController.this.view.getCosteTextField();
+				if (!Character.isDigit(tf.getText().charAt(0)) && tf.getText().charAt(0) != '.') {
+					tf.setText("");
+				}
+			}
+			
+		});
 	}
 
 	private void loadTextAreaListeners () {
@@ -151,7 +183,7 @@ public class RegistrarCursoController {
 		}
 		this.model.insertCurso(
 				view.getNombreCurso(), view.getObjetivosDescripcion(),
-				profesorElegido.get().getRemuneracion(), // El unico coste del curso es la remuneracion del unico profesor
+				view.getCoste(), 
 				view.getInscripcionIniDate(), view.getInscripcionFinDate(), view.getCursoIniDate(), view.getCursoFinDate(),
 				view.getPlazas(), view.getLocalizacion(),
 				profesorElegido.get().getId()); // El curso solo tiene un profesor
