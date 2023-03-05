@@ -184,7 +184,7 @@ public class Util {
 			}
 		}
 		System.out.printf("Paid %f Coste %f Devuelto %f\n", paid, coste, devuelto);
-		System.out.print("Hola");
+	
 		if (devuelto > 0) return InscripcionState.CANCELADA;
 		if (paid > coste) return InscripcionState.EXCESO;
 		if (paid < coste) return InscripcionState.PENDIENTE;
