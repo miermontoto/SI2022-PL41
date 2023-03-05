@@ -170,12 +170,18 @@ public class Util {
 	 */
 	public static InscripcionState getInscripcionState (Double coste, List<PagoDTO> pagos) {
 		double paid = 0;
+		double devuelto = 0;
 		for (PagoDTO p : pagos) {
 			paid += Double.parseDouble(p.getImporte());
+			
+			if(!(p.getImportedevuelto() == null)) {
+				devuelto += Double.parseDouble(p.getImportedevuelto());
+			}
 		}
-		System.out.printf("Paid %f Coste %f\n", paid, coste);
+		System.out.printf("Paid %f Coste %f Devuelto %f\n", paid, coste, devuelto);
 		if (paid > coste) return InscripcionState.EXCESO;
 		if (paid < coste) return InscripcionState.PENDIENTE;
+		if (devuelto > 0) return InscripcionState.CANCELADA;
 		return InscripcionState.PAGADA;
 	}
 	
