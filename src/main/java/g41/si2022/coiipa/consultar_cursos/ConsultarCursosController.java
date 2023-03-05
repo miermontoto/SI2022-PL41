@@ -71,19 +71,29 @@ public class ConsultarCursosController {
 				gastos = model.getGastos(curso.getId());
 				ingresosEstimados = model.getIngresosEstimados(curso.getId());
 				costeCurso = model.getCosteCurso(curso.getId());
-				String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Integer.parseInt(gastos));
+				
+				balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Integer.parseInt(gastos));
 				StringBuilder sb = new StringBuilder();
+				
 				sb.append("<html><body>");
 				sb.append("<p><b>Gastos:</b> " + gastos + "€");
 				sb.append("<p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
 				sb.append("<p><b>Balance estimado:</b> " + balanceEstimado + "€");
-				sb.append("</body></html>");
-				view.getLblEconomicInfo().setText(sb.toString());
 				
+				listaPagos = model.getListaPagos(curso.getId());
 				InscripcionState estado = StateUtilities.getInscripcionState(Double.valueOf(Double.parseDouble(costeCurso)), listaPagos);
-				if (estado == InscripcionState.PAGADA) {
-					
-				}
+				
+				if (estado == InscripcionState.PAGADA) 
+					ingresosReales =  model.getImportePagos(curso.getId());
+				else	
+					ingresosReales = "0";
+
+				balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Integer.parseInt(gastos));
+				sb.append("<p><b>Ingresos reales:</b> " + ingresosReales + "€");
+				sb.append("<p><b>Balance real:</b> " + balanceReal + "€");
+				sb.append("</body></html>");
+
+				view.getLblEconomicInfo().setText(sb.toString());
 
 				return;
 			}
@@ -97,7 +107,5 @@ public class ConsultarCursosController {
 				new String[] { "Fecha de inscripción", "Alumno"}, null);
 		view.getTablaInscr().setModel(tableModel);
 		SwingUtil.autoAdjustColumns(view.getTablaInscr());
-	}
-
-	
+	}	
 }

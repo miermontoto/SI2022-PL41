@@ -44,19 +44,21 @@ public class ConsultarCursosModel {
 		return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
 	}
 
-	public List<PagoDTO> getListaPagos(String idInscr) {
-		String sql = "SELECT * FROM pago where inscripcion_id = ?";
+	public List<PagoDTO> getListaPagos(String idCurso) {
+		String sql = "SELECT * FROM pago "
+					 + "INNER JOIN inscripcion ON pago.inscripcion_id = inscripcion.id "
+					 + "INNER JOIN curso ON inscripcion.curso_id = curso.id"
+					 + "WHERE curso.id = ?" ;
 
-		return db.executeQueryPojo(PagoDTO.class, sql, idInscr);
+		return db.executeQueryPojo(PagoDTO.class, sql, idCurso);
 	}
 
+	public String getImportePagos(String idCurso) {
+		String sql = "SELECT sum(importe) FROM pago "
+					 + "INNER JOIN inscripcion ON pago.inscripcion_id = inscripcion.id "
+					 + "INNER JOIN curso ON inscripcion.curso_id = curso.id"
+			 		 + "WHERE curso.id = ?" ;
 
-
-	// public double getIngresosReales(String idCurso) {
-	// 	String sql = "SELECT count(*) * curso.coste FROM inscripcion "
-	// 			   + "INNER JOIN curso ON inscripcion.curso_id = curso.id "
-	// 			   + "WHERE inscripcion.estado = 'Pagado' AND inscripcion.curso_id = ?";
-
-	// 	return Double.parseDouble((String) db.executeQueryArray(sql, idCurso).get(0)[0]);
-	// }
+		return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
+	}
 }
