@@ -3,14 +3,18 @@ package g41.si2022.coiipa.inscribir_usuario;
 import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.awt.Color;
 
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
 import g41.si2022.coiipa.dto.AlumnoDTO;
 import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.util.SwingUtil;
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
 
 public class InscribirUsuarioController {
@@ -36,37 +40,37 @@ public class InscribirUsuarioController {
             }
         });
 
-        view.getTxtEmailLogin().addKeyListener(new java.awt.event.KeyAdapter() {
+        view.getTxtEmailLogin().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
 
-        view.getTxtEmail().addKeyListener(new java.awt.event.KeyAdapter() {
+        view.getTxtEmail().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
 
-        view.getTxtNombre().addKeyListener(new java.awt.event.KeyAdapter() {
+        view.getTxtNombre().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
 
-        view.getTxtApellidos().addKeyListener(new java.awt.event.KeyAdapter() {
+        view.getTxtApellidos().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
 
-        view.getTxtTelefono().addKeyListener(new java.awt.event.KeyAdapter() {
+        view.getTxtTelefono().addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 SwingUtil.exceptionWrapper(() -> manageForm());
             }
         });
@@ -97,7 +101,18 @@ public class InscribirUsuarioController {
         }
 
         alumno = model.getAlumnoFromEmail(email).get(0);
-        model.insertInscripcion(LocalDate.now().toString(), "Pendiente", cursoId, alumno.getId());
+
+        model.insertInscripcion(LocalDate.now().toString(), cursoId, alumno.getId());
+
+        if(model.checkAlumnoInCurso(alumno.getId(), cursoId)) {
+            SwingUtil.showMessage("Ya está inscrito en este curso", "Inscripción de alumno", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        model.insertInscripcion(LocalDate.now().toString(), cursoId, alumno.getId());
+        getListaCursos();
+        Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(view.getTablaCursos()) + " ha sido realizada con éxito.");
+
         SwingUtil.showMessage("Inscripción realizada con éxito", "Inscripción de alumno");
     }
 
@@ -112,16 +127,16 @@ public class InscribirUsuarioController {
         view.getLblSignin().setForeground(Color.RED);
         view.getLblSignup().setForeground(Color.RED);
 
-        boolean validEmail;
+        boolean validEmail = false;
+        JLabel target = null;
         switch(view.getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
             case "sign-in":
+                target = view.getLblSignin();
                 if (!Util.verifyEmailStructure(signinEmail)) { // Check basic structure
-                    view.getLblSignin().setText("");
+                    target.setText("");
                     break;
                 }
                 validEmail = model.verifyEmail(signinEmail); // Check if email exists in database
-                view.getLblSignin().setText(validEmail ? "" : "Email desconocido");
-                view.getBtnInscribir().setEnabled(validEmail);
                 break;
 
             case "sign-up":
@@ -130,26 +145,30 @@ public class InscribirUsuarioController {
                     break;
                 }
                 validEmail = !model.verifyEmail(signupEmail); // Check if email doesn't already exist in db
-                view.getLblSignup().setText(validEmail ? "" : "Email ya registrado");
-                view.getBtnInscribir().setEnabled(validEmail);
                 break;
         }
+        target.setText(validEmail ? "" : "Email desconocido");
+        view.getBtnInscribir().setEnabled(validEmail);
     }
 
     public void updateCursoValue() {
+        cursoId = null;
         for (CursoDTO curso : cursos) {
             if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
+                if (curso.getPlazas_libres().equals("0")) {
+                    SwingUtil.showMessage("No quedan plazas libres para este curso", "Inscripción de alumno", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 cursoId = curso.getId();
                 return;
             }
         }
-        cursoId = null;
     }
 
     public void getListaCursos() {
         cursos = model.getListaCursos(view.getMain().getToday().toString());
-        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas", "start_inscr", "end_inscr" },
-        		new String[] { "Nombre", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
+        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas_libres", "start_inscr", "end_inscr" },
+        		new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
         view.getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
     }

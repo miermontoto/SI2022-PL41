@@ -1,4 +1,4 @@
-package g41.si2022.util;
+package g41.si2022.ui;
 
 public abstract class Tab extends javax.swing.JPanel {
 

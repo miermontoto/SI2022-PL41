@@ -1,9 +1,11 @@
 package g41.si2022.coiipa.registrar_curso;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.text.NumberFormatter;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
@@ -15,13 +17,16 @@ import g41.si2022.util.BetterDatePicker;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 
-public class RegistrarCursoView extends g41.si2022.util.Tab {
+public class RegistrarCursoView extends g41.si2022.ui.Tab {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField nombreCurso;
@@ -29,11 +34,13 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	private JIntegerTextField plazas;
 	private BetterDatePicker fechaInscripcionIni, fechaInscripcionFin;
 	private BetterDatePicker fechaCursoIni, fechaCursoFin;
+	private JTextField coste;
 	private JTable profTable;
 	private JButton registrarCurso;
 
 	public String getNombreCurso () { return this.nombreCurso.getText().trim(); }
 	public String getObjetivosDescripcion () { return this.objetivosDescripcion.getText().trim(); }
+	public JTextArea getObjetivosDescripcionTextArea () { return this.objetivosDescripcion; }
 	public String getPlazas () { return this.plazas.getText().trim(); }
 	public String getInscripcionIniDate () { return this.fechaInscripcionIni.getDate().toString(); }
 	public BetterDatePicker getInscripcionIni () { return this.fechaInscripcionIni; }
@@ -43,14 +50,18 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	public BetterDatePicker getCursoIni () { return this.fechaCursoIni; }
 	public String getCursoFinDate () { return this.fechaCursoFin.getDate().toString(); }
 	public BetterDatePicker getCursoFin () { return this.fechaCursoFin; }
+	public String getCoste () { return this.coste.getText(); }
+	public JTextField getCosteTextField () { return this.coste; }
 	public JTable getTablaProfesores() { return this.profTable; }
 	public JButton getSubmitButton() { return this.registrarCurso; }
+	public JTextArea getLocalizacionTextArea () { return this.localizacion; }
+	public String getLocalizacion () { return this.localizacion.getText(); }
 
 	public void setNombreCurso (String nombreCurso) { this.nombreCurso.setText(nombreCurso); }
 	public void setObjetivosDescripcion (String objetivosDescripcion) { this.objetivosDescripcion.setText(objetivosDescripcion); }
 	public void setPlazas (int plazas) { this.plazas.setText(String.format("%d", Math.max(0, plazas))); }
 
-	public RegistrarCursoView (g41.si2022.util.SwingMain main) {
+	public RegistrarCursoView (g41.si2022.ui.SwingMain main) {
 		super(main);
 		this.initView();
 	}
@@ -122,13 +133,17 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
-					panelInscDesde.add(this.fechaInscripcionIni = new BetterDatePicker(), BorderLayout.CENTER);
+					panelInscDesde.add(new JPanel(), BorderLayout.CENTER);
+					panelInscDesde.add(this.fechaInscripcionIni = new BetterDatePicker(), BorderLayout.EAST);
 					panelInscripciones.add(panelInscDesde, BorderLayout.WEST);
+				} {
+					panelInscripciones.add(new JPanel(), BorderLayout.CENTER);
 				} { // Hasta
 					JPanel panelInscHasta = new JPanel(new BorderLayout());
 					panelInscHasta.add(new JLabel("Hasta"), BorderLayout.WEST);
-					panelInscHasta.add(this.fechaInscripcionFin = new BetterDatePicker(), BorderLayout.CENTER);
-					panelInscripciones.add(panelInscHasta, BorderLayout.CENTER);
+					panelInscHasta.add(new JPanel(), BorderLayout.CENTER);
+					panelInscHasta.add(this.fechaInscripcionFin = new BetterDatePicker(), BorderLayout.EAST);
+					panelInscripciones.add(panelInscHasta, BorderLayout.EAST);
 				}
 			}
 		} { // Curso
@@ -138,31 +153,44 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 			} { // Input
 				JPanel panelInscripciones = new JPanel(new BorderLayout());
 				right.gridy = 4;
+				right.fill = GridBagConstraints.WEST;
 				centerPanel.add(panelInscripciones, right);
 				{ // Desde
 					JPanel panelInscDesde = new JPanel(new BorderLayout());
 					panelInscDesde.add(new JLabel("Desde"), BorderLayout.WEST);
-					panelInscDesde.add(this.fechaCursoIni = new BetterDatePicker(), BorderLayout.CENTER);
+					panelInscDesde.add(new JPanel(), BorderLayout.CENTER);
+					panelInscDesde.add(this.fechaCursoIni = new BetterDatePicker(), BorderLayout.EAST);
 					panelInscripciones.add(panelInscDesde, BorderLayout.WEST);
+				} {
+					panelInscripciones.add(new JPanel(), BorderLayout.CENTER);
 				} { // Hasta
 					JPanel panelInscHasta = new JPanel(new BorderLayout());
 					panelInscHasta.add(new JLabel("Hasta"), BorderLayout.WEST);
-					panelInscHasta.add(this.fechaCursoFin = new BetterDatePicker(), BorderLayout.CENTER);
-					panelInscripciones.add(panelInscHasta, BorderLayout.CENTER);
+					panelInscHasta.add(new JPanel(), BorderLayout.CENTER);
+					panelInscHasta.add(this.fechaCursoFin = new BetterDatePicker(), BorderLayout.EAST);
+					panelInscripciones.add(panelInscHasta, BorderLayout.EAST);
 				}
 			}
 		} { // Localizacion
 			{ // Label
 				left.gridy = 5;
 				centerPanel.add(new JLabel("Localizacion:"), left);
-			}
-			{ // Input
+			} { // Input
 				right.gridy = 5;
 				right.fill = GridBagConstraints.BOTH;
 				this.localizacion = new JTextArea();
 				this.localizacion.setLineWrap(true);
 				this.localizacion.setRows(2);
 				centerPanel.add(this.localizacion, right);
+			}
+		} { // Coste
+			{ // Label
+				left.gridy = 6;
+				centerPanel.add(new JLabel("Coste Inscripción:"), left);
+			} { // Input
+				right.gridy = 6;
+				right.fill = GridBagConstraints.BOTH;
+				centerPanel.add(this.coste = new JTextField(), right);
 			}
 		}
 

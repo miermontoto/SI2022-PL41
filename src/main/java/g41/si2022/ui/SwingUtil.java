@@ -1,4 +1,4 @@
-package g41.si2022.util;
+package g41.si2022.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -11,6 +11,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import org.apache.commons.beanutils.PropertyUtils;
+
+import g41.si2022.util.ApplicationException;
+import g41.si2022.util.TableColumnAdjuster;
+import g41.si2022.util.UnexpectedException;
 
 /**
  * Metodos de utilidad para interfaces de usuario con swing (poblar tablas a partir de un objeto POJO
@@ -43,7 +47,6 @@ public class SwingUtil {
 		}
 	}
 
-
 	public static void showMessage(String message, String title, int type) {
 		/* Como este metodo no recibe el contexto de la ventana de la aplicación,
 		 * no usa el metodo estatico showMessageDialog de JOptionPane
@@ -57,9 +60,8 @@ public class SwingUtil {
 	}
 
 	public static void showMessage(String message, String title) {
-		showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
+	    showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
-
 
 	/**
 	 * Ajusta todas las columnas de la tabla al tamanyo correspondiente al contenido del tablemodel

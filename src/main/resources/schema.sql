@@ -13,13 +13,13 @@ create table curso (
     id integer primary key autoincrement,
     nombre text not null,
     descripcion text,
-    estado text not null,
     coste float not null,
     start_inscr date not null,
     end_inscr date not null,
     plazas integer not null,
     start date not null,
     end date not null,
+    localizacion text not null,
     docente_id integer not null,
     foreign key (docente_id) references docente(id)
 );
@@ -27,11 +27,16 @@ create table curso (
 create table inscripcion (
     id integer primary key autoincrement,
     fecha date not null,
-    estado text not null,
     curso_id integer not null,
     alumno_id integer not null,
     foreign key (curso_id) references curso(id),
     foreign key (alumno_id) references alumno(id)
+);
+
+create table inscripcioncancelada (
+	id integer primary key autoincrement,
+	inscripcion_id integer not null,
+	foreign key (inscripcion_id) references inscripcion(id)
 );
 
 create table alumno (
