@@ -7,7 +7,6 @@ public class TabsSecretaria extends TabbedFrame {
 
     public TabsSecretaria(SwingMain main) {
         super(main);
-        frame.setTitle("COIIPA: Gestión de la secretaria administrativa");
 
         tabs.put("Registrar pagos", new RegistrarPagoView(main));
         tabs.put("Consultar cursos", new ConsultarCursosView(main));

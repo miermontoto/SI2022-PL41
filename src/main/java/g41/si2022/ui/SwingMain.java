@@ -2,9 +2,12 @@ package g41.si2022.ui;
 
 import java.awt.EventQueue;
 import java.time.LocalDate;
+import java.awt.BorderLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -24,8 +27,10 @@ import g41.si2022.util.BetterDatePicker;
 public class SwingMain {
 
 	private JFrame frame;
-	private JPanel mainPanel;
 	private BetterDatePicker today;
+	private JPanel mainMenu;
+	private JPanel navigation;
+	private JPanel total;
 
 	/**
 	 * Launch the application.
@@ -60,30 +65,61 @@ public class SwingMain {
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-		mainPanel = new JPanel();
+		total = new JPanel();
+		{ // Navigation panel
+			navigation = new JPanel();
+			navigation.setLayout(new BorderLayout());
 
-		JButton btnResponsable = new JButton("Responsable de formación");
-		JButton btnSecretaria = new JButton("Secretaria administrativa");
-		JButton btnProfesional = new JButton("Profesional (alumnado)");
+			JButton btnBack = new JButton("< Back");
+			btnBack.addActionListener(e -> {
+				setMainPanel(mainMenu);
+				setNavigation(false);
+			});
+			JLabel lblTitle = new JLabel("Title");
+			navigation.add(btnBack, BorderLayout.WEST);
+			navigation.add(lblTitle, BorderLayout.EAST);
+			setNavigation(false);
+		} { // mainMenu
+			mainMenu = new JPanel();
 
-		today = new BetterDatePicker();
-		today.setDateToToday();
-		mainPanel.add(today);
-		mainPanel.add(btnResponsable);
-		mainPanel.add(btnSecretaria);
-		mainPanel.add(btnProfesional);
+			JButton btnResponsable = new JButton("Responsable de formación");
+			JButton btnSecretaria = new JButton("Secretaria administrativa");
+			JButton btnProfesional = new JButton("Profesional (alumnado)");
 
-		btnProfesional.addActionListener(e -> new TabsProfesional(this));
-		btnResponsable.addActionListener(e -> new TabsResponsable(this));
-		btnSecretaria.addActionListener(e -> new TabsSecretaria(this));
+			today = new BetterDatePicker();
+			today.setDateToToday();
 
-		frame.add(mainPanel);
-		frame.repaint();
-		frame.revalidate();
+			TabbedFrame profesional = new TabsProfesional(this);
+			TabbedFrame responsable = new TabsResponsable(this);
+			TabbedFrame secretaria = new TabsSecretaria(this);
+
+			btnProfesional.addActionListener(e -> {setMainPanel(profesional.getComponent());});
+			btnResponsable.addActionListener(e -> {setMainPanel(responsable.getComponent());});
+			btnSecretaria.addActionListener(e -> {setMainPanel(secretaria.getComponent());});
+
+			mainMenu.add(today);
+			mainMenu.add(btnResponsable);
+			mainMenu.add(btnSecretaria);
+			mainMenu.add(btnProfesional);
+		}
+
+		setMainPanel(mainMenu);
+		setNavigation(false);
+		frame.add(total);
 	}
 
 	public JFrame getFrame() { return this.frame; }
+	public void setMainPanel(JComponent panel) {
+		total.removeAll();
+		total.add(navigation);
+		total.add(panel);
+		total.repaint();
+		total.revalidate();
+		setNavigation(true);
+	}
 
-	public LocalDate getToday() { return this.today.getDate();}
-	public BetterDatePicker getTodayPicker() { return this.today;}
+	public JPanel getMainMenu() { return this.mainMenu; }
+	public LocalDate getToday() { return getTodayPicker().getDate();}
+	public BetterDatePicker getTodayPicker() { return this.today; }
+	public void setNavigation(boolean visible) { navigation.setVisible(visible); }
 }
