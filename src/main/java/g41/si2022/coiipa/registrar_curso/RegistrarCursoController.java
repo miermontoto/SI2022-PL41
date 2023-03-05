@@ -13,8 +13,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import g41.si2022.coiipa.dto.ProfesorDTO;
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.SwingUtil;
 
 public class RegistrarCursoController {
 	private RegistrarCursoModel model;
@@ -59,7 +59,7 @@ public class RegistrarCursoController {
 			@Override
 			public void focusGained(FocusEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
@@ -69,7 +69,7 @@ public class RegistrarCursoController {
 					tf.setText("");
 				}
 			}
-			
+
 		});
 	}
 
@@ -183,7 +183,7 @@ public class RegistrarCursoController {
 		}
 		this.model.insertCurso(
 				view.getNombreCurso(), view.getObjetivosDescripcion(),
-				view.getCoste(), 
+				view.getCoste(),
 				view.getInscripcionIniDate(), view.getInscripcionFinDate(), view.getCursoIniDate(), view.getCursoFinDate(),
 				view.getPlazas(), view.getLocalizacion(),
 				profesorElegido.get().getId()); // El curso solo tiene un profesor

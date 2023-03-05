@@ -15,9 +15,8 @@ import javax.swing.text.NumberFormatter;
 import net.miginfocom.swing.MigLayout;
 import com.github.lgooddatepicker.components.DatePicker;
 import lombok.Getter;
-
-import g41.si2022.util.SwingMain;
-import g41.si2022.util.Tab;
+import g41.si2022.ui.SwingMain;
+import g41.si2022.ui.Tab;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 import javax.swing.JCheckBox;
@@ -55,26 +54,26 @@ public class InsertarDevolucionView extends Tab {
 		formPanel.add(lblTitulo, "cell 0 0,growx,aligny top");
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		JLabel label = new JLabel("Nombre del inscrito: ");
 		formPanel.add(label, "cell 0 1,alignx left,aligny center");
 		lblNombreInscripcion = new JLabel("No se ha seleccionado ningún nombre");
 		formPanel.add(lblNombreInscripcion, "cell 0 2,alignx left,aligny center");
-		
-				
+
+
 		JLabel lblImporteADevolver = new JLabel("Importe a devolver:");
 		formPanel.add(lblImporteADevolver, "cell 0 4,alignx left,aligny center");
-				
+
 		lblImporteDevuelto = new JLabel("");
 		formPanel.add(lblImporteDevuelto, "cell 0 5");
-		
+
 		btnCancelarInscripcion = new JButton("Cancelar inscripción");
 		formPanel.add(btnCancelarInscripcion, "cell 0 8");
-		
+
 		lblError = new JLabel("");
 		formPanel.add(lblError, "cell 0 10");
 		tableInscripciones = new JTable();
-		
+
 		//JScrollPane que contiene tabla de inscripciones
 		JScrollPane scrollPane_1 = new JScrollPane(tableInscripciones);
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);

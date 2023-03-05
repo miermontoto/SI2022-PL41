@@ -26,7 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 
-public class RegistrarCursoView extends g41.si2022.util.Tab {
+public class RegistrarCursoView extends g41.si2022.ui.Tab {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField nombreCurso;
@@ -61,7 +61,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	public void setObjetivosDescripcion (String objetivosDescripcion) { this.objetivosDescripcion.setText(objetivosDescripcion); }
 	public void setPlazas (int plazas) { this.plazas.setText(String.format("%d", Math.max(0, plazas))); }
 
-	public RegistrarCursoView (g41.si2022.util.SwingMain main) {
+	public RegistrarCursoView (g41.si2022.ui.SwingMain main) {
 		super(main);
 		this.initView();
 	}

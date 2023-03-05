@@ -12,8 +12,8 @@ import java.util.Iterator;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.CursoState;
 import g41.si2022.util.StateUtilities;
-import g41.si2022.util.SwingUtil;
 import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.ui.SwingUtil;
 
 public class ConsultarIngresosGastosController {
 
@@ -25,14 +25,14 @@ public class ConsultarIngresosGastosController {
 		// return fillOtherData(filterData()); // TODO: fillOtherData with the Ingresos and Gastos
 		return filterData();
 	};
-	
+
 	/**
 	 * Fills other data that is not originally in the data set.
 	 * Particularly, it will fill the following columns:
 	 * 	- Balance
-	 * 
+	 *
 	 * In most case scenarios, the list passed to this function is the one returned by <code>filterData</code>
-	 * 
+	 *
 	 * @param data Source data set
 	 * @return Data set with extra data added
 	 */
@@ -48,7 +48,7 @@ public class ConsultarIngresosGastosController {
 		}
 		return data;
 	}
-	
+
 	/**
 	 * Filters the data set.
 	 * The data set contains all the entries no matter what filters are set.
@@ -56,9 +56,9 @@ public class ConsultarIngresosGastosController {
 	 *  - State of the course
 	 *  - Start date of the filter
 	 *  - End date of the filter
-	 *  
+	 *
 	 *  In most case scenarios, the list returned by this function will then be passed to <code>fillOtherData</code>.
-	 *  
+	 *
 	 * @return Filtered data set
 	 */
 	private List<CursoDTO> filterData () {
@@ -79,7 +79,7 @@ public class ConsultarIngresosGastosController {
 			});
 		}
 		aux = new ArrayList<CursoDTO>(output); // DO NOT REMOVE -> Concurrent Modifications will happen if removed
-		
+
 		// SECOND : WE FILTER THE DATES
 		java.time.LocalDate
 			start = this.view.getStartDatePicker().getDate(), // All entries' end date must be higher than the filter's start date
@@ -103,7 +103,7 @@ public class ConsultarIngresosGastosController {
 		this.cursos = new ArrayList<CursoDTO> ();
 		this.initView();
 	}
-	
+
 	private void initView () {
 		// this.cursos = this.model.getCursosList();
 		this.cursos = this.model.getCursosBalance();
@@ -132,7 +132,7 @@ public class ConsultarIngresosGastosController {
 						)
 				);
 	}
-	
+
 	private void loadDateListeners() {
 		BetterDatePicker start = this.view.getStartDatePicker();
 		BetterDatePicker end = this.view.getEndDatePicker();
@@ -140,7 +140,7 @@ public class ConsultarIngresosGastosController {
 			if (start.getDate() != null && end.getDate() != null && start.compareTo(end) >= 0) {
 					end.setDate(start.getDate().plusDays(1));
 			}
-			
+
 		});
 		end.addDateChangeListener((e) -> {
 			if (end.getDate() != null && start.getDate() != null && start.compareTo(end) >= 0) {

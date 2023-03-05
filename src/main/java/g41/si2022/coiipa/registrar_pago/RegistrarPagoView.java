@@ -15,9 +15,8 @@ import javax.swing.text.NumberFormatter;
 import net.miginfocom.swing.MigLayout;
 import com.github.lgooddatepicker.components.DatePicker;
 import lombok.Getter;
-
-import g41.si2022.util.SwingMain;
-import g41.si2022.util.Tab;
+import g41.si2022.ui.SwingMain;
+import g41.si2022.ui.Tab;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 import javax.swing.JCheckBox;
@@ -43,11 +42,11 @@ public class RegistrarPagoView extends Tab {
 		super(main);
 		formPanel = new JPanel();
 		this.setLayout(new BorderLayout(0, 0));
-		
+
 		panel = new JPanel();
 		add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
-		
+
 		chkAll = new JCheckBox("Ver todas las inscripciones");
 		chkAll.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(chkAll);
@@ -60,7 +59,7 @@ public class RegistrarPagoView extends Tab {
 		formPanel.add(lblTitulo, "cell 0 0,growx,aligny top");
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 				JLabel label = new JLabel("Nombre del inscrito: ");
 				formPanel.add(label, "cell 0 1,alignx left,aligny center");
 		lblNombreInscripcion = new JLabel("No se ha selecciona ningún nombre");
@@ -78,10 +77,10 @@ public class RegistrarPagoView extends Tab {
 
 		formPanel.add(txtImporte = new JFormattedTextField(formatter), "cell 0 4,growx");
 		formPanel.add(datePicker = new DatePicker(), "cell 0 6,growx,aligny center");
-		
+
 				btnInsertarPago = new JButton("Insertar pago");
 				formPanel.add(btnInsertarPago, "cell 0 8");
-		
+
 		lblError = new JLabel("");
 		formPanel.add(lblError, "cell 0 10");
 		tableInscripciones = new JTable();

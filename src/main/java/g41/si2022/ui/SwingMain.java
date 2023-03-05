@@ -1,4 +1,4 @@
-package g41.si2022.util;
+package g41.si2022.ui;
 
 import java.awt.EventQueue;
 import java.time.LocalDate;
@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
 import com.formdev.flatlaf.FlatLightLaf;
+
+import g41.si2022.util.BetterDatePicker;
 
 
 /**

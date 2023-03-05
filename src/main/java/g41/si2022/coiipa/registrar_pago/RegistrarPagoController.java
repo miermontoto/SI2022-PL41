@@ -10,8 +10,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
 import g41.si2022.coiipa.dto.InscripcionDTO;
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.InscripcionState;
-import g41.si2022.util.SwingUtil;
 import g41.si2022.util.Util;
 
 public class RegistrarPagoController {
@@ -109,7 +109,7 @@ public class RegistrarPagoController {
 				new String[] { "inscripcion_id", "inscripcion_alumno_id", "inscripcion_curso_id", "alumno_nombre", "curso_nombre", "inscripcion_fecha", "curso_coste","inscripcion_pagado", "estado" },	//La primera columna estará oculta
 				new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
 				null
-				)); 
+				));
 
 		// Ocultar foreign keys de la tabla
 		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(0));

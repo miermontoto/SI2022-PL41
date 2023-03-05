@@ -14,7 +14,7 @@ import javax.swing.table.TableModel;
 
 import g41.si2022.coiipa.dto.AlumnoDTO;
 import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.util.SwingUtil;
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
 
 public class InscribirUsuarioController {
@@ -108,7 +108,7 @@ public class InscribirUsuarioController {
             SwingUtil.showMessage("Ya está inscrito en este curso", "Inscripción de alumno", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         model.insertInscripcion(LocalDate.now().toString(), cursoId, alumno.getId());
         getListaCursos();
         Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(view.getTablaCursos()) + " ha sido realizada con éxito.");

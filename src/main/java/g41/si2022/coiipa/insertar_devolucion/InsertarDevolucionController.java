@@ -13,9 +13,9 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import g41.si2022.coiipa.dto.cancelacionDTO;
+import g41.si2022.ui.SwingMain;
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.ApplicationException;
-import g41.si2022.util.SwingMain;
-import g41.si2022.util.SwingUtil;
 import g41.si2022.util.Util;
 
 public class InsertarDevolucionController {
@@ -59,7 +59,7 @@ public class InsertarDevolucionController {
 	}
 
 	private void handleSelect() {
-		
+
 		eraseControls(true); //Borramos también el aviso de pago insertado con éxito/error
 		int fila = vista.getTableInscripciones().getSelectedRow();
 		if (fila == -1) return;
@@ -143,7 +143,7 @@ public class InsertarDevolucionController {
 				new String[] { "id", "alumno_id", "nombre", "coste", "nombre_curso", "inicio_curso"},	//La primera columna estará oculta
 				new String[] { "ID", "ID Alumno", "Nombre curso", "Coste", "Nombre curso", "Fecha de inicio"},
 				null
-				)); 
+				));
 
 		// Ocultar foreign keys de la tabla
 		table.removeColumn(table.getColumnModel().getColumn(0));
