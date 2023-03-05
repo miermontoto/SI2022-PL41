@@ -39,6 +39,7 @@ public class ConsultarCursosView extends Tab {
 		// no pasa nada, el botón te observa desde los cielos y te quiere. ~mier
 		// ya no es lo mismo, estoy enfadado. ~rubennmg
 		// te lo mereces, has traicionado al puga gamer y al cabo peñas. ~mier
+		// ahora estoy triste, pasadlo bien vacas. ~rubennmg
 
 		JPanel panel1 = new JPanel();
 		// Add elements

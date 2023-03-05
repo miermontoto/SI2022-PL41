@@ -12,6 +12,7 @@ public class InscripcionDTO {
     	inscripcion_id,
     	inscripcion_fecha,
     	inscripcion_estado,
+    	inscripcion_pagado,
     	inscripcion_curso_id,
     	inscripcion_alumno_id,
     	alumno_nombre,

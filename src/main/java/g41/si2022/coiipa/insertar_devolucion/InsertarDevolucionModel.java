@@ -17,7 +17,7 @@ public class InsertarDevolucionModel {
 		String sql =
 				"select i.id, i.alumno_id, a.nombre, c.coste, c.nombre as nombre_curso, c.start as inicio_curso"
 				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
-				+ " inner join curso as c on c.id = i.curso_id where c.start>=? and i.estado='Pagado' order by i.fecha asc";
+				+ " inner join curso as c on c.id = i.curso_id where c.start>=? order by i.fecha asc";
 		String d = Util.dateToIsoString(fechaActual);
 		return db.executeQueryPojo(cancelacionDTO.class, sql, d); // Statement preparado.
 	}
