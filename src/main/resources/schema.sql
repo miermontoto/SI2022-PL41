@@ -3,6 +3,7 @@
 
 drop table if exists curso;
 drop table if exists inscripcion;
+drop table if exists inscripcioncancelada;
 drop table if exists alumno;
 drop table if exists docente;
 drop table if exists docencia;
