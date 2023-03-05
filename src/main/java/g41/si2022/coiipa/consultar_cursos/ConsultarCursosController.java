@@ -84,7 +84,7 @@ public class ConsultarCursosController {
 				InscripcionState estado = StateUtilities.getInscripcionState(Double.valueOf(Double.parseDouble(costeCurso)), listaPagos);
 				
 				if (estado == InscripcionState.PAGADA) 
-					ingresosReales =  model.getImportePagos(curso.getId());
+					ingresosReales = model.getImportePagos(curso.getId());
 				else	
 					ingresosReales = "0";
 
