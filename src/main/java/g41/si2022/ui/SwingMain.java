@@ -11,12 +11,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
 
 import g41.si2022.util.BetterDatePicker;
+import g41.si2022.util.FontType;
+import g41.si2022.util.JLabelFactory;
 import net.miginfocom.swing.MigLayout;
 
 
@@ -75,14 +79,15 @@ public class SwingMain {
 		navigation = new JPanel();
 		navigation.setLayout(new BorderLayout());
 
-		JButton btnBack = new JButton("< Back");
+		JButton btnBack = new JButton("← Volver");
 		btnBack.addActionListener(e -> {
 			setMainPanel(mainMenu);
 			setNavigation(false);
 		});
-		JLabel lblTitle = new JLabel("");
+		lblTitle = JLabelFactory.getLabel(FontType.subtitle, "test");
 		navigation.add(btnBack, BorderLayout.WEST);
 		navigation.add(lblTitle, BorderLayout.EAST);
+		navigation.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.SOUTH);
 		// mainMenu
 		mainMenu = new JPanel();
 
@@ -92,35 +97,37 @@ public class SwingMain {
 		TabbedFrame profesional = new TabsProfesional(this);
 		TabbedFrame responsable = new TabsResponsable(this);
 		TabbedFrame secretaria = new TabsSecretaria(this);
-		mainMenu.setLayout(new MigLayout("", "[174px][222px][214px]", "[25px][][][][][][][][]"));
+		mainMenu.setLayout(new MigLayout("", "[][222px,grow,fill][]", "[][][5px][][5px][][60px][][10px]"));
 
-		mainMenu.add(new JLabel("Today:"), "cell 0 6,alignx right,aligny center");
-		mainMenu.add(today, "cell 1 6,alignx left,aligny center");
+		mainMenu.add(new JLabel("Today:"), "cell 0 7");
+		mainMenu.add(today, "cell 1 7");
 
 		setMainPanel(mainMenu);
 		setNavigation(false);
 
+		mainMenu.add(JLabelFactory.getLabel(FontType.title, "  Selección de usuario"), "cell 1 0, alignx center");
+
 		JButton btnSecretaria = new JButton("Secretaria administrativa");
-		btnSecretaria.addActionListener(e -> {setMainPanel(secretaria.getComponent());});
-		mainMenu.add(btnSecretaria, "cell 1 0,alignx left,aligny top");
+		btnSecretaria.addActionListener(e -> {setMainPanel(secretaria.getComponent(), "Secretaría administrativa");});
+		mainMenu.add(btnSecretaria, "cell 1 1");
 
 		JButton btnResponsable = new JButton("Responsable de formación");
-		btnResponsable.addActionListener(e -> {setMainPanel(responsable.getComponent());});
-		mainMenu.add(btnResponsable, "cell 1 2,alignx left,aligny top");
+		btnResponsable.addActionListener(e -> {setMainPanel(responsable.getComponent(), "Responsable de formación");});
+		mainMenu.add(btnResponsable, "cell 1 3");
 
 		JButton btnProfesional = new JButton("Profesional (alumnado)");
-		btnProfesional.addActionListener(e -> {setMainPanel(profesional.getComponent());});
-		mainMenu.add(btnProfesional, "cell 1 4,alignx left,aligny top");
+		btnProfesional.addActionListener(e -> {setMainPanel(profesional.getComponent(), "Alumnado");});
+		mainMenu.add(btnProfesional, "cell 1 5");
 
 		JButton btnDebug = new JButton("Debug menu");
 		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent());});
-		mainMenu.add(btnDebug, "cell 1 8,alignx left,aligny top");
+		mainMenu.add(btnDebug, "cell 1 8");
 
 		frame.getContentPane().add(total);
 	}
 
 	public JFrame getFrame() { return this.frame; }
-	public void setMainPanel(JComponent panel) {
+	public void setMainPanel(JComponent panel, String title) {
 		if (panel instanceof JTabbedPane) {
 			((Tab) ((JTabbedPane) panel).getSelectedComponent()).initController();
 		}
@@ -129,6 +136,7 @@ public class SwingMain {
 
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+		gbc.ipady = 20;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		total.add(navigation, gbc);
 		gbc.gridy = 1;
@@ -140,10 +148,21 @@ public class SwingMain {
 			gbc.weightx = 1;
 			gbc.weighty = 1;
 		}
+		updateTitle(title);
 		total.add(panel, gbc);
 		total.repaint();
 		total.revalidate();
 		setNavigation(true);
+	}
+
+	public void updateTitle(String title) {
+		navigation.remove(lblTitle);
+		lblTitle = JLabelFactory.getLabel(FontType.subtitle, title+" ");
+		navigation.add(lblTitle, BorderLayout.EAST);
+	}
+
+	public void setMainPanel(JComponent panel) {
+		setMainPanel(panel, panel.getName());
 	}
 
 	public JPanel getMainMenu() { return this.mainMenu; }
