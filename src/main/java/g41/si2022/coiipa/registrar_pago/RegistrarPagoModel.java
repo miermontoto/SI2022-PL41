@@ -66,4 +66,13 @@ public class RegistrarPagoModel {
 		String sql = "select email from alumno where id=?";
 		return (String) db.executeQueryArray(sql, idAlumno).get(0)[0];
 	}
+	
+	public boolean isCancelled(String idInscripcion) {
+		String sql = "select count(id) from inscripcioncancelada where inscripcion_id=?";
+		int test = (int) db.executeQueryArray(sql, idInscripcion).get(0)[0];
+		
+		if(test > 0) { return true;}
+	else { return false;}
+		
+	}
 }
