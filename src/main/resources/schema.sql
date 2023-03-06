@@ -72,6 +72,7 @@ create table docencia (
 
 create table pago (
     id integer primary key autoincrement,
+    importe float not null,
     fecha date not null,
     inscripcion_id integer not null,
     foreign key (inscripcion_id) references inscripcion(id)
