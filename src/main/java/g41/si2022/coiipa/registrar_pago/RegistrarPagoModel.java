@@ -42,6 +42,7 @@ public class RegistrarPagoModel {
 				"SELECT * "
 				+ " FROM pago "
 				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id ";
+		
 		return db.executeQueryPojo(PagoDTO.class, sql);
 	}
 	
@@ -50,6 +51,7 @@ public class RegistrarPagoModel {
 				"SELECT * "
 				+ " FROM pago "
 				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id "
+				+ " left join inscripcioncancelada on inscripcioncancelada.inscripcion_id = inscripcion.id"
 				+ " WHERE inscripcion.alumno_id = ? "
 				+ " AND inscripcion.curso_id = ?";
 		return db.executeQueryPojo(PagoDTO.class, sql, alumnoId, cursoId);

@@ -9,6 +9,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.CursoState;
 import g41.si2022.util.FontType;
@@ -35,6 +36,10 @@ public class ConsultarIngresosGastosView extends g41.si2022.ui.Tab {
 		this.initView();
 	}
 
+	/**
+	 * Inits all the components that this View uses.
+	 * All the behaviour and listeners are in the <code>ConsultarIngresosGastosController</code>.
+	 */
 	private void initView () {
 		this.setLayout(new BorderLayout());
 		// Title

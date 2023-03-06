@@ -1,6 +1,8 @@
 package g41.si2022.coiipa.inscribir_usuario;
 
 import java.awt.BorderLayout;
+
+
 import lombok.Getter;
 import java.awt.GridLayout;
 import javax.swing.JButton;

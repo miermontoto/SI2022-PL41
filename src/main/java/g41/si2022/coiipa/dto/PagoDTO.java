@@ -10,9 +10,10 @@ public class PagoDTO {
 	private String
 		id,
 		importe,
+		importedevuelto,
 		fecha,
 		inscripcion_id;
-		
+
 	public PagoDTO() { }
 
 }
