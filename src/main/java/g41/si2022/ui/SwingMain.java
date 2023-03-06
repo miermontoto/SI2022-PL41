@@ -26,6 +26,7 @@ import lombok.Getter;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
+import g41.si2022.util.Database;
 
 
 /**
@@ -55,6 +56,11 @@ public class SwingMain {
 				try {
 					SwingMain window = new SwingMain();
 					window.frame.setVisible(true);
+					Database db = new Database();
+					if (!db.exists()) {
+						db.createDatabase(false);
+						db.loadDatabase();
+					}
 				} catch (Exception e) { e.printStackTrace(); }
 			}
 		});
