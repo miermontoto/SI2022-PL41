@@ -15,4 +15,10 @@ public class GestionarCursosModel {
         return db.executeQueryPojo(CursoDTO.class, null, CursoDTO.getSqlQuery());
     }   
 
+    public String getDescripcionCurso(String idCurso)
+    {
+        String sql = "SELECT descripcion FROM curso where id = ?";
+
+        return String.valueOf(db.executeQueryArray(sql, idCurso).get(0)[0]);
+    }
 }

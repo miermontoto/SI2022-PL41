@@ -19,6 +19,7 @@ public class GestionarCursosController {
     private GestionarCursosView view;
     private List<CursoDTO> cursos;
     private List<CursoDTO> cursosActivos;
+    private String descripcionCurso;
 
 
     /*              NO BORRAR (de momento)                  */
@@ -41,6 +42,7 @@ public class GestionarCursosController {
     
     public void initView() 
     {
+        // Mostrar cursos activos en JTable
         getCursosActivos(); 
         // Mostrar más detalles para cada curso seleccionado
         view.getTablaCursos().addMouseListener(new MouseAdapter() 
@@ -83,7 +85,14 @@ public class GestionarCursosController {
 
     private void mostrarDetallesCurso()
     {
-        
+        for (CursoDTO curso : cursosActivos)
+        {
+            if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos())))
+            {
+                descripcionCurso = model.getDescripcionCurso(curso.getId());
+                
+            }
+        }
     }
 
     private void filtrarCursos()

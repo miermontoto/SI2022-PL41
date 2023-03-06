@@ -22,6 +22,7 @@ public class GestionarCursosView extends Tab {
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
     private JComboBox<String> cbFiltro;
+    private JTextArea txtDescripcion;
     
     public GestionarCursosView(SwingMain main)
     {
@@ -76,7 +77,7 @@ public class GestionarCursosView extends Tab {
 
         // Elements of mainCenterPanel
         JLabel lblDescripcion = new JLabel("Objetivos y contenidos del curso:");
-        JTextArea txtDescripcion = new JTextArea();
+        txtDescripcion = new JTextArea();
         JLabel lblLugar = new JLabel("Lugar:");
         JTextField txtLugar = new JTextField();
         JLabel lblProfesor = new JLabel("Profesor:");
