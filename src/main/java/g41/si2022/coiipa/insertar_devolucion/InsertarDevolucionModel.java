@@ -22,15 +22,10 @@ public class InsertarDevolucionModel {
 		return db.executeQueryPojo(cancelacionDTO.class, sql, d); // Statement preparado.
 	}
 
-	public void registrarPago(int importe, String fecha, int idInscripcion) {
-		String sql = "INSERT INTO pago (importe, fecha, inscripcion_id) VALUES(?,?,?)";
+	public void registrarDevolucion(double importe, String fecha, int idInscripcion) {
+		String sql = "INSERT INTO inscripcioncancelada (importedevuelto, fechacancelacion, inscripcion_id) VALUES(?,?,?)";
 		db.executeUpdate(sql, importe, Util.isoStringToDate(fecha), idInscripcion);
 
-		this.actualizarInscripcion(idInscripcion);
 	}
 
-	public void actualizarInscripcion(int id) {
-		String sql = "UPDATE inscripcion SET estado=? WHERE id=?";
-		db.executeUpdate(sql, "Pagado", id);
-	}
 }

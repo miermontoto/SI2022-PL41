@@ -29,8 +29,8 @@ public class SwingMain {
 
 	private JFrame frame;
 	private JTabbedPane tabs;
-	private Debug debugTab;
-
+	private Map<String, Map<String, Tab>> theTabs;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -65,7 +65,7 @@ public class SwingMain {
 
 		// Tabs are the main content of the window. This will contain all the other GUIs.
 		tabs = new JTabbedPane();
-		new TreeMap<String, Map<String, Tab>>() {{
+		this.theTabs = new TreeMap<String, Map<String, Tab>>() {{
 			put("Other", new TreeMap<String, Tab> () {{
 				put("Debug", new Debug(SwingMain.this));
 			}});
@@ -80,7 +80,8 @@ public class SwingMain {
 			put("Profesional", new TreeMap<String, Tab> () {{
 				put("Inscribirse", new InscribirUsuarioView(SwingMain.this));
 			}});
-		}}.forEach((name, innerTabs) -> {
+		}};
+		this.theTabs.forEach((name, innerTabs) -> {
 			tabs.add(name, new JTabbedPane() {{
 				innerTabs.forEach((innerName, tab) -> {
 					add(innerName, tab);
@@ -129,5 +130,5 @@ public class SwingMain {
 	public JFrame getFrame() { return this.frame; }
 
 	public LocalDate getToday() { return getTodayPicker().getDate(); }
-	public BetterDatePicker getTodayPicker() { return debugTab.getToday(); }
+	public BetterDatePicker getTodayPicker() { return ((Debug) (this.theTabs.get("Other").get("Debug"))).getToday(); }
 }

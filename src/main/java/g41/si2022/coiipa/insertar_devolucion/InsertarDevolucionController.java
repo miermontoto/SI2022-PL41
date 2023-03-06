@@ -95,28 +95,13 @@ public class InsertarDevolucionController {
 		//Obtenemos el nombre del inscrito
 		String nombreInscrito = vista.getLblNombreInscripcion().getText();
 
-		//if(nombreInscrito == "No se ha seleccionado ningún nombre" || importeString == null || vista.getDatePicker().getDate() == null) {
+		Date fechaActual = Date.from(vista.getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		double importedevuelto = Double.parseDouble(vista.getLblImporteDevuelto().getText());
 
-		vista.getLblError().setText("Por favor, rellena todos los campos para continuar"); //Mostramos un error
-		return;
+		modelo.registrarDevolucion(importedevuelto, Util.dateToIsoString(fechaActual), idInscripcion);
 
-		//} else {
-
-		// Hacemos las conversiones a Date y int
-		//	Date fechaPago = java.sql.Date.valueOf(vista.getDatePicker().getDate());
-		//	int importe = Integer.parseInt(importeString);
-
-		//	System.out.printf("Se han pagado %s € para el alumno %s, en la inscripción: %d, con fecha %s\n", importe, nombreInscrito, idInscripcion, fechaPago.toString()); //DEBUG
-		//	modelo.registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion); // Registro en la BBDD el pago
-		//	enviarEmail(idAlumno, vista.getLblNombreInscripcion().getText()); // Envío un email al alumno
-		//	getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
-		//Si había algún error habilitado en la etiqueta, lo deshabilitamos y mostramos éxito
-		//	vista.getLblError().setText("Pago insertado con éxito");
-		//Ponemos las entradas en blanco
-		//	eraseControls(false);
-
-		//}
 	}
+
 
 	public void enviarEmail(int idalumno, String alumno){
 		String directory = System.getProperty("user.dir"); // Directorio principal del programa
@@ -143,7 +128,7 @@ public class InsertarDevolucionController {
 				new String[] { "id", "alumno_id", "nombre", "coste", "nombre_curso", "inicio_curso"},	//La primera columna estará oculta
 				new String[] { "ID", "ID Alumno", "Nombre curso", "Coste", "Nombre curso", "Fecha de inicio"},
 				null
-				));
+				)); 
 
 		// Ocultar foreign keys de la tabla
 		table.removeColumn(table.getColumnModel().getColumn(0));
@@ -151,4 +136,5 @@ public class InsertarDevolucionController {
 
 		SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas
 	}
+
 }
