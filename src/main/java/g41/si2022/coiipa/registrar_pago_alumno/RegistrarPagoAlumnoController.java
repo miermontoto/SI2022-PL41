@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.registrar_pago;
+package g41.si2022.coiipa.registrar_pago_alumno;
 
 import java.util.Date;
 import java.util.List;
@@ -14,12 +14,12 @@ import g41.si2022.util.InscripcionState;
 import g41.si2022.util.SwingUtil;
 import g41.si2022.util.Util;
 
-public class RegistrarPagoController {
+public class RegistrarPagoAlumnoController {
 
-	private RegistrarPagoView view;
-	private RegistrarPagoModel model;
+	private RegistrarPagoAlumnoView view;
+	private RegistrarPagoAlumnoModel model;
 
-	public RegistrarPagoController(RegistrarPagoView vista, RegistrarPagoModel modelo) {
+	public RegistrarPagoAlumnoController(RegistrarPagoAlumnoView vista, RegistrarPagoAlumnoModel modelo) {
 		this.view = vista;
 		this.model = modelo;
 		this.initView();
@@ -109,7 +109,7 @@ public class RegistrarPagoController {
 				new String[] { "inscripcion_id", "inscripcion_alumno_id", "inscripcion_curso_id", "alumno_nombre", "curso_nombre", "inscripcion_fecha", "curso_coste","inscripcion_pagado", "estado" },	//La primera columna estará oculta
 				new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
 				null
-				)); 
+				));
 
 		// Ocultar foreign keys de la tabla
 		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(0));
