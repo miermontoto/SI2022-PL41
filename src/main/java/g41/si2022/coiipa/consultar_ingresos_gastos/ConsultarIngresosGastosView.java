@@ -35,6 +35,10 @@ public class ConsultarIngresosGastosView extends g41.si2022.util.Tab {
 		this.initView();
 	}
 	
+	/**
+	 * Inits all the components that this View uses.
+	 * All the behaviour and listeners are in the <code>ConsultarIngresosGastosController</code>.
+	 */
 	private void initView () {
 		this.setLayout(new BorderLayout());
 		// Title
