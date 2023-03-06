@@ -3,17 +3,21 @@ package g41.si2022.ui;
 import java.awt.EventQueue;
 import java.time.LocalDate;
 import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
 
 import g41.si2022.util.BetterDatePicker;
+import net.miginfocom.swing.MigLayout;
 
 
 /**
@@ -31,6 +35,7 @@ public class SwingMain {
 	private JPanel mainMenu;
 	private JPanel navigation;
 	private JPanel total;
+	private JLabel lblTitle;
 
 	/**
 	 * Launch the application.
@@ -60,59 +65,73 @@ public class SwingMain {
 	public void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
-		frame.setSize(640, 480);
-		frame.setSize(640*2, 480*2);
+		frame.setSize(1280, 720);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		total = new JPanel();
-		{ // Navigation panel
-			navigation = new JPanel();
-			navigation.setLayout(new BorderLayout());
+		total.setLayout(new GridBagLayout());
 
-			JButton btnBack = new JButton("< Back");
-			btnBack.addActionListener(e -> {
-				setMainPanel(mainMenu);
-				setNavigation(false);
-			});
-			JLabel lblTitle = new JLabel("Title");
-			navigation.add(btnBack, BorderLayout.WEST);
-			navigation.add(lblTitle, BorderLayout.EAST);
+		navigation = new JPanel();
+		navigation.setLayout(new BorderLayout());
+
+		JButton btnBack = new JButton("< Back");
+		btnBack.addActionListener(e -> {
+			setMainPanel(mainMenu);
 			setNavigation(false);
-		} { // mainMenu
-			mainMenu = new JPanel();
+		});
+		JLabel lblTitle = new JLabel("");
+		navigation.add(btnBack, BorderLayout.WEST);
+		//navigation.add(lblTitle, BorderLayout.EAST);
+		// mainMenu
+		mainMenu = new JPanel();
 
-			JButton btnResponsable = new JButton("Responsable de formación");
-			JButton btnSecretaria = new JButton("Secretaria administrativa");
-			JButton btnProfesional = new JButton("Profesional (alumnado)");
+		today = new BetterDatePicker();
+		today.setDateToToday();
 
-			today = new BetterDatePicker();
-			today.setDateToToday();
+		TabbedFrame profesional = new TabsProfesional(this);
+		TabbedFrame responsable = new TabsResponsable(this);
+		TabbedFrame secretaria = new TabsSecretaria(this);
+		mainMenu.setLayout(new MigLayout("", "[174px][222px][214px]", "[25px][][][][][][]"));
 
-			TabbedFrame profesional = new TabsProfesional(this);
-			TabbedFrame responsable = new TabsResponsable(this);
-			TabbedFrame secretaria = new TabsSecretaria(this);
-
-			btnProfesional.addActionListener(e -> {setMainPanel(profesional.getComponent());});
-			btnResponsable.addActionListener(e -> {setMainPanel(responsable.getComponent());});
-			btnSecretaria.addActionListener(e -> {setMainPanel(secretaria.getComponent());});
-
-			mainMenu.add(today);
-			mainMenu.add(btnResponsable);
-			mainMenu.add(btnSecretaria);
-			mainMenu.add(btnProfesional);
-		}
+		mainMenu.add(new JLabel("Today:"), "cell 0 6,alignx right,aligny center");
+		mainMenu.add(today, "cell 1 6,alignx left,aligny center");
 
 		setMainPanel(mainMenu);
 		setNavigation(false);
-		frame.add(total);
+
+		JButton btnSecretaria = new JButton("Secretaria administrativa");
+		btnSecretaria.addActionListener(e -> {setMainPanel(secretaria.getComponent());});
+		mainMenu.add(btnSecretaria, "cell 1 0,alignx left,aligny top");
+
+		JButton btnResponsable = new JButton("Responsable de formación");
+		btnResponsable.addActionListener(e -> {setMainPanel(responsable.getComponent());});
+		mainMenu.add(btnResponsable, "cell 1 2,alignx left,aligny top");
+		JButton btnProfesional = new JButton("Profesional (alumnado)");
+
+		btnProfesional.addActionListener(e -> {setMainPanel(profesional.getComponent());});
+		mainMenu.add(btnProfesional, "cell 1 4,alignx left,aligny top");
+
+		frame.getContentPane().add(total);
 	}
 
 	public JFrame getFrame() { return this.frame; }
 	public void setMainPanel(JComponent panel) {
+		if (panel instanceof JTabbedPane) {
+			((Tab) ((JTabbedPane) panel).getSelectedComponent()).initController();
+		}
+		GridBagConstraints gbc = new GridBagConstraints();
 		total.removeAll();
-		total.add(navigation);
-		total.add(panel);
+
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		total.add(navigation, gbc);
+		gbc.gridy = 1;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		total.add(panel, gbc);
 		total.repaint();
 		total.revalidate();
 		setNavigation(true);
