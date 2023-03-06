@@ -76,8 +76,6 @@ public class InsertarDevolucionView extends Tab {
 
 		//JScrollPane que contiene tabla de inscripciones
 		JScrollPane scrollPane_1 = new JScrollPane(tableInscripciones);
-		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.add(scrollPane_1, BorderLayout.CENTER);
 
 		tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
