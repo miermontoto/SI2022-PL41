@@ -24,9 +24,11 @@ public class RegistrarPagoProfesorController {
 		this.initView();
 	}
 
-	private String idFactura = null;
+	private int row;
+	private JTable table;
 
 	public void initView() {
+		table = view.getTableInscripciones();
 		getListaFacturas(); // Precarga inicial de la lista de inscripciones
 		setControls(false); // Inicio la vista con todo deshabilitado
 
@@ -44,13 +46,16 @@ public class RegistrarPagoProfesorController {
 	}
 
 	private void handleInsertar() {
-
+		String date = view.getDatePicker().getDate().toString();
+		String id = table.getModel().getValueAt(row, 0).toString();
+		model.updateFactura(id, date);
+		getListaFacturas();
+		SwingUtil.showMessage("Pago registrado correctamente", "Registro de pagos");
 	}
 
 	private void handleSelect() {
-		JTable table = view.getTableInscripciones();
 		TableModel model = table.getModel();
-		int row = table.getSelectedRow();
+		row = table.getSelectedRow();
 
 		if(row == -1) {
 			eraseControls(true);
@@ -71,7 +76,6 @@ public class RegistrarPagoProfesorController {
 
 	private void getListaFacturas() {
 		List<FacturaDTO> listaFacturas;
-		JTable table = view.getTableInscripciones();
 		String today = view.getMain().getToday().toString();
 		listaFacturas = view.getChkAll().isSelected() ? model.getListaFacturas(today) : model.getListaFacturasSinPagar(today);
 		table.setModel(SwingUtil.getTableModelFromPojos(listaFacturas,

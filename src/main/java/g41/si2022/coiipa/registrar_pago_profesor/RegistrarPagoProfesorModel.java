@@ -30,4 +30,9 @@ public class RegistrarPagoProfesorModel {
 		+ " order by fecha_introd";
 		return db.executeQueryPojo(FacturaDTO.class, sql, today);
 	}
+
+	public void updateFactura(String id, String date) {
+		String sql = "update factura set fecha_pago = ? where id = ?";
+		db.executeUpdate(sql, date, id);
+	}
 }
