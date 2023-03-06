@@ -61,7 +61,7 @@ public class SwingMain {
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
 		frame.setSize(640, 480);
-		// frame.setSize(640*2, 480*2);
+		frame.setSize(640*2, 480*2);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
