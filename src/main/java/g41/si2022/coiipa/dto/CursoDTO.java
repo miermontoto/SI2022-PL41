@@ -17,6 +17,7 @@ public class CursoDTO {
 		end,
 		id,
 		plazas,
+		cursoEstado,	// Annadido por StateUtilities
 		plazas_libres, // Annadido por InscribirUsuario
 		docente_id, // Annadido por RegistrarCurso
 		ingresos, // Annadido por ConsultarIngresosGastos
