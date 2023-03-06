@@ -59,15 +59,37 @@ public class SwingMain {
 	public void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
-		// frame.setSize(640, 480);
 		frame.setSize(640*2, 480*2);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		// Tabs are the main content of the window. This will contain all the other GUIs.
 		tabs = new JTabbedPane();
-		Map<String, JTabbedPane> theTabs = new TreeMap<>();
+		new TreeMap<String, Map<String, Tab>>() {{
+			put("Other", new TreeMap<String, Tab> () {{
+				put("Debug", new Debug(SwingMain.this));
+			}});
+			put("Secretaria", new TreeMap<String, Tab> () {{
+				put("Registrar Pagos", new RegistrarPagoView(SwingMain.this));
+				put("Consultar cursos", new ConsultarCursosView(SwingMain.this));
+			}});
+			put("Responsable", new TreeMap<String, Tab> () {{
+				put("Registrar Curso", new RegistrarCursoView(SwingMain.this));
+				put("Consultar Balance", new ConsultarIngresosGastosView(SwingMain.this));
+			}});
+			put("Profesional", new TreeMap<String, Tab> () {{
+				put("Inscribirse", new InscribirUsuarioView(SwingMain.this));
+			}});
+		}}.forEach((name, innerTabs) -> {
+			tabs.add(name, new JTabbedPane() {{
+				innerTabs.forEach((innerName, tab) -> {
+					add(innerName, tab);
+				});
+			}});
+		});
+		this.getFrame().add(tabs);
 
+		/*
 		JTabbedPane other = new JTabbedPane();
 		JTabbedPane secretaria = new JTabbedPane();
 		JTabbedPane responsable = new JTabbedPane();
@@ -101,6 +123,7 @@ public class SwingMain {
 		frame.add(tabs);
 		frame.repaint();
 		frame.revalidate();
+		*/
 	}
 
 	public JFrame getFrame() { return this.frame; }
