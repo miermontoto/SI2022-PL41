@@ -10,10 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
 import g41.si2022.coiipa.dto.FacturaDTO;
-import g41.si2022.coiipa.dto.InscripcionDTO;
-import g41.si2022.util.InscripcionState;
 import g41.si2022.util.SwingUtil;
-import g41.si2022.util.Util;
 
 public class RegistrarPagoProfesorController {
 
@@ -26,9 +23,7 @@ public class RegistrarPagoProfesorController {
 		this.initView();
 	}
 
-	private String idInscripcion = null;
-	private String idAlumno = null;
-	private String idCurso = null;
+	private String idFactura = null;
 
 	public void initView() {
 		getListaFacturas(); // Precarga inicial de la lista de inscripciones
@@ -44,7 +39,6 @@ public class RegistrarPagoProfesorController {
 
 	private void setControls(boolean status) {
 		view.getBtnInsertarPago().setEnabled(status);
-		view.getTxtImporte().setEnabled(status);
 		view.getDatePicker().setEnabled(status);
 	}
 
@@ -69,7 +63,7 @@ public class RegistrarPagoProfesorController {
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
-		view.getLblNombreInscripcion().setText("No se ha seleccionado ninguna factura");
+		view.getLblNombreDocente().setText("No se ha seleccionado ninguna factura");
 		view.getTxtImporte().setText("");
 		view.getDatePicker().setText("");
 		if(eliminarAviso) view.getLblError().setText("");
