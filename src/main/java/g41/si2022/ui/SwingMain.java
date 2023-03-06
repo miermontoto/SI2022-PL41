@@ -82,7 +82,7 @@ public class SwingMain {
 		});
 		JLabel lblTitle = new JLabel("");
 		navigation.add(btnBack, BorderLayout.WEST);
-		//navigation.add(lblTitle, BorderLayout.EAST);
+		navigation.add(lblTitle, BorderLayout.EAST);
 		// mainMenu
 		mainMenu = new JPanel();
 
@@ -92,7 +92,7 @@ public class SwingMain {
 		TabbedFrame profesional = new TabsProfesional(this);
 		TabbedFrame responsable = new TabsResponsable(this);
 		TabbedFrame secretaria = new TabsSecretaria(this);
-		mainMenu.setLayout(new MigLayout("", "[174px][222px][214px]", "[25px][][][][][][]"));
+		mainMenu.setLayout(new MigLayout("", "[174px][222px][214px]", "[25px][][][][][][][][]"));
 
 		mainMenu.add(new JLabel("Today:"), "cell 0 6,alignx right,aligny center");
 		mainMenu.add(today, "cell 1 6,alignx left,aligny center");
@@ -107,10 +107,14 @@ public class SwingMain {
 		JButton btnResponsable = new JButton("Responsable de formación");
 		btnResponsable.addActionListener(e -> {setMainPanel(responsable.getComponent());});
 		mainMenu.add(btnResponsable, "cell 1 2,alignx left,aligny top");
-		JButton btnProfesional = new JButton("Profesional (alumnado)");
 
+		JButton btnProfesional = new JButton("Profesional (alumnado)");
 		btnProfesional.addActionListener(e -> {setMainPanel(profesional.getComponent());});
 		mainMenu.add(btnProfesional, "cell 1 4,alignx left,aligny top");
+
+		JButton btnDebug = new JButton("Debug menu");
+		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent());});
+		mainMenu.add(btnDebug, "cell 1 8,alignx left,aligny top");
 
 		frame.getContentPane().add(total);
 	}
@@ -129,8 +133,13 @@ public class SwingMain {
 		total.add(navigation, gbc);
 		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
+		if (panel == mainMenu) {
+			gbc.weightx = 0;
+			gbc.weighty = 0;
+		} else {
+			gbc.weightx = 1;
+			gbc.weighty = 1;
+		}
 		total.add(panel, gbc);
 		total.repaint();
 		total.revalidate();

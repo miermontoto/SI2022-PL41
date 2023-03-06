@@ -3,37 +3,34 @@ package g41.si2022.ui;
 import java.awt.BorderLayout;
 import lombok.Getter;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import g41.si2022.util.ApplicationException;
-import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.Database;
 
 import java.awt.event.ActionEvent;
 
 @Getter
-public class Debug extends Tab {
+public class Debug {
 
-	private static final long serialVersionUID = -4249195203893017275L;
-	private BetterDatePicker today;
+	private JPanel all;
 
 	public Debug(SwingMain main) {
-		super(main);
 
-		this.setLayout(new BorderLayout());
+		all = new JPanel();
+
+		all.setLayout(new BorderLayout());
 		JPanel dbButtons = new JPanel ();
-		this.add(dbButtons, BorderLayout.NORTH);
+		all.add(dbButtons, BorderLayout.NORTH);
 		JPanel otherButtons = new JPanel ();
-		this.add(otherButtons, BorderLayout.SOUTH);
+		all.add(otherButtons, BorderLayout.SOUTH);
 
 		Database db = new Database();
 
 		JLabel status = new JLabel();
 		status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
-		today = new BetterDatePicker();
-		today.setDateToToday();
 
 		JButton schema = new JButton("Run schema");
 		schema.addActionListener(e -> {
@@ -88,12 +85,12 @@ public class Debug extends Tab {
 		dbButtons.add(data);
 		dbButtons.add(delete);
 		dbButtons.add(isFile);
-		otherButtons.add(today);
 		otherButtons.add(close);
 
-		this.add(status, BorderLayout.CENTER);
+		all.add(status, BorderLayout.CENTER);
 	}
 
-	@Override
-	protected void initController() { }
+	public JComponent getComponent() {
+		return all;
+	}
 }
