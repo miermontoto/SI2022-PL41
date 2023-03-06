@@ -139,7 +139,7 @@ public class InscribirUsuarioView extends Tab {
 		lblSignin = new JLabel("");
 		
 		JPanel output = new JPanel(new BorderLayout());
-		output.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.BLACK));
+		output.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
 		output.add(JLabelFactory.getLabel(FontType.subtitle, "Signin"), BorderLayout.NORTH);
 
 		JPanel signinPanel = new JPanel(new GridBagLayout());
