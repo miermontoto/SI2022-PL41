@@ -1,11 +1,16 @@
 package g41.si2022.ui;
 
+import java.awt.Insets;
 import java.awt.EventQueue;
 import java.time.LocalDate;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
+import java.io.File;
+import java.io.IOException;
 import java.awt.GridBagConstraints;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,7 +26,6 @@ import lombok.Getter;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
-import net.miginfocom.swing.MigLayout;
 
 
 /**
@@ -65,6 +69,7 @@ public class SwingMain {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws IOException
 	 */
 	public void initialize() {
 		frame = new JFrame();
@@ -97,31 +102,52 @@ public class SwingMain {
 		TabbedFrame profesional = new TabsProfesional(this);
 		TabbedFrame responsable = new TabsResponsable(this);
 		TabbedFrame secretaria = new TabsSecretaria(this);
-		mainMenu.setLayout(new MigLayout("", "[][222px,grow,fill][]", "[][][5px][][5px][][60px][][10px]"));
+		mainMenu.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
 
-		mainMenu.add(new JLabel("Today:"), "cell 0 7");
-		mainMenu.add(today, "cell 1 7");
+		Insets i = new Insets(10, 10, 10, 10);
+		gbc.insets = i;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		mainMenu.add(JLabelFactory.getLabel(FontType.title, "  Selección de usuario"), gbc);
+
+		gbc.gridy = 1;
+		JButton btnSecretaria = new JButton("Secretaria administrativa");
+		btnSecretaria.addActionListener(e -> {setMainPanel(secretaria.getComponent(), "Secretaría administrativa");});
+		mainMenu.add(btnSecretaria, gbc);
+
+		gbc.gridy = 2;
+		JButton btnResponsable = new JButton("Responsable de formación");
+		btnResponsable.addActionListener(e -> {setMainPanel(responsable.getComponent(), "Responsable de formación");});
+		mainMenu.add(btnResponsable, gbc);
+
+		gbc.gridy = 3;
+		JButton btnProfesional = new JButton("Profesional (alumnado)");
+		btnProfesional.addActionListener(e -> {setMainPanel(profesional.getComponent(), "Alumnado");});
+		mainMenu.add(btnProfesional, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 6;
+		mainMenu.add(new JLabel("Today:"), gbc);
+		gbc.gridx = 1;
+		mainMenu.add(today, gbc);
+
+		gbc.gridx = 2;
+		gbc.gridy = 6;
+		JButton btnDebug = new JButton("Debug menu");
+		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent());});
+		mainMenu.add(btnDebug, gbc);
+
+		try {
+			gbc.gridx = 2;
+			gbc.gridy = 0;
+			gbc.gridheight = 6;
+			mainMenu.add(new JLabel(new ImageIcon(ImageIO.read(new File("src/main/resources/logo.png")))), gbc);
+		} catch (IOException ioe) {}
 
 		setMainPanel(mainMenu);
 		setNavigation(false);
-
-		mainMenu.add(JLabelFactory.getLabel(FontType.title, "  Selección de usuario"), "cell 1 0, alignx center");
-
-		JButton btnSecretaria = new JButton("Secretaria administrativa");
-		btnSecretaria.addActionListener(e -> {setMainPanel(secretaria.getComponent(), "Secretaría administrativa");});
-		mainMenu.add(btnSecretaria, "cell 1 1");
-
-		JButton btnResponsable = new JButton("Responsable de formación");
-		btnResponsable.addActionListener(e -> {setMainPanel(responsable.getComponent(), "Responsable de formación");});
-		mainMenu.add(btnResponsable, "cell 1 3");
-
-		JButton btnProfesional = new JButton("Profesional (alumnado)");
-		btnProfesional.addActionListener(e -> {setMainPanel(profesional.getComponent(), "Alumnado");});
-		mainMenu.add(btnProfesional, "cell 1 5");
-
-		JButton btnDebug = new JButton("Debug menu");
-		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent());});
-		mainMenu.add(btnDebug, "cell 1 8");
 
 		frame.getContentPane().add(total);
 	}
