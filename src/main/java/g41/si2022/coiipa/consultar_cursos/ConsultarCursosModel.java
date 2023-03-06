@@ -4,7 +4,6 @@ import java.util.List;
 
 
 import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.DocenciaDTO;
 import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.util.Database;
@@ -14,8 +13,13 @@ public class ConsultarCursosModel {
 	private Database db = new Database();
 
 	public List<CursoDTO> getListaCursos() {
+		String sql = "SELECT curso.nombre, plazas, start, end, inscripcion.fecha as inscripcion_fecha, start_inscr, end_inscr, "
+				   + "alumno.nombre as inscripcion_alumno "
+				   + "FROM curso INNER JOIN inscripcion "
+				   + "ON curso.id = inscripcion.curso_id "
+				   + "INNER JOIN alumno ON inscripcion.id = alumno.id";
 
-		return db.executeQueryPojo(CursoDTO.class, CursoDTO.getSqlQuery());
+		return db.executeQueryPojo(CursoDTO.class, sql);
 	}
 
 	public List<InscripcionDTO> getListaInscr(String idCurso) {

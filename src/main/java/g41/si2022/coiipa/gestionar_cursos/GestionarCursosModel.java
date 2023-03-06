@@ -9,6 +9,7 @@ public class GestionarCursosModel {
     
     private Database db = new Database();
 
+    // Cambiar todo kekw
     // Query to get all (active) courses
     public List<CursoDTO> getListaCursos() 
     {    

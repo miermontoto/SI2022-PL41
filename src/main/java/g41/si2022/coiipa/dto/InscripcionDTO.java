@@ -22,5 +22,5 @@ public class InscripcionDTO {
 
     public InscripcionDTO() {}
 
-    public static String getSqlQuery() { return "select * from inscripcion order by id asc"; }
+    // public static String getSqlQuery() { return "select * from inscripcion order by id asc"; }
 }

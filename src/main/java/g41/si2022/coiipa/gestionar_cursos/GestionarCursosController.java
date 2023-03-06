@@ -69,16 +69,15 @@ public class GestionarCursosController {
         cursos = model.getListaCursos();
         for (CursoDTO curso : cursos)
         {
-            LocalDate today = LocalDate.now();
-            CursoState estadoCurso = StateUtilities.getCursoState(curso, today);
+            curso.setEstado(StateUtilities.getCursoState(curso, this.view.getMain().getToday()));
+            CursoState estadoCurso = curso.getEstado();
 
             if (estadoCurso == CursoState.EN_CURSO)
                 cursosActivos.add(curso);
         }
-        // ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ 
-        // ¿Cómo añadir estado y plazas vacantes?
-        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosActivos, new String[] { "nombre", "start_inscr", "end_inscr", "plazas", "start" },
-                new String[] { "Nombre", "Inicio de inscripciones", "Fin de inscripciones", "Plazas (no vacantes)", "Inicio del curso" }, null);
+        
+        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosActivos, new String[] { "nombre", "estado", "start_inscr", "end_inscr", "plazas", "plazas_libres", "start" },
+                new String[] { "Nombre", "Estado", "Inicio de inscripciones", "Fin de inscripciones", "Plazas", "Plazas vacantes" , "Inicio del curso" }, null);
         view.getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
     }
