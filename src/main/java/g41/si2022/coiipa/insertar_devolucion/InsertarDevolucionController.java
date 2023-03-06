@@ -105,6 +105,8 @@ public class InsertarDevolucionController {
 			SwingUtil.showMessage("La inscripción del alumno " + nombreInscrito + " ha sido realizada con éxito. Se le han devuelto " + importedevuelto + " €", "Servicio de cancelaciones");
 
 			getListaInscripciones();
+			
+			setControls(false);
 	}
 		
 
