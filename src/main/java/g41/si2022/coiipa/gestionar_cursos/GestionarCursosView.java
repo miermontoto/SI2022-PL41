@@ -21,6 +21,7 @@ public class GestionarCursosView extends Tab {
     
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
+    private JComboBox<String> cbFiltro;
     
     public GestionarCursosView(SwingMain main)
     {
@@ -56,7 +57,7 @@ public class GestionarCursosView extends Tab {
        
         // eastPanel's elements
         JLabel lblFiltro = new JLabel("Filtrar por:");
-        JComboBox<String> cbFiltro = new JComboBox<String>();
+        cbFiltro = new JComboBox<String>();
        
         // Add items to comboBox
         cbFiltro.addItem("Fecha");
@@ -74,20 +75,16 @@ public class GestionarCursosView extends Tab {
         JPanel mainCenterPanel = new JPanel(new GridLayout(4, 2));
 
         // Elements of mainCenterPanel
-        JLabel lblObjetivos = new JLabel("Objetivos del curso:");
-        JTextArea txtObjetivos = new JTextArea();
-        JLabel lblContenidos = new JLabel("Contenidos principales:");
-        JTextArea txtContenidos = new JTextArea();
+        JLabel lblDescripcion = new JLabel("Objetivos y contenidos del curso:");
+        JTextArea txtDescripcion = new JTextArea();
         JLabel lblLugar = new JLabel("Lugar:");
         JTextField txtLugar = new JTextField();
         JLabel lblProfesor = new JLabel("Profesor:");
         JTextField txtProfesor = new JTextField();
         
         // Add elements to mainCenterPanel
-        mainCenterPanel.add(lblObjetivos);
-        mainCenterPanel.add(txtObjetivos);
-        mainCenterPanel.add(lblContenidos);
-        mainCenterPanel.add(txtContenidos);
+        mainCenterPanel.add(lblDescripcion);
+        mainCenterPanel.add(txtDescripcion);
         mainCenterPanel.add(lblLugar);
         mainCenterPanel.add(txtLugar);
         mainCenterPanel.add(lblProfesor);

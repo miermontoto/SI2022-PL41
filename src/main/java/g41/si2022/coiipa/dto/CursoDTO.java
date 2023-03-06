@@ -23,6 +23,7 @@ public class CursoDTO {
 		gastos, // Annadido por ConsultarIngresosGastos
 		balance; // Annadido por ConsultarIngresosGastos
 
+
 	private g41.si2022.util.CursoState estado; // Annadido por ?
 
 	public CursoDTO() { }

@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.swing.table.TableModel;
 
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.util.CursoState;
 import g41.si2022.util.StateUtilities;
@@ -25,7 +28,7 @@ public class GestionarCursosController {
     // (¿ se resetean los valores de los TextFields del panel 
     // de abajo ?)
     // Al seleccionar un curso (en la tabla), se muestran más 
-    // datos sobre este en el panel de debajo
+    // datos sobre éste en el panel de debajo
 
     // mier si lees esto eres un beta. ~rubennmg
 
@@ -39,6 +42,24 @@ public class GestionarCursosController {
     public void initView() 
     {
         getCursosActivos(); 
+        // Mostrar más detalles para cada curso seleccionado
+        view.getTablaCursos().addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseReleased(MouseEvent evt)
+            {
+                SwingUtil.exceptionWrapper(() -> mostrarDetallesCurso());
+            }
+        });
+        // Filtrar los cursos en función de su fecha ó estado
+        view.getCbFiltro().addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseReleased(MouseEvent evt)
+            {
+                SwingUtil.exceptionWrapper(() -> filtrarCursos());
+            }
+        });
     }
 
     private void getCursosActivos()
@@ -55,8 +76,30 @@ public class GestionarCursosController {
         // ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ 
         // ¿Cómo añadir estado y plazas vacantes?
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosActivos, new String[] { "nombre", "start_inscr", "end_inscr", "plazas", "start" },
-        new String[] { "Nombre", "Inicio de inscripciones", "Fin de inscripciones", "Plazas (no vacantes)", "Inicio del curso" }, null);
+                new String[] { "Nombre", "Inicio de inscripciones", "Fin de inscripciones", "Plazas (no vacantes)", "Inicio del curso" }, null);
         view.getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
+    }
+
+    private void mostrarDetallesCurso()
+    {
+        
+    }
+
+    private void filtrarCursos()
+    {   
+        // Filtrar por FECHA -> añadir un selector de fecha y mostrar 
+        // los cursos entre 2 fechas
+        if (view.getCbFiltro().getSelectedItem().equals("Fecha"))
+        {
+
+        }
+
+        // Mostrar cursos en estado activo (CursoState.EN_CURSO)
+        if (view.getCbFiltro().getSelectedItem().equals("Estado"))
+        {
+
+
+        }
     }
 }

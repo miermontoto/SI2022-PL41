@@ -1,7 +1,6 @@
 package g41.si2022.coiipa.consultar_cursos;
 
 import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.DocenciaDTO;
 import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.util.SwingUtil;
@@ -38,7 +37,8 @@ public class ConsultarCursosController {
 	public void initView()
 	{
 		getListaCursos();
-		view.getTablaCursos().addMouseListener(new MouseAdapter() {
+		view.getTablaCursos().addMouseListener(new MouseAdapter() 
+		{
 			@Override
 			public void mouseReleased(MouseEvent ent) {
 				SwingUtil.exceptionWrapper(() -> getValueCurso());
