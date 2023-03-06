@@ -186,7 +186,8 @@ public class RegistrarCursoController {
 				view.getCoste(), 
 				view.getInscripcionIniDate(), view.getInscripcionFinDate(), view.getCursoIniDate(), view.getCursoFinDate(),
 				view.getPlazas(), view.getLocalizacion(),
-				profesorElegido.get().getId()); // El curso solo tiene un profesor
+				profesorElegido.get().getId(), // El curso solo tiene un profesor
+				profesorElegido.get().getRemuneracion());
 		SwingUtil.showMessage("Curso registrado con éxito.", "Registro de cursos");
 	}
 
