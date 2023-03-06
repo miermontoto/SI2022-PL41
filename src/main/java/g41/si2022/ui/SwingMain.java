@@ -105,8 +105,7 @@ public class SwingMain {
 		mainMenu.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		Insets i = new Insets(10, 10, 10, 10);
-		gbc.insets = i;
+		gbc.insets = new Insets(10, 10, 10, 10);
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -136,7 +135,7 @@ public class SwingMain {
 		gbc.gridx = 2;
 		gbc.gridy = 6;
 		JButton btnDebug = new JButton("Debug menu");
-		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent());});
+		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent(), "Debug menu");});
 		mainMenu.add(btnDebug, gbc);
 
 		try {
@@ -162,15 +161,15 @@ public class SwingMain {
 
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.ipady = 20;
+		gbc.ipady = 20; // Make "back" button bigger
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		total.add(navigation, gbc);
 		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		if (panel == mainMenu) {
+		if (panel == mainMenu) { // Center only main menu
 			gbc.weightx = 0;
 			gbc.weighty = 0;
-		} else {
+		} else { // Fill the rest
 			gbc.weightx = 1;
 			gbc.weighty = 1;
 		}
