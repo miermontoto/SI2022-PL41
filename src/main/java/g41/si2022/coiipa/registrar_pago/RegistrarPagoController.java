@@ -85,8 +85,8 @@ public class RegistrarPagoController {
 		Util.sendEmail(email, "COIIPA: pago registrado", "Su pago ha sido registrado correctamente."); // Envío un email al alumno
 		getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
 		// Si había algún error habilitado en la etiqueta, se deshabilita y mostramos éxito
-		view.getLblError().setText("Pago insertado con éxito");
-		SwingUtil.showMessage("Pago insertado con éxito", "Registro de pagos");
+		//view.getLblError().setText("Pago insertado con éxito");
+		SwingUtil.showMessage("Pago por importe de " + importe + " € de parte del alumno " + nombreInscrito + " insertado con éxito", "Registro de pagos");
 		eraseControls(false); // Entradas en blanco
 	}
 

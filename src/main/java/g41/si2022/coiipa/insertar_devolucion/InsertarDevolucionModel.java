@@ -27,5 +27,10 @@ public class InsertarDevolucionModel {
 		db.executeUpdate(sql, importe, Util.isoStringToDate(fecha), idInscripcion);
 
 	}
+	
+	public String getEmailAlumno(String idAlumno) {
+		String sql = "select email from alumno where id=?";
+		return (String) db.executeQueryArray(sql, idAlumno).get(0)[0];
+	}
 
 }
