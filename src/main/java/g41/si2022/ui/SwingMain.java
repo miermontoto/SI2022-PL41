@@ -54,13 +54,10 @@ public class SwingMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					Database db = new Database();
+					if (db.createDatabase(true)) db.loadDatabase();
 					SwingMain window = new SwingMain();
 					window.frame.setVisible(true);
-					Database db = new Database();
-					if (!db.exists()) {
-						db.createDatabase(false);
-						db.loadDatabase();
-					}
 				} catch (Exception e) { e.printStackTrace(); }
 			}
 		});
@@ -70,14 +67,6 @@ public class SwingMain {
 	 * Create the application.
 	 */
 	public SwingMain() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 * @throws IOException
-	 */
-	public void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
 		frame.setSize(1280, 720);
