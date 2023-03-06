@@ -7,12 +7,19 @@ public class ConsultarIngresosGastosModel {
 
 	private Database db = new Database();
 	
-	public java.util.List<CursoDTO> getCursosList () {
-		String sql = 
-				"SELECT * FROM curso ORDER BY curso.start_inscr";
-		return db.executeQueryPojo(CursoDTO.class, sql);
-	}
-	
+	/**
+	 * Returns a big data set, containing:
+	 * - Gastos (docencia.remuneracion) // TODO: This will be later changed with some sort of SUM()
+	 * - Ingresos (SUM(pago.importe))
+	 * - Ingresos - Gastos
+	 * - curso.nombre
+	 * - curso.start_inscr
+	 * - curso.end_inscr
+	 * - curso.start
+	 * - curso.end
+	 * 
+	 * @return List <html>&gt;</html>CursoDTO&<html>&gt;</html> containing all the data needed to display the JTable
+	 */
 	public java.util.List<CursoDTO> getCursosBalance () {
 		String sql = 
 				"SELECT docencia.remuneracion as gastos, "
