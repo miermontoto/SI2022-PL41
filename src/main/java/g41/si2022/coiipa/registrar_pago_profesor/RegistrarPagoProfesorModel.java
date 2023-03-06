@@ -9,7 +9,7 @@ public class RegistrarPagoProfesorModel {
 	private Database db = new Database();
 
 	public List<FacturaDTO> getListaFacturas(String today) {
-		String sql = "select *, dca.remuneracion,"
+		String sql = "select f.*, dca.remuneracion,"
 		+ " dce.nombre as doc_nombre, dce.apellidos as doc_apellidos, c.nombre as curso_nombre"
 		+ " from factura as f"
 		+ " inner join docencia as dca on f.docencia_id = dca.id"
@@ -20,7 +20,7 @@ public class RegistrarPagoProfesorModel {
 	}
 
 	public List<FacturaDTO> getListaFacturasSinPagar(String today) {
-		String sql = "select *, dca.remuneracion,"
+		String sql = "select f.*, dca.remuneracion,"
 		+ " dce.nombre as doc_nombre, dce.apellidos as doc_apellidos, c.nombre as curso_nombre"
 		+ " from factura as f"
 		+ " inner join docencia as dca on f.docencia_id = dca.id"
