@@ -11,9 +11,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import net.miginfocom.swing.MigLayout;
-import com.github.lgooddatepicker.components.DatePicker;
 import lombok.Getter;
 
+import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.SwingMain;
 import g41.si2022.util.Tab;
 import g41.si2022.util.FontType;
@@ -32,7 +32,7 @@ public class RegistrarPagoProfesorView extends Tab {
 	private JLabel lblTitulo;
 	private JButton btnInsertarPago;
 
-	private DatePicker datePicker;
+	private BetterDatePicker datePicker;
 	private JFormattedTextField txtImporte;
 	private JLabel lblError;
 	private JPanel panel;
@@ -54,7 +54,7 @@ public class RegistrarPagoProfesorView extends Tab {
 		formPanel.setLayout(new MigLayout("", "[122.00px,grow][]", "[28.00,top][20.00px,center][21.00][22.00][22.00][][][][][][]"));
 		this.add(formPanel, BorderLayout.EAST);
 
-		lblTitulo = JLabelFactory.getLabel(FontType.title, "Registrar pagos de facturas");
+		lblTitulo = JLabelFactory.getLabel(FontType.title, "Pagar facturas");
 
 		formPanel.add(lblTitulo, "cell 0 0,growx,aligny top");
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
@@ -69,9 +69,9 @@ public class RegistrarPagoProfesorView extends Tab {
 		formPanel.add(lblCurso, "cell 0 3,alignx left,aligny center");
 		lblNombreCurso = new JLabel("N/A");
 		formPanel.add(lblNombreCurso, "cell 0 4,alignx left,aligny center");
-		formPanel.add(new JLabel("Introducir fecha del pago:"), "cell 0 5");
 
-		formPanel.add(datePicker = new DatePicker(), "cell 0 6,growx,aligny center");
+		formPanel.add(new JLabel("Introducir fecha del pago:"), "cell 0 5");
+		formPanel.add(datePicker = new BetterDatePicker(), "cell 0 6,growx,aligny center");
 
 		btnInsertarPago = new JButton("Registrar pago");
 		formPanel.add(btnInsertarPago, "cell 0 8");
