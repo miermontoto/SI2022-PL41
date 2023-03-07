@@ -101,12 +101,25 @@ public class StateUtilities {
 				devuelto += Double.parseDouble(p.getImportedevuelto());
 			}
 		}
-		//System.out.printf("Paid %f Coste %f\n", paid, coste);
 
 		if (paid > coste) return InscripcionState.EXCESO;
 		if (paid < coste) return InscripcionState.PENDIENTE;
-		if (paid == coste) return InscripcionState.PAGADA;
-		return InscripcionState.CANCELADA;
+		return InscripcionState.PAGADA;
 	}
 
+	/**
+	 * Returns the InscripcionState for a given Course and student.
+	 *
+	 * @param curso Course that is being paid.
+	 * @param pagos Payments of this student and this course.
+	 * @return State of the inscription
+	 */
+	public static InscripcionState getInscripcionState (Double coste, Double pagado) {
+
+		if (pagado > coste) return InscripcionState.EXCESO;
+		if (pagado < coste) return InscripcionState.PENDIENTE;
+		return InscripcionState.PAGADA;
+	}
+	
+	
 }
