@@ -29,7 +29,9 @@ public class ConsultarIngresosGastosModel {
 				+ " ,curso.start_inscr "
 				+ " ,curso.end_inscr "
 				+ " ,curso.start "
-				+ " ,curso.end "
+				+ " ,curso.end"
+				+ " ,MAX(pago.fecha) as pagoHighestFecha "
+				+ " ,MIN(pago.fecha) as pagoLowestFecha "
 				+ " FROM curso "
 				+ " LEFT JOIN docencia ON curso.id = docencia.curso_id " // Change for INNER JOIN. To do this, INSERT INTO docencia when creating a new course
 				+ " LEFT JOIN inscripcion ON inscripcion.curso_id = curso.id "

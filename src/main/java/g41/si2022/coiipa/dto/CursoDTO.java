@@ -23,6 +23,8 @@ public class CursoDTO {
 		ingresos, // Annadido por ConsultarIngresosGastos
 		gastos, // Annadido por ConsultarIngresosGastos
 		balance, // Annadido por ConsultarIngresosGastos
+		pagoHighestFecha, // Annadido por ConsultarIngresosGastos
+		pagoLowestFecha, // Annadido por ConsultarIngresosGastos
 		inscripcion_fecha, // Annadido por consultarCursos
 		inscripcion_alumno, // Annadido por consultarCursos
 		pago_importe_devuelto; // Annadido por consultarCursos
