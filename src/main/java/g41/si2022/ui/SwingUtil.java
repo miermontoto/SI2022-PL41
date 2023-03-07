@@ -23,11 +23,9 @@ import g41.si2022.util.UnexpectedException;
  */
 public class SwingUtil {
 
-
 	private SwingUtil() {
 		throw new IllegalStateException("Utility class");
 	}
-
 
 	/**
 	 * Ejecuta un metodo en respuesta a un evento envolviendolo en un manejador de excepciones estandar
@@ -40,11 +38,18 @@ public class SwingUtil {
 		try {
 			consumer.run();
 		} catch (ApplicationException e) { // Excepción controlada de la que se puede recuperar la aplicación
-			showMessage(e.getMessage(), "Informacion", JOptionPane.INFORMATION_MESSAGE);
+			showMessage(e.getMessage(), "PRECAUCIÓN", JOptionPane.WARNING_MESSAGE);
 		} catch (RuntimeException e) { // Resto de excepciones, además de la ventana informativa muestra el stacktrace
 			e.printStackTrace();
 			showMessage(e.toString(), "Excepcion no controlada", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	/**
+	 * @param consumer Metodo a ejecutar (sin parametros de entrada ni valores de salida)
+	 */
+	public static void raiseWarning (String msg) {
+		showMessage(msg, "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static void showMessage(String message, String title, int type) {
@@ -93,7 +98,6 @@ public class SwingUtil {
 			}
 		return ""; // Ya no existe esta clave
 	}
-
 
 	/**
 	 * Crea un tablemodel a partir de una lista de objetos POJO con las columnas que se indican.
@@ -194,7 +198,6 @@ public class SwingUtil {
 			}
 		return tm;
 	}
-
 
 	/**
 	 * Crea un Comboboxmodel a partir de una lista de objetos.
