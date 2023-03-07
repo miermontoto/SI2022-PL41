@@ -26,6 +26,7 @@ import lombok.Getter;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
+import g41.si2022.util.Database;
 
 
 /**
@@ -53,6 +54,8 @@ public class SwingMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					Database db = new Database();
+					if (db.createDatabase(true)) db.loadDatabase();
 					SwingMain window = new SwingMain();
 					window.frame.setVisible(true);
 				} catch (Exception e) { e.printStackTrace(); }
@@ -64,14 +67,6 @@ public class SwingMain {
 	 * Create the application.
 	 */
 	public SwingMain() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 * @throws IOException
-	 */
-	public void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
 		frame.setSize(1280, 720);
