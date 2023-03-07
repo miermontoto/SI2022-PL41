@@ -13,6 +13,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.Tab;
+import g41.si2022.util.CursoState;
 import lombok.Getter;
 
 @Getter
@@ -20,7 +21,7 @@ public class GestionarCursosView extends Tab {
 
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
-    private JComboBox<String> cbFiltro;
+    private JComboBox<CursoState> cbFiltro;
     private JTextArea txtDescripcion;
     private JTextArea txtProfesor;
     private JTextArea txtLugar;
@@ -54,11 +55,7 @@ public class GestionarCursosView extends Tab {
 
         // eastPanel's elements
         JLabel lblFiltro = new JLabel("Filtrar por:");
-        cbFiltro = new JComboBox<String>();
-
-        // Add items to comboBox
-        cbFiltro.addItem("Fecha");
-        cbFiltro.addItem("Estado");
+        cbFiltro = new JComboBox<CursoState>();
 
         JPanel anotherNorthPanel = new JPanel(new GridLayout());
 

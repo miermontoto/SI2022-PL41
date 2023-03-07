@@ -29,14 +29,13 @@ public class ConsultarIngresosGastosController {
 	 *  - Start date of the filter
 	 *  - End date of the filter
 	 *  
-	 * @return Filtered data set
+	 * @return Filtered data set rubén beta (mg)
 	 */
 	private List<CursoDTO> filterData () {
 		// Get the selected item from the the filter
 		CursoState selectedItem = (CursoState) this.view.getFilterEstadoComboBox().getSelectedItem();
-		ArrayList<CursoDTO>
-		output = new ArrayList<CursoDTO> (), // Will contain the entries that meet the filter
-		aux; // Is used as auxiliary list to avoid concurrent modifications
+		ArrayList<CursoDTO> output = new ArrayList<CursoDTO>(), // Will contain the entries that meet the filter
+			aux; // Is used as auxiliary list to avoid concurrent modifications
 
 		// FIRST : WE FILTER THE STATES
 		if (selectedItem.equals(CursoState.CUALQUIERA)) { // If the CB has chosen ANY, the output array will contain all entries
@@ -132,7 +131,6 @@ public class ConsultarIngresosGastosController {
 			if (start.getDate() != null && end.getDate() != null && start.compareTo(end) >= 0) {
 				end.setDate(start.getDate().plusDays(1));
 			}
-
 		});
 		end.addDateChangeListener((e) -> {
 			if (end.getDate() != null && start.getDate() != null && start.compareTo(end) >= 0) {
