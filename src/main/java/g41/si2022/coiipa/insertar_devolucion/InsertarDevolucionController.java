@@ -146,7 +146,10 @@ public class InsertarDevolucionController {
 					));
 
 			// Ocultar foreign keys de la tabla
-			table.removeColumn(table.getColumnModel().getColumn(0));
+			for(int i=0; i<2; i++) {
+				table.removeColumn(table.getColumnModel().getColumn(0));
+
+			}
 			table.setDefaultEditor(Object.class, null); // Deshabilitar edición
 
 			SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas

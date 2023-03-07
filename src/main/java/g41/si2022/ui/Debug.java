@@ -104,9 +104,9 @@ public class Debug {
 		});
 		all.add(close, gbc);
 
-		gbc.gridy = 3;
+		gbc.gridy = 4;
 		gbc.gridx = 1;
-		gbc.gridwidth = 3;
+		gbc.gridwidth = 2;
 		all.add(status, gbc);
 
 		gbc.gridy = 0;

@@ -91,3 +91,32 @@ Solo funciona en JRE 1.8 (Java 8)
 - poder gestionar pagos y cobros por caja (en lugar de transferencias, tener en cuenta límite legal)
 - gestionar inscripciones múltiples (realizadas por entidades)
 
+---
+# Sprint 2
+Ordenados de mayor a menor importancia.
+1. Un curso puede tener varias sesiones.
+2. Una inscripcion puede tener varios pagos para compensar `InscripcionState.EXCESO`.
+3. Un curos puede tener varios profesores. A cada uno se le realizan pagos separados de distintas cantidades.
+4. En el momento en que un curso es `CursoState.FINALIZADO`, todos sus profesores han sido pagados y todas las inscripciones han sido devueltas, Rosa debe de marcar el curso para CERRAR. El sistema debe revisar que las condiciones para el cierre del curso se hayan cumplido.
+5. Los cursos se pueden ofrecer a distintos colectivos con distintos precios cada uno.
+6. En ocasiones un curso no tiene inscripciones suficientes para rentabilizar.
+	En estos casos el curso se retrasa, acordando fechas nuevas (sumando SEMANAS EXACTAS).
+	Se envía un e-mail a todos los inscritos, que pueden solicitar una devolución. (100% de lo pagado).
+	En otros casos se atrasa solamente la fecha de fin de inscripcion.
+		Q: Inscripcion overlap con curso? A: Emitir WARNING
+	En otros casos se debe cancelar una actividad.
+		Se envía un e-mail a todos los inscritos.
+		Se realizan devoluciones del 100% a todos los inscritos.
+7. Gestionar pagos en efectivo (max 1000€, marcar como variable junto a `getToday()`).
+8. Gestionar inscripciones en bloque.
+	Q: Nombres? A: EMPRESA Y MIEMBROS INSCRITOS
+	Se registra un único pago.
+
+Faltan detalles:
+1. Los profesores de un curso pueden ser empleados de una empresa, se le paga a la empresa. Externalizacion de la contratacion de profesores.
+
+- Sistema centralizado de pagos?
+- Pantalla de variables:
+	- Today
+	- Max pagos efectivo
+- DTO genérico?
