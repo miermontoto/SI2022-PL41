@@ -6,13 +6,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import g41.si2022.util.BetterDatePicker;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.Tab;
+import g41.si2022.util.CursoState;
 import lombok.Getter;
 
 @Getter
@@ -20,8 +21,11 @@ public class GestionarCursosView extends Tab {
 
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
-    private JComboBox<String> cbFiltro;
+    private JComboBox<CursoState> cbFiltro;
     private JTextArea txtDescripcion;
+    private JTextArea txtProfesor;
+    private JTextArea txtLugar;
+    private BetterDatePicker startDate, endDate;
 
     public GestionarCursosView(SwingMain main)
     {
@@ -35,8 +39,6 @@ public class GestionarCursosView extends Tab {
 
         // ------------- main.BorderLayout.NORTH -------------
         JPanel mainNorthPanel = new JPanel(new BorderLayout());
-        // Add mainNorthPanel to this
-        this.add(mainNorthPanel, BorderLayout.NORTH);
 
         // Elements of mainNnorthPanel
         JLabel lblCursos = new JLabel("Cursos:");
@@ -45,31 +47,40 @@ public class GestionarCursosView extends Tab {
 		tablaCursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrCursos = new JScrollPane(tablaCursos);
 
+        // Add mainNorthPanel to this
+        this.add(mainNorthPanel, BorderLayout.NORTH);
+
         // centerPanel (BorderLayout.CENTER) with label and table
         JPanel centerPanel = new JPanel(new BorderLayout());
 
+        // eastPanel's elements
+        JLabel lblFiltro = new JLabel("Filtrar por:");
+        cbFiltro = new JComboBox<CursoState>();
+
+        JPanel anotherNorthPanel = new JPanel(new GridLayout());
+
         // Add elements to centerPanel
-        centerPanel.add(lblCursos, BorderLayout.NORTH);
+        anotherNorthPanel.add(lblFiltro);
+        anotherNorthPanel.add(cbFiltro);
+        anotherNorthPanel.add(startDate = new BetterDatePicker());
+        anotherNorthPanel.add(endDate = new BetterDatePicker());
+        centerPanel.add(anotherNorthPanel, BorderLayout.NORTH);
+        centerPanel.add(lblCursos, BorderLayout.CENTER);
         centerPanel.add(scrCursos, BorderLayout.CENTER);
 
         // rightPanel (BorderLayout.EAST) with label and comboBox
-        JPanel eastPanel = new JPanel(new GridLayout());
+        // JPanel eastPanel = new JPanel(new GridLayout());
 
-        // eastPanel's elements
-        JLabel lblFiltro = new JLabel("Filtrar por:");
-        cbFiltro = new JComboBox<String>();
-
-        // Add items to comboBox
-        cbFiltro.addItem("Fecha");
-        cbFiltro.addItem("Estado");
-
+        
         // Add items to eastPanel
-        eastPanel.add(lblFiltro);
-        eastPanel.add(cbFiltro);
+        // eastPanel.add(lblFiltro);
+        // eastPanel.add(cbFiltro);
+        // eastPanel.add(startDate = new BetterDatePicker());
+        // eastPanel.add(endDate = new BetterDatePicker());
 
         // Add elements to mainNorthPanel
         mainNorthPanel.add(centerPanel, BorderLayout.NORTH);
-        mainNorthPanel.add(eastPanel, BorderLayout.EAST);
+        // mainNorthPanel.add(eastPanel, BorderLayout.EAST);
 
         // ------------- main.BorderLayout.CENTER -------------
         JPanel mainCenterPanel = new JPanel(new GridLayout(4, 2));
@@ -78,9 +89,9 @@ public class GestionarCursosView extends Tab {
         JLabel lblDescripcion = new JLabel("Objetivos y contenidos del curso:");
         txtDescripcion = new JTextArea();
         JLabel lblLugar = new JLabel("Lugar:");
-        JTextField txtLugar = new JTextField();
+        txtLugar = new JTextArea();
         JLabel lblProfesor = new JLabel("Profesor:");
-        JTextField txtProfesor = new JTextField();
+        txtProfesor = new JTextArea();
 
         // Add elements to mainCenterPanel
         mainCenterPanel.add(lblDescripcion);

@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.consultar_cursos;
 
 import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.ui.SwingUtil;
 
@@ -17,13 +18,15 @@ public class ConsultarCursosController {
 	private ConsultarCursosModel model;
 	private ConsultarCursosView view;
 
+	private List<CursoDTO> cursos;
 	private List<CursoDTO> cursosAndInscr;
 	private List<PagoDTO> listaPagos;
 	private String gastos;
 	private String ingresosEstimados;
 	private String ingresosReales;
-	private String balanceEstimado;
-	private String balanceReal;
+	// dont needed
+	// private String balanceEstimado;
+	// private String balanceReal;
 	private String costeCurso;
 
 	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
@@ -47,7 +50,7 @@ public class ConsultarCursosController {
 	}
 
 	public void getListaCursos() {
-		cursosAndInscr = model.getListaCursos();
+		cursosAndInscr = model.getListaCursosInscr();
 
 		for (CursoDTO curso : cursosAndInscr)
 			curso.setEstado(StateUtilities.getCursoState(curso, this.view.getMain().getToday()));
@@ -59,14 +62,20 @@ public class ConsultarCursosController {
 	}
 
 	public void getListaInscr() {
-		for (CursoDTO curso : cursosAndInscr) {
-			listaPagos = model.getListaPagos(curso.getId());
-
-			curso.setInscripcion_estado(StateUtilities.getInscripcionState(Double.parseDouble(curso.getCoste()), listaPagos));
-
+		cursos = model.getListaCursos();
+		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
-				TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosAndInscr, new String[] { "inscripcion_fecha", "inscripcion_alumno", "inscripcion_estado" },
-						new String[] { "Fecha de inscripción", "Alumno", "Estado"}, null);
+
+				List<InscripcionDTO> listaInscr = model.getListaInscr(curso.getId());
+				Double valorCurso = Double.parseDouble(curso.getCoste());
+				for(InscripcionDTO inscripcion : listaInscr) {
+					listaPagos = model.getListaPagos(inscripcion.getId());
+					inscripcion.setEstado(StateUtilities.getInscripcionState(valorCurso, listaPagos));
+				}
+
+				TableModel tableModel = SwingUtil.getTableModelFromPojos(listaInscr,
+					new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "estado" },
+						new String[] { "Fecha de inscripción", "Nombre", "Apellidos", "Estado" }, null);
 				view.getTablaInscr().setModel(tableModel);
 				SwingUtil.autoAdjustColumns(view.getTablaInscr());
 
@@ -83,29 +92,25 @@ public class ConsultarCursosController {
 				ingresosEstimados = model.getIngresosEstimados(curso.getId());
 				costeCurso = model.getCosteCurso(curso.getId());
 
-				balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Integer.parseInt(gastos));
-				StringBuilder sb = new StringBuilder();
-
-				sb.append("<html><body>");
-				sb.append("<p><b>Gastos:</b> " + gastos + "€");
-				sb.append("<p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
-				sb.append("<p><b>Balance estimado:</b> " + balanceEstimado + "€");
-
 				listaPagos = model.getListaPagos(curso.getId());
 				InscripcionState estado = StateUtilities.getInscripcionState(Double.valueOf(Double.parseDouble(costeCurso)), listaPagos);
 
-				if (estado == InscripcionState.PAGADA)
-					ingresosReales = model.getImportePagos(curso.getId());
-				else
-					ingresosReales = "0";
+				ingresosReales = estado == InscripcionState.PAGADA ? model.getImportePagos(curso.getId()) : "0";
 
-				balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Integer.parseInt(gastos));
-				sb.append("<p><b>Ingresos reales:</b> " + ingresosReales + "€");
+				String balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Integer.parseInt(gastos));
+
+				String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Integer.parseInt(gastos));
+				StringBuilder sb = new StringBuilder();
+
+				sb.append("<html><body>");
+				sb.append("<p><b>Gastos actuales:</b> " + gastos + "€");
+				sb.append("<p><p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
+				sb.append("<p><b>Balance estimado:</b> " + balanceEstimado + "€");
+				sb.append("<p><p><b>Ingresos actuales:</b> " + ingresosReales + "€");
 				sb.append("<p><b>Balance real:</b> " + balanceReal + "€");
 				sb.append("</body></html>");
 
 				view.getLblEconomicInfo().setText(sb.toString());
-
 				return;
 			}
 		}
