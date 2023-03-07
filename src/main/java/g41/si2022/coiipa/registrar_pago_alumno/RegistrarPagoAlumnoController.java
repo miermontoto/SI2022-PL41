@@ -99,7 +99,7 @@ public class RegistrarPagoAlumnoController {
 		inscripciones = model.getInscripciones(date);
 
 		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
-			x.setEstado(g41.si2022.util.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), Double.parseDouble(x.getInscripcion_pagado())));
+			x.setEstado(g41.si2022.util.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), Double.parseDouble(x.getPagado())));
 			if(model.isCancelled(idInscripcion))
 				x.setEstado(InscripcionState.CANCELADA);
 			if (!view.getChkAll().isSelected() && x.getEstado() != InscripcionState.PENDIENTE && x.getEstado() != InscripcionState.EXCESO) {
