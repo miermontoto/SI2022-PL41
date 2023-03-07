@@ -19,7 +19,7 @@ public abstract class TabbedFrame {
 
         tabbedPane.addChangeListener(e -> {
 			Tab tab = (Tab) tabbedPane.getSelectedComponent();
-			if (tab != null) tab.initController();
+			if (tab != null && !tab.isOpened()) tab.abstractInitController(); // <-- Montoto btw
 		});
     }
 

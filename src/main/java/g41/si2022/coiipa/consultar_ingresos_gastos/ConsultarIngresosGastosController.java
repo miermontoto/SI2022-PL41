@@ -6,7 +6,6 @@ import java.util.stream.Stream;
 import java.util.List;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.CursoState;
@@ -96,8 +95,8 @@ public class ConsultarIngresosGastosController {
 		this.cursos = this.model.getCursosBalance();
 		this.cursos.forEach((x) -> x.setEstado(StateUtilities.getCursoState(x, this.view.getMain().getToday())));
 		this.loadComboBox();
-		this.loadTable();
 		this.loadDateListeners();
+		this.loadTable();
 	}
 
 	/**
