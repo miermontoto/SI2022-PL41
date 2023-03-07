@@ -9,6 +9,7 @@ import javax.swing.table.TableModel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.coiipa.dto.ProfesorDTO;
 import g41.si2022.util.CursoState;
 import g41.si2022.util.StateUtilities;
 import g41.si2022.ui.SwingUtil;
@@ -19,8 +20,8 @@ public class GestionarCursosController {
     private GestionarCursosView view;
     private List<CursoDTO> cursos;
     private List<CursoDTO> cursosActivos;
-    private String descripcionCurso;
-
+    
+    
 
     /*              NO BORRAR (de momento)                  */
     // Por defecto se muestran los cursos activos
@@ -59,14 +60,14 @@ public class GestionarCursosController {
         });
 
         // Filtrar los cursos en función de su fecha ó estado
-        view.getCbFiltro().addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseReleased(MouseEvent evt)
-            {
-                SwingUtil.exceptionWrapper(() -> filtrarCursos());
-            }
-        });
+        // view.getCbFiltro().addMouseListener(new MouseAdapter()
+        // {
+        //     @Override
+        //     public void mouseReleased(MouseEvent evt)
+        //     {
+        //         SwingUtil.exceptionWrapper(() -> filtrarCursos());
+        //     }
+        // });
     }
 
     private void getCursosActivos()
@@ -74,12 +75,20 @@ public class GestionarCursosController {
         cursosActivos = new LinkedList<>();
         cursos = model.getListaCursos();
         for (CursoDTO curso : cursos)
-        {
+        {   
+            // Añadir estado al curso 
             curso.setEstado(StateUtilities.getCursoState(curso, this.view.getMain().getToday()));
             CursoState estadoCurso = curso.getEstado();
             
             if (estadoCurso != CursoState.FINALIZADO)
-                cursosActivos.add(curso);
+            {
+                // Añadir número de plazas libres al curso activo (para mostrarlas)
+                // Sumatorio de plazas totales menos las inscripciones NO canceladas
+                curso.setPlazas_libres(String.valueOf((Integer.valueOf(curso.getPlazas()) - Integer.valueOf(model.getNumIscripciones(curso.getId())))));
+                
+                // Añadir curso a la lista de cursos activos
+                cursosActivos.add(curso);  
+            } 
         }
     }
 
@@ -93,11 +102,26 @@ public class GestionarCursosController {
 
     private void showDetallesCurso()
     {
+        List<ProfesorDTO> docentes;
+        
         for (CursoDTO curso : cursosActivos)
         {
             if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos())))
             {
-                descripcionCurso = model.getDescripcionCurso(curso.getId());
+                // Mostrar la descripción del curso
+                view.getTxtDescripcion().setText(" " + model.getDescripcionCurso(curso.getId()));
+                // Obtener docente/s que imparten el curso
+                docentes = model.getDocentesCurso(curso.getId());
+                view.getTxtProfesor().setText("");
+               
+                for (ProfesorDTO docente: docentes)
+                {
+                    String nombre = docente.getNombre();
+                    String apellidos = docente.getApellidos();
+                    view.getTxtProfesor().setText(view.getTxtProfesor().getText() + " " + nombre + " " + apellidos);
+                }
+                // Mostrar lugar en el que se imparte el curso
+                view.getTxtLugar().setText(" " + model.getLugarCurso(curso.getId()));
             }
         }
     }
