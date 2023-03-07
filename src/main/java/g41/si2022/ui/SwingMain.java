@@ -126,7 +126,7 @@ public class SwingMain {
 
 		gbc.gridx = 0;
 		gbc.gridy = 6;
-		mainMenu.add(new JLabel("Today:"), gbc);
+		mainMenu.add(new JLabel("Hoy:"), gbc);
 		gbc.gridx = 1;
 		mainMenu.add(today, gbc);
 
@@ -193,7 +193,7 @@ public class SwingMain {
 
 	public void updateTitle(String title) {
 		navigation.remove(lblTitle);
-		lblTitle = JLabelFactory.getLabel(FontType.subtitle, title+" ");
+		lblTitle = JLabelFactory.getLabel(FontType.subtitle, title + " ");
 		navigation.add(lblTitle, BorderLayout.EAST);
 	}
 
@@ -202,7 +202,7 @@ public class SwingMain {
 	}
 
 	public JPanel getMainMenu() { return this.mainMenu; }
-	public LocalDate getToday() { return getTodayPicker().getDate();}
+	public LocalDate getToday() { return getTodayPicker().getDate(); }
 	public BetterDatePicker getTodayPicker() { return this.today; }
 	public void setNavigation(boolean visible) { navigation.setVisible(visible); }
 }
