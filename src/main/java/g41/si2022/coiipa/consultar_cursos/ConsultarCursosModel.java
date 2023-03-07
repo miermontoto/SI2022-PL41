@@ -14,9 +14,8 @@ public class ConsultarCursosModel {
 
 	public List<CursoDTO> getListaCursos() {
 		String sql = "SELECT * FROM curso "
-				   + "INNER JOIN inscripcion on inscripcion.id = curso.id"
-				   + "GROUP BY curso.id asc";
-
+				   + "INNER JOIN inscripcion on inscripcion.id = curso.id ";
+				   
 		return db.executeQueryPojo(CursoDTO.class, sql);
 	}
 

@@ -98,7 +98,11 @@ public class ConsultarCursosController {
 
 				sb.append("<html><body>");
 				sb.append("<p><b>Gastos:</b> " + gastos + "€");
+				sb.append("<p></p>");
+				sb.append("<p></p>");
 				sb.append("<p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
+				sb.append("<p></p>");
+				sb.append("<p></p>");
 				// dont needed
 				// sb.append("<p><b>Balance estimado:</b> " + balanceEstimado + "€");
 
