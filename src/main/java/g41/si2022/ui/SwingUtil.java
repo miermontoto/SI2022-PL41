@@ -7,6 +7,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -61,6 +62,14 @@ public class SwingUtil {
 
 	public static void showMessage(String message, String title) {
 	    showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public static boolean passwordDialog() {
+		JPasswordField jpf = new JPasswordField();
+		int option = JOptionPane.showConfirmDialog(null, jpf, "Introduzca la contraseña", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		if (option == JOptionPane.OK_OPTION) {
+			return new String(jpf.getPassword()).equals("test");
+		} else return false;
 	}
 
 	/**

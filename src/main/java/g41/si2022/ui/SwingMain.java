@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -48,6 +49,7 @@ public class SwingMain {
 	private JPanel navigation;
 	private JPanel total;
 	private JLabel lblTitle;
+	private JComponent[] passProtected;
 
 	/**
 	 * Launch the application.
@@ -100,6 +102,9 @@ public class SwingMain {
 		TabbedFrame profesional = new TabsProfesional(this);
 		TabbedFrame responsable = new TabsResponsable(this);
 		TabbedFrame secretaria = new TabsSecretaria(this);
+
+		passProtected = new JComponent[] {responsable.getComponent(), secretaria.getComponent()};
+
 		mainMenu.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
@@ -160,6 +165,15 @@ public class SwingMain {
 
 	public JFrame getFrame() { return this.frame; }
 	public void setMainPanel(JComponent panel, String title) {
+		/*for(JComponent c : passProtected) {
+			if (c == panel) {
+				if (!SwingUtil.passwordDialog()) {
+					SwingUtil.showMessage("Contraseña incorrecta", "Contraseña incorrecta", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				break;
+			}
+		}*/
 		if (panel instanceof JTabbedPane) {
 			((Tab) ((JTabbedPane) panel).getSelectedComponent()).initController();
 		}
