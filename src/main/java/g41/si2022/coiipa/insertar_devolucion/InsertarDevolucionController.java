@@ -85,7 +85,7 @@ public class InsertarDevolucionController {
 		if(dias > 3 && dias < 7) importeDevuelto = costeCurso / 2;
 		if(dias < 3) importeDevuelto = 0;
 
-		System.out.printf("Coste %f, %f \n", costeCurso, importeDevuelto);
+		//System.out.printf("Coste %f, %f \n", costeCurso, importeDevuelto);
 		vista.getLblImporteDevuelto().setText(Double.toString(importeDevuelto));
 
 		setControls(true);
@@ -97,19 +97,24 @@ public class InsertarDevolucionController {
 
 			Date fechaActual = Date.from(vista.getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
 			double importedevuelto = Double.parseDouble(vista.getLblImporteDevuelto().getText());
-			
+
 			modelo.registrarDevolucion(importedevuelto, Util.dateToIsoString(fechaActual), idInscripcion);
 
-	}
-		
-		public void enviarEmail(int idalumno, String alumno){
-			String directory = System.getProperty("user.dir"); // Directorio principal del programa
-			String target = directory + "/target/"; // Calculamos el target de este proyecto
+			enviarEmail(idAlumno, nombreInscrito);
 
-			try (FileWriter fw = new FileWriter(target + "email.txt")) {
-				fw.write("Hola, " + alumno + ", te escribimos para comunicarte que se ha cancelado tu inscripción con éxito. \n");
-				fw.close();
-			} catch (IOException e) { throw new ApplicationException(e); }
+			SwingUtil.showMessage("La inscripción del alumno " + nombreInscrito + " ha sido realizada con éxito. Se le han devuelto " + importedevuelto + " €", "Servicio de cancelaciones");
+
+			getListaInscripciones();
+
+			setControls(false);
+	}
+
+		public void enviarEmail(int idAlumno, String alumno){
+
+			String email = modelo.getEmailAlumno(Integer.toString(idAlumno));
+			Util.sendEmail(email, "Cancelado con éxito", "Hola, hemos realizado la cancelación de tu curso con éxito");
+
+
 		}
 
 		public void getListaInscripciones() {
@@ -127,7 +132,7 @@ public class InsertarDevolucionController {
 					new String[] { "id", "alumno_id", "nombre", "coste", "nombre_curso", "inicio_curso"},	//La primera columna estará oculta
 					new String[] { "ID", "ID Alumno", "Nombre curso", "Coste", "Nombre curso", "Fecha de inicio"},
 					null
-					)); 
+					));
 
 			// Ocultar foreign keys de la tabla
 			table.removeColumn(table.getColumnModel().getColumn(0));
