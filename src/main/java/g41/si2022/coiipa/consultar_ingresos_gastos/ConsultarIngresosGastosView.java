@@ -9,19 +9,20 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.CursoState;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 
-public class ConsultarIngresosGastosView extends g41.si2022.util.Tab {
+public class ConsultarIngresosGastosView extends g41.si2022.ui.Tab {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private JTable movimientos;
 	private JComboBox<CursoState> filterEstado;
 	private BetterDatePicker startDate, endDate;
-	
+
 	public JTable getMovimientosTable () { return this.movimientos; }
 	public JComboBox<CursoState> getFilterEstadoComboBox () { return this.filterEstado; }
 	public BetterDatePicker getStartDatePicker () { return this.startDate; }
@@ -30,11 +31,11 @@ public class ConsultarIngresosGastosView extends g41.si2022.util.Tab {
 	/**
 	 * Create the panel.
 	 */
-	public ConsultarIngresosGastosView(g41.si2022.util.SwingMain main) {
+	public ConsultarIngresosGastosView(g41.si2022.ui.SwingMain main) {
 		super(main);
 		this.initView();
 	}
-	
+
 	/**
 	 * Inits all the components that this View uses.
 	 * All the behaviour and listeners are in the <code>ConsultarIngresosGastosController</code>.

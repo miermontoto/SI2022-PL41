@@ -10,8 +10,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
 import g41.si2022.coiipa.dto.InscripcionDTO;
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.InscripcionState;
-import g41.si2022.util.SwingUtil;
 import g41.si2022.util.Util;
 
 public class RegistrarPagoAlumnoController {

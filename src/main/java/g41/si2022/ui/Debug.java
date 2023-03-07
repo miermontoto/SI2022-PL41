@@ -1,40 +1,47 @@
-package g41.si2022.util;
+package g41.si2022.ui;
 
-import java.awt.BorderLayout;
-import lombok.Getter;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+
+import g41.si2022.util.ApplicationException;
+import g41.si2022.util.Database;
+import g41.si2022.util.FontType;
+import g41.si2022.util.JLabelFactory;
+
 import java.awt.event.ActionEvent;
 
-@Getter
-public class Debug extends Tab {
+public class Debug {
 
-	private static final long serialVersionUID = -4249195203893017275L;
-	private BetterDatePicker today;
+	private JPanel all;
 
 	public Debug(SwingMain main) {
-		super(main);
 
-		this.setLayout(new BorderLayout());
-		JPanel dbButtons = new JPanel ();
-		this.add(dbButtons, BorderLayout.NORTH);
-		JPanel otherButtons = new JPanel ();
-		this.add(otherButtons, BorderLayout.SOUTH);
+		all = new JPanel();
+
+		all.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
 
 		Database db = new Database();
 
 		JLabel status = new JLabel();
 		status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-		today = new BetterDatePicker();
-		today.setDateToToday();
-
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.fill = GridBagConstraints.BOTH;
 		JButton schema = new JButton("Run schema");
 		schema.addActionListener(e -> {
 			status.setText(db.createDatabase(false) ? "Database created" : "Failed to create database");
 		});
+		all.add(schema, gbc);
 
+		gbc.gridy = 2;
 		JButton data = new JButton("Load data");
 		data.addActionListener(e -> {
 			if (db.exists()) {
@@ -47,14 +54,21 @@ public class Debug extends Tab {
 				}
 			} else status.setText("Failed to load data (db hasn't been created yet)");
 		});
+		all.add(data, gbc);
 
-		JButton refreshDb = new JButton("⟳");
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.gridheight = 2;
+		JButton refreshDb = new JButton("⟳ Refresh db");
 		refreshDb.addActionListener(e -> {
 			schema.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 			data.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 			status.setText("Database regenerated");
 		});
+		all.add(refreshDb, gbc);
 
+		gbc.gridy = 3;
+		gbc.gridheight = 1;
 		JButton delete = new JButton("Delete");
 		delete.addActionListener(e -> {
 			if (db.exists()) {
@@ -67,28 +81,39 @@ public class Debug extends Tab {
 				}
 			} else status.setText("There is no database to delete");
 		});
+		all.add(delete, gbc);
 
+		gbc.gridx = 1;
 		JButton isFile = new JButton("Status");
 		isFile.addActionListener(e -> {
 			status.setText(db.exists() ? "Database exists" : "Database doesn't exist");
 		});
+		all.add(isFile, gbc);
 
+		gbc.gridx = 2;
+		for(int i = 1; i < 4; i++) {
+			gbc.gridy = i;
+			all.add(new JLabel("          "), gbc);
+		}
+
+		gbc.gridx = 3;
+		gbc.gridy = 3;
 		JButton close = new JButton("Close window");
 		close.addActionListener(e -> {
 			System.exit(0);
 		});
+		all.add(close, gbc);
 
-		dbButtons.add(refreshDb);
-		dbButtons.add(schema);
-		dbButtons.add(data);
-		dbButtons.add(delete);
-		dbButtons.add(isFile);
-		otherButtons.add(today);
-		otherButtons.add(close);
+		gbc.gridy = 3;
+		gbc.gridx = 1;
+		gbc.gridwidth = 3;
+		all.add(status, gbc);
 
-		this.add(status, BorderLayout.CENTER);
+		gbc.gridy = 0;
+		all.add(JLabelFactory.getLabel(FontType.title, "Database control panel"), gbc);
 	}
 
-	@Override
-	protected void initController() { }
+	public JComponent getComponent() {
+		return all;
+	}
 }

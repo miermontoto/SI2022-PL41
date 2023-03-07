@@ -12,18 +12,18 @@ import javax.swing.border.Border;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import g41.si2022.util.SwingMain;
-import g41.si2022.util.Tab;
+import g41.si2022.ui.SwingMain;
+import g41.si2022.ui.Tab;
 import lombok.Getter;
 
 @Getter
 public class GestionarCursosView extends Tab {
-    
+
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
     private JComboBox<String> cbFiltro;
     private JTextArea txtDescripcion;
-    
+
     public GestionarCursosView(SwingMain main)
     {
         super(main);
@@ -45,25 +45,25 @@ public class GestionarCursosView extends Tab {
         tablaCursos.setDefaultEditor(Object.class, null);
 		tablaCursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrCursos = new JScrollPane(tablaCursos);
-       
+
         // centerPanel (BorderLayout.CENTER) with label and table
         JPanel centerPanel = new JPanel(new BorderLayout());
-        
+
         // Add elements to centerPanel
         centerPanel.add(lblCursos, BorderLayout.NORTH);
         centerPanel.add(scrCursos, BorderLayout.CENTER);
-       
+
         // rightPanel (BorderLayout.EAST) with label and comboBox
         JPanel eastPanel = new JPanel(new GridLayout());
-       
+
         // eastPanel's elements
         JLabel lblFiltro = new JLabel("Filtrar por:");
         cbFiltro = new JComboBox<String>();
-       
+
         // Add items to comboBox
         cbFiltro.addItem("Fecha");
         cbFiltro.addItem("Estado");
-       
+
         // Add items to eastPanel
         eastPanel.add(lblFiltro);
         eastPanel.add(cbFiltro);
@@ -82,7 +82,7 @@ public class GestionarCursosView extends Tab {
         JTextField txtLugar = new JTextField();
         JLabel lblProfesor = new JLabel("Profesor:");
         JTextField txtProfesor = new JTextField();
-        
+
         // Add elements to mainCenterPanel
         mainCenterPanel.add(lblDescripcion);
         mainCenterPanel.add(txtDescripcion);

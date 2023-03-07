@@ -13,9 +13,9 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import g41.si2022.coiipa.dto.cancelacionDTO;
+import g41.si2022.ui.SwingMain;
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.ApplicationException;
-import g41.si2022.util.SwingMain;
-import g41.si2022.util.SwingUtil;
 import g41.si2022.util.Util;
 
 public class InsertarDevolucionController {
@@ -108,7 +108,6 @@ public class InsertarDevolucionController {
 
 			setControls(false);
 	}
-
 
 		public void enviarEmail(int idAlumno, String alumno){
 

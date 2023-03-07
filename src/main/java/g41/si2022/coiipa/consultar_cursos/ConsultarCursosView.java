@@ -10,10 +10,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import g41.si2022.util.SwingMain;
+import g41.si2022.ui.SwingMain;
+import g41.si2022.ui.Tab;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
-import g41.si2022.util.Tab;
 
 @Getter
 public class ConsultarCursosView extends Tab {

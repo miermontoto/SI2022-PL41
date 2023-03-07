@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.awt.event.MouseAdapter;
 
 import g41.si2022.coiipa.dto.FacturaDTO;
-import g41.si2022.util.SwingUtil;
+import g41.si2022.ui.SwingUtil;
 
 public class RegistrarPagoProfesorController {
 
