@@ -60,14 +60,14 @@ public class GestionarCursosController {
         });
 
         // Filtrar los cursos en función de su fecha ó estado
-        // view.getCbFiltro().addMouseListener(new MouseAdapter()
-        // {
-        //     @Override
-        //     public void mouseReleased(MouseEvent evt)
-        //     {
-        //         SwingUtil.exceptionWrapper(() -> filtrarCursos());
-        //     }
-        // });
+        view.getCbFiltro().addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseReleased(MouseEvent evt)
+            {
+                SwingUtil.exceptionWrapper(() -> filtrarCursos());
+            }
+        });
     }
 
     private void getCursosActivos()
