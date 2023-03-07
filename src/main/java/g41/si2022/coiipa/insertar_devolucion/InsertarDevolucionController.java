@@ -46,12 +46,15 @@ public class InsertarDevolucionController {
 	private void setControls(boolean status) {
 
 		vista.getBtnCancelarInscripcion().setEnabled(status);
+		
 	}
 
 	private void eraseControls(boolean eliminaraviso) {
+		
 		vista.getLblNombreInscripcion().setText("No se ha seleccionado ningún nombre");
 		vista.getLblImporteDevuelto().setText("");
 		if(eliminaraviso) vista.getLblError().setText("");
+		
 	}
 
 	private void handleSelect() {
@@ -88,21 +91,34 @@ public class InsertarDevolucionController {
 	}
 
 	private void handleDevolver() {
-		//Obtenemos el nombre del inscrito
-		String nombreInscrito = vista.getLblNombreInscripcion().getText();
+		
+		if(!(vista.getLblImporteDevuelto().getText() == null || vista.getLblImporteDevuelto().getText() == "")) {
+			
+			
+		
+			//Obtenemos el nombre del inscrito
+		
+			String nombreInscrito = vista.getLblNombreInscripcion().getText();
 
 			Date fechaActual = Date.from(vista.getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
-			double importedevuelto = Double.parseDouble(vista.getLblImporteDevuelto().getText());
+			
+			double importedevuelto = 0.0;
+			
+			importedevuelto = Double.parseDouble(vista.getLblImporteDevuelto().getText());
 
 			modelo.registrarDevolucion(importedevuelto, Util.dateToIsoString(fechaActual), idInscripcion);
 
 			enviarEmail(idAlumno, nombreInscrito);
 
-			SwingUtil.showMessage("La inscripción del alumno " + nombreInscrito + " ha sido realizada con éxito. Se le han devuelto " + importedevuelto + " €", "Servicio de cancelaciones");
+			SwingUtil.showMessage("La cancelación de la inscripción del alumno " + nombreInscrito + " ha sido realizada con éxito. Se le han devuelto " + importedevuelto + " €", "Servicio de cancelaciones");
 
 			getListaInscripciones();
 
 			setControls(false);
+			
+		}
+		
+		
 	}
 
 		public void enviarEmail(int idAlumno, String alumno){

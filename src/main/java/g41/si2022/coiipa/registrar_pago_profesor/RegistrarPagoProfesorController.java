@@ -79,10 +79,10 @@ public class RegistrarPagoProfesorController {
 		listaFacturas = view.getChkAll().isSelected() ? model.getListaFacturas(today) : model.getListaFacturasSinPagar(today);
 		table.setModel(SwingUtil.getTableModelFromPojos(listaFacturas,
 			new String[] {"id", "doc_nombre", "doc_apellidos", "curso_nombre", "remuneracion", "fecha_introd", "fecha_pago"},
-			new String[] {"", "", "", "", "€", "Fecha int.", "Fecha pago"},
+			new String[] {"", "Nombre", "Apellidos", "Curso", "€", "Fecha int.", "Fecha pago"},
 			null));
-		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(1));
-		SwingUtil.autoAdjustColumns(table);
+		table.removeColumn(table.getColumnModel().getColumn(0));
+		//SwingUtil.autoAdjustColumns(table);
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
