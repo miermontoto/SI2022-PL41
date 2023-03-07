@@ -22,6 +22,8 @@ public class GestionarCursosView extends Tab {
     private JTable tablaCursos;
     private JComboBox<String> cbFiltro;
     private JTextArea txtDescripcion;
+    private JTextArea txtProfesor;
+    private JTextArea txtLugar;
 
     public GestionarCursosView(SwingMain main)
     {
@@ -79,9 +81,9 @@ public class GestionarCursosView extends Tab {
         JLabel lblDescripcion = new JLabel("Objetivos y contenidos del curso:");
         txtDescripcion = new JTextArea();
         JLabel lblLugar = new JLabel("Lugar:");
-        JTextField txtLugar = new JTextField();
+        txtLugar = new JTextArea();
         JLabel lblProfesor = new JLabel("Profesor:");
-        JTextField txtProfesor = new JTextField();
+        txtProfesor = new JTextArea();
 
         // Add elements to mainCenterPanel
         mainCenterPanel.add(lblDescripcion);
