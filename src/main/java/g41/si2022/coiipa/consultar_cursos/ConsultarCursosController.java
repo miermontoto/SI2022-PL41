@@ -1,7 +1,6 @@
 package g41.si2022.coiipa.consultar_cursos;
 
 import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.ui.SwingUtil;
 

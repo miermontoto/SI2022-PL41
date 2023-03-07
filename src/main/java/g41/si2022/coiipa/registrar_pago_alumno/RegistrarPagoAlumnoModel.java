@@ -1,13 +1,11 @@
 package g41.si2022.coiipa.registrar_pago_alumno;
 
-import java.util.Date;
 import java.util.List;
 
 import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.util.Database;
-import g41.si2022.util.Util;
 
 public class RegistrarPagoAlumnoModel {
 	private Database db = new Database();
@@ -18,7 +16,7 @@ public class RegistrarPagoAlumnoModel {
 				+ " i.alumno_id as inscripcion_alumno_id, "
 				+ " a.nombre as alumno_nombre, "
 				+ " c.coste as curso_coste, "
-				+ " sum(pa.importe) as inscripcion_pagado, "
+				+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as inscripcion_pagado, "
 				+ " c.nombre as curso_nombre, "
 				+ " i.curso_id as inscripcion_curso_id, "
 				+ " i.fecha as inscripcion_fecha"
@@ -66,13 +64,13 @@ public class RegistrarPagoAlumnoModel {
 		String sql = "select email from alumno where id=?";
 		return (String) db.executeQueryArray(sql, idAlumno).get(0)[0];
 	}
-	
+
 	public boolean isCancelled(String idInscripcion) {
 		String sql = "select count(id) from inscripcioncancelada where inscripcion_id=?";
 		int test = (int) db.executeQueryArray(sql, idInscripcion).get(0)[0];
-		
+
 		if(test > 0) { return true;}
 	else { return false;}
-		
+
 	}
 }

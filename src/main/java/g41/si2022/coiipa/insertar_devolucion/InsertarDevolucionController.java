@@ -2,8 +2,6 @@ package g41.si2022.coiipa.insertar_devolucion;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -12,10 +10,8 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
-import g41.si2022.coiipa.dto.cancelacionDTO;
-import g41.si2022.ui.SwingMain;
+import g41.si2022.coiipa.dto.CancelacionDTO;
 import g41.si2022.ui.SwingUtil;
-import g41.si2022.util.ApplicationException;
 import g41.si2022.util.Util;
 
 public class InsertarDevolucionController {
@@ -50,12 +46,15 @@ public class InsertarDevolucionController {
 	private void setControls(boolean status) {
 
 		vista.getBtnCancelarInscripcion().setEnabled(status);
+
 	}
 
 	private void eraseControls(boolean eliminaraviso) {
+
 		vista.getLblNombreInscripcion().setText("No se ha seleccionado ningún nombre");
 		vista.getLblImporteDevuelto().setText("");
 		if(eliminaraviso) vista.getLblError().setText("");
+
 	}
 
 	private void handleSelect() {
@@ -92,21 +91,34 @@ public class InsertarDevolucionController {
 	}
 
 	private void handleDevolver() {
-		//Obtenemos el nombre del inscrito
-		String nombreInscrito = vista.getLblNombreInscripcion().getText();
+
+		if(!(vista.getLblImporteDevuelto().getText() == null || vista.getLblImporteDevuelto().getText() == "")) {
+
+
+
+			//Obtenemos el nombre del inscrito
+
+			String nombreInscrito = vista.getLblNombreInscripcion().getText();
 
 			Date fechaActual = Date.from(vista.getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
-			double importedevuelto = Double.parseDouble(vista.getLblImporteDevuelto().getText());
+
+			double importedevuelto = 0.0;
+
+			importedevuelto = Double.parseDouble(vista.getLblImporteDevuelto().getText());
 
 			modelo.registrarDevolucion(importedevuelto, Util.dateToIsoString(fechaActual), idInscripcion);
 
 			enviarEmail(idAlumno, nombreInscrito);
 
-			SwingUtil.showMessage("La inscripción del alumno " + nombreInscrito + " ha sido realizada con éxito. Se le han devuelto " + importedevuelto + " €", "Servicio de cancelaciones");
+			SwingUtil.showMessage("La cancelación de la inscripción del alumno " + nombreInscrito + " ha sido realizada con éxito. Se le han devuelto " + importedevuelto + " €", "Servicio de cancelaciones");
 
 			getListaInscripciones();
 
 			setControls(false);
+
+		}
+
+
 	}
 
 		public void enviarEmail(int idAlumno, String alumno){
@@ -120,12 +132,11 @@ public class InsertarDevolucionController {
 		public void getListaInscripciones() {
 
 			this.eraseControls(true);
-			//Obtengo la tabla de inscripciones
+			// Obtengo la tabla de inscripciones
 			JTable table = vista.getTableInscripciones();
-			TableModel tmodel; //Modelo de la tabla
 			Date fechaActual = Date.from(vista.getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-			List<cancelacionDTO> inscripcionesAll = modelo.getListaInscripciones(fechaActual);
+			List<CancelacionDTO> inscripcionesAll = modelo.getListaInscripciones(fechaActual);
 			//tmodel = SwingUtil.getTableModelFromPojos(inscripcionesAll, new String[] { "id", "alumno_id", "nombre", "coste", "nombre_curso", "inicio_curso" }); //La primera columna estará oculta
 			table.setModel(SwingUtil.getTableModelFromPojos(
 					inscripcionesAll,
@@ -135,7 +146,10 @@ public class InsertarDevolucionController {
 					));
 
 			// Ocultar foreign keys de la tabla
-			table.removeColumn(table.getColumnModel().getColumn(0));
+			for(int i=0; i<2; i++) {
+				table.removeColumn(table.getColumnModel().getColumn(0));
+
+			}
 			table.setDefaultEditor(Object.class, null); // Deshabilitar edición
 
 			SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas

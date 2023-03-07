@@ -15,5 +15,4 @@ public class PagoDTO {
 		inscripcion_id;
 
 	public PagoDTO() { }
-
 }

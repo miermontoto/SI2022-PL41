@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.Data;
 
 @Setter @Getter @Data
-public class cancelacionDTO {
+public class CancelacionDTO {
 
 	private int id;
 	private int alumno_id;
@@ -14,9 +14,9 @@ public class cancelacionDTO {
 	private String nombre_curso;
 	private String inicio_curso;
 
-	public cancelacionDTO() { }
+	public CancelacionDTO() { }
 
-	public cancelacionDTO(int id, int alumno_id, String Nombre_alumno, String Coste_curso, String Nombre_curso, String Inicio_curso) {
+	public CancelacionDTO(int id, int alumno_id, String Nombre_alumno, String Coste_curso, String Nombre_curso, String Inicio_curso) {
 		this.id = id;
 		this.alumno_id = alumno_id;
 		this.nombre = Nombre_alumno;

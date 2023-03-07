@@ -28,6 +28,7 @@ public class RegistrarPagoAlumnoController {
 	private String idInscripcion = null;
 	private String idAlumno = null;
 	private String idCurso = null;
+	private List<InscripcionDTO> inscripciones;
 
 	public void initView() {
 		getListaInscripciones(); // Precarga inicial de la lista de inscripciones
@@ -66,7 +67,8 @@ public class RegistrarPagoAlumnoController {
 		idCurso = (String) tempModel.getValueAt(fila, 2);
 		view.getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 3));
 
-		setControls(true);
+		InscripcionState estado = inscripciones.get(fila).getEstado();
+		setControls(estado == InscripcionState.PENDIENTE || estado == InscripcionState.EXCESO);
 	}
 
 	private void handleInsertar() {
@@ -92,17 +94,15 @@ public class RegistrarPagoAlumnoController {
 
 	public void getListaInscripciones() {
 		JTable table = view.getTableInscripciones();
-		List<InscripcionDTO> inscripciones;
 
 		String date = view.getMain().getToday().toString();
 		inscripciones = model.getInscripciones(date);
 
 		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
-			x.setEstado(g41.si2022.util.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), model.getPagos(x.getInscripcion_alumno_id(), x.getInscripcion_curso_id())));
+			x.setEstado(g41.si2022.util.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), Double.parseDouble(x.getInscripcion_pagado())));
 			if(model.isCancelled(idInscripcion))
 				x.setEstado(InscripcionState.CANCELADA);
-			
-			if (!view.getChkAll().isSelected() && (x.getEstado() == InscripcionState.PENDIENTE || x.getEstado() ==InscripcionState.CANCELADA)) {
+			if (!view.getChkAll().isSelected() && x.getEstado() != InscripcionState.PENDIENTE && x.getEstado() != InscripcionState.EXCESO) {
 				inscripciones.remove(x);
 			}
 		});
