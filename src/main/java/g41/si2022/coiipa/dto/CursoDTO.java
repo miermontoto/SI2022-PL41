@@ -21,7 +21,9 @@ public class CursoDTO {
 		docente_id, // Annadido por RegistrarCurso
 		ingresos, // Annadido por ConsultarIngresosGastos
 		gastos, // Annadido por ConsultarIngresosGastos
-		balance; // Annadido por ConsultarIngresosGastos
+		balance, // Annadido por ConsultarIngresosGastos
+		pagoHighestFecha, // Annadido por ConsultarIngresosGastos
+		pagoLowestFecha; // Annadido por ConsultarIngresosGastos
 
 	private g41.si2022.util.CursoState estado; // Annadido por ?
 

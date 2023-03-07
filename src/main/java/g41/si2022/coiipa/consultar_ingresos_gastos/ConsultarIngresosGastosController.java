@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import java.util.List;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.CursoState;
@@ -20,6 +21,10 @@ public class ConsultarIngresosGastosController {
 
 	private List<CursoDTO> cursos;
 	private java.util.function.Supplier<List<CursoDTO>> sup = () -> filterData();
+	private java.util.function.Supplier<List<CursoDTO>> supOutOfRangeDates = () -> filterData().stream().filter(x -> 
+		 	(view.getEndDatePicker().getDate() != null && x.getPagoHighestFecha() != null && x.getPagoHighestFecha().compareTo(view.getEndDatePicker().getDate().toString()) > 0) ||
+			(view.getStartDatePicker().getDate() != null && x.getPagoLowestFecha() != null && x.getPagoLowestFecha().compareTo(view.getStartDatePicker().getDate().toString()) < 0)
+	).collect(Collectors.toList());
 
 	/**
 	 * Filters the data set.
@@ -53,12 +58,12 @@ public class ConsultarIngresosGastosController {
 		start = this.view.getStartDatePicker().getDate(), // All entries' end date must be higher than the filter's start date
 		end = this.view.getEndDatePicker().getDate(); // All entries' start date must be lower than the filter's end date
 		if (start != null) {
-			Stream.of((CursoDTO[]) aux.toArray())
+			aux.stream()
 			.filter(x -> start.toString().compareTo(x.getEnd()) > 0)	// We remove the entries whose end date is lower than the filter's start date
 			.forEach(output::remove);
 		}
 		if (end != null) {
-			Stream.of((CursoDTO[]) aux.toArray())
+			aux.stream()
 			.filter(x -> end.toString().compareTo(x.getStart_inscr()) < 0)	// We remove the entries whose start date is higher than the filter's end date
 			.forEach(output::remove);
 		}
@@ -120,6 +125,15 @@ public class ConsultarIngresosGastosController {
 						null
 						)
 				);
+		this.view.getOffMovimientosTable().setModel(
+				SwingUtil.getTableModelFromPojos(
+						this.supOutOfRangeDates.get(),
+						new String[] { "nombre", "start_inscr", "end_inscr", "start", "end", "ingresos", "gastos", "balance" },
+						new String[] { "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Ingresos", "Gastos", "Balance" },
+						null
+						)
+				);
+				
 	}
 
 	/**
