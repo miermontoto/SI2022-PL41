@@ -191,11 +191,10 @@ public class RegistrarCursoView extends g41.si2022.ui.Tab {
 
 		JPanel bottomPane = new JPanel();
 		bottomPane.setLayout(new BorderLayout());
-
 		bottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar profesor"), BorderLayout.NORTH);
 
 		JScrollPane sp = new JScrollPane();
-
+		sp.getVerticalScrollBar().setUnitIncrement(20);
 		sp.setPreferredSize(new java.awt.Dimension(
 				this.getWidth(), 150
 		));
