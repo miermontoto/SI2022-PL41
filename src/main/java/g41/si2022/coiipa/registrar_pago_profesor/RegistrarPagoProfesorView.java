@@ -14,8 +14,8 @@ import net.miginfocom.swing.MigLayout;
 import lombok.Getter;
 
 import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.SwingMain;
-import g41.si2022.util.Tab;
+import g41.si2022.ui.SwingMain;
+import g41.si2022.ui.Tab;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 import javax.swing.JCheckBox;
