@@ -7,7 +7,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.Border;
 
+import g41.si2022.util.BetterDatePicker;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import g41.si2022.ui.SwingMain;
@@ -23,6 +25,7 @@ public class GestionarCursosView extends Tab {
     private JTextArea txtDescripcion;
     private JTextArea txtProfesor;
     private JTextArea txtLugar;
+    private BetterDatePicker startDate, endDate;
 
     public GestionarCursosView(SwingMain main)
     {
@@ -50,13 +53,6 @@ public class GestionarCursosView extends Tab {
         // centerPanel (BorderLayout.CENTER) with label and table
         JPanel centerPanel = new JPanel(new BorderLayout());
 
-        // Add elements to centerPanel
-        centerPanel.add(lblCursos, BorderLayout.NORTH);
-        centerPanel.add(scrCursos, BorderLayout.CENTER);
-
-        // rightPanel (BorderLayout.EAST) with label and comboBox
-        JPanel eastPanel = new JPanel(new GridLayout());
-
         // eastPanel's elements
         JLabel lblFiltro = new JLabel("Filtrar por:");
         cbFiltro = new JComboBox<String>();
@@ -65,13 +61,30 @@ public class GestionarCursosView extends Tab {
         cbFiltro.addItem("Fecha");
         cbFiltro.addItem("Estado");
 
+        JPanel anotherNorthPanel = new JPanel(new GridLayout());
+
+        // Add elements to centerPanel
+        anotherNorthPanel.add(lblFiltro);
+        anotherNorthPanel.add(cbFiltro);
+        anotherNorthPanel.add(startDate = new BetterDatePicker());
+        anotherNorthPanel.add(endDate = new BetterDatePicker());
+        centerPanel.add(anotherNorthPanel, BorderLayout.NORTH);
+        centerPanel.add(lblCursos, BorderLayout.CENTER);
+        centerPanel.add(scrCursos, BorderLayout.CENTER);
+
+        // rightPanel (BorderLayout.EAST) with label and comboBox
+        // JPanel eastPanel = new JPanel(new GridLayout());
+
+        
         // Add items to eastPanel
-        eastPanel.add(lblFiltro);
-        eastPanel.add(cbFiltro);
+        // eastPanel.add(lblFiltro);
+        // eastPanel.add(cbFiltro);
+        // eastPanel.add(startDate = new BetterDatePicker());
+        // eastPanel.add(endDate = new BetterDatePicker());
 
         // Add elements to mainNorthPanel
         mainNorthPanel.add(centerPanel, BorderLayout.NORTH);
-        mainNorthPanel.add(eastPanel, BorderLayout.EAST);
+        // mainNorthPanel.add(eastPanel, BorderLayout.EAST);
 
         // ------------- main.BorderLayout.CENTER -------------
         JPanel mainCenterPanel = new JPanel(new GridLayout(4, 2));
