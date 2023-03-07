@@ -10,7 +10,7 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
-import g41.si2022.coiipa.dto.cancelacionDTO;
+import g41.si2022.coiipa.dto.CancelacionDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
 
@@ -46,15 +46,15 @@ public class InsertarDevolucionController {
 	private void setControls(boolean status) {
 
 		vista.getBtnCancelarInscripcion().setEnabled(status);
-		
+
 	}
 
 	private void eraseControls(boolean eliminaraviso) {
-		
+
 		vista.getLblNombreInscripcion().setText("No se ha seleccionado ningún nombre");
 		vista.getLblImporteDevuelto().setText("");
 		if(eliminaraviso) vista.getLblError().setText("");
-		
+
 	}
 
 	private void handleSelect() {
@@ -91,19 +91,19 @@ public class InsertarDevolucionController {
 	}
 
 	private void handleDevolver() {
-		
+
 		if(!(vista.getLblImporteDevuelto().getText() == null || vista.getLblImporteDevuelto().getText() == "")) {
-			
-			
-		
+
+
+
 			//Obtenemos el nombre del inscrito
-		
+
 			String nombreInscrito = vista.getLblNombreInscripcion().getText();
 
 			Date fechaActual = Date.from(vista.getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
-			
+
 			double importedevuelto = 0.0;
-			
+
 			importedevuelto = Double.parseDouble(vista.getLblImporteDevuelto().getText());
 
 			modelo.registrarDevolucion(importedevuelto, Util.dateToIsoString(fechaActual), idInscripcion);
@@ -115,10 +115,10 @@ public class InsertarDevolucionController {
 			getListaInscripciones();
 
 			setControls(false);
-			
+
 		}
-		
-		
+
+
 	}
 
 		public void enviarEmail(int idAlumno, String alumno){
@@ -136,7 +136,7 @@ public class InsertarDevolucionController {
 			JTable table = vista.getTableInscripciones();
 			Date fechaActual = Date.from(vista.getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-			List<cancelacionDTO> inscripcionesAll = modelo.getListaInscripciones(fechaActual);
+			List<CancelacionDTO> inscripcionesAll = modelo.getListaInscripciones(fechaActual);
 			//tmodel = SwingUtil.getTableModelFromPojos(inscripcionesAll, new String[] { "id", "alumno_id", "nombre", "coste", "nombre_curso", "inicio_curso" }); //La primera columna estará oculta
 			table.setModel(SwingUtil.getTableModelFromPojos(
 					inscripcionesAll,

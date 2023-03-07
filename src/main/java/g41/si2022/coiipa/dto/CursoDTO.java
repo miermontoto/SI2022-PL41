@@ -32,6 +32,4 @@ public class CursoDTO {
 	private g41.si2022.util.CursoState estado; // Annadido por ?
 
 	public CursoDTO() { }
-
-	public static String getSqlQuery() { return "select * from curso order by id asc"; }
 }
