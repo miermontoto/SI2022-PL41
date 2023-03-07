@@ -1,6 +1,8 @@
 package g41.si2022.coiipa.inscribir_usuario;
 
 import java.awt.BorderLayout;
+
+
 import lombok.Getter;
 import java.awt.GridLayout;
 import javax.swing.JButton;
@@ -17,9 +19,9 @@ import javax.swing.ButtonGroup;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
+import g41.si2022.ui.Tab;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
-import g41.si2022.util.Tab;
 
 @Getter
 public class InscribirUsuarioView extends Tab {
@@ -46,7 +48,7 @@ public class InscribirUsuarioView extends Tab {
 	private JLabel lblSignup;
 	private JLabel lblStatus;
 
-	public InscribirUsuarioView(g41.si2022.util.SwingMain main) {
+	public InscribirUsuarioView(g41.si2022.ui.SwingMain main) {
 		super(main);
 		initialize();
 	}

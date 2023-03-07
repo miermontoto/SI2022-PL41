@@ -5,7 +5,6 @@ import java.util.Map;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -13,8 +12,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import g41.si2022.coiipa.dto.ProfesorDTO;
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.SwingUtil;
 
 public class RegistrarCursoController {
 	private RegistrarCursoModel model;
@@ -59,7 +58,7 @@ public class RegistrarCursoController {
 			@Override
 			public void focusGained(FocusEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
@@ -69,7 +68,7 @@ public class RegistrarCursoController {
 					tf.setText("");
 				}
 			}
-			
+
 		});
 	}
 
@@ -123,39 +122,36 @@ public class RegistrarCursoController {
 		cursoFin = view.getCursoFin();
 		// Load the Inscripcion Ini DatePicker listener (set Fin to next day)
 		inscripcionIni.addDateChangeListener((e) -> {
-			// Query on #20879
+			// Query on #20879 -> Resolved to: Allow but issue a warning.
 			if (inscripcionIni.compareTo(this.view.getMain().getTodayPicker()) < 0) {
-				inscripcionIni.setDate(this.view.getMain().getToday());
+				SwingUtil.raiseWarning("Se está seleccionando una fecha anterior al día de hoy.");
 			}
-			if (inscripcionFin.getDate() == null) {
+			if (inscripcionFin.getDate() == null || inscripcionFin.compareTo(inscripcionIni) <= 0) {
 				inscripcionFin.setDate(e.getNewDate().plusDays(1));
 			}
 		});
 		// Load the Curso Ini DatePicker listener (set Fin to next day)
 		cursoIni.addDateChangeListener((e) -> {
-			if (cursoFin.getDate() == null) {
+			if (cursoFin.getDate() == null || cursoFin.compareTo(cursoIni) <= 0) {
 				cursoFin.setDate(e.getNewDate().plusDays(1));
+			}
+			if (inscripcionFin == null || inscripcionFin.compareTo(cursoIni) >= 0) {
+				inscripcionFin.setDate(e.getNewDate().minusDays(1));
 			}
 		});
 		// Load the Inscripcion Fin DatePicker listener (set Fin to next day if lower than Ini)
 		inscripcionFin.addDateChangeListener((e) -> {
-			if (inscripcionIni.getDate() != null && inscripcionIni.compareTo(inscripcionFin) >= 0) {
-				inscripcionFin.setDate(inscripcionIni.getDate().plusDays(1));
+			if (cursoIni.getDate() == null || cursoIni.compareTo(inscripcionFin) <= 0) {
+				cursoIni.setDate(e.getNewDate().plusDays(1));
 			}
-			if (cursoFin.getDate() != null && inscripcionFin.compareTo(cursoFin) >= 0) {
-				cursoFin.setDate(inscripcionFin.getDate());
-			}
-			if (cursoIni.getDate() == null) {
-				cursoIni.setDate(inscripcionFin.getDate().plusDays(1));
+			if (inscripcionIni.getDate() == null || inscripcionIni.compareTo(inscripcionFin) >= 0) {
+				inscripcionIni.setDate(e.getNewDate().minusDays(1));
 			}
 		});
 		// Load the Curso Fin DatePicker listener (set Fin to next day if lower than Ini)
 		cursoFin.addDateChangeListener((e) -> {
-			if (cursoIni.getDate() != null && cursoIni.compareTo(cursoFin) >= 0) {
-				cursoFin.setDate(cursoIni.getDate().plusDays(1));
-			}
-			if (inscripcionFin.getDate() != null && inscripcionFin.compareTo(cursoFin) >= 0) {
-				inscripcionFin.setDate(cursoFin.getDate());
+			if (cursoIni.getDate() == null || cursoIni.compareTo(cursoFin) >= 0) {
+				cursoIni.setDate(e.getNewDate().minusDays(1));
 			}
 		});
 	}
@@ -183,7 +179,7 @@ public class RegistrarCursoController {
 		}
 		this.model.insertCurso(
 				view.getNombreCurso(), view.getObjetivosDescripcion(),
-				view.getCoste(), 
+				view.getCoste(),
 				view.getInscripcionIniDate(), view.getInscripcionFinDate(), view.getCursoIniDate(), view.getCursoFinDate(),
 				view.getPlazas(), view.getLocalizacion(),
 				profesorElegido.get().getId(), // El curso solo tiene un profesor
