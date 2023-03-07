@@ -55,8 +55,12 @@ public class InscribirUsuarioView extends Tab {
 	}
 
     private void toggle() {
-		JTextField[] fields = {txtEmail, txtNombre, txtApellidos, txtTelefono, txtEmailLogin};
-        for(JTextField field : fields) field.setEnabled(!field.isEnabled());
+		boolean isSignin = radioSignin.isSelected();
+		txtEmail.setEnabled(!isSignin);
+		txtNombre.setEnabled(!isSignin);
+		txtApellidos.setEnabled(!isSignin);
+		txtTelefono.setEnabled(!isSignin);
+		txtEmailLogin.setEnabled(isSignin);
 		lblSignin.setText("");
 		lblSignup.setText("");
     }
@@ -89,8 +93,8 @@ public class InscribirUsuarioView extends Tab {
 
 	private JPanel radioPanel () {
 		JPanel radioPanel = new JPanel(new java.awt.FlowLayout());
-		radioPanel.add(radioSignin);
 		radioPanel.add(radioSignup);
+		radioPanel.add(radioSignin);
 		radioSignin.addActionListener( e -> toggle() );
 		radioSignup.addActionListener( e -> toggle() );
 		return radioPanel;
@@ -99,7 +103,7 @@ public class InscribirUsuarioView extends Tab {
 	private JPanel signupPanel () {
 		JPanel output = new JPanel (new BorderLayout());
 		output.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK));
-		output.add(JLabelFactory.getLabel(FontType.subtitle, "Signup"), BorderLayout.NORTH);
+		output.add(JLabelFactory.getLabel(FontType.subtitle, "Registro de usuario"), BorderLayout.NORTH);
 		txtNombre = new JTextField("", InscribirUsuarioView.textFieldSize);
 		txtApellidos = new JTextField();
 		txtEmail = new JTextField();
@@ -140,7 +144,7 @@ public class InscribirUsuarioView extends Tab {
 
 		JPanel output = new JPanel(new BorderLayout());
 		output.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
-		output.add(JLabelFactory.getLabel(FontType.subtitle, "Signin"), BorderLayout.NORTH);
+		output.add(JLabelFactory.getLabel(FontType.subtitle, "Inicio de sesión"), BorderLayout.NORTH);
 
 		JPanel signinPanel = new JPanel(new GridBagLayout());
 		output.add(signinPanel, BorderLayout.CENTER);
