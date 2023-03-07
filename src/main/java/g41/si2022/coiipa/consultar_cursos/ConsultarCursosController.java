@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.consultar_cursos;
 
 import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.ui.SwingUtil;
 
@@ -63,19 +64,23 @@ public class ConsultarCursosController {
 		cursos = model.getListaCursos();
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
-				listaPagos = model.getListaPagos(curso.getId());
 
-				curso.setInscripcion_estado(StateUtilities.getInscripcionState(Double.parseDouble(curso.getCoste()), listaPagos));
-				
-				TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosAndInscr, new String[] { "inscripcion_fecha", "inscripcion_alumno", "inscripcion_estado" },
-						new String[] { "Fecha de inscripción", "Alumno", "Estado"}, null);
+				List<InscripcionDTO> listaInscr = model.getListaInscr(curso.getId());
+				for(InscripcionDTO inscripcion : listaInscr) {
+					listaPagos = model.getListaPagos(inscripcion.getId());
+					inscripcion.setEstado(StateUtilities.getInscripcionState(Double.valueOf(Double.parseDouble(curso.getCoste())), listaPagos));
+				}
+
+				TableModel tableModel = SwingUtil.getTableModelFromPojos(listaInscr,
+					new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "estado" },
+						new String[] { "Fecha de inscripción", "Nombre", "Apellidos", "Estado" }, null);
 				view.getTablaInscr().setModel(tableModel);
 				SwingUtil.autoAdjustColumns(view.getTablaInscr());
 
 				return;
 			}
 		}
-        throw new ApplicationException("Curso seleccionado desconocido");		
+        throw new ApplicationException("Curso seleccionado desconocido");
 	}
 
 	public void balance() {
