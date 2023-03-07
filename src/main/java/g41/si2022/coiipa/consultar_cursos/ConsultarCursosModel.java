@@ -15,12 +15,12 @@ public class ConsultarCursosModel {
 	public List<CursoDTO> getListaCursos() {
 		String sql = "SELECT * FROM curso "
 				   + "INNER JOIN inscripcion on inscripcion.id = curso.id ";
-				   
+
 		return db.executeQueryPojo(CursoDTO.class, sql);
 	}
 
 	public List<CursoDTO> getListaCursosInscr() {
-		String sql = "SELECT curso.nombre, coste, plazas, start, end, inscripcion.fecha as inscripcion_fecha, start_inscr, end_inscr, "
+		String sql = "SELECT curso.id, curso.nombre, coste, plazas, start, end, inscripcion.fecha as inscripcion_fecha, start_inscr, end_inscr, "
 				   + "alumno.nombre as inscripcion_alumno "
 				   + "FROM curso INNER JOIN inscripcion "
 				   + "ON curso.id = inscripcion.curso_id "
@@ -56,7 +56,9 @@ public class ConsultarCursosModel {
 	}
 
 	public String getIngresosEstimados(String idCurso) {
-		String sql = "SELECT coste * plazas as ingrEst from curso WHERE id = ?";
+		String sql = "select coste * count(*) from curso "
+				   + "inner join inscripcion on curso.id = inscripcion.curso_id "
+				   + "where curso.id = ?";
 		try {
 			return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
 		} catch (IndexOutOfBoundsException ioob) { return "0"; }

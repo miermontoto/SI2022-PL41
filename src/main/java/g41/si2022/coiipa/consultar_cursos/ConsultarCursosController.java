@@ -92,37 +92,25 @@ public class ConsultarCursosController {
 				ingresosEstimados = model.getIngresosEstimados(curso.getId());
 				costeCurso = model.getCosteCurso(curso.getId());
 
-				// dont needed
-				// balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Integer.parseInt(gastos));
-				StringBuilder sb = new StringBuilder();
-
-				sb.append("<html><body>");
-				sb.append("<p><b>Gastos:</b> " + gastos + "€");
-				sb.append("<p></p>");
-				sb.append("<p></p>");
-				sb.append("<p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
-				sb.append("<p></p>");
-				sb.append("<p></p>");
-				// dont needed
-				// sb.append("<p><b>Balance estimado:</b> " + balanceEstimado + "€");
-
 				listaPagos = model.getListaPagos(curso.getId());
 				InscripcionState estado = StateUtilities.getInscripcionState(Double.valueOf(Double.parseDouble(costeCurso)), listaPagos);
 
-				if (estado == InscripcionState.PAGADA)
-					ingresosReales = model.getImportePagos(curso.getId());
-				else
-					ingresosReales = "0";
+				ingresosReales = estado == InscripcionState.PAGADA ? model.getImportePagos(curso.getId()) : "0";
 
-				// dont needed
-				// balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Integer.parseInt(gastos));
-				sb.append("<p><b>Ingresos reales:</b> " + ingresosReales + "€");
-				// dont needed
-				// sb.append("<p><b>Balance real:</b> " + balanceReal + "€");
+				String balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Integer.parseInt(gastos));
+
+				String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Integer.parseInt(gastos));
+				StringBuilder sb = new StringBuilder();
+
+				sb.append("<html><body>");
+				sb.append("<p><b>Gastos actuales:</b> " + gastos + "€");
+				sb.append("<p><p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
+				sb.append("<p><b>Balance estimado:</b> " + balanceEstimado + "€");
+				sb.append("<p><p><b>Ingresos actuales:</b> " + ingresosReales + "€");
+				sb.append("<p><b>Balance real:</b> " + balanceReal + "€");
 				sb.append("</body></html>");
 
 				view.getLblEconomicInfo().setText(sb.toString());
-
 				return;
 			}
 		}
