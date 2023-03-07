@@ -10,11 +10,11 @@ public class StateUtilities {
 	private StateUtilities () {
 		throw new UnexpectedException("StateUtilities");
 	}
-	
+
 	/**
 	 * Returns the current state of a course for a given date.
 	 * NOTE: Calling this function will execute a query.
-	 * 
+	 *
 	 * @param curso Course to be checked.
 	 * @param today Reference date to be used.
 	 * @return State of the course for the given date.
@@ -22,12 +22,12 @@ public class StateUtilities {
 	public static CursoState getCursoState (CursoDTO curso, LocalDate today) {
 		return getCursoState(curso, today, false);
 	}
-	
+
 	/**
 	 * Returns the current state of a course for a given date.
 	 * NOTE: Calling this function will execute a query
 	 * if the parameter <code>canBeCerrado</code> is set to <code>true</code>.
-	 * 
+	 *
 	 * @param curso Course to be checked.
 	 * @param today Reference date to be used.
 	 * @param canBeCerrado true if the curso can be cerrado, false if not.
@@ -49,15 +49,15 @@ public class StateUtilities {
 			return CursoState.FINALIZADO;
 		}
 	}
-	
+
 	/**
 	 * Returns the cursos with the states.
 	 * This function will return the CERRADO state in particular, which is not returned by <code>getCursoState</code>.
-	 * 
+	 *
 	 * @return Cursos with states.
 	 */
 	public static List<CursoDTO> getCursosWithStates (LocalDate today) {
-		String sql = 
+		String sql =
 				"SELECT *, CASE WHEN fecha_pago IS NOT NULL THEN 'CERRADO' ELSE NULL END AS cursoEstado\r\n "
 				+ "FROM curso "
 				+ "LEFT JOIN docencia ON curso.id = docencia.curso_id "
@@ -66,15 +66,15 @@ public class StateUtilities {
 		lc.forEach(x -> x.setCursoEstado(x.getCursoEstado() == null ? getCursoState(x, today, false).toString() : x.getCursoEstado()));
 		return lc;
 	}
-	
+
 	/**
 	 * Returns the cursos with the states.
 	 * This function will return the CERRADO state in particular, which is not returned by <code>getCursoState</code>.
-	 * 
+	 *
 	 * @return Cursos with states.
 	 */
 	public static List<CursoDTO> getCursosWithStates (String cursoId, LocalDate today) {
-		String sql = 
+		String sql =
 				"SELECT *, CASE WHEN fecha_pago IS NOT NULL THEN 'CERRADO' ELSE NULL END AS cursoEstado\r\n "
 				+ "FROM curso "
 				+ "LEFT JOIN docencia ON curso.id = docencia.curso_id "
@@ -84,10 +84,10 @@ public class StateUtilities {
 		lc.forEach(x -> x.setCursoEstado(x.getCursoEstado() == null ? getCursoState(x, today, false).toString() : x.getCursoEstado()));
 		return lc;
 	}
-	
+
 	/**
 	 * Returns the InscripcionState for a given Course and student.
-	 * 
+	 *
 	 * @param curso Course that is being paid.
 	 * @param pagos Payments of this student and this course.
 	 * @return State of the inscription
@@ -101,7 +101,7 @@ public class StateUtilities {
 				devuelto += Double.parseDouble(p.getImportedevuelto());
 			}
 		}
-		System.out.printf("Paid %f Coste %f\n", paid, coste);
+		//System.out.printf("Paid %f Coste %f\n", paid, coste);
 
 		if (paid > coste) return InscripcionState.EXCESO;
 		if (paid < coste) return InscripcionState.PENDIENTE;

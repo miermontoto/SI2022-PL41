@@ -183,7 +183,7 @@ public class Util {
 				devuelto += Double.parseDouble(p.getImportedevuelto());
 			}
 		}
-		System.out.printf("Paid %f Coste %f Devuelto %f\n", paid, coste, devuelto);
+		//System.out.printf("Paid %f Coste %f Devuelto %f\n", paid, coste, devuelto);
 		if (devuelto > 0) return InscripcionState.CANCELADA;
 		if (paid > coste) return InscripcionState.EXCESO;
 		if (paid < coste) return InscripcionState.PENDIENTE;
