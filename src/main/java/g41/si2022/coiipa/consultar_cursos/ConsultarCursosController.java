@@ -36,7 +36,7 @@ public class ConsultarCursosController {
 	public void initView()
 	{
 		getListaCursos();
-		view.getTablaCursos().addMouseListener(new MouseAdapter() 
+		view.getTablaCursos().addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mouseReleased(MouseEvent ent) {
@@ -51,7 +51,7 @@ public class ConsultarCursosController {
 
 		for (CursoDTO curso : cursosAndInscr)
 			curso.setEstado(StateUtilities.getCursoState(curso, this.view.getMain().getToday()));
-		
+
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosAndInscr, new String[] { "nombre", "estado", "plazas", "start", "end" },
         		new String[] { "Nombre", "Estado", "Plazas", "Fecha ini. curso", "Fecha fin curso" }, null);
         view.getTablaCursos().setModel(tableModel);
@@ -61,11 +61,11 @@ public class ConsultarCursosController {
 	public void getListaInscr() {
 		for (CursoDTO curso : cursosAndInscr) {
 			listaPagos = model.getListaPagos(curso.getId());
-			
+
 			curso.setInscripcion_estado(StateUtilities.getInscripcionState(Double.parseDouble(curso.getCoste()), listaPagos));
 
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
-				TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosAndInscr, new String[] { "fecha", "inscripcion_alumno", "inscripcion_estado" },
+				TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosAndInscr, new String[] { "inscripcion_fecha", "inscripcion_alumno", "inscripcion_estado" },
 						new String[] { "Fecha de inscripción", "Alumno", "Estado"}, null);
 				view.getTablaInscr().setModel(tableModel);
 				SwingUtil.autoAdjustColumns(view.getTablaInscr());
@@ -82,21 +82,21 @@ public class ConsultarCursosController {
 				gastos = model.getGastos(curso.getId());
 				ingresosEstimados = model.getIngresosEstimados(curso.getId());
 				costeCurso = model.getCosteCurso(curso.getId());
-				
+
 				balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Integer.parseInt(gastos));
 				StringBuilder sb = new StringBuilder();
-				
+
 				sb.append("<html><body>");
 				sb.append("<p><b>Gastos:</b> " + gastos + "€");
 				sb.append("<p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
 				sb.append("<p><b>Balance estimado:</b> " + balanceEstimado + "€");
-				
+
 				listaPagos = model.getListaPagos(curso.getId());
 				InscripcionState estado = StateUtilities.getInscripcionState(Double.valueOf(Double.parseDouble(costeCurso)), listaPagos);
-				
-				if (estado == InscripcionState.PAGADA) 
+
+				if (estado == InscripcionState.PAGADA)
 					ingresosReales = model.getImportePagos(curso.getId());
-				else	
+				else
 					ingresosReales = "0";
 
 				balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Integer.parseInt(gastos));
@@ -118,5 +118,5 @@ public class ConsultarCursosController {
 	// 			new String[] { "Fecha de inscripción", "Alumno"}, null);
 	// 	view.getTablaInscr().setModel(tableModel);
 	// 	SwingUtil.autoAdjustColumns(view.getTablaInscr());
-	// }	
+	// }
 }

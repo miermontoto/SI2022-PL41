@@ -13,7 +13,7 @@ public class ConsultarCursosModel {
 	private Database db = new Database();
 
 	public List<CursoDTO> getListaCursos() {
-		String sql = "SELECT curso.nombre, plazas, start, end, inscripcion.fecha as inscripcion_fecha, start_inscr, end_inscr, "
+		String sql = "SELECT curso.nombre, coste, plazas, start, end, inscripcion.fecha as inscripcion_fecha, start_inscr, end_inscr, "
 				   + "alumno.nombre as inscripcion_alumno "
 				   + "FROM curso INNER JOIN inscripcion "
 				   + "ON curso.id = inscripcion.curso_id "
@@ -38,14 +38,16 @@ public class ConsultarCursosModel {
 
 	public String getCosteCurso(String idCurso) {
 		String sql = "SELECT coste FROM curso where id = ?";
-
-		return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
+		try {
+			return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
+		} catch (IndexOutOfBoundsException ioob) {return "0";}
 	}
 
 	public String getIngresosEstimados(String idCurso) {
 		String sql = "SELECT coste * plazas as ingrEst from curso WHERE id = ?";
-
-		return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
+		try {
+			return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
+		} catch (IndexOutOfBoundsException ioob) { return "0"; }
 	}
 
 	public List<PagoDTO> getListaPagos(String idCurso) {
@@ -60,9 +62,11 @@ public class ConsultarCursosModel {
 	public String getImportePagos(String idCurso) {
 		String sql = "SELECT sum(importe) FROM pago "
 					 + "INNER JOIN inscripcion ON pago.inscripcion_id = inscripcion.id "
-					 + "INNER JOIN curso ON inscripcion.curso_id = curso.id"
+					 + "INNER JOIN curso ON inscripcion.curso_id = curso.id "
 			 		 + "WHERE curso.id = ?" ;
 
-		return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
+		try {
+			return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
+		} catch (NullPointerException npe) { return "0"; }
 	}
 }
