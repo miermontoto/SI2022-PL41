@@ -1,7 +1,9 @@
 # Proyecto COIIPA (SI2022-PL41)
 \[[proyecto base original](https://github.com/javiertuya/samples-test-dev)\] |
 \[[redkanban](https://in2test.lsi.uniovi.es/redkanban/)\] |
-\[[teams doc](https://unioviedo.sharepoint.com/sites/CV22_SistemasdeInformacinGradoenIngenieraInformticaenTecnolo-SI2022-PL41/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fsites%2FCV22%5FSistemasdeInformacinGradoenIngenieraInformticaenTecnolo%2DSI2022%2DPL41%2FDocumentos%20compartidos%2FSI2022%2DPL41&p=true&ga=1)\]
+\[[teams doc](https://unioviedo.sharepoint.com/sites/CV22_SistemasdeInformacinGradoenIngenieraInformticaenTecnolo-SI2022-PL41/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fsites%2FCV22%5FSistemasdeInformacinGradoenIngenieraInformticaenTecnolo%2DSI2022%2DPL41%2FDocumentos%20compartidos%2FSI2022%2DPL41&p=true&ga=1)\] |
+\[[modelo de dominio](src/main/resources/mod_dominio.md)\]
+
  
 ## instalar (temporal)
 1. `Maven > Update Project...`
@@ -12,6 +14,7 @@ Solo funciona en JRE 1.8 (Java 8)
 
 ---
 
+# sprint 1
 ## info
 - Proyecto sobre COIPA, petición por el vicedecano
 - sw para apoyar cursos de formación
@@ -65,7 +68,7 @@ Solo funciona en JRE 1.8 (Java 8)
 - **economía**
 	- fundamental ingresos y gastos en un determinado periodo sobre los cursos de formación
 
-## restricciones sprint 1
+## restricciones
 - solo planificar actividades que tengan un unico profesor.
 - solo planificar actividades que se realizan en una única fecha.
 - el formulario solo se rellena por un miembro de la secretaría administrativa.
@@ -74,4 +77,17 @@ Solo funciona en JRE 1.8 (Java 8)
 - se asume que todas las transferencias se realizan con el importe correcto.
 - se asume que el tesorero no se puede equivocar a la hora de realizar transferencias.
 
-## [modelo de dominio](src/main/resources/mod_dominio.md)
+# sprint2
+
+## objetivos
+- (deshacer) actividades de más de una fecha.
+- (deshacer) las transferencias pueden tener un importe incorrecto.
+- (deshacer) actividades con más de un profesor
+- contratar cursos a empresas (docencias)
+- formalizar el cierre de un curso (cerrar el sistema comprobando incidencias, devoluciones, impagos...)
+- diferentes precios para colectivos diferentes
+- retrasar curso cuando no hay suficientes inscripciones (fechas nuevas, acuerdo con docencia, se avisa a los inscritos)
+- posibilidad de cancelar actividades (se reflejan devoluciones)
+- poder gestionar pagos y cobros por caja (en lugar de transferencias, tener en cuenta límite legal)
+- gestionar inscripciones múltiples (realizadas por entidades)
+
