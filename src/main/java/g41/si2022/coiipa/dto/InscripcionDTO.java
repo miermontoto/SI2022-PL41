@@ -21,6 +21,4 @@ public class InscripcionDTO {
     private InscripcionState estado;
 
     public InscripcionDTO() {}
-
-    // public static String getSqlQuery() { return "select * from inscripcion order by id asc"; }
 }

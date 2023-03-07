@@ -17,6 +17,4 @@ public class ProfesorDTO {
 	// generar la columa extra en la JTable de RegistrarCurso
 
 	public ProfesorDTO() { }
-
-	public static String getSqlQuery() { return "select * from docente order by apellidos asc"; }
 }

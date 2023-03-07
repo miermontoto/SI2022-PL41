@@ -8,20 +8,11 @@ import lombok.Data;
 
 public class DocenciaDTO {
 
-    private String 
+    private String
         id,
         remuneracion,
         curso_id,
         docente_id;
-    
+
     public DocenciaDTO() { }
-
-    public DocenciaDTO(String id, String remuneracion, String curso_id, String docente_id) {
-        this.id = id;
-        this.remuneracion = remuneracion;
-        this.curso_id = curso_id;
-        this.docente_id = docente_id;
-    }
-
-    public static String getSqlQuery() { return "SELECT * from docencia order by id asc"; }
 }
