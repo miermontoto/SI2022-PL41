@@ -31,7 +31,7 @@ public class ConsultarCursosModel {
 
 	// Modificar query para que devuelva los valores necesarios de inscripción de tipo CursoDTO
 	public List<InscripcionDTO> getListaInscr(String idCurso) {
-		String sql = "SELECT i.fecha as fecha, a.nombre as alumno_nombre, "
+		String sql = "SELECT i.id, i.fecha, a.nombre as alumno_nombre, "
 		+ " a.apellidos as alumno_apellidos"
 		+ " FROM inscripcion as i"
 		+ " INNER JOIN alumno as a ON i.alumno_id = a.id"
@@ -70,14 +70,13 @@ public class ConsultarCursosModel {
 		return db.executeQueryPojo(PagoDTO.class, sql, idCurso);
 	}
 
-	public String getImportePagos(String idCurso) {
-		String sql = "SELECT sum(importe) FROM pago "
-					 + "INNER JOIN inscripcion ON pago.inscripcion_id = inscripcion.id "
-					 + "INNER JOIN curso ON inscripcion.curso_id = curso.id "
-			 		 + "WHERE curso.id = ?" ;
+	public String getImportePagos(String idInscripcion) {
+		String sql = "SELECT sum(importe) FROM pago as p "
+					 + "INNER JOIN inscripcion as i ON p.inscripcion_id = i.id "
+			 		 + "WHERE i.id = ?" ;
 
 		try {
-			return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
-		} catch (NullPointerException npe) { return "0"; }
+			return String.valueOf((double) db.executeQueryArray(sql, idInscripcion).get(0)[0]);
+		} catch (NullPointerException npe) { return "0.0"; }
 	}
 }

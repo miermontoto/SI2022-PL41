@@ -108,11 +108,11 @@ public class RegistrarPagoAlumnoController {
 		});
 
 		table.setModel(SwingUtil.getTableModelFromPojos(
-				inscripciones,
-				new String[] { "inscripcion_id", "inscripcion_alumno_id", "inscripcion_curso_id", "alumno_nombre", "curso_nombre", "inscripcion_fecha", "curso_coste","inscripcion_pagado", "estado" },	//La primera columna estará oculta
-				new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
-				null
-				));
+			inscripciones,
+			new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "curso_nombre", "fecha", "curso_coste","pagado", "estado" },	//La primera columna estará oculta
+			new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
+			null
+		));
 
 		// Ocultar foreign keys de la tabla
 		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(0));

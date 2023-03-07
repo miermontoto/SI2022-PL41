@@ -16,14 +16,14 @@ public class RegistrarPagoAlumnoModel {
 				+ " i.alumno_id as inscripcion_alumno_id, "
 				+ " a.nombre as alumno_nombre, "
 				+ " c.coste as curso_coste, "
-				+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as inscripcion_pagado, "
+				+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as pagado, "
 				+ " c.nombre as curso_nombre, "
 				+ " i.curso_id as inscripcion_curso_id, "
 				+ " i.fecha as inscripcion_fecha"
 				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
 				+ " inner join curso as c on c.id = i.curso_id "
 				+ " left join pago as pa on pa.inscripcion_id = i.id "
-				+ " where i.fecha<=? and c.start >=? group by i.id order by i.fecha asc ";
+				+ " where i.fecha<=? and c.start >=? group by i.id order by i.fecha asc";
 		return db.executeQueryPojo(InscripcionDTO.class, sql, date, date);
 	}
 
