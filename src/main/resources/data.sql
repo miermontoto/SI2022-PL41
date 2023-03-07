@@ -99,5 +99,10 @@ insert into pago (importe, fecha, inscripcion_id) values
     (100, '2022-09-15', 14), (100, '2022-09-15', 15);
 
 insert into docencia (remuneracion, curso_id, docente_id) values
-(120, 1, 1), (90, 4, 4), (70, 5, 5),
-(110, 3, 6), (100, 2, 5), (80, 1, 4);
+    (120, 1, 1), (90, 4, 4), (70, 5, 5),
+    (110, 3, 6), (100, 2, 5), (80, 1, 4);
+
+insert into factura (fecha_introd, fecha_pago, docencia_id) values
+    ('2022-09-15', '', 1), ('2022-09-15', '', 2),
+    ('2022-09-15', '2022-09-15', 3), ('2022-09-15', '2022-09-15', 4),
+    ('2022-09-15', '', 5), ('2022-09-15', '', 6);

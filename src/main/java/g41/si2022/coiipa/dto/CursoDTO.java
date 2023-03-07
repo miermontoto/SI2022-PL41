@@ -17,6 +17,7 @@ public class CursoDTO {
 		end,
 		id,
 		plazas,
+		cursoEstado,	// Annadido por StateUtilities
 		plazas_libres, // Annadido por InscribirUsuario
 		docente_id, // Annadido por RegistrarCurso
 		ingresos, // Annadido por ConsultarIngresosGastos
@@ -31,6 +32,4 @@ public class CursoDTO {
 	private g41.si2022.util.CursoState estado; // Annadido por ?
 
 	public CursoDTO() { }
-
-	public static String getSqlQuery() { return "select * from curso order by id asc"; }
 }

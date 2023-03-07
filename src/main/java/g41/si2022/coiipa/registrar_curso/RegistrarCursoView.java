@@ -1,11 +1,9 @@
 package g41.si2022.coiipa.registrar_curso;
 
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.text.NumberFormatter;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
@@ -17,16 +15,13 @@ import g41.si2022.util.BetterDatePicker;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 
-public class RegistrarCursoView extends g41.si2022.util.Tab {
+public class RegistrarCursoView extends g41.si2022.ui.Tab {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField nombreCurso;
@@ -61,7 +56,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 	public void setObjetivosDescripcion (String objetivosDescripcion) { this.objetivosDescripcion.setText(objetivosDescripcion); }
 	public void setPlazas (int plazas) { this.plazas.setText(String.format("%d", Math.max(0, plazas))); }
 
-	public RegistrarCursoView (g41.si2022.util.SwingMain main) {
+	public RegistrarCursoView (g41.si2022.ui.SwingMain main) {
 		super(main);
 		this.initView();
 	}
@@ -218,7 +213,7 @@ public class RegistrarCursoView extends g41.si2022.util.Tab {
 		bottomPane.add(this.registrarCurso, BorderLayout.SOUTH);
 
 		this.add(bottomPane, BorderLayout.SOUTH);
-		add(new JLabel("Registrar Curso"), BorderLayout.NORTH);
+		add(JLabelFactory.getLabel(FontType.title, "Registrar Curso"), BorderLayout.NORTH);
 	}
 
 	@Override

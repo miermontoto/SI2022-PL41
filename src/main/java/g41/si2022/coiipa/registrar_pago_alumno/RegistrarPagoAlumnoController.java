@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.registrar_pago;
+package g41.si2022.coiipa.registrar_pago_alumno;
 
 import java.util.Date;
 import java.util.List;
@@ -10,16 +10,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
 import g41.si2022.coiipa.dto.InscripcionDTO;
+import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.InscripcionState;
-import g41.si2022.util.SwingUtil;
 import g41.si2022.util.Util;
 
-public class RegistrarPagoController {
+public class RegistrarPagoAlumnoController {
 
-	private RegistrarPagoView view;
-	private RegistrarPagoModel model;
+	private RegistrarPagoAlumnoView view;
+	private RegistrarPagoAlumnoModel model;
 
-	public RegistrarPagoController(RegistrarPagoView vista, RegistrarPagoModel modelo) {
+	public RegistrarPagoAlumnoController(RegistrarPagoAlumnoView vista, RegistrarPagoAlumnoModel modelo) {
 		this.view = vista;
 		this.model = modelo;
 		this.initView();
@@ -28,6 +28,7 @@ public class RegistrarPagoController {
 	private String idInscripcion = null;
 	private String idAlumno = null;
 	private String idCurso = null;
+	private List<InscripcionDTO> inscripciones;
 
 	public void initView() {
 		getListaInscripciones(); // Precarga inicial de la lista de inscripciones
@@ -66,7 +67,8 @@ public class RegistrarPagoController {
 		idCurso = (String) tempModel.getValueAt(fila, 2);
 		view.getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 3));
 
-		setControls(true);
+		InscripcionState estado = inscripciones.get(fila).getEstado();
+		setControls(estado == InscripcionState.PENDIENTE || estado == InscripcionState.EXCESO);
 	}
 
 	private void handleInsertar() {
@@ -85,21 +87,22 @@ public class RegistrarPagoController {
 		Util.sendEmail(email, "COIIPA: pago registrado", "Su pago ha sido registrado correctamente."); // Envío un email al alumno
 		getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
 		// Si había algún error habilitado en la etiqueta, se deshabilita y mostramos éxito
-		view.getLblError().setText("Pago insertado con éxito");
-		SwingUtil.showMessage("Pago insertado con éxito", "Registro de pagos");
+		//view.getLblError().setText("Pago insertado con éxito");
+		SwingUtil.showMessage("Pago por importe de " + importe + " € de parte del alumno " + nombreInscrito + " insertado con éxito", "Registro de pagos");
 		eraseControls(false); // Entradas en blanco
 	}
 
 	public void getListaInscripciones() {
 		JTable table = view.getTableInscripciones();
-		List<InscripcionDTO> inscripciones;
 
 		String date = view.getMain().getToday().toString();
 		inscripciones = model.getInscripciones(date);
 
 		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
-			x.setEstado(g41.si2022.util.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), model.getPagos(x.getInscripcion_alumno_id(), x.getInscripcion_curso_id())));
-			if (!view.getChkAll().isSelected() && x.getEstado() != InscripcionState.PENDIENTE) {
+			x.setEstado(g41.si2022.util.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), Double.parseDouble(x.getInscripcion_pagado())));
+			if(model.isCancelled(idInscripcion))
+				x.setEstado(InscripcionState.CANCELADA);
+			if (!view.getChkAll().isSelected() && x.getEstado() != InscripcionState.PENDIENTE && x.getEstado() != InscripcionState.EXCESO) {
 				inscripciones.remove(x);
 			}
 		});
@@ -109,7 +112,7 @@ public class RegistrarPagoController {
 				new String[] { "inscripcion_id", "inscripcion_alumno_id", "inscripcion_curso_id", "alumno_nombre", "curso_nombre", "inscripcion_fecha", "curso_coste","inscripcion_pagado", "estado" },	//La primera columna estará oculta
 				new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
 				null
-				)); 
+				));
 
 		// Ocultar foreign keys de la tabla
 		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(0));
