@@ -60,11 +60,11 @@ public class ConsultarCursosController {
 
 	public void getListaInscr() {
 		for (CursoDTO curso : cursosAndInscr) {
-			listaPagos = model.getListaPagos(curso.getId());
-
-			curso.setInscripcion_estado(StateUtilities.getInscripcionState(Double.parseDouble(curso.getCoste()), listaPagos));
-
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
+				listaPagos = model.getListaPagos(curso.getId());
+
+				curso.setInscripcion_estado(StateUtilities.getInscripcionState(Double.parseDouble(curso.getCoste()), listaPagos));
+				
 				TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosAndInscr, new String[] { "inscripcion_fecha", "inscripcion_alumno", "inscripcion_estado" },
 						new String[] { "Fecha de inscripción", "Alumno", "Estado"}, null);
 				view.getTablaInscr().setModel(tableModel);
