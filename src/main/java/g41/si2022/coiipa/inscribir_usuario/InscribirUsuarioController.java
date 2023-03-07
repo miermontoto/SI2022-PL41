@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.awt.Color;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
@@ -40,40 +41,24 @@ public class InscribirUsuarioController {
             }
         });
 
-        view.getTxtEmailLogin().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                SwingUtil.exceptionWrapper(() -> manageForm());
-            }
-        });
+        JComponent[] listenTo = {
+            view.getTxtEmailLogin(),
+            view.getTxtEmail(),
+            view.getTxtNombre(),
+            view.getTxtApellidos(),
+            view.getTxtTelefono(),
+            view.getRadioSignin(),
+            view.getRadioSignup()
+        };
 
-        view.getTxtEmail().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                SwingUtil.exceptionWrapper(() -> manageForm());
-            }
-        });
-
-        view.getTxtNombre().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                SwingUtil.exceptionWrapper(() -> manageForm());
-            }
-        });
-
-        view.getTxtApellidos().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                SwingUtil.exceptionWrapper(() -> manageForm());
-            }
-        });
-
-        view.getTxtTelefono().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                SwingUtil.exceptionWrapper(() -> manageForm());
-            }
-        });
+        for (JComponent component : listenTo) {
+            component.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent evt) {
+                    SwingUtil.exceptionWrapper(() -> manageForm());
+                }
+            });
+        }
 
         view.getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageMain()));
         view.getRadioSignin().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageForm()));
@@ -102,8 +87,6 @@ public class InscribirUsuarioController {
 
         alumno = model.getAlumnoFromEmail(email).get(0);
 
-        model.insertInscripcion(LocalDate.now().toString(), cursoId, alumno.getId());
-
         if(model.checkAlumnoInCurso(alumno.getId(), cursoId)) {
             SwingUtil.showMessage("Ya está inscrito en este curso", "Inscripción de alumno", JOptionPane.ERROR_MESSAGE);
             return;
@@ -129,6 +112,7 @@ public class InscribirUsuarioController {
 
         boolean validEmail = false;
         JLabel target = null;
+        String errorMsg = "";
         switch(view.getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
             case "sign-in":
                 target = view.getLblSignin();
@@ -137,17 +121,20 @@ public class InscribirUsuarioController {
                     break;
                 }
                 validEmail = model.verifyEmail(signinEmail); // Check if email exists in database
+                errorMsg = "Email desconocido";
                 break;
 
             case "sign-up":
+                target = view.getLblSignup();
                 if (!Util.verifyEmailStructure(signupEmail)) {
                     view.getLblSignup().setText("");
                     break;
                 }
                 validEmail = !model.verifyEmail(signupEmail); // Check if email doesn't already exist in db
+                errorMsg = "El email ya está registrado";
                 break;
         }
-        target.setText(validEmail ? "" : "Email desconocido");
+        target.setText(validEmail ? "" : errorMsg);
         view.getBtnInscribir().setEnabled(validEmail);
     }
 
