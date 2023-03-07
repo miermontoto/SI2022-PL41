@@ -71,6 +71,7 @@ public class SwingMain {
 		theTabs.put("Consultar cursos", new g41.si2022.coiipa.consultar_cursos.ConsultarCursosView(this));
 		theTabs.put("Consultar Ingresos y Gastos", new g41.si2022.coiipa.consultar_ingresos_gastos.ConsultarIngresosGastosView(this));
 		theTabs.put("Registrar pago profesor", new g41.si2022.coiipa.registrar_pago_profesor.RegistrarPagoProfesorView(this));
+		theTabs.put("Gestionar cursos", new g41.si2022.coiipa.gestionar_cursos.GestionarCursosView(this));
 		// ↑↑↑ ONLY MODIFY THIS IN ORDER TO ADD NEW TABS ↑↑↑
 
 		theTabs.forEach((name, tab) -> tabs.add(name, tab));

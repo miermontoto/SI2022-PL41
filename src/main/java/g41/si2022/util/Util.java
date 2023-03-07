@@ -165,10 +165,10 @@ public class Util {
 		return formatter.format(javaDate);
 	}
 
-	
+
 	/**
 	 * Returns the InscripcionState for a given Course and student.
-	 * 
+	 *
 	 * @param curso Course that is being paid.
 	 * @param pagos Payments of this student and this course.
 	 * @return State of the inscription
@@ -178,20 +178,19 @@ public class Util {
 		double devuelto = 0;
 		for (PagoDTO p : pagos) {
 			paid += Double.parseDouble(p.getImporte());
-			
+
 			if(!(p.getImportedevuelto() == null)) {
 				devuelto += Double.parseDouble(p.getImportedevuelto());
 			}
 		}
 		System.out.printf("Paid %f Coste %f Devuelto %f\n", paid, coste, devuelto);
-		
 		if (devuelto > 0) return InscripcionState.CANCELADA;
 		if (paid > coste) return InscripcionState.EXCESO;
 		if (paid < coste) return InscripcionState.PENDIENTE;
-		
+
 		return InscripcionState.PAGADA;
 	}
-	
+
 
 
 }

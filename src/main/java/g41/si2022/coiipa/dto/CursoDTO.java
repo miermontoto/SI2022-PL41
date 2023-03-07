@@ -22,8 +22,13 @@ public class CursoDTO {
 		docente_id, // Annadido por RegistrarCurso
 		ingresos, // Annadido por ConsultarIngresosGastos
 		gastos, // Annadido por ConsultarIngresosGastos
-		balance; // Annadido por ConsultarIngresosGastos
+		balance, // Annadido por ConsultarIngresosGastos
+		inscripcion_fecha, // Annadido por consultarCursos
+		inscripcion_alumno, // Annadido por consultarCursos
+		pago_importe_devuelto; // Annadido por consultarCursos
 
+
+	private g41.si2022.util.InscripcionState inscripcion_estado; // Annadido por consultarCursos
 	private g41.si2022.util.CursoState estado; // Annadido por ?
 
 	public CursoDTO() { }
