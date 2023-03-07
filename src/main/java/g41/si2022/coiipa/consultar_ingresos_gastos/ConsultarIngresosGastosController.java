@@ -38,14 +38,14 @@ public class ConsultarIngresosGastosController {
 	private List<CursoDTO> filterData () {
 		// Get the selected item from the the filter
 		CursoState selectedItem = (CursoState) this.view.getFilterEstadoComboBox().getSelectedItem();
-		ArrayList<CursoDTO> output = new ArrayList<CursoDTO>(), // Will contain the entries that meet the filter
+		List<CursoDTO> output = new ArrayList<CursoDTO>(), // Will contain the entries that meet the filter
 			aux; // Is used as auxiliary list to avoid concurrent modifications
 
 		// FIRST : WE FILTER THE STATES
 		if (selectedItem.equals(CursoState.CUALQUIERA)) { // If the CB has chosen ANY, the output array will contain all entries
 			output.addAll(this.cursos);
 		} else { // If the CB has chosen something else, the entries are filtered
-			Stream.of((CursoDTO[]) this.cursos.toArray())
+			output = this.cursos.stream()
 			.filter(x -> selectedItem.equals(x.getEstado()))
 			.collect(Collectors.toList());
 		}
@@ -93,7 +93,7 @@ public class ConsultarIngresosGastosController {
 	 */
 	private void initView () {
 		this.cursos = this.model.getCursosBalance();
-		this.cursos.forEach((x) -> x.setEstado(StateUtilities.getCursoState(x, this.view.getMain().getToday())));
+		this.cursos.forEach((x) -> x.setEstado(StateUtilities.getCursoState(x, this.view.getMain().getToday(), false)));
 		this.loadComboBox();
 		this.loadDateListeners();
 		this.loadTable();
