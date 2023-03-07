@@ -1,10 +1,8 @@
 package g41.si2022.coiipa.gestionar_cursos;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.table.TableModel;
-
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
@@ -89,7 +87,6 @@ public class GestionarCursosController {
             if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos())))
             {
                 descripcionCurso = model.getDescripcionCurso(curso.getId());
-
             }
         }
     }
@@ -106,7 +103,6 @@ public class GestionarCursosController {
         // Mostrar cursos en estado activo (CursoState.EN_CURSO)
         if (view.getCbFiltro().getSelectedItem().equals("Estado"))
         {
-
 
         }
     }

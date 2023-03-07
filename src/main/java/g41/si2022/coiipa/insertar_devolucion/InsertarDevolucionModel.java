@@ -3,14 +3,13 @@ package g41.si2022.coiipa.insertar_devolucion;
 import java.util.Date;
 import java.util.List;
 
-import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.coiipa.dto.cancelacionDTO;
 import g41.si2022.util.Database;
 import g41.si2022.util.Util;
 
 public class InsertarDevolucionModel {
 	private Database db = new Database();
-	
+
 	public List<cancelacionDTO> getListaInscripciones(Date fechaActual) {
 
 		//validateNotNull(fechaInscripcion, MSG_FECHA_INSCRIPCION_NO_NULA);
@@ -31,7 +30,7 @@ public class InsertarDevolucionModel {
 		db.executeUpdate(sql, importe, Util.isoStringToDate(fecha), idInscripcion);
 
 	}
-	
+
 	public String getEmailAlumno(String idAlumno) {
 		String sql = "select email from alumno where id=?";
 		return (String) db.executeQueryArray(sql, idAlumno).get(0)[0];

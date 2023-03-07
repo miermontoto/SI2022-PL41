@@ -1,6 +1,5 @@
 package g41.si2022.coiipa.registrar_pago_profesor;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.JTable;

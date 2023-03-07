@@ -101,7 +101,7 @@ public class RegistrarPagoAlumnoController {
 			x.setEstado(g41.si2022.util.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), model.getPagos(x.getInscripcion_alumno_id(), x.getInscripcion_curso_id())));
 			if(model.isCancelled(idInscripcion))
 				x.setEstado(InscripcionState.CANCELADA);
-			
+
 			if (!view.getChkAll().isSelected() && (x.getEstado() == InscripcionState.PENDIENTE || x.getEstado() ==InscripcionState.CANCELADA)) {
 				inscripciones.remove(x);
 			}

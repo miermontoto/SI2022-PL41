@@ -2,8 +2,6 @@ package g41.si2022.coiipa.insertar_devolucion;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -13,9 +11,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import g41.si2022.coiipa.dto.cancelacionDTO;
-import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.SwingUtil;
-import g41.si2022.util.ApplicationException;
 import g41.si2022.util.Util;
 
 public class InsertarDevolucionController {
@@ -120,9 +116,8 @@ public class InsertarDevolucionController {
 		public void getListaInscripciones() {
 
 			this.eraseControls(true);
-			//Obtengo la tabla de inscripciones
+			// Obtengo la tabla de inscripciones
 			JTable table = vista.getTableInscripciones();
-			TableModel tmodel; //Modelo de la tabla
 			Date fechaActual = Date.from(vista.getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
 			List<cancelacionDTO> inscripcionesAll = modelo.getListaInscripciones(fechaActual);
