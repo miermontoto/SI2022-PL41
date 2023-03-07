@@ -10,6 +10,8 @@ import java.awt.Insets;
 
 import g41.si2022.util.ApplicationException;
 import g41.si2022.util.Database;
+import g41.si2022.util.FontType;
+import g41.si2022.util.JLabelFactory;
 
 import java.awt.event.ActionEvent;
 
@@ -30,7 +32,7 @@ public class Debug {
 		status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
 		gbc.gridx = 1;
-		gbc.gridy = 0;
+		gbc.gridy = 1;
 		gbc.insets = new Insets(10, 10, 10, 10);
 		gbc.fill = GridBagConstraints.BOTH;
 		JButton schema = new JButton("Run schema");
@@ -39,7 +41,7 @@ public class Debug {
 		});
 		all.add(schema, gbc);
 
-		gbc.gridy = 1;
+		gbc.gridy = 2;
 		JButton data = new JButton("Load data");
 		data.addActionListener(e -> {
 			if (db.exists()) {
@@ -55,7 +57,7 @@ public class Debug {
 		all.add(data, gbc);
 
 		gbc.gridx = 0;
-		gbc.gridy = 0;
+		gbc.gridy = 1;
 		gbc.gridheight = 2;
 		JButton refreshDb = new JButton("⟳ Refresh db");
 		refreshDb.addActionListener(e -> {
@@ -65,7 +67,7 @@ public class Debug {
 		});
 		all.add(refreshDb, gbc);
 
-		gbc.gridy = 2;
+		gbc.gridy = 3;
 		gbc.gridheight = 1;
 		JButton delete = new JButton("Delete");
 		delete.addActionListener(e -> {
@@ -89,21 +91,26 @@ public class Debug {
 		all.add(isFile, gbc);
 
 		gbc.gridx = 2;
-		for(int i = 0; i < 3; i++) {
+		for(int i = 1; i < 4; i++) {
 			gbc.gridy = i;
 			all.add(new JLabel("          "), gbc);
 		}
 
 		gbc.gridx = 3;
-		gbc.gridy = 2;
+		gbc.gridy = 3;
 		JButton close = new JButton("Close window");
 		close.addActionListener(e -> {
 			System.exit(0);
 		});
 		all.add(close, gbc);
 
-		gbc.gridy = 1;
+		gbc.gridy = 3;
+		gbc.gridx = 1;
+		gbc.gridwidth = 3;
 		all.add(status, gbc);
+
+		gbc.gridy = 0;
+		all.add(JLabelFactory.getLabel(FontType.title, "Database control panel"), gbc);
 	}
 
 	public JComponent getComponent() {
