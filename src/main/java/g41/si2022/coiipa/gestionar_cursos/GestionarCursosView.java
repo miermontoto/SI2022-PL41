@@ -36,8 +36,6 @@ public class GestionarCursosView extends Tab {
 
         // ------------- main.BorderLayout.NORTH -------------
         JPanel mainNorthPanel = new JPanel(new BorderLayout());
-        // Add mainNorthPanel to this
-        this.add(mainNorthPanel, BorderLayout.NORTH);
 
         // Elements of mainNnorthPanel
         JLabel lblCursos = new JLabel("Cursos:");
@@ -45,6 +43,9 @@ public class GestionarCursosView extends Tab {
         tablaCursos.setDefaultEditor(Object.class, null);
 		tablaCursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrCursos = new JScrollPane(tablaCursos);
+
+        // Add mainNorthPanel to this
+        this.add(mainNorthPanel, BorderLayout.NORTH);
        
         // centerPanel (BorderLayout.CENTER) with label and table
         JPanel centerPanel = new JPanel(new BorderLayout());

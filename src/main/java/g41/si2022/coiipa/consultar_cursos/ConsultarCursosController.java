@@ -17,6 +17,7 @@ public class ConsultarCursosController {
 	private ConsultarCursosModel model;
 	private ConsultarCursosView view;
 
+	private List<CursoDTO> cursos;
 	private List<CursoDTO> cursosAndInscr;
 	private List<PagoDTO> listaPagos;
 	private String gastos;
@@ -47,7 +48,7 @@ public class ConsultarCursosController {
 	}
 
 	public void getListaCursos() {
-		cursosAndInscr = model.getListaCursos();
+		cursosAndInscr = model.getListaCursosInscr();
 
 		for (CursoDTO curso : cursosAndInscr)
 			curso.setEstado(StateUtilities.getCursoState(curso, this.view.getMain().getToday()));
@@ -59,7 +60,8 @@ public class ConsultarCursosController {
 	}
 
 	public void getListaInscr() {
-		for (CursoDTO curso : cursosAndInscr) {
+		cursos = model.getListaCursos();
+		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
 				listaPagos = model.getListaPagos(curso.getId());
 
@@ -73,7 +75,7 @@ public class ConsultarCursosController {
 				return;
 			}
 		}
-        throw new ApplicationException("Curso seleccionado desconocido");
+        throw new ApplicationException("Curso seleccionado desconocido");		
 	}
 
 	public void balance() {

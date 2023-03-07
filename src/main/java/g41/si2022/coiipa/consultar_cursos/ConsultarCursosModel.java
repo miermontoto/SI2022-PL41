@@ -13,6 +13,13 @@ public class ConsultarCursosModel {
 	private Database db = new Database();
 
 	public List<CursoDTO> getListaCursos() {
+		String sql = "SELECT * FROM curso "
+				   + "INNER JOIN inscripcion on inscripcion.id = curso.id";
+
+		return db.executeQueryPojo(CursoDTO.class, sql);
+	}
+
+	public List<CursoDTO> getListaCursosInscr() {
 		String sql = "SELECT curso.nombre, coste, plazas, start, end, inscripcion.fecha as inscripcion_fecha, start_inscr, end_inscr, "
 				   + "alumno.nombre as inscripcion_alumno "
 				   + "FROM curso INNER JOIN inscripcion "
@@ -22,6 +29,7 @@ public class ConsultarCursosModel {
 		return db.executeQueryPojo(CursoDTO.class, sql);
 	}
 
+	// Modificar query para que devuelva los valores necesarios de inscripción de tipo CursoDTO
 	public List<InscripcionDTO> getListaInscr(String idCurso) {
 		String sql = "SELECT * FROM inscripcion WHERE curso_id = ?";
 
