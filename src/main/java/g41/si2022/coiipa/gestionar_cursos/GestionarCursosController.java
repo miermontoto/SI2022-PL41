@@ -1,5 +1,7 @@
 package g41.si2022.coiipa.gestionar_cursos;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.table.TableModel;
@@ -31,6 +33,8 @@ public class GestionarCursosController {
 
     // mier si lees esto eres un beta. ~rubennmg
 
+
+
     public GestionarCursosController(GestionarCursosModel model, GestionarCursosView view)
     {
         this.model = model;
@@ -42,15 +46,18 @@ public class GestionarCursosController {
     {
         // Mostrar cursos activos en JTable
         getCursosActivos();
+        showListaCursos();
+
         // Mostrar más detalles para cada curso seleccionado
         view.getTablaCursos().addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseReleased(MouseEvent evt)
             {
-                SwingUtil.exceptionWrapper(() -> mostrarDetallesCurso());
+                SwingUtil.exceptionWrapper(() -> showDetallesCurso());
             }
         });
+
         // Filtrar los cursos en función de su fecha ó estado
         view.getCbFiltro().addMouseListener(new MouseAdapter()
         {
@@ -63,24 +70,28 @@ public class GestionarCursosController {
     }
 
     private void getCursosActivos()
-    {
+    {      
+        cursosActivos = new LinkedList<>();
         cursos = model.getListaCursos();
         for (CursoDTO curso : cursos)
         {
             curso.setEstado(StateUtilities.getCursoState(curso, this.view.getMain().getToday()));
             CursoState estadoCurso = curso.getEstado();
-
-            if (estadoCurso == CursoState.EN_CURSO)
+            
+            if (estadoCurso != CursoState.FINALIZADO)
                 cursosActivos.add(curso);
         }
+    }
 
+    private void showListaCursos()
+    {
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosActivos, new String[] { "nombre", "estado", "start_inscr", "end_inscr", "plazas", "plazas_libres", "start" },
                 new String[] { "Nombre", "Estado", "Inicio de inscripciones", "Fin de inscripciones", "Plazas", "Plazas vacantes" , "Inicio del curso" }, null);
         view.getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
     }
 
-    private void mostrarDetallesCurso()
+    private void showDetallesCurso()
     {
         for (CursoDTO curso : cursosActivos)
         {

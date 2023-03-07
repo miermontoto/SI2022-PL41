@@ -9,10 +9,11 @@ public class GestionarCursosModel {
 
     private Database db = new Database();
 
-    // Cambiar todo kekw
-    // Query to get all (active) courses
-    public List<CursoDTO> getListaCursos() {
-        return db.executeQueryPojo(CursoDTO.class, "select * from curso");
+    public List<CursoDTO> getListaCursos() 
+    {
+        String sql = "SELECT * FROM curso";
+
+        return db.executeQueryPojo(CursoDTO.class, sql);
     }
 
     public String getDescripcionCurso(String idCurso)
