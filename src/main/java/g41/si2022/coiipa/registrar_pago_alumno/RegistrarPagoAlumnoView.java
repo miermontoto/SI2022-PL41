@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.registrar_pago;
+package g41.si2022.coiipa.registrar_pago_alumno;
 
 import java.awt.BorderLayout;
 import java.text.NumberFormat;
@@ -23,7 +23,7 @@ import g41.si2022.util.JLabelFactory;
 import javax.swing.JCheckBox;
 
 @Getter
-public class RegistrarPagoView extends Tab {
+public class RegistrarPagoAlumnoView extends Tab {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
@@ -39,15 +39,15 @@ public class RegistrarPagoView extends Tab {
 	private JPanel panel;
 	private JCheckBox chkAll;
 
-	public RegistrarPagoView(SwingMain main) {
+	public RegistrarPagoAlumnoView(SwingMain main) {
 		super(main);
 		formPanel = new JPanel();
 		this.setLayout(new BorderLayout(0, 0));
-		
+
 		panel = new JPanel();
 		add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
-		
+
 		chkAll = new JCheckBox("Ver todas las inscripciones");
 		chkAll.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(chkAll);
@@ -60,7 +60,7 @@ public class RegistrarPagoView extends Tab {
 		formPanel.add(lblTitulo, "cell 0 0,growx,aligny top");
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 				JLabel label = new JLabel("Nombre del inscrito: ");
 				formPanel.add(label, "cell 0 1,alignx left,aligny center");
 		lblNombreInscripcion = new JLabel("No se ha selecciona ningún nombre");
@@ -78,10 +78,10 @@ public class RegistrarPagoView extends Tab {
 
 		formPanel.add(txtImporte = new JFormattedTextField(formatter), "cell 0 4,growx");
 		formPanel.add(datePicker = new DatePicker(), "cell 0 6,growx,aligny center");
-		
+
 				btnInsertarPago = new JButton("Insertar pago");
 				formPanel.add(btnInsertarPago, "cell 0 8");
-		
+
 		lblError = new JLabel("");
 		formPanel.add(lblError, "cell 0 10");
 		tableInscripciones = new JTable();
@@ -92,5 +92,5 @@ public class RegistrarPagoView extends Tab {
 	}
 
 	@Override
-	public void initController() { new RegistrarPagoController(this, new RegistrarPagoModel()); }
+	public void initController() { new RegistrarPagoAlumnoController(this, new RegistrarPagoAlumnoModel()); }
 }
