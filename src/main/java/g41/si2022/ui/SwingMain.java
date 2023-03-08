@@ -161,12 +161,14 @@ public class SwingMain {
 	public JFrame getFrame() { return this.frame; }
 
 	public void setMainPanel(JComponent panel, String title) {
+		/*
 		if (panel instanceof JTabbedPane) {
 			Tab t;
-			if (!(t = ((Tab) ((JTabbedPane) panel).getSelectedComponent())).isOpened()) {
-				t.abstractInitController();
+			if (!(t = ((Tab) ((JTabbedPane) panel).getSelectedComponent())).isNonVolatileLoaded()) {
+				t.initController();
 			}
 		}
+		*/
 		GridBagConstraints gbc = new GridBagConstraints();
 		total.removeAll();
 

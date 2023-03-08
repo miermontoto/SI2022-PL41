@@ -16,16 +16,14 @@ import g41.si2022.ui.SwingUtil;
 import java.util.stream.Collectors;
 
 
-public class GestionarCursosController {
+public class GestionarCursosController extends g41.si2022.ui.Controller<GestionarCursosView, GestionarCursosModel> {
 
-    private GestionarCursosModel model;
-    private GestionarCursosView view;
     private List<CursoDTO> cursos;
     private List<CursoDTO> cursosActivos;
     
     private java.util.function.Supplier<List<CursoDTO>> sup = () -> {
         // Get the selected item from the the filter
-		CursoState selectedItem = (CursoState) this.view.getCbFiltro().getSelectedItem();
+		CursoState selectedItem = (CursoState) this.getView().getCbFiltro().getSelectedItem();
 		List<CursoDTO> output = new ArrayList<CursoDTO>(), // Will contain the entries that meet the filter
 			aux; // Is used as auxiliary list to avoid concurrent modifications
 
@@ -41,8 +39,8 @@ public class GestionarCursosController {
 
 		// SECOND : WE FILTER THE DATES
 		java.time.LocalDate
-		    start = this.view.getStartDate().getDate(), // All entries' end date must be higher than the filter's start date
-		    end = this.view.getEndDate().getDate(); // All entries' start date must be lower than the filter's end date
+		    start = this.getView().getStartDate().getDate(), // All entries' end date must be higher than the filter's start date
+		    end = this.getView().getEndDate().getDate(); // All entries' start date must be lower than the filter's end date
 		if (start != null) {
 			aux.stream()
 			    .filter(x -> start.toString().compareTo(x.getEnd()) > 0)	// We remove the entries whose end date is lower than the filter's start date
@@ -58,30 +56,22 @@ public class GestionarCursosController {
     };
 
     public GestionarCursosController(GestionarCursosModel model, GestionarCursosView view) {
-        this.model = model;
-        this.view = view;
-        initView();
+    	super(view, model);
     }
 
-    public void initView() {
-        // Mostrar cursos activos en JTable
-        getCursosActivos();
-        loadComboBox();
-        showListaCursos();
-        loadDates();
-
-        // Mostrar más detalles para cada curso seleccionado
-        view.getTablaCursos().addMouseListener(new MouseAdapter()
-        {
+    @Override
+    protected void initNonVolatileData () {
+    	this.loadComboBox();
+    	this.loadDates();
+    	// Mostrar más detalles para cada curso seleccionado
+        this.getView().getTablaCursos().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent evt) {
                 SwingUtil.exceptionWrapper(() -> showDetallesCurso());
             }
         });
-
         // Filtrar los cursos en función de su fecha ó estado
-        view.getCbFiltro().addMouseListener(new MouseAdapter()
-        {
+        this.getView().getCbFiltro().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent evt)
             {
@@ -93,22 +83,27 @@ public class GestionarCursosController {
             }
         });
     }
+    
+    @Override
+    protected void initVolatileData () {
+    	this.getCursosActivos();
+    	this.showListaCursos();
+    }
 
-    private void getCursosActivos()
-    {
+    private void getCursosActivos() {
         cursosActivos = new LinkedList<>();
-        cursos = model.getListaCursos();
+        cursos = this.getModel().getListaCursos();
         for (CursoDTO curso : cursos)
         {
             // Añadir estado al curso
-            curso.setEstado(StateUtilities.getCursoState(curso, this.view.getMain().getToday()));
+            curso.setEstado(StateUtilities.getCursoState(curso, this.getView().getMain().getToday()));
             CursoState estadoCurso = curso.getEstado();
 
             if (estadoCurso != CursoState.FINALIZADO && estadoCurso != CursoState.CERRADO)
             {
                 // Añadir número de plazas libres al curso activo (para mostrarlas)
                 // Sumatorio de plazas totales menos las inscripciones NO canceladas
-                curso.setPlazas_libres(String.valueOf((Integer.valueOf(curso.getPlazas()) - Integer.valueOf(model.getNumIscripciones(curso.getId())))));
+                curso.setPlazas_libres(String.valueOf((Integer.valueOf(curso.getPlazas()) - Integer.valueOf(this.getModel().getNumIscripciones(curso.getId())))));
 
                 // Añadir curso a la lista de cursos activos
                 cursosActivos.add(curso);
@@ -124,8 +119,8 @@ public class GestionarCursosController {
             new String[] { "Nombre", "Estado", "Inicio de inscripciones", "Fin de inscripciones", "Plazas", "Plazas vacantes" , "Inicio del curso" },
             null
         );
-        view.getTablaCursos().setModel(tableModel);
-        SwingUtil.autoAdjustColumns(view.getTablaCursos());
+        this.getView().getTablaCursos().setModel(tableModel);
+        SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
     }
 
     private void showDetallesCurso()
@@ -134,22 +129,22 @@ public class GestionarCursosController {
         
         for (CursoDTO curso : cursosActivos)
         {
-            if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos())))
+            if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos())))
             {
                 // Mostrar la descripción del curso
-                view.getTxtDescripcion().setText(" " + model.getDescripcionCurso(curso.getId()));
+                this.getView().getTxtDescripcion().setText(" " + this.getModel().getDescripcionCurso(curso.getId()));
                 // Obtener docente/s que imparten el curso
-                docentes = model.getDocentesCurso(curso.getId());
-                view.getTxtProfesor().setText("");
+                docentes = this.getModel().getDocentesCurso(curso.getId());
+                this.getView().getTxtProfesor().setText("");
                
                 for (ProfesorDTO docente: docentes)
                 {
                     String nombre = docente.getNombre();
                     String apellidos = docente.getApellidos();
-                    view.getTxtProfesor().setText(view.getTxtProfesor().getText() + " " + nombre + " " + apellidos);
+                    this.getView().getTxtProfesor().setText(this.getView().getTxtProfesor().getText() + " " + nombre + " " + apellidos);
                 }
                 // Mostrar lugar en el que se imparte el curso
-                view.getTxtLugar().setText(" " + model.getLugarCurso(curso.getId()));
+                this.getView().getTxtLugar().setText(" " + this.getModel().getLugarCurso(curso.getId()));
             }
         }
     }
@@ -157,8 +152,8 @@ public class GestionarCursosController {
     private void loadComboBox () {
 		java.util.stream.Stream.of(CursoState.values())
         .filter(x -> !x.equals(CursoState.CERRADO) && !x.equals(CursoState.FINALIZADO))
-        .forEach(e -> this.view.getCbFiltro().addItem(e));
-		this.view.getCbFiltro().addItemListener((e) -> {
+        .forEach(e -> this.getView().getCbFiltro().addItem(e));
+		this.getView().getCbFiltro().addItemListener((e) -> {
 			if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
 				this.showListaCursos();
 			}
@@ -166,8 +161,8 @@ public class GestionarCursosController {
 	}
 
     private void loadDates () {
-        g41.si2022.util.BetterDatePicker start = this.view.getStartDate(),
-        end =  this.view.getEndDate();
+        g41.si2022.util.BetterDatePicker start = this.getView().getStartDate(),
+        end =  this.getView().getEndDate();
        start.addDateChangeListener((e) -> {
 			if (start.getDate() != null && end.getDate() != null && start.compareTo(end) >= 0) {
 				end.setDate(start.getDate().plusDays(1));

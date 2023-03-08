@@ -5,7 +5,7 @@ import java.util.List;
 import g41.si2022.coiipa.dto.FacturaDTO;
 import g41.si2022.util.Database;
 
-public class RegistrarPagoProfesorModel {
+public class RegistrarPagoProfesorModel extends g41.si2022.ui.Model {
 	private Database db = new Database();
 
 	public List<FacturaDTO> getListaFacturas(String today) {
