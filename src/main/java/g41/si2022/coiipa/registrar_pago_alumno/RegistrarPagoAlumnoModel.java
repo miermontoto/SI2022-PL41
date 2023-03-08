@@ -15,6 +15,7 @@ public class RegistrarPagoAlumnoModel {
 				"select i.id,"
 				+ " i.alumno_id as alumno_id,"
 				+ " a.nombre as alumno_nombre,"
+				+ " a.apellidos as alumno_apellidos, "
 				+ " c.coste as curso_coste,"
 				+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as pagado,"
 				+ " c.nombre as curso_nombre,"

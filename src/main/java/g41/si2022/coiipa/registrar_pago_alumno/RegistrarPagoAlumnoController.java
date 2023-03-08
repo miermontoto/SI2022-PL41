@@ -106,11 +106,11 @@ public class RegistrarPagoAlumnoController {
 				inscripciones.remove(x);
 			}
 		});
-
+//alumno_id
 		table.setModel(SwingUtil.getTableModelFromPojos(
 			inscripciones,
-			new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "curso_nombre", "fecha", "curso_coste","pagado", "estado" },	//La primera columna estará oculta
-			new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
+			new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "alumno_apellidos", "curso_nombre", "fecha", "curso_coste","pagado", "estado" },	//La primera columna estará oculta
+			new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Apellidos del alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
 			null
 		));
 

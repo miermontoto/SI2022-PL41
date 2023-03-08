@@ -15,7 +15,7 @@ public class InscripcionDTO {
     	curso_id,
     	alumno_id,
     	alumno_nombre,
-		alumno_apellidos,
+		alumno_apellidos, 
     	curso_coste,
     	curso_nombre;
     private InscripcionState estado;
