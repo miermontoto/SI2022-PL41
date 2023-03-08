@@ -1,7 +1,6 @@
 package g41.si2022.coiipa.insertar_devolucion;
 
 import java.awt.BorderLayout;
-import java.text.NumberFormat;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -10,20 +9,13 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.text.NumberFormatter;
 
 import net.miginfocom.swing.MigLayout;
-import com.github.lgooddatepicker.components.DatePicker;
 import lombok.Getter;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.Tab;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
-import javax.swing.JCheckBox;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.BevelBorder;
-import javax.swing.table.DefaultTableModel;
-import java.awt.FlowLayout;
 
 
 @Getter
@@ -76,8 +68,6 @@ public class InsertarDevolucionView extends Tab {
 
 		//JScrollPane que contiene tabla de inscripciones
 		JScrollPane scrollPane_1 = new JScrollPane(tableInscripciones);
-		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.add(scrollPane_1, BorderLayout.CENTER);
 
 		tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

@@ -9,18 +9,16 @@ import lombok.Data;
 public class InscripcionDTO {
 
     private String
-    	inscripcion_id,
-    	inscripcion_fecha,
-    	inscripcion_estado,
-    	inscripcion_pagado,
-    	inscripcion_curso_id,
-    	inscripcion_alumno_id,
+    	id,
+    	fecha,
+    	pagado,
+    	curso_id,
+    	alumno_id,
     	alumno_nombre,
+		alumno_apellidos,
     	curso_coste,
     	curso_nombre;
     private InscripcionState estado;
 
     public InscripcionDTO() {}
-
-    public static String getSqlQuery() { return "select * from inscripcion order by id asc"; }
 }

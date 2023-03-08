@@ -1,11 +1,9 @@
 package g41.si2022.coiipa.registrar_curso;
 
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.text.NumberFormatter;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
@@ -17,9 +15,6 @@ import g41.si2022.util.BetterDatePicker;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -196,11 +191,10 @@ public class RegistrarCursoView extends g41.si2022.ui.Tab {
 
 		JPanel bottomPane = new JPanel();
 		bottomPane.setLayout(new BorderLayout());
-
 		bottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar profesor"), BorderLayout.NORTH);
 
 		JScrollPane sp = new JScrollPane();
-
+		sp.getVerticalScrollBar().setUnitIncrement(20);
 		sp.setPreferredSize(new java.awt.Dimension(
 				this.getWidth(), 150
 		));
@@ -218,7 +212,7 @@ public class RegistrarCursoView extends g41.si2022.ui.Tab {
 		bottomPane.add(this.registrarCurso, BorderLayout.SOUTH);
 
 		this.add(bottomPane, BorderLayout.SOUTH);
-		add(new JLabel("Registrar Curso"), BorderLayout.NORTH);
+		add(JLabelFactory.getLabel(FontType.title, "Registrar Curso"), BorderLayout.NORTH);
 	}
 
 	@Override
