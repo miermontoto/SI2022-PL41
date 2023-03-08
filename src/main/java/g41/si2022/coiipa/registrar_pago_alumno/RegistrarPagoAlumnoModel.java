@@ -19,6 +19,7 @@ public class RegistrarPagoAlumnoModel {
 				+ " c.coste as curso_coste,"
 				+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as pagado,"
 				+ " c.nombre as curso_nombre,"
+				+ " i.id as inscripcion_id, "
 				+ " i.curso_id as curso_id,"
 				+ " i.fecha as fecha"
 				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
@@ -67,7 +68,7 @@ public class RegistrarPagoAlumnoModel {
 	}
 
 	public boolean isCancelled(String idInscripcion) {
-		String sql = "select count(id) from inscripcioncancelada where inscripcion_id=?";
+		String sql = "select count(id) from inscripcioncancelada where inscripcion_id=?"; //Si está en la tabla de inscripciones canceladas, es que está cancelada
 		int test = (int) db.executeQueryArray(sql, idInscripcion).get(0)[0];
 
 		return test > 0;
