@@ -10,5 +10,4 @@ public class FacturaDTO {
     private String id, remuneracion, fecha_introd, fecha_pago,
         docencia_id, doc_nombre, doc_apellidos, curso_nombre;
 
-    public FacturaDTO() {}
 }

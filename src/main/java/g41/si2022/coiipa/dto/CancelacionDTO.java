@@ -14,14 +14,4 @@ public class CancelacionDTO {
 	private String nombre_curso;
 	private String inicio_curso;
 
-	public CancelacionDTO() { }
-
-	public CancelacionDTO(int id, int alumno_id, String Nombre_alumno, String Coste_curso, String Nombre_curso, String Inicio_curso) {
-		this.id = id;
-		this.alumno_id = alumno_id;
-		this.nombre = Nombre_alumno;
-		this.coste = Coste_curso;
-		this.nombre_curso = Nombre_curso;
-		this.inicio_curso = Inicio_curso;
-	}
 }

@@ -14,5 +14,4 @@ public class AlumnoDTO {
         telefono,
         id;
 
-    public AlumnoDTO() { }
 }

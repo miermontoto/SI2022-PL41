@@ -33,5 +33,4 @@ public class CursoDTO {
 	private g41.si2022.util.InscripcionState inscripcion_estado; // Annadido por consultarCursos
 	private g41.si2022.util.CursoState estado; // Annadido por ?
 
-	public CursoDTO() { }
 }
