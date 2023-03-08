@@ -4,24 +4,21 @@ import java.util.List;
 
 import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.coiipa.dto.ProfesorDTO;
-import g41.si2022.util.Database;
 
 public class GestionarCursosModel extends g41.si2022.ui.Model {
-
-    private Database db = new Database();
 
     public List<CursoDTO> getListaCursos() 
     {
         String sql = "SELECT * FROM curso";
 
-        return db.executeQueryPojo(CursoDTO.class, sql);
+        return this.getDatabase().executeQueryPojo(CursoDTO.class, sql);
     }
     
     public String getDescripcionCurso(String idCurso)
     {
         String sql = "SELECT descripcion FROM curso WHERE id = ?";
 
-        return String.valueOf((String) db.executeQueryArray(sql, idCurso).get(0)[0]);
+        return String.valueOf((String) this.getDatabase().executeQueryArray(sql, idCurso).get(0)[0]);
     }
 
     public String getNumIscripciones(String idCurso)
@@ -31,7 +28,7 @@ public class GestionarCursosModel extends g41.si2022.ui.Model {
                    + "LEFT JOIN inscripcioncancelada ON inscripcioncancelada.inscripcion_id = inscripcion.id "
                    + "WHERE inscripcion.curso_id = ?";
                     
-        return String.valueOf((Integer) db.executeQueryArray(sql, idCurso).get(0)[0]);
+        return String.valueOf((Integer) this.getDatabase().executeQueryArray(sql, idCurso).get(0)[0]);
     }
 
     public List<ProfesorDTO> getDocentesCurso(String idCurso)
@@ -40,7 +37,7 @@ public class GestionarCursosModel extends g41.si2022.ui.Model {
                    + "INNER JOIN docente ON curso.id = docente.id "
                    + "WHERE curso.id = ?";
 
-        return db.executeQueryPojo(ProfesorDTO.class, sql, idCurso);
+        return this.getDatabase().executeQueryPojo(ProfesorDTO.class, sql, idCurso);
     }
 
     public String getLugarCurso(String idCurso)
@@ -48,14 +45,6 @@ public class GestionarCursosModel extends g41.si2022.ui.Model {
         String sql = "SELECT localizacion FROM curso "
                    + "WHERE curso.id = ?";
         
-        return String.valueOf((String) db.executeQueryArray(sql, idCurso).get(0)[0]);
+        return String.valueOf((String) this.getDatabase().executeQueryArray(sql, idCurso).get(0)[0]);
     }
-
-    // prueba
-    // public String getNumIscripciones2(String idCurso)
-    // {
-    //     String sql = "SELECT count(inscripcion.id)"
-                    
-    //     return String.valueOf((Integer) db.executeQueryArray(sql, idCurso).get(0)[0]);
-    // }
 }
