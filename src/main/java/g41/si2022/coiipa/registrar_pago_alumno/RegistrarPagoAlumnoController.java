@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.registrar_pago;
+package g41.si2022.coiipa.registrar_pago_alumno;
 
 import java.util.Date;
 import java.util.List;
@@ -9,16 +9,17 @@ import javax.swing.table.TableModel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
-import g41.si2022.coiipa.dto.PagoDTO;
-import g41.si2022.util.SwingUtil;
+import g41.si2022.coiipa.dto.InscripcionDTO;
+import g41.si2022.ui.SwingUtil;
+import g41.si2022.util.InscripcionState;
 import g41.si2022.util.Util;
 
-public class RegistrarPagoController {
+public class RegistrarPagoAlumnoController {
 
-	private RegistrarPagoView view;
-	private RegistrarPagoModel model;
+	private RegistrarPagoAlumnoView view;
+	private RegistrarPagoAlumnoModel model;
 
-	public RegistrarPagoController(RegistrarPagoView vista, RegistrarPagoModel modelo) {
+	public RegistrarPagoAlumnoController(RegistrarPagoAlumnoView vista, RegistrarPagoAlumnoModel modelo) {
 		this.view = vista;
 		this.model = modelo;
 		this.initView();
@@ -26,6 +27,8 @@ public class RegistrarPagoController {
 
 	private String idInscripcion = null;
 	private String idAlumno = null;
+	private String idCurso = null;
+	private List<InscripcionDTO> inscripciones;
 
 	public void initView() {
 		getListaInscripciones(); // Precarga inicial de la lista de inscripciones
@@ -33,8 +36,8 @@ public class RegistrarPagoController {
 
 		view.getBtnInsertarPago().addActionListener(e -> handleInsertar());
 		view.getTableInscripciones().addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseReleased(MouseEvent evt) { handleSelect(); }
+			@Override
+			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
 		view.getChkAll().addActionListener(e -> getListaInscripciones());
 	}
@@ -61,9 +64,11 @@ public class RegistrarPagoController {
 		TableModel tempModel = view.getTableInscripciones().getModel();
 		idInscripcion = (String) tempModel.getValueAt(fila, 0);
 		idAlumno = (String) tempModel.getValueAt(fila, 1);
-		view.getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 2));
+		idCurso = (String) tempModel.getValueAt(fila, 2);
+		view.getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 3));
 
-		setControls(true);
+		InscripcionState estado = inscripciones.get(fila).getEstado();
+		setControls(estado == InscripcionState.PENDIENTE || estado == InscripcionState.EXCESO);
 	}
 
 	private void handleInsertar() {
@@ -82,24 +87,35 @@ public class RegistrarPagoController {
 		Util.sendEmail(email, "COIIPA: pago registrado", "Su pago ha sido registrado correctamente."); // Envío un email al alumno
 		getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
 		// Si había algún error habilitado en la etiqueta, se deshabilita y mostramos éxito
-		view.getLblError().setText("Pago insertado con éxito");
-		SwingUtil.showMessage("Pago insertado con éxito", "Registro de pagos");
+		//view.getLblError().setText("Pago insertado con éxito");
+		SwingUtil.showMessage("Pago por importe de " + importe + " € de parte del alumno " + nombreInscrito + " insertado con éxito", "Registro de pagos");
 		eraseControls(false); // Entradas en blanco
 	}
 
 	public void getListaInscripciones() {
 		JTable table = view.getTableInscripciones();
-		TableModel tmodel; // Modelo de la tabla a inicializar según checkbox
-		List<PagoDTO> inscripciones;
 
 		String date = view.getMain().getToday().toString();
-		inscripciones = view.getChkAll().isSelected() ? model.getInscripciones(date) : model.getInscripcionesPendientes(date);
+		inscripciones = model.getInscripciones(date);
 
-		tmodel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] { "id", "alumno_id", "nombre", "fecha", "coste", "estado" }); //La primera columna estará oculta
-		table.setModel(tmodel);
+		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
+			x.setEstado(g41.si2022.util.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), Double.parseDouble(x.getPagado())));
+			if(model.isCancelled(idInscripcion))
+				x.setEstado(InscripcionState.CANCELADA);
+			if (!view.getChkAll().isSelected() && x.getEstado() != InscripcionState.PENDIENTE && x.getEstado() != InscripcionState.EXCESO) {
+				inscripciones.remove(x);
+			}
+		});
+
+		table.setModel(SwingUtil.getTableModelFromPojos(
+			inscripciones,
+			new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "curso_nombre", "fecha", "curso_coste","pagado", "estado" },	//La primera columna estará oculta
+			new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
+			null
+		));
 
 		// Ocultar foreign keys de la tabla
-		for(int i=0;i<2;i++) table.removeColumn(table.getColumnModel().getColumn(0));
+		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(0));
 		table.setDefaultEditor(Object.class, null); // Deshabilitar edición
 
 		//SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas

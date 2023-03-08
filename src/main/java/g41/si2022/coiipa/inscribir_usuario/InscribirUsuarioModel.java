@@ -20,7 +20,7 @@ public class InscribirUsuarioModel {
     }
 
     public List<CursoDTO> getListaCursos() {
-        return db.executeQueryPojo(CursoDTO.class, CursoDTO.getSqlQuery());
+        return db.executeQueryPojo(CursoDTO.class, "select * from curso");
     }
 
     public List<AlumnoDTO> getAlumnoFromEmail(String email) {
@@ -31,7 +31,7 @@ public class InscribirUsuarioModel {
 
     public boolean checkAlumnoInCurso(String alumno_id, String curso_id) {
         String sql = "select count(*) from inscripcion where alumno_id = ? and curso_id = ?";
-        return db.executeQueryArray(sql, alumno_id, curso_id).get(0)[0] != "0";
+        return db.executeQueryArray(sql, alumno_id, curso_id).get(0)[0].equals("0");
     }
 
     public void insertAlumno(String nombre, String apellidos, String email, String telefono) {
@@ -41,10 +41,10 @@ public class InscribirUsuarioModel {
         db.executeUpdate(sql, nombre, apellidos, email, telefono);
     }
 
-    public void insertInscripcion(String fecha, String estado, String curso_id, String alumno_id) {
-        String sql = "insert into inscripcion (fecha, estado, curso_id, alumno_id)"
-            + " values (?, ?, ?, ?)";
-        db.executeUpdate(sql, fecha, estado, curso_id, alumno_id);
+    public void insertInscripcion(String fecha, String curso_id, String alumno_id) {
+        String sql = "insert into inscripcion (fecha, curso_id, alumno_id)"
+            + " values (?, ?, ?)";
+        db.executeUpdate(sql, fecha, curso_id, alumno_id);
     }
 
     public boolean verifyEmail(String email) {
