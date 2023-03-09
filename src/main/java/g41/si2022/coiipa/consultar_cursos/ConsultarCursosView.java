@@ -23,11 +23,11 @@ public class ConsultarCursosView extends Tab {
 	private JLabel lblEconomicInfo;
 
 	public ConsultarCursosView(SwingMain main) {
-		super(main);
-		initialize();
+		super(main, ConsultarCursosModel.class, ConsultarCursosView.class, ConsultarCursosController.class);
 	}
 
-	private void initialize() {
+	@Override
+	protected void initView() {
 		this.setLayout(new BorderLayout(0, 0));
 
 		// ------------- BorderLayout -> NORTH -------------
@@ -89,6 +89,4 @@ public class ConsultarCursosView extends Tab {
 		centerPanel.add(panel4);
 	}
 
-	@Override
-	protected void initController() { new ConsultarCursosController(new ConsultarCursosModel(), this); }
 }

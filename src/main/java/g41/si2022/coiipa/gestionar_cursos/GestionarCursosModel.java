@@ -6,7 +6,7 @@ import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.coiipa.dto.ProfesorDTO;
 import g41.si2022.util.Database;
 
-public class GestionarCursosModel {
+public class GestionarCursosModel extends g41.si2022.ui.Model {
 
     private Database db = new Database();
 

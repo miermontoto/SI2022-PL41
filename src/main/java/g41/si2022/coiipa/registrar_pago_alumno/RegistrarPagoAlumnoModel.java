@@ -7,7 +7,7 @@ import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.util.Database;
 
-public class RegistrarPagoAlumnoModel {
+public class RegistrarPagoAlumnoModel extends g41.si2022.ui.Model {
 	private Database db = new Database();
 
 	public List<InscripcionDTO> getInscripciones(String date) {

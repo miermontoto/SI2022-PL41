@@ -27,14 +27,12 @@ public class GestionarCursosView extends Tab {
     private JTextArea txtLugar;
     private BetterDatePicker startDate, endDate;
 
-    public GestionarCursosView(SwingMain main)
-    {
-        super(main);
-        initialize();
+    public GestionarCursosView(SwingMain main) {
+		super(main, GestionarCursosModel.class, GestionarCursosView.class, GestionarCursosController.class);
     }
 
-    private void initialize()
-    {
+    @Override
+    protected void initView () {
         this.setLayout(new BorderLayout());
 
         // ------------- main.BorderLayout.NORTH -------------
@@ -104,8 +102,5 @@ public class GestionarCursosView extends Tab {
         // Add mainCenterPanel to this
         this.add(mainCenterPanel, BorderLayout.CENTER);
     }
-
-    @Override
-	protected void initController() { new GestionarCursosController(new GestionarCursosModel(), this); }
 
 }

@@ -7,7 +7,7 @@ import g41.si2022.coiipa.dto.CancelacionDTO;
 import g41.si2022.util.Database;
 import g41.si2022.util.Util;
 
-public class InsertarDevolucionModel {
+public class InsertarDevolucionModel extends g41.si2022.ui.Model {
 	private Database db = new Database();
 
 	public List<CancelacionDTO> getListaInscripciones(Date fechaActual) {

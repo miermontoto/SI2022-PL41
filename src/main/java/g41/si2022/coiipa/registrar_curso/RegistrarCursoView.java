@@ -57,11 +57,11 @@ public class RegistrarCursoView extends g41.si2022.ui.Tab {
 	public void setPlazas (int plazas) { this.plazas.setText(String.format("%d", Math.max(0, plazas))); }
 
 	public RegistrarCursoView (g41.si2022.ui.SwingMain main) {
-		super(main);
-		this.initView();
+		super(main, RegistrarCursoModel.class, RegistrarCursoView.class, RegistrarCursoController.class);
 	}
 
-	private void initView() {
+	@Override
+	protected void initView() {
 		this.setLayout(new BorderLayout(0, 0));
 
 		JPanel centerPanel = new JPanel();
@@ -213,11 +213,6 @@ public class RegistrarCursoView extends g41.si2022.ui.Tab {
 
 		this.add(bottomPane, BorderLayout.SOUTH);
 		add(JLabelFactory.getLabel(FontType.title, "Registrar Curso"), BorderLayout.NORTH);
-	}
-
-	@Override
-	public void initController() {
-		new RegistrarCursoController(new RegistrarCursoModel(), this);
 	}
 
 }

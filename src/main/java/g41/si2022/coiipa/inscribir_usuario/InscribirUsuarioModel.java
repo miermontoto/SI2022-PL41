@@ -7,7 +7,7 @@ import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.util.Database;
 import g41.si2022.util.Util;
 
-public class InscribirUsuarioModel {
+public class InscribirUsuarioModel extends g41.si2022.ui.Model {
 
     private Database db = new Database();
 

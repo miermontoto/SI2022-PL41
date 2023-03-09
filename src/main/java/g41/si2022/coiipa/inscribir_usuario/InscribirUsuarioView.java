@@ -12,7 +12,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.JSeparator;
 import javax.swing.JRadioButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -50,8 +49,7 @@ public class InscribirUsuarioView extends Tab {
 	private JLabel lblStatus;
 
 	public InscribirUsuarioView(g41.si2022.ui.SwingMain main) {
-		super(main);
-		initialize();
+		super(main, InscribirUsuarioModel.class, InscribirUsuarioView.class, InscribirUsuarioController.class);
 	}
 
     private void toggle() {
@@ -65,7 +63,8 @@ public class InscribirUsuarioView extends Tab {
 		lblSignup.setText("");
     }
 
-	private void initialize() {
+    @Override
+	protected void initView () {
 		this.setLayout(new BorderLayout());
 		this.add(JLabelFactory.getLabel(FontType.title, "Inscripción de alumnado"), BorderLayout.NORTH);
 		btnInscribir = new JButton("Inscribirse");
@@ -188,6 +187,4 @@ public class InscribirUsuarioView extends Tab {
 		return bottomPane;
 	}
 
-	@Override
-	public void initController() { new InscribirUsuarioController(new InscribirUsuarioModel(), this); }
 }

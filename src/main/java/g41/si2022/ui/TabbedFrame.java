@@ -17,10 +17,12 @@ public abstract class TabbedFrame {
         tabs = new TreeMap<>();
         main.setNavigation(true);
 
+        /*
         tabbedPane.addChangeListener(e -> {
 			Tab tab = (Tab) tabbedPane.getSelectedComponent();
-			if (tab != null && !tab.isOpened()) tab.abstractInitController(); // <-- Montoto btw
+			if (tab != null) tab.initVolatileData();
 		});
+		*/
     }
 
     void addTabs() {

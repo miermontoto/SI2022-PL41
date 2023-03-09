@@ -3,7 +3,7 @@ package g41.si2022.coiipa.consultar_ingresos_gastos;
 import g41.si2022.util.Database;
 import g41.si2022.coiipa.dto.CursoDTO;
 
-public class ConsultarIngresosGastosModel {
+public class ConsultarIngresosGastosModel extends g41.si2022.ui.Model {
 
 	private Database db = new Database();
 	
