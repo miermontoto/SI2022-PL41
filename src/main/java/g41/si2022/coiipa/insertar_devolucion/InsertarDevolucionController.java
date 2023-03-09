@@ -62,7 +62,7 @@ public class InsertarDevolucionController extends g41.si2022.mvc.Controller<Inse
 		Double costeCurso = Double.valueOf((String) tempModel.getValueAt(fila,  4));
 
 		Date fechaActual = Date.from(this.getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
-		Date fechaCurso = Util.isoStringToDate((String) tempModel.getValueAt(fila, 5));
+		Date fechaCurso = Util.isoStringToDate((String) tempModel.getValueAt(fila, 6));
 
 		//Calculamos el número de días que quedan
 
