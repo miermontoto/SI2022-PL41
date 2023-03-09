@@ -9,10 +9,10 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 import g41.si2022.ui.SwingMain;
-import g41.si2022.util.ApplicationException;
-import g41.si2022.util.Database;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
+import g41.si2022.util.db.Database;
+import g41.si2022.util.exception.ApplicationException;
 
 import java.awt.event.ActionEvent;
 

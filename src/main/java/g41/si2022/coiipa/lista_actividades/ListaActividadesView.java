@@ -9,11 +9,12 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 
 import g41.si2022.util.BetterDatePicker;
+import g41.si2022.util.state.CursoState;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.Tab;
-import g41.si2022.util.CursoState;
 import lombok.Getter;
 
 @Getter

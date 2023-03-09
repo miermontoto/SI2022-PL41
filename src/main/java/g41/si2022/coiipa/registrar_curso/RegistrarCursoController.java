@@ -163,7 +163,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	public void insertCurso () {
 		Optional<ProfesorDTO> profesorElegido = this.getProfesor();
 		if (!profesorElegido.isPresent()) {
-			throw new g41.si2022.util.UnexpectedException("No se ha seleccionado a ningún docente.");
+			throw new g41.si2022.util.exception.UnexpectedException("No se ha seleccionado a ningún docente.");
 		}
 		this.getModel().insertCurso(
 				this.getView().getNombreCurso(), this.getView().getObjetivosDescripcion(),

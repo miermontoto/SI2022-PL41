@@ -2,7 +2,7 @@ package g41.si2022.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import g41.si2022.util.InscripcionState;
+import g41.si2022.util.state.InscripcionState;
 import lombok.Data;
 
 @Getter @Setter @Data

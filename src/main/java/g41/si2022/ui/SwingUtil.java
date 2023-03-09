@@ -12,9 +12,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import org.apache.commons.beanutils.PropertyUtils;
 
-import g41.si2022.util.ApplicationException;
 import g41.si2022.util.TableColumnAdjuster;
-import g41.si2022.util.UnexpectedException;
+import g41.si2022.util.exception.ApplicationException;
+import g41.si2022.util.exception.UnexpectedException;
 
 /**
  * Metodos de utilidad para interfaces de usuario con swing (poblar tablas a partir de un objeto POJO
@@ -44,7 +44,7 @@ public class SwingUtil {
 			showMessage(e.toString(), "Excepcion no controlada", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+
 	/**
 	 * @param consumer Metodo a ejecutar (sin parametros de entrada ni valores de salida)
 	 */

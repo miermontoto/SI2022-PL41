@@ -1,10 +1,12 @@
-package g41.si2022.util;
+package g41.si2022.util.state;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.PagoDTO;
+import g41.si2022.util.db.Database;
+import g41.si2022.util.exception.UnexpectedException;
 
 public class StateUtilities {
 

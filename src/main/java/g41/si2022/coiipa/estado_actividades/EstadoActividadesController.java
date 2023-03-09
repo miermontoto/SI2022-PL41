@@ -9,9 +9,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.table.TableModel;
-import g41.si2022.util.ApplicationException;
-import g41.si2022.util.InscripcionState;
-import g41.si2022.util.StateUtilities;
+
+import g41.si2022.util.exception.ApplicationException;
+import g41.si2022.util.state.InscripcionState;
+import g41.si2022.util.state.StateUtilities;
 
 public class EstadoActividadesController extends g41.si2022.mvc.Controller<EstadoActividadesView, EstadoActividadesModel> {
 

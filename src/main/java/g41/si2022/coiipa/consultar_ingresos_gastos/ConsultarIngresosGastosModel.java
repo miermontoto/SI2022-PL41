@@ -1,7 +1,7 @@
 package g41.si2022.coiipa.consultar_ingresos_gastos;
 
 import g41.si2022.dto.CursoDTO;
-import g41.si2022.util.Database;
+import g41.si2022.util.db.Database;
 
 public class ConsultarIngresosGastosModel extends g41.si2022.mvc.Model {
 

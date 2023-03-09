@@ -11,8 +11,8 @@ import java.awt.event.MouseAdapter;
 
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
-import g41.si2022.util.InscripcionState;
 import g41.si2022.util.Util;
+import g41.si2022.util.state.InscripcionState;
 
 public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<RegistrarPagoAlumnoView, RegistrarPagoAlumnoModel> {
 
@@ -98,7 +98,7 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 		inscripciones = this.getModel().getInscripciones(date);
 
 		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
-			x.setEstado(g41.si2022.util.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), Double.parseDouble(x.getPagado())));
+			x.setEstado(g41.si2022.util.state.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), Double.parseDouble(x.getPagado())));
 			if(this.getModel().isCancelled(idInscripcion))
 				x.setEstado(InscripcionState.CANCELADA);
 			if (!this.getView().getChkAll().isSelected() && x.getEstado() != InscripcionState.PENDIENTE && x.getEstado() != InscripcionState.EXCESO) {

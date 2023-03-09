@@ -1,7 +1,7 @@
 package g41.si2022.coiipa.registrar_curso;
 
 import g41.si2022.dto.ProfesorDTO;
-import g41.si2022.util.Database;
+import g41.si2022.util.db.Database;
 
 public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 

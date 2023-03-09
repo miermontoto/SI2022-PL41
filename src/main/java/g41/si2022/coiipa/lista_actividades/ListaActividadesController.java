@@ -9,8 +9,8 @@ import javax.swing.table.TableModel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
-import g41.si2022.util.CursoState;
-import g41.si2022.util.StateUtilities;
+import g41.si2022.util.state.CursoState;
+import g41.si2022.util.state.StateUtilities;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;

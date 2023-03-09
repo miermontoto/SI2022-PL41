@@ -5,7 +5,7 @@ import java.util.List;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
-import g41.si2022.util.Database;
+import g41.si2022.util.db.Database;
 
 public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 

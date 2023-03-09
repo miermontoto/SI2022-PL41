@@ -32,7 +32,7 @@ import g41.si2022.ui.panels.TabsSecretaria;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
-import g41.si2022.util.Database;
+import g41.si2022.util.db.Database;
 
 
 /**

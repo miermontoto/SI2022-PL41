@@ -8,8 +8,8 @@ import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 
 import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.CursoState;
-import g41.si2022.util.StateUtilities;
+import g41.si2022.util.state.CursoState;
+import g41.si2022.util.state.StateUtilities;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
 

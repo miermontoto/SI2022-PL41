@@ -4,8 +4,8 @@ import java.util.List;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.CursoDTO;
-import g41.si2022.util.Database;
 import g41.si2022.util.Util;
+import g41.si2022.util.db.Database;
 
 public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
 
