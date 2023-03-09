@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.actividades_formacion;
+package g41.si2022.coiipa.gestionar_cursos;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -17,7 +17,7 @@ import g41.si2022.util.CursoState;
 import lombok.Getter;
 
 @Getter
-public class ActividadesFormacionView extends Tab {
+public class GestionarCursosView extends Tab {
 
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
@@ -27,7 +27,7 @@ public class ActividadesFormacionView extends Tab {
     private JTextArea txtLugar;
     private BetterDatePicker startDate, endDate;
 
-    public ActividadesFormacionView(SwingMain main)
+    public GestionarCursosView(SwingMain main)
     {
         super(main);
         initialize();
@@ -71,7 +71,7 @@ public class ActividadesFormacionView extends Tab {
         // rightPanel (BorderLayout.EAST) with label and comboBox
         // JPanel eastPanel = new JPanel(new GridLayout());
 
-
+        
         // Add items to eastPanel
         // eastPanel.add(lblFiltro);
         // eastPanel.add(cbFiltro);
@@ -106,6 +106,6 @@ public class ActividadesFormacionView extends Tab {
     }
 
     @Override
-	protected void initController() { new ActividadesFormacionController(new ActividadesFormacionModel(), this); }
+	protected void initController() { new GestionarCursosController(new GestionarCursosModel(), this); }
 
 }

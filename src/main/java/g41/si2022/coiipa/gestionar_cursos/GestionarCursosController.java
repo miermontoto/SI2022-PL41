@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.actividades_formacion;
+package g41.si2022.coiipa.gestionar_cursos;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -16,13 +16,13 @@ import g41.si2022.ui.SwingUtil;
 import java.util.stream.Collectors;
 
 
-public class ActividadesFormacionController {
+public class GestionarCursosController {
 
-    private ActividadesFormacionModel model;
-    private ActividadesFormacionView view;
+    private GestionarCursosModel model;
+    private GestionarCursosView view;
     private List<CursoDTO> cursos;
     private List<CursoDTO> cursosActivos;
-
+    
     private java.util.function.Supplier<List<CursoDTO>> sup = () -> {
         // Get the selected item from the the filter
 		CursoState selectedItem = (CursoState) this.view.getCbFiltro().getSelectedItem();
@@ -57,7 +57,7 @@ public class ActividadesFormacionController {
 		return output; // We return the filtered array
     };
 
-    public ActividadesFormacionController(ActividadesFormacionModel model, ActividadesFormacionView view) {
+    public GestionarCursosController(GestionarCursosModel model, GestionarCursosView view) {
         this.model = model;
         this.view = view;
         initView();
@@ -88,7 +88,7 @@ public class ActividadesFormacionController {
                 // SwingUtil.exceptionWrapper(() -> filtrarCursos());
                 SwingUtil.exceptionWrapper(() -> {
                     // GestionarCursosController.this.filtrarCursos();
-                    ActividadesFormacionController.this.showListaCursos();
+                    GestionarCursosController.this.showListaCursos();
                 });
             }
         });
@@ -108,7 +108,7 @@ public class ActividadesFormacionController {
             {
                 // Añadir número de plazas libres al curso activo (para mostrarlas)
                 // Sumatorio de plazas totales menos las inscripciones NO canceladas
-                curso.setPlazas_libres(String.valueOf((Integer.valueOf(curso.getPlazas()) - Integer.valueOf(model.getNumInscripciones(curso.getId())))));
+                curso.setPlazas_libres(String.valueOf((Integer.valueOf(curso.getPlazas()) - Integer.valueOf(model.getNumIscripciones(curso.getId())))));
 
                 // Añadir curso a la lista de cursos activos
                 cursosActivos.add(curso);
@@ -131,7 +131,7 @@ public class ActividadesFormacionController {
     private void showDetallesCurso()
     {
         List<ProfesorDTO> docentes;
-
+        
         for (CursoDTO curso : cursosActivos)
         {
             if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos())))
@@ -141,7 +141,7 @@ public class ActividadesFormacionController {
                 // Obtener docente/s que imparten el curso
                 docentes = model.getDocentesCurso(curso.getId());
                 view.getTxtProfesor().setText("");
-
+               
                 for (ProfesorDTO docente: docentes)
                 {
                     String nombre = docente.getNombre();

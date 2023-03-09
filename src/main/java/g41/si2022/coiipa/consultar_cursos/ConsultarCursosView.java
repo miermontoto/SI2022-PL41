@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.estado_actividades;
+package g41.si2022.coiipa.consultar_cursos;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -15,14 +15,14 @@ import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 
 @Getter
-public class EstadoActividadesView extends Tab {
+public class ConsultarCursosView extends Tab {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tablaCursos;
 	private JTable tablaInscr;
 	private JLabel lblEconomicInfo;
 
-	public EstadoActividadesView(SwingMain main) {
+	public ConsultarCursosView(SwingMain main) {
 		super(main);
 		initialize();
 	}
@@ -90,5 +90,5 @@ public class EstadoActividadesView extends Tab {
 	}
 
 	@Override
-	protected void initController() { new EstadoActividadesController(new EstadoActividadesModel(), this); }
+	protected void initController() { new ConsultarCursosController(new ConsultarCursosModel(), this); }
 }

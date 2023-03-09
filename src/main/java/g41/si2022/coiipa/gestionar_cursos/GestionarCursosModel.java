@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.actividades_formacion;
+package g41.si2022.coiipa.gestionar_cursos;
 
 import java.util.List;
 
@@ -6,26 +6,31 @@ import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.coiipa.dto.ProfesorDTO;
 import g41.si2022.util.Database;
 
-public class ActividadesFormacionModel {
+public class GestionarCursosModel {
 
     private Database db = new Database();
 
-    public List<CursoDTO> getListaCursos() {
+    public List<CursoDTO> getListaCursos() 
+    {
         String sql = "SELECT * FROM curso";
+
         return db.executeQueryPojo(CursoDTO.class, sql);
     }
-
-    public String getDescripcionCurso(String idCurso) {
+    
+    public String getDescripcionCurso(String idCurso)
+    {
         String sql = "SELECT descripcion FROM curso WHERE id = ?";
+
         return String.valueOf((String) db.executeQueryArray(sql, idCurso).get(0)[0]);
     }
 
-    public String getNumInscripciones(String idCurso) {
+    public String getNumIscripciones(String idCurso)
+    {
         String sql = "SELECT count(inscripcion.id) - count(inscripcioncancelada.id) from CURSO "
                    + "INNER JOIN inscripcion on curso.id = inscripcion.curso_id "
                    + "LEFT JOIN inscripcioncancelada ON inscripcioncancelada.inscripcion_id = inscripcion.id "
                    + "WHERE inscripcion.curso_id = ?";
-
+                    
         return String.valueOf((Integer) db.executeQueryArray(sql, idCurso).get(0)[0]);
     }
 
@@ -42,7 +47,7 @@ public class ActividadesFormacionModel {
     {
         String sql = "SELECT localizacion FROM curso "
                    + "WHERE curso.id = ?";
-
+        
         return String.valueOf((String) db.executeQueryArray(sql, idCurso).get(0)[0]);
     }
 
@@ -50,7 +55,7 @@ public class ActividadesFormacionModel {
     // public String getNumIscripciones2(String idCurso)
     // {
     //     String sql = "SELECT count(inscripcion.id)"
-
+                    
     //     return String.valueOf((Integer) db.executeQueryArray(sql, idCurso).get(0)[0]);
     // }
 }

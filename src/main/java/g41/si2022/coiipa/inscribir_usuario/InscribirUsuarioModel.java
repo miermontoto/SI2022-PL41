@@ -14,9 +14,7 @@ public class InscribirUsuarioModel {
     public List<CursoDTO> getListaCursos(String date) {
         String sql = "select *, (c.plazas -"
         + " (select count(*) from inscripcion as i where i.curso_id = c.id)"
-        + " + (select count(*) from inscripcioncancelada as ic"
-        + " inner join inscripcion as i on i.id = ic.inscripcion_id"
-        + " where i.curso_id = c.id)"
+        //+ " (select count(*) from cancelada as ca where ca.curso_id = c.id)"
         + ") as plazas_libres from curso as c where start_inscr <= ? and end_inscr >= ?";
         return db.executeQueryPojo(CursoDTO.class, sql, date, date);
     }

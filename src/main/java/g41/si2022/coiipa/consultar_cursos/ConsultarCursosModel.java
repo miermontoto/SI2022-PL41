@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.estado_actividades;
+package g41.si2022.coiipa.consultar_cursos;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.util.Database;
 
-public class EstadoActividadesModel {
+public class ConsultarCursosModel {
 
 	private Database db = new Database();
 
