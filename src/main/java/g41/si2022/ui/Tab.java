@@ -13,6 +13,14 @@ public abstract class Tab extends javax.swing.JPanel {
 	private Controller<? extends Tab, ? extends Model> controller;
 
 	/**
+	 * The <code>setVisible</code> method from this class
+	 * is called a few times before actually being visible.
+	 * This value is used to delay the <code>initNonVolatileData</code>
+	 * and <code>initVolatileData</code> calls so lazy loading actually works.
+	 */
+	private int delayCount;
+
+	/**
 	 * Creates a new Tab.
 	 *
 	 * @param main Reference to the <code>SwingMain</code> window.
@@ -26,6 +34,7 @@ public abstract class Tab extends javax.swing.JPanel {
 			Class<? extends Tab> v,
 			Class<? extends Controller<? extends Tab, ? extends Model>> c
 			) {
+		this.delayCount = 2;
 		this.main = main;
 		this.initView();
 		java.util.stream.Stream.of(c.getDeclaredConstructors())
@@ -55,7 +64,7 @@ public abstract class Tab extends javax.swing.JPanel {
 
 	@Override
 	public void setVisible (boolean visible) {
-		if (visible) {
+		if (this.delayCount-- <= 0 && visible) {
 			if (this.controller != null && !this.controller.isNonVolatileLoaded ()) {
 				this.controller.setNonVolatileLoaded(true);
 				this.controller.initNonVolatileData();
