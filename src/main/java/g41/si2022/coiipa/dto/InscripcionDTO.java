@@ -13,8 +13,9 @@ public class InscripcionDTO {
     	pagado,
     	curso_id,
     	alumno_id,
+    	inscripcion_id,
     	alumno_nombre,
-		alumno_apellidos,
+		alumno_apellidos, 
     	curso_coste,
     	curso_nombre;
 

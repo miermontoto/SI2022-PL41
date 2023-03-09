@@ -67,7 +67,7 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 		this.getView().getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 3));
 
 		InscripcionState estado = inscripciones.get(fila).getEstado();
-		setControls(estado == InscripcionState.PENDIENTE || estado == InscripcionState.EXCESO);
+		setControls(estado == InscripcionState.PENDIENTE || !(estado == InscripcionState.EXCESO));
 	}
 
 	private void handleInsertar() {
@@ -105,11 +105,11 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 				inscripciones.remove(x);
 			}
 		});
-
+//alumno_id
 		table.setModel(SwingUtil.getTableModelFromPojos(
 			inscripciones,
-			new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "curso_nombre", "fecha", "curso_coste","pagado", "estado" },	//La primera columna estará oculta
-			new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
+			new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "alumno_apellidos", "curso_nombre", "fecha", "curso_coste","pagado", "estado" },	//La primera columna estará oculta
+			new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Apellidos del alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
 			null
 		));
 

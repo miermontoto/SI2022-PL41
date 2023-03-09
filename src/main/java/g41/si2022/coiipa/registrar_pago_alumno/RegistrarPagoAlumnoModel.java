@@ -13,9 +13,11 @@ public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
 				"select i.id,"
 				+ " i.alumno_id as alumno_id,"
 				+ " a.nombre as alumno_nombre,"
+				+ " a.apellidos as alumno_apellidos, "
 				+ " c.coste as curso_coste,"
 				+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as pagado,"
 				+ " c.nombre as curso_nombre,"
+				+ " i.id as inscripcion_id, "
 				+ " i.curso_id as curso_id,"
 				+ " i.fecha as fecha"
 				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
@@ -65,8 +67,6 @@ public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
 
 	public boolean isCancelled(String idInscripcion) {
 		String sql = "select count(id) from inscripcioncancelada where inscripcion_id=?";
-		int test = (int) this.getDatabase().executeQueryArray(sql, idInscripcion).get(0)[0];
-
-		return test > 0;
+		return (int) this.getDatabase().executeQueryArray(sql, idInscripcion).get(0)[0] > 0;
 	}
 }

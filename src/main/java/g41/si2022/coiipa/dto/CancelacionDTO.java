@@ -10,6 +10,7 @@ public class CancelacionDTO {
 	private int id;
 	private int alumno_id;
 	private String nombre;
+	private String apellidos;
 	private String coste;
 	private String nombre_curso;
 	private String inicio_curso;

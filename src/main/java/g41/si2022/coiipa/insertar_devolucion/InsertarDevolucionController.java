@@ -59,7 +59,7 @@ public class InsertarDevolucionController extends g41.si2022.mvc.Controller<Inse
 		idAlumno = (int) tempModel.getValueAt(fila, 1);
 		this.getView().getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 2));
 
-		Double costeCurso = Double.valueOf((String) tempModel.getValueAt(fila,  3));
+		Double costeCurso = Double.valueOf((String) tempModel.getValueAt(fila,  4));
 
 		Date fechaActual = Date.from(this.getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		Date fechaCurso = Util.isoStringToDate((String) tempModel.getValueAt(fila, 5));
@@ -112,8 +112,8 @@ public class InsertarDevolucionController extends g41.si2022.mvc.Controller<Inse
 			//tmodel = SwingUtil.getTableModelFromPojos(inscripcionesAll, new String[] { "id", "alumno_id", "nombre", "coste", "nombre_curso", "inicio_curso" }); //La primera columna estará oculta
 			table.setModel(SwingUtil.getTableModelFromPojos(
 					inscripcionesAll,
-					new String[] { "id", "alumno_id", "nombre", "coste", "nombre_curso", "inicio_curso"},	//La primera columna estará oculta
-					new String[] { "ID", "ID Alumno", "Nombre curso", "Coste", "Nombre curso", "Fecha de inicio"},
+					new String[] { "id", "alumno_id", "nombre", "apellidos", "coste", "nombre_curso", "inicio_curso"},	//La primera columna estará oculta
+					new String[] { "ID", "ID Alumno", "Nombre curso", "Apellidos del alumno", "Coste", "Nombre curso", "Fecha de inicio"},
 					null
 					));
 
