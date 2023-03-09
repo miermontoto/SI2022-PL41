@@ -5,10 +5,8 @@ import java.util.List;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
-import g41.si2022.util.db.Database;
 
 public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
-	private Database db = new Database();
 
 	public List<InscripcionDTO> getInscripciones(String date) {
 		String sql =
@@ -24,7 +22,7 @@ public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
 				+ " inner join curso as c on c.id = i.curso_id"
 				+ " left join pago as pa on pa.inscripcion_id = i.id"
 				+ " where i.fecha<=? and c.start >=? group by i.id order by i.fecha asc";
-		return db.executeQueryPojo(InscripcionDTO.class, sql, date, date);
+		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, date, date);
 	}
 
 	public CursoDTO getCurso (String id) {
@@ -32,7 +30,7 @@ public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
 				" SELECT * "
 				+ " FROM curso "
 				+ " WHERE curso.id = ?";
-		return db.executeQueryPojo(CursoDTO.class, sql, id).get(0);
+		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, id).get(0);
 	}
 
 	public List<PagoDTO> getPagos () {
@@ -41,7 +39,7 @@ public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
 				+ " FROM pago "
 				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id ";
 
-		return db.executeQueryPojo(PagoDTO.class, sql);
+		return this.getDatabase().executeQueryPojo(PagoDTO.class, sql);
 	}
 
 	public List<PagoDTO> getPagos (String alumnoId, String cursoId) {
@@ -52,22 +50,22 @@ public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
 				+ " left join inscripcioncancelada on inscripcioncancelada.inscripcion_id = inscripcion.id"
 				+ " WHERE inscripcion.alumno_id = ? "
 				+ " AND inscripcion.curso_id = ?";
-		return db.executeQueryPojo(PagoDTO.class, sql, alumnoId, cursoId);
+		return this.getDatabase().executeQueryPojo(PagoDTO.class, sql, alumnoId, cursoId);
 	}
 
 	public void registrarPago(String importe, String fecha, String idInscripcion) {
 		String sql = "INSERT INTO pago (importe, fecha, inscripcion_id) VALUES(?,?,?)";
-		db.executeUpdate(sql, importe, fecha, idInscripcion);
+		this.getDatabase().executeUpdate(sql, importe, fecha, idInscripcion);
 	}
 
 	public String getEmailAlumno(String idAlumno) {
 		String sql = "select email from alumno where id=?";
-		return (String) db.executeQueryArray(sql, idAlumno).get(0)[0];
+		return (String) this.getDatabase().executeQueryArray(sql, idAlumno).get(0)[0];
 	}
 
 	public boolean isCancelled(String idInscripcion) {
 		String sql = "select count(id) from inscripcioncancelada where inscripcion_id=?";
-		int test = (int) db.executeQueryArray(sql, idInscripcion).get(0)[0];
+		int test = (int) this.getDatabase().executeQueryArray(sql, idInscripcion).get(0)[0];
 
 		return test > 0;
 	}

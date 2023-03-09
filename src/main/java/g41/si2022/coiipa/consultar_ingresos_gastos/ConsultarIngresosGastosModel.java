@@ -1,11 +1,8 @@
 package g41.si2022.coiipa.consultar_ingresos_gastos;
 
 import g41.si2022.dto.CursoDTO;
-import g41.si2022.util.db.Database;
 
 public class ConsultarIngresosGastosModel extends g41.si2022.mvc.Model {
-
-	private Database db = new Database();
 
 	/**
 	 * Returns a big data set, containing:
@@ -37,7 +34,7 @@ public class ConsultarIngresosGastosModel extends g41.si2022.mvc.Model {
 				+ " LEFT JOIN inscripcion ON inscripcion.curso_id = curso.id "
 				+ " LEFT JOIN pago ON pago.inscripcion_id = inscripcion.id "
 				+ " GROUP BY (curso.id)";
-		return db.executeQueryPojo(CursoDTO.class, sql);
+		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql);
 	}
 
 }
