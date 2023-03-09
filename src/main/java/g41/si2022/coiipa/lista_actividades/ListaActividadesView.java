@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.gestionar_cursos;
+package g41.si2022.coiipa.lista_actividades;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -17,7 +17,7 @@ import g41.si2022.util.CursoState;
 import lombok.Getter;
 
 @Getter
-public class GestionarCursosView extends Tab {
+public class ListaActividadesView extends Tab {
 
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
@@ -27,8 +27,8 @@ public class GestionarCursosView extends Tab {
     private JTextArea txtLugar;
     private BetterDatePicker startDate, endDate;
 
-    public GestionarCursosView(SwingMain main) {
-		super(main, GestionarCursosModel.class, GestionarCursosView.class, GestionarCursosController.class);
+    public ListaActividadesView(SwingMain main) {
+		super(main, ListaActividadesModel.class, ListaActividadesView.class, ListaActividadesController.class);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class GestionarCursosView extends Tab {
         // rightPanel (BorderLayout.EAST) with label and comboBox
         // JPanel eastPanel = new JPanel(new GridLayout());
 
-        
+
         // Add items to eastPanel
         // eastPanel.add(lblFiltro);
         // eastPanel.add(cbFiltro);

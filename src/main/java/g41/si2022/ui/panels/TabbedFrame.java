@@ -1,10 +1,13 @@
-package g41.si2022.ui;
+package g41.si2022.ui.panels;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
+
+import g41.si2022.ui.SwingMain;
+import g41.si2022.ui.Tab;
 
 public abstract class TabbedFrame {
     JTabbedPane tabbedPane;
@@ -29,7 +32,7 @@ public abstract class TabbedFrame {
         tabs.forEach((name, tab) -> tabbedPane.addTab(name, tab));
     }
 
-    JComponent getComponent() {
+    public JComponent getComponent() {
         return tabbedPane;
     }
 }

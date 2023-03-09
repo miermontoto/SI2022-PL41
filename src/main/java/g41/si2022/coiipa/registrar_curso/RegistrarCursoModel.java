@@ -1,9 +1,9 @@
 package g41.si2022.coiipa.registrar_curso;
 
-import g41.si2022.coiipa.dto.ProfesorDTO;
+import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.util.Database;
 
-public class RegistrarCursoModel extends g41.si2022.ui.Model {
+public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 
 	private Database db = new Database();
 
@@ -26,10 +26,10 @@ public class RegistrarCursoModel extends g41.si2022.ui.Model {
 				nombre, descripcion, coste,
 				inscrStart, inscrEnd, plazas, start, end, localizacion, docenteId
 				);
-		sql = 
+		sql =
 				"SELECT curso.id FROM curso ORDER BY curso.id DESC LIMIT(1)";
 		this.insertDocencia(remuneracion, docenteId,
-				db.executeQueryPojo(g41.si2022.coiipa.dto.CursoDTO.class, sql).get(0).getId());
+				db.executeQueryPojo(g41.si2022.dto.CursoDTO.class, sql).get(0).getId());
 	}
 
 	public void insertDocencia (

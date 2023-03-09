@@ -14,12 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
-import g41.si2022.coiipa.dto.AlumnoDTO;
-import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.dto.AlumnoDTO;
+import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
 
-public class InscribirUsuarioController extends g41.si2022.ui.Controller<InscribirUsuarioView, InscribirUsuarioModel> {
+public class InscribirUsuarioController extends g41.si2022.mvc.Controller<InscribirUsuarioView, InscribirUsuarioModel> {
 
     private List<CursoDTO> cursos;
     private String cursoId;
@@ -30,12 +30,12 @@ public class InscribirUsuarioController extends g41.si2022.ui.Controller<Inscrib
     }
 
     @Override
-    protected void initVolatileData () {
+    public void initVolatileData() {
     	this.getListaCursos();
     }
 
     @Override
-    protected void initNonVolatileData () {
+    public void initNonVolatileData() {
     	this.getView().getTablaCursos().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent ent) {

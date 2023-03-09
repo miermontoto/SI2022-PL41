@@ -10,11 +10,11 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
-import g41.si2022.coiipa.dto.CancelacionDTO;
+import g41.si2022.dto.CancelacionDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
 
-public class InsertarDevolucionController extends g41.si2022.ui.Controller<InsertarDevolucionView, InsertarDevolucionModel> {
+public class InsertarDevolucionController extends g41.si2022.mvc.Controller<InsertarDevolucionView, InsertarDevolucionModel> {
 
 	private int idInscripcion = -1;
 	private int idAlumno = -1;
@@ -24,28 +24,28 @@ public class InsertarDevolucionController extends g41.si2022.ui.Controller<Inser
 	}
 
 	@Override
-	protected void initNonVolatileData () {
+	public void initNonVolatileData() {
 		this.getView().getBtnCancelarInscripcion().addActionListener(e -> handleDevolver());
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
 	}
-	
+
 	@Override
-	protected void initVolatileData () {
+	public void initVolatileData() {
 		getListaInscripciones(); // Precarga inicial de la lista de inscripciones
 		setControls(false); // Inicio la vista con todo deshabilitado
 	}
 
-	private void setControls(boolean status) { 
-		this.getView().getBtnCancelarInscripcion().setEnabled(status); 
+	private void setControls(boolean status) {
+		this.getView().getBtnCancelarInscripcion().setEnabled(status);
 	}
 
-	private void eraseControls(boolean eliminaraviso) { 
+	private void eraseControls(boolean eliminaraviso) {
 		this.getView().getLblNombreInscripcion().setText("No se ha seleccionado ningún nombre");
 		this.getView().getLblImporteDevuelto().setText("");
-		if(eliminaraviso) this.getView().getLblError().setText(""); 
+		if(eliminaraviso) this.getView().getLblError().setText("");
 	}
 
 	private void handleSelect() {
@@ -81,24 +81,24 @@ public class InsertarDevolucionController extends g41.si2022.ui.Controller<Inser
 		setControls(true);
 	}
 
-	private void handleDevolver() { 
-		if(this.getView().getLblImporteDevuelto().getText() != null && this.getView().getLblImporteDevuelto().getText() != "") { 
-			//Obtenemos el nombre del inscrito 
-			String nombreInscrito = this.getView().getLblNombreInscripcion().getText(); 
-			Date fechaActual = Date.from(this.getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant()); 
-			double importedevuelto = 0.0; 
-			importedevuelto = Double.parseDouble(this.getView().getLblImporteDevuelto().getText()); 
-			this.getModel().registrarDevolucion(importedevuelto, Util.dateToIsoString(fechaActual), idInscripcion); 
-			enviarEmail(idAlumno, nombreInscrito); 
-			SwingUtil.showMessage("La cancelación de la inscripción del alumno " + nombreInscrito + " ha sido realizada con éxito. Se le han devuelto " + importedevuelto + " €", "Servicio de cancelaciones"); 
-			getListaInscripciones(); 
-			setControls(false); 
-		} 
+	private void handleDevolver() {
+		if(this.getView().getLblImporteDevuelto().getText() != null && this.getView().getLblImporteDevuelto().getText() != "") {
+			//Obtenemos el nombre del inscrito
+			String nombreInscrito = this.getView().getLblNombreInscripcion().getText();
+			Date fechaActual = Date.from(this.getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
+			double importedevuelto = 0.0;
+			importedevuelto = Double.parseDouble(this.getView().getLblImporteDevuelto().getText());
+			this.getModel().registrarDevolucion(importedevuelto, Util.dateToIsoString(fechaActual), idInscripcion);
+			enviarEmail(idAlumno, nombreInscrito);
+			SwingUtil.showMessage("La cancelación de la inscripción del alumno " + nombreInscrito + " ha sido realizada con éxito. Se le han devuelto " + importedevuelto + " €", "Servicio de cancelaciones");
+			getListaInscripciones();
+			setControls(false);
+		}
 	}
 
-		public void enviarEmail(int idAlumno, String alumno){ 
+		public void enviarEmail(int idAlumno, String alumno){
 			String email = this.getModel().getEmailAlumno(Integer.toString(idAlumno));
-			Util.sendEmail(email, "Cancelado con éxito", "Hola, hemos realizado la cancelación de tu curso con éxito"); 
+			Util.sendEmail(email, "Cancelado con éxito", "Hola, hemos realizado la cancelación de tu curso con éxito");
 		}
 
 		public void getListaInscripciones() {

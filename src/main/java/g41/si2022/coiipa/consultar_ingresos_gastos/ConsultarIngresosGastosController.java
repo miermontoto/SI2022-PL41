@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.CursoState;
 import g41.si2022.util.StateUtilities;
-import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
 
-public class ConsultarIngresosGastosController extends g41.si2022.ui.Controller<ConsultarIngresosGastosView, ConsultarIngresosGastosModel> {
+public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller<ConsultarIngresosGastosView, ConsultarIngresosGastosModel> {
 
 	private List<CursoDTO> cursos;
 	private java.util.function.Supplier<List<CursoDTO>> sup = () -> filterData();
-	private java.util.function.Supplier<List<CursoDTO>> supOutOfRangeDates = () -> filterData().stream().filter(x -> 
+	private java.util.function.Supplier<List<CursoDTO>> supOutOfRangeDates = () -> filterData().stream().filter(x ->
 		 	(this.getView().getEndDatePicker().getDate() != null && x.getPagoHighestFecha() != null &&
 		 		x.getPagoHighestFecha().compareTo(this.getView().getEndDatePicker().getDate().toString()) > 0) ||
 			(this.getView().getStartDatePicker().getDate() != null && x.getPagoLowestFecha() != null &&
@@ -31,7 +31,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.ui.Controller<
 	 *  - State of the course
 	 *  - Start date of the filter
 	 *  - End date of the filter
-	 *  
+	 *
 	 * @return Filtered data set rubén beta (mg)
 	 */
 	private List<CursoDTO> filterData () {
@@ -69,7 +69,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.ui.Controller<
 		output.forEach(
 				x -> x.setBalance(
 						String.format("%.2f",
-								Double.parseDouble(x.getIngresos() == null ? "0.0" : x.getIngresos()) - 
+								Double.parseDouble(x.getIngresos() == null ? "0.0" : x.getIngresos()) -
 								Double.parseDouble(x.getGastos() == null ? "0.0" : x.getGastos()))
 						));
 		return output; // We return the filtered array
@@ -77,7 +77,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.ui.Controller<
 
 	/**
 	 * Creates a new Controller
-	 * 
+	 *
 	 * @param view View that this controller is controlling.
 	 * @param model Model that this controller uses.
 	 */
@@ -86,14 +86,14 @@ public class ConsultarIngresosGastosController extends g41.si2022.ui.Controller<
 	}
 
 	@Override
-	protected void initVolatileData () {
+	public void initVolatileData() {
 		this.cursos = this.getModel().getCursosBalance();
 		this.cursos.forEach((x) -> x.setEstado(StateUtilities.getCursoState(x, this.getView().getMain().getToday(), false)));
 		this.loadTable();
 	}
-	
+
 	@Override
-	protected void initNonVolatileData () {
+	public void initNonVolatileData() {
 		loadComboBox();
 		loadDateListeners();
 	}
@@ -130,7 +130,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.ui.Controller<
 						null
 						)
 				);
-				
+
 	}
 
 	/**

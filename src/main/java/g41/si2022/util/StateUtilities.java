@@ -2,8 +2,9 @@ package g41.si2022.util;
 
 import java.time.LocalDate;
 import java.util.List;
-import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.PagoDTO;
+
+import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.PagoDTO;
 
 public class StateUtilities {
 
@@ -120,6 +121,6 @@ public class StateUtilities {
 		if (pagado < coste) return InscripcionState.PENDIENTE;
 		return InscripcionState.PAGADA;
 	}
-	
-	
+
+
 }

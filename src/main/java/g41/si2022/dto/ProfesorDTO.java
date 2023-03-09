@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.dto;
+package g41.si2022.dto;
 
 import lombok.Getter;
 import lombok.Setter;

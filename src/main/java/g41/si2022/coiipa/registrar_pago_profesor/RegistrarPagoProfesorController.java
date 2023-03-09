@@ -9,10 +9,10 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.awt.event.MouseAdapter;
 
-import g41.si2022.coiipa.dto.FacturaDTO;
+import g41.si2022.dto.FacturaDTO;
 import g41.si2022.ui.SwingUtil;
 
-public class RegistrarPagoProfesorController extends g41.si2022.ui.Controller<RegistrarPagoProfesorView, RegistrarPagoProfesorModel> {
+public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<RegistrarPagoProfesorView, RegistrarPagoProfesorModel> {
 
 	private int row;
 	private JTable table;
@@ -22,7 +22,7 @@ public class RegistrarPagoProfesorController extends g41.si2022.ui.Controller<Re
 	}
 
 	@Override
-	protected void initNonVolatileData () {
+	public void initNonVolatileData() {
 		this.table = this.getView().getTableInscripciones();
 		this.getView().getBtnInsertarPago().addActionListener(e -> handleInsertar());
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
@@ -33,7 +33,7 @@ public class RegistrarPagoProfesorController extends g41.si2022.ui.Controller<Re
 	}
 
 	@Override
-	protected void initVolatileData () {
+	public void initVolatileData() {
 		getListaFacturas(); // Precarga inicial de la lista de inscripciones
 		setControls(false); // Inicio la vista con todo deshabilitado
 	}

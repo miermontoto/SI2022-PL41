@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.gestionar_cursos;
+package g41.si2022.coiipa.lista_actividades;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,19 +8,20 @@ import javax.swing.table.TableModel;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
-import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.ProfesorDTO;
+
 import g41.si2022.util.CursoState;
 import g41.si2022.util.StateUtilities;
+import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
 import java.util.stream.Collectors;
 
 
-public class GestionarCursosController extends g41.si2022.ui.Controller<GestionarCursosView, GestionarCursosModel> {
+public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaActividadesView, ListaActividadesModel> {
 
     private List<CursoDTO> cursos;
     private List<CursoDTO> cursosActivos;
-    
+
     private java.util.function.Supplier<List<CursoDTO>> sup = () -> {
         // Get the selected item from the the filter
 		CursoState selectedItem = (CursoState) this.getView().getCbFiltro().getSelectedItem();
@@ -55,12 +56,12 @@ public class GestionarCursosController extends g41.si2022.ui.Controller<Gestiona
 		return output; // We return the filtered array
     };
 
-    public GestionarCursosController(GestionarCursosModel model, GestionarCursosView view) {
+    public ListaActividadesController(ListaActividadesModel model, ListaActividadesView view) {
     	super(view, model);
     }
 
     @Override
-    protected void initNonVolatileData () {
+    public void initNonVolatileData() {
     	this.loadComboBox();
     	this.loadDates();
     	// Mostrar más detalles para cada curso seleccionado
@@ -78,14 +79,14 @@ public class GestionarCursosController extends g41.si2022.ui.Controller<Gestiona
                 // SwingUtil.exceptionWrapper(() -> filtrarCursos());
                 SwingUtil.exceptionWrapper(() -> {
                     // GestionarCursosController.this.filtrarCursos();
-                    GestionarCursosController.this.showListaCursos();
+                    ListaActividadesController.this.showListaCursos();
                 });
             }
         });
     }
-    
+
     @Override
-    protected void initVolatileData () {
+    public void initVolatileData() {
     	this.getCursosActivos();
     	this.showListaCursos();
     }
@@ -126,7 +127,7 @@ public class GestionarCursosController extends g41.si2022.ui.Controller<Gestiona
     private void showDetallesCurso()
     {
         List<ProfesorDTO> docentes;
-        
+
         for (CursoDTO curso : cursosActivos)
         {
             if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos())))
@@ -136,7 +137,7 @@ public class GestionarCursosController extends g41.si2022.ui.Controller<Gestiona
                 // Obtener docente/s que imparten el curso
                 docentes = this.getModel().getDocentesCurso(curso.getId());
                 this.getView().getTxtProfesor().setText("");
-               
+
                 for (ProfesorDTO docente: docentes)
                 {
                     String nombre = docente.getNombre();

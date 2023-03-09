@@ -11,11 +11,11 @@ import java.util.Optional;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import g41.si2022.coiipa.dto.ProfesorDTO;
+import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.BetterDatePicker;
 
-public class RegistrarCursoController extends g41.si2022.ui.Controller<RegistrarCursoView, RegistrarCursoModel> {
+public class RegistrarCursoController extends g41.si2022.mvc.Controller<RegistrarCursoView, RegistrarCursoModel> {
 
 	private Map<String, ProfesorDTO> profesoresMap;
 	private final java.util.function.Supplier <List<ProfesorDTO>> sup = () -> {
@@ -30,7 +30,7 @@ public class RegistrarCursoController extends g41.si2022.ui.Controller<Registrar
 	}
 
 	@Override
-	protected void initNonVolatileData () {
+	public void initNonVolatileData() {
 		// Load the insert curso listener
 		this.getView().getSubmitButton().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> insertCurso()));
 		this.loadDateListeners();
@@ -67,9 +67,9 @@ public class RegistrarCursoController extends g41.si2022.ui.Controller<Registrar
 		});
 
 	}
-	
+
 	@Override
-	protected void initVolatileData () {
+	public void initVolatileData() {
 		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
 	}
 

@@ -2,12 +2,12 @@ package g41.si2022.coiipa.inscribir_usuario;
 
 import java.util.List;
 
-import g41.si2022.coiipa.dto.AlumnoDTO;
-import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.dto.AlumnoDTO;
+import g41.si2022.dto.CursoDTO;
 import g41.si2022.util.Database;
 import g41.si2022.util.Util;
 
-public class InscribirUsuarioModel extends g41.si2022.ui.Model {
+public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
 
     private Database db = new Database();
 

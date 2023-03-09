@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import g41.si2022.coiipa.dto.PagoDTO;
+import g41.si2022.dto.PagoDTO;
 
 /**
  * Utilidades varias con metodos generales de serializacion, conversion a csv y conversion de fechas

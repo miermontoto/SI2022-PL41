@@ -2,12 +2,12 @@ package g41.si2022.coiipa.registrar_pago_alumno;
 
 import java.util.List;
 
-import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.InscripcionDTO;
-import g41.si2022.coiipa.dto.PagoDTO;
+import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.InscripcionDTO;
+import g41.si2022.dto.PagoDTO;
 import g41.si2022.util.Database;
 
-public class RegistrarPagoAlumnoModel extends g41.si2022.ui.Model {
+public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
 	private Database db = new Database();
 
 	public List<InscripcionDTO> getInscripciones(String date) {

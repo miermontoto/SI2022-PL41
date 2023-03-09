@@ -3,11 +3,11 @@ package g41.si2022.coiipa.insertar_devolucion;
 import java.util.Date;
 import java.util.List;
 
-import g41.si2022.coiipa.dto.CancelacionDTO;
+import g41.si2022.dto.CancelacionDTO;
 import g41.si2022.util.Database;
 import g41.si2022.util.Util;
 
-public class InsertarDevolucionModel extends g41.si2022.ui.Model {
+public class InsertarDevolucionModel extends g41.si2022.mvc.Model {
 	private Database db = new Database();
 
 	public List<CancelacionDTO> getListaInscripciones(Date fechaActual) {

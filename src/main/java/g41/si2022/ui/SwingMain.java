@@ -25,7 +25,11 @@ import javax.swing.event.MouseInputAdapter;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
-
+import g41.si2022.ui.panels.Debug;
+import g41.si2022.ui.panels.TabbedFrame;
+import g41.si2022.ui.panels.TabsProfesional;
+import g41.si2022.ui.panels.TabsResponsable;
+import g41.si2022.ui.panels.TabsSecretaria;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;

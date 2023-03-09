@@ -1,4 +1,4 @@
-package g41.si2022.ui;
+package g41.si2022.mvc;
 
 public abstract class Model {
 

@@ -1,8 +1,8 @@
-package g41.si2022.coiipa.consultar_cursos;
+package g41.si2022.coiipa.estado_actividades;
 
-import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.InscripcionDTO;
-import g41.si2022.coiipa.dto.PagoDTO;
+import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.InscripcionDTO;
+import g41.si2022.dto.PagoDTO;
 import g41.si2022.ui.SwingUtil;
 
 import java.awt.event.MouseAdapter;
@@ -13,7 +13,7 @@ import g41.si2022.util.ApplicationException;
 import g41.si2022.util.InscripcionState;
 import g41.si2022.util.StateUtilities;
 
-public class ConsultarCursosController extends g41.si2022.ui.Controller<ConsultarCursosView, ConsultarCursosModel> {
+public class EstadoActividadesController extends g41.si2022.mvc.Controller<EstadoActividadesView, EstadoActividadesModel> {
 
 	// private ConsultarCursosView view;
 	// private ConsultarCursosModel model;
@@ -29,14 +29,14 @@ public class ConsultarCursosController extends g41.si2022.ui.Controller<Consulta
 	// private String balanceReal;
 	private String costeCurso;
 
-	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView t) {
+	public EstadoActividadesController(EstadoActividadesModel m, EstadoActividadesView t) {
 		super(t, m);
 	}
-	
-	protected void initVolatileData () {
+
+	public void initVolatileData() {
 		this.getListaCursos();
 	}
-	
+
 	public void initNonVolatileData() {
 		this.getView().getTablaCursos().addMouseListener(new MouseAdapter() {
 			@Override

@@ -9,12 +9,12 @@ import javax.swing.table.TableModel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
-import g41.si2022.coiipa.dto.InscripcionDTO;
+import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.InscripcionState;
 import g41.si2022.util.Util;
 
-public class RegistrarPagoAlumnoController extends g41.si2022.ui.Controller<RegistrarPagoAlumnoView, RegistrarPagoAlumnoModel> {
+public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<RegistrarPagoAlumnoView, RegistrarPagoAlumnoModel> {
 
 	private String idInscripcion = null;
 	private String idAlumno = null;
@@ -26,7 +26,7 @@ public class RegistrarPagoAlumnoController extends g41.si2022.ui.Controller<Regi
 	}
 
 	@Override
-	protected void initNonVolatileData () {
+	public void initNonVolatileData() {
 		this.getView().getBtnInsertarPago().addActionListener(e -> handleInsertar());
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
@@ -36,7 +36,7 @@ public class RegistrarPagoAlumnoController extends g41.si2022.ui.Controller<Regi
 	}
 
 	@Override
-	protected void initVolatileData () {
+	public void initVolatileData() {
 		this.getListaInscripciones();
 		setControls(false); // Inicio la vista con todo deshabilitado
 	}
