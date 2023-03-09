@@ -20,5 +20,4 @@ public class InscripcionDTO {
     	curso_nombre;
     private InscripcionState estado;
 
-    public InscripcionDTO() {}
 }

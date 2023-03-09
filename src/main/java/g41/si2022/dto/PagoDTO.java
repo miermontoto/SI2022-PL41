@@ -14,5 +14,4 @@ public class PagoDTO {
 		fecha,
 		inscripcion_id;
 
-	public PagoDTO() { }
 }

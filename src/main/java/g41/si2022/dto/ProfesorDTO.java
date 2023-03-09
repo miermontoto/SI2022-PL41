@@ -16,5 +16,4 @@ public class ProfesorDTO {
 	// La remuneracion es por curso, es neceasaria para que se pueda
 	// generar la columa extra en la JTable de RegistrarCurso
 
-	public ProfesorDTO() { }
 }

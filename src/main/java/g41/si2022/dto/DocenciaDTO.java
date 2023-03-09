@@ -14,5 +14,4 @@ public class DocenciaDTO {
         curso_id,
         docente_id;
 
-    public DocenciaDTO() { }
 }
