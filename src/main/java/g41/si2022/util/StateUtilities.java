@@ -95,12 +95,12 @@ public class StateUtilities {
 	 */
 	public static InscripcionState getInscripcionState (Double coste, java.util.List<PagoDTO> pagos) {
 		double paid = 0;
-		double devuelto = 0;
+		//double devuelto = 0;
 		for (PagoDTO p : pagos) {
 			paid += Double.parseDouble(p.getImporte());
-			if(p.getImportedevuelto() != null) {
+			/*if(p.getImportedevuelto() != null) {
 				devuelto += Double.parseDouble(p.getImportedevuelto());
-			}
+			}*/
 		}
 
 		if (paid > coste) return InscripcionState.EXCESO;

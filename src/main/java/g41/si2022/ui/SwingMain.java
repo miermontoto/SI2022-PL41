@@ -19,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.MouseInputAdapter;
 

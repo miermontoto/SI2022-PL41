@@ -18,7 +18,7 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 
 	private String idInscripcion = null;
 	private String idAlumno = null;
-	private String idCurso = null;
+	//private String idCurso = null;
 	private List<InscripcionDTO> inscripciones;
 
 	public RegistrarPagoAlumnoController(RegistrarPagoAlumnoModel modelo, RegistrarPagoAlumnoView vista) {
@@ -63,7 +63,7 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 		TableModel tempModel = this.getView().getTableInscripciones().getModel();
 		idInscripcion = (String) tempModel.getValueAt(fila, 0);
 		idAlumno = (String) tempModel.getValueAt(fila, 1);
-		idCurso = (String) tempModel.getValueAt(fila, 2);
+		//idCurso = (String) tempModel.getValueAt(fila, 2);
 		this.getView().getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 3));
 
 		InscripcionState estado = inscripciones.get(fila).getEstado();

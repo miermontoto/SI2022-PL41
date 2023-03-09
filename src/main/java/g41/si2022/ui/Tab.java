@@ -1,7 +1,6 @@
 package g41.si2022.ui;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import g41.si2022.mvc.Controller;
