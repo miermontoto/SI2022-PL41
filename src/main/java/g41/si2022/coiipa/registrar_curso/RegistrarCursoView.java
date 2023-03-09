@@ -169,7 +169,7 @@ public class RegistrarCursoView extends g41.si2022.ui.Tab {
 		} { // Localizacion
 			{ // Label
 				left.gridy = 5;
-				centerPanel.add(new JLabel("Localizacion:"), left);
+				centerPanel.add(new JLabel("Localización:"), left);
 			} { // Input
 				right.gridy = 5;
 				right.fill = GridBagConstraints.BOTH;

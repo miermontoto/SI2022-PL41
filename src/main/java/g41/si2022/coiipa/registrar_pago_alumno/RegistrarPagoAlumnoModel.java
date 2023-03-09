@@ -11,8 +11,7 @@ public class RegistrarPagoAlumnoModel {
 	private Database db = new Database();
 
 	public List<InscripcionDTO> getInscripciones(String date) {
-		String sql =
-				"select i.id,"
+		String sql = "select i.id,"
 				+ " i.alumno_id as alumno_id,"
 				+ " a.nombre as alumno_nombre,"
 				+ " c.coste as curso_coste,"
@@ -28,28 +27,21 @@ public class RegistrarPagoAlumnoModel {
 	}
 
 	public CursoDTO getCurso (String id) {
-		String sql =
-				" SELECT * "
-				+ " FROM curso "
-				+ " WHERE curso.id = ?";
+		String sql = "select * from curso WHERE curso.id = ?";
 		return db.executeQueryPojo(CursoDTO.class, sql, id).get(0);
 	}
 
 	public List<PagoDTO> getPagos () {
-		String sql =
-				"SELECT * "
-				+ " FROM pago "
-				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id ";
+		String sql = "select * from pago INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id ";
 
 		return db.executeQueryPojo(PagoDTO.class, sql);
 	}
 
 	public List<PagoDTO> getPagos (String alumnoId, String cursoId) {
 		String sql =
-				"SELECT * "
-				+ " FROM pago "
+				"SELECT * FROM pago "
 				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id "
-				+ " left join inscripcioncancelada on inscripcioncancelada.inscripcion_id = inscripcion.id"
+				+ " LEFT JOIN inscripcioncancelada ON inscripcioncancelada.inscripcion_id = inscripcion.id"
 				+ " WHERE inscripcion.alumno_id = ? "
 				+ " AND inscripcion.curso_id = ?";
 		return db.executeQueryPojo(PagoDTO.class, sql, alumnoId, cursoId);

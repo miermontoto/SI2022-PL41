@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.consultar_cursos;
+package g41.si2022.coiipa.estado_actividades;
 
 import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.coiipa.dto.InscripcionDTO;
@@ -13,10 +13,10 @@ import g41.si2022.util.ApplicationException;
 import g41.si2022.util.InscripcionState;
 import g41.si2022.util.StateUtilities;
 
-public class ConsultarCursosController {
+public class EstadoActividadesController {
 
-	private ConsultarCursosModel model;
-	private ConsultarCursosView view;
+	private EstadoActividadesModel model;
+	private EstadoActividadesView view;
 
 	private List<CursoDTO> cursos;
 	private List<CursoDTO> cursosAndInscr;
@@ -29,7 +29,7 @@ public class ConsultarCursosController {
 	// private String balanceReal;
 	private String costeCurso;
 
-	public ConsultarCursosController(ConsultarCursosModel m, ConsultarCursosView v)
+	public EstadoActividadesController(EstadoActividadesModel m, EstadoActividadesView v)
 	{
 		this.model = m;
 		this.view = v;
