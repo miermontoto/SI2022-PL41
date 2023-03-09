@@ -1,4 +1,4 @@
-package g41.si2022.util;
+package g41.si2022.util.db;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.File;
@@ -6,6 +6,8 @@ import java.io.File;
 import java.util.Properties;
 
 import org.apache.commons.dbutils.DbUtils;
+
+import g41.si2022.util.exception.ApplicationException;
 
 /**
  * Encapsula los datos de acceso JDBC, lectura de la configuracion

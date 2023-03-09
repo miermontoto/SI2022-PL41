@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.dto;
+package g41.si2022.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +16,4 @@ public class ProfesorDTO {
 	// La remuneracion es por curso, es neceasaria para que se pueda
 	// generar la columa extra en la JTable de RegistrarCurso
 
-	public ProfesorDTO() { }
 }

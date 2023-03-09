@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.gestionar_cursos;
+package g41.si2022.coiipa.lista_actividades;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -9,15 +9,16 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 
 import g41.si2022.util.BetterDatePicker;
+import g41.si2022.util.state.CursoState;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.Tab;
-import g41.si2022.util.CursoState;
 import lombok.Getter;
 
 @Getter
-public class GestionarCursosView extends Tab {
+public class ListaActividadesView extends Tab {
 
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
@@ -27,14 +28,12 @@ public class GestionarCursosView extends Tab {
     private JTextArea txtLugar;
     private BetterDatePicker startDate, endDate;
 
-    public GestionarCursosView(SwingMain main)
-    {
-        super(main);
-        initialize();
+    public ListaActividadesView(SwingMain main) {
+		super(main, ListaActividadesModel.class, ListaActividadesView.class, ListaActividadesController.class);
     }
 
-    private void initialize()
-    {
+    @Override
+    protected void initView () {
         this.setLayout(new BorderLayout());
 
         // ------------- main.BorderLayout.NORTH -------------
@@ -71,7 +70,7 @@ public class GestionarCursosView extends Tab {
         // rightPanel (BorderLayout.EAST) with label and comboBox
         // JPanel eastPanel = new JPanel(new GridLayout());
 
-        
+
         // Add items to eastPanel
         // eastPanel.add(lblFiltro);
         // eastPanel.add(cbFiltro);
@@ -104,8 +103,5 @@ public class GestionarCursosView extends Tab {
         // Add mainCenterPanel to this
         this.add(mainCenterPanel, BorderLayout.CENTER);
     }
-
-    @Override
-	protected void initController() { new GestionarCursosController(new GestionarCursosModel(), this); }
 
 }

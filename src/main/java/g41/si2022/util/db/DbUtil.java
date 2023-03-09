@@ -1,4 +1,4 @@
-package g41.si2022.util;
+package g41.si2022.util.db;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +17,9 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
+
+import g41.si2022.util.exception.ApplicationException;
+import g41.si2022.util.exception.UnexpectedException;
 
 /**
  * Metodos de utilidad para simplificar las queries realizadas en las clases

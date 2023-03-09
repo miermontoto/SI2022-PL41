@@ -1,4 +1,4 @@
-package g41.si2022.util;
+package g41.si2022.util.state;
 
 public enum CursoState {
 	CUALQUIERA,
@@ -9,4 +9,3 @@ public enum CursoState {
 	FINALIZADO,
 	CERRADO;
 }
-

@@ -9,81 +9,80 @@ import javax.swing.table.TableModel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
-import g41.si2022.coiipa.dto.InscripcionDTO;
+import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
-import g41.si2022.util.InscripcionState;
 import g41.si2022.util.Util;
+import g41.si2022.util.state.InscripcionState;
 
-public class RegistrarPagoAlumnoController {
-
-	private RegistrarPagoAlumnoView view;
-	private RegistrarPagoAlumnoModel model;
-
-	public RegistrarPagoAlumnoController(RegistrarPagoAlumnoView vista, RegistrarPagoAlumnoModel modelo) {
-		this.view = vista;
-		this.model = modelo;
-		this.initView();
-	}
+public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<RegistrarPagoAlumnoView, RegistrarPagoAlumnoModel> {
 
 	private String idInscripcion = null;
 	private String idAlumno = null;
-	private String idCurso = null;
+	//private String idCurso = null;
 	private List<InscripcionDTO> inscripciones;
 
-	public void initView() {
-		getListaInscripciones(); // Precarga inicial de la lista de inscripciones
-		setControls(false); // Inicio la vista con todo deshabilitado
+	public RegistrarPagoAlumnoController(RegistrarPagoAlumnoModel modelo, RegistrarPagoAlumnoView vista) {
+		super(vista, modelo);
+	}
 
-		view.getBtnInsertarPago().addActionListener(e -> handleInsertar());
-		view.getTableInscripciones().addMouseListener(new MouseAdapter() {
+	@Override
+	public void initNonVolatileData() {
+		this.getView().getBtnInsertarPago().addActionListener(e -> handleInsertar());
+		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
-		view.getChkAll().addActionListener(e -> getListaInscripciones());
+		this.getView().getChkAll().addActionListener(e -> getListaInscripciones());
+	}
+
+	@Override
+	public void initVolatileData() {
+		this.getListaInscripciones();
+		setControls(false); // Inicio la vista con todo deshabilitado
 	}
 
 	private void setControls(boolean status) {
-		view.getBtnInsertarPago().setEnabled(status);
-		view.getTxtImporte().setEnabled(status);
-		view.getDatePicker().setEnabled(status);
+		this.getView().getBtnInsertarPago().setEnabled(status);
+		this.getView().getTxtImporte().setEnabled(status);
+		this.getView().getDatePicker().setEnabled(status);
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
-		view.getLblNombreInscripcion().setText("No se ha seleccionado ningún nombre");
-		view.getTxtImporte().setText("");
-		view.getDatePicker().setText("");
-		if(eliminarAviso) view.getLblError().setText("");
+		this.getView().getLblNombreInscripcion().setText("No se ha seleccionado ningún nombre");
+		this.getView().getTxtImporte().setText("");
+		this.getView().getDatePicker().setText("");
+		if(eliminarAviso) this.getView().getLblError().setText("");
 		setControls(false);
 	}
 
 	private void handleSelect() {
 		eraseControls(true); // Borramos también el aviso de pago insertado con éxito/error
-		int fila = view.getTableInscripciones().getSelectedRow();
+		int fila = this.getView().getTableInscripciones().getSelectedRow();
 		if (fila == -1) return;
 
-		TableModel tempModel = view.getTableInscripciones().getModel();
+		TableModel tempModel = this.getView().getTableInscripciones().getModel();
 		idInscripcion = (String) tempModel.getValueAt(fila, 0);
 		idAlumno = (String) tempModel.getValueAt(fila, 1);
-		idCurso = (String) tempModel.getValueAt(fila, 2);
-		view.getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 3));
+		//idCurso = (String) tempModel.getValueAt(fila, 2);
+		this.getView().getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 3));
 
 		InscripcionState estado = inscripciones.get(fila).getEstado();
 		setControls(estado == InscripcionState.PENDIENTE || !(estado == InscripcionState.EXCESO));
 	}
 
 	private void handleInsertar() {
-		String nombreInscrito = view.getLblNombreInscripcion().getText();
-		String importe = view.getTxtImporte().getText();
+		String nombreInscrito = this.getView().getLblNombreInscripcion().getText();
+		String importe = this.getView().getTxtImporte().getText();
 
-		if(nombreInscrito == "No se ha seleccionado ningún nombre" || importe == null || view.getDatePicker().getDate() == null) {
-			view.getLblError().setText("Por favor, rellena todos los campos para continuar"); // Se muestra un error
+		if(nombreInscrito == "No se ha seleccionado ningún nombre" || importe == null || this.getView().getDatePicker().getDate() == null) {
+			this.getView().getLblError().setText("Por favor, rellena todos los campos para continuar"); // Se muestra un error
 			return;
 		}
 
-		String email = model.getEmailAlumno(idAlumno);
-		Date fechaPago = java.sql.Date.valueOf(view.getDatePicker().getDate());
+		String email = this.getModel().getEmailAlumno(idAlumno);
+		Date fechaPago = java.sql.Date.valueOf(this.getView().getDatePicker().getDate());
 
-		model.registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion); // Registro en la BBDD el pago
+		this.getModel().registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion); // Registro en la BBDD el pago
 		Util.sendEmail(email, "COIIPA: pago registrado", "Su pago ha sido registrado correctamente."); // Envío un email al alumno
 		getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
 		// Si había algún error habilitado en la etiqueta, se deshabilita y mostramos éxito
@@ -93,16 +92,16 @@ public class RegistrarPagoAlumnoController {
 	}
 
 	public void getListaInscripciones() {
-		JTable table = view.getTableInscripciones();
+		JTable table = this.getView().getTableInscripciones();
 
-		String date = view.getMain().getToday().toString();
-		inscripciones = model.getInscripciones(date);
+		String date = this.getView().getMain().getToday().toString();
+		inscripciones = this.getModel().getInscripciones(date);
 
 		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
-			x.setEstado(g41.si2022.util.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), Double.parseDouble(x.getPagado())));
-			if(model.isCancelled(x.getInscripcion_id()))
+			x.setEstado(g41.si2022.util.state.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), Double.parseDouble(x.getPagado())));
+			if(this.getModel().isCancelled(idInscripcion))
 				x.setEstado(InscripcionState.CANCELADA);
-			if (!view.getChkAll().isSelected() && x.getEstado() != InscripcionState.PENDIENTE && x.getEstado() != InscripcionState.EXCESO) {
+			if (!this.getView().getChkAll().isSelected() && x.getEstado() != InscripcionState.PENDIENTE && x.getEstado() != InscripcionState.EXCESO) {
 				inscripciones.remove(x);
 			}
 		});
