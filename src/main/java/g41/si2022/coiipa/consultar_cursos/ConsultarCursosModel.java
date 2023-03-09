@@ -1,9 +1,9 @@
 package g41.si2022.coiipa.consultar_cursos; 
 import java.util.List;
 
-import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.InscripcionDTO;
-import g41.si2022.coiipa.dto.PagoDTO;
+import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.InscripcionDTO;
+import g41.si2022.dto.PagoDTO;
 
 public class ConsultarCursosModel extends g41.si2022.mvc.Model {
 

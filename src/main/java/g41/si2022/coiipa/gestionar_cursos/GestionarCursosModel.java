@@ -2,8 +2,8 @@ package g41.si2022.coiipa.gestionar_cursos;
 
 import java.util.List;
 
-import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.ProfesorDTO;
+import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.ProfesorDTO;
 
 public class GestionarCursosModel extends g41.si2022.mvc.Model {
 

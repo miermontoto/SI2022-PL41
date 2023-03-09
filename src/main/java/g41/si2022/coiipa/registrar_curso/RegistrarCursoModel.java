@@ -27,7 +27,7 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		sql =
 				"SELECT curso.id FROM curso ORDER BY curso.id DESC LIMIT(1)";
 		this.insertDocencia(remuneracion, docenteId,
-				this.getDatabase().executeQueryPojo(g41.si2022.coiipa.dto.CursoDTO.class, sql).get(0).getId());
+				this.getDatabase().executeQueryPojo(g41.si2022.dto.CursoDTO.class, sql).get(0).getId());
 	}
 
 	public void insertDocencia (
