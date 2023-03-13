@@ -21,7 +21,7 @@ create table curso (
     plazas integer not null,
     start date not null,
     end date not null,
-    localizacion text not null,
+    localizacion text,
     docente_id integer not null,
     foreign key (docente_id) references docente(id)
 );
