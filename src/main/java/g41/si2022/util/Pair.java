@@ -2,12 +2,18 @@ package g41.si2022.util;
 
 /**
  * This class represents a pair of items.
- * It is used in <code>SwingMain</code> to bundle the
- * <code>TabbedFrame</code> and <code>JButton</code>
- * on a single <code>Map</code> value.
+ * It is used in {@link SwingMain} to bundle the * {@link TabbedFrame} and {@link JButton}
+ * on a single {@link Map} value.
  * 
  * @param <K> First item
  * @param <V> Second item
+ * 
+ * @see SwingMain
+ * @see TabbedFrame
+ * @see JButton
+ * @see Map
+ * 
+ * @author Alex // UO281827
  */
 public class Pair<K, V> {
 
