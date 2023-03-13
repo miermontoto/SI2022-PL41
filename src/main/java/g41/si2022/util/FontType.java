@@ -10,7 +10,16 @@ package g41.si2022.util;
  * @author Alex // UO281827
  */
 public enum FontType {
+	/**
+	 * Title font. Bigger size. Bold.
+	 */
 	title,
+	/**
+	 * Subtitle font. Bigger-ish size. Italic.
+	 */
 	subtitle,
+	/**
+	 * Normal font. Normal size.
+	 */
 	normal
 }
