@@ -1,6 +1,7 @@
 package g41.si2022.ui;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import g41.si2022.mvc.Controller;
@@ -29,8 +30,8 @@ public abstract class Tab extends javax.swing.JPanel {
 		this.main = main;
 		this.initView();
 		java.util.stream.Stream.of(c.getDeclaredConstructors())
-			.filter(x -> java.util.List.of(x.getParameterTypes()).contains(m) &&
-						 java.util.List.of(x.getParameterTypes()).contains(v))
+			.filter(x -> Arrays.asList(x.getParameterTypes()).contains(m) &&
+						 Arrays.asList(x.getParameterTypes()).contains(v))
 			.collect(Collectors.toList())
 			.forEach(x -> {
 				try {
