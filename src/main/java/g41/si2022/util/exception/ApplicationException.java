@@ -1,4 +1,4 @@
-package g41.si2022.util;
+package g41.si2022.util.exception;
 
 /**
  * Excepcion producida por la aplicacion antes situaciones que no deberian ocurrir pero que son controladas

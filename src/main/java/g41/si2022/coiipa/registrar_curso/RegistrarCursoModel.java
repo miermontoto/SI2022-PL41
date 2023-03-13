@@ -1,17 +1,15 @@
 package g41.si2022.coiipa.registrar_curso;
 
-import g41.si2022.coiipa.dto.ProfesorDTO;
-import g41.si2022.util.Database;
+import g41.si2022.dto.ProfesorDTO;
+import g41.si2022.util.db.Database;
 
-public class RegistrarCursoModel {
-
-	private Database db = new Database();
+public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 
 	public java.util.List<ProfesorDTO> getListaProfesores () {
 		String sql =
 				"SELECT * "
 						+ " FROM docente ORDER BY nombre";
-		return db.executeQueryPojo(ProfesorDTO.class, sql);
+		return this.getDatabase().executeQueryPojo(ProfesorDTO.class, sql);
 	}
 
 	public void insertCurso (
@@ -22,14 +20,14 @@ public class RegistrarCursoModel {
 		String sql =
 				"INSERT INTO curso (nombre, descripcion, coste, start_inscr, end_inscr, plazas, start, end, localizacion, docente_id) "
 						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		db.executeUpdate(sql,
+		this.getDatabase().executeUpdate(sql,
 				nombre, descripcion, coste,
 				inscrStart, inscrEnd, plazas, start, end, localizacion, docenteId
 				);
-		sql = 
+		sql =
 				"SELECT curso.id FROM curso ORDER BY curso.id DESC LIMIT(1)";
 		this.insertDocencia(remuneracion, docenteId,
-				db.executeQueryPojo(g41.si2022.coiipa.dto.CursoDTO.class, sql).get(0).getId());
+				this.getDatabase().executeQueryPojo(g41.si2022.dto.CursoDTO.class, sql).get(0).getId());
 	}
 
 	public void insertDocencia (
@@ -38,7 +36,7 @@ public class RegistrarCursoModel {
 		String sql =
 				"INSERT INTO docencia (remuneracion, docente_id, curso_id) "
 						+ " VALUES (?, ?, ?)";
-		db.executeUpdate(sql,
+		this.getDatabase().executeUpdate(sql,
 				remuneracion, profesor_id, curso_id);
 	}
 }

@@ -19,17 +19,20 @@ import javax.swing.JLabel;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.MouseInputAdapter;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
-
+import g41.si2022.ui.panels.Debug;
+import g41.si2022.ui.panels.TabbedFrame;
+import g41.si2022.ui.panels.TabsProfesional;
+import g41.si2022.ui.panels.TabsResponsable;
+import g41.si2022.ui.panels.TabsSecretaria;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
-import g41.si2022.util.Database;
+import g41.si2022.util.db.Database;
 
 
 /**
@@ -126,7 +129,7 @@ public class SwingMain {
 
 		gbc.gridx = 0;
 		gbc.gridy = 6;
-		mainMenu.add(new JLabel("Today:"), gbc);
+		mainMenu.add(new JLabel("Hoy:"), gbc);
 		gbc.gridx = 1;
 		mainMenu.add(today, gbc);
 
@@ -159,10 +162,16 @@ public class SwingMain {
 	}
 
 	public JFrame getFrame() { return this.frame; }
+
 	public void setMainPanel(JComponent panel, String title) {
+		/*
 		if (panel instanceof JTabbedPane) {
-			((Tab) ((JTabbedPane) panel).getSelectedComponent()).initController();
+			Tab t;
+			if (!(t = ((Tab) ((JTabbedPane) panel).getSelectedComponent())).isNonVolatileLoaded()) {
+				t.initController();
+			}
 		}
+		*/
 		GridBagConstraints gbc = new GridBagConstraints();
 		total.removeAll();
 
@@ -189,7 +198,7 @@ public class SwingMain {
 
 	public void updateTitle(String title) {
 		navigation.remove(lblTitle);
-		lblTitle = JLabelFactory.getLabel(FontType.subtitle, title+" ");
+		lblTitle = JLabelFactory.getLabel(FontType.subtitle, title + " ");
 		navigation.add(lblTitle, BorderLayout.EAST);
 	}
 
@@ -198,7 +207,7 @@ public class SwingMain {
 	}
 
 	public JPanel getMainMenu() { return this.mainMenu; }
-	public LocalDate getToday() { return getTodayPicker().getDate();}
+	public LocalDate getToday() { return getTodayPicker().getDate(); }
 	public BetterDatePicker getTodayPicker() { return this.today; }
 	public void setNavigation(boolean visible) { navigation.setVisible(visible); }
 }

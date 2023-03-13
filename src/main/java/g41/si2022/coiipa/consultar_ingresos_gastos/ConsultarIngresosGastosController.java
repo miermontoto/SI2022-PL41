@@ -8,18 +8,21 @@ import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 
 import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.CursoState;
-import g41.si2022.util.StateUtilities;
-import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.util.state.CursoState;
+import g41.si2022.util.state.StateUtilities;
+import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
 
-public class ConsultarIngresosGastosController {
-
-	private ConsultarIngresosGastosView view;
-	private ConsultarIngresosGastosModel model;
+public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller<ConsultarIngresosGastosView, ConsultarIngresosGastosModel> {
 
 	private List<CursoDTO> cursos;
 	private java.util.function.Supplier<List<CursoDTO>> sup = () -> filterData();
+	private java.util.function.Supplier<List<CursoDTO>> supOutOfRangeDates = () -> filterData().stream().filter(x ->
+		 	(this.getView().getEndDatePicker().getDate() != null && x.getPagoHighestFecha() != null &&
+		 		x.getPagoHighestFecha().compareTo(this.getView().getEndDatePicker().getDate().toString()) > 0) ||
+			(this.getView().getStartDatePicker().getDate() != null && x.getPagoLowestFecha() != null &&
+				x.getPagoLowestFecha().compareTo(this.getView().getStartDatePicker().getDate().toString()) < 0)
+	).collect(Collectors.toList());
 
 	/**
 	 * Filters the data set.
@@ -28,21 +31,20 @@ public class ConsultarIngresosGastosController {
 	 *  - State of the course
 	 *  - Start date of the filter
 	 *  - End date of the filter
-	 *  
-	 * @return Filtered data set
+	 *
+	 * @return Filtered data set rubén beta (mg)
 	 */
 	private List<CursoDTO> filterData () {
 		// Get the selected item from the the filter
-		CursoState selectedItem = (CursoState) this.view.getFilterEstadoComboBox().getSelectedItem();
-		ArrayList<CursoDTO>
-		output = new ArrayList<CursoDTO> (), // Will contain the entries that meet the filter
-		aux; // Is used as auxiliary list to avoid concurrent modifications
+		CursoState selectedItem = (CursoState) this.getView().getFilterEstadoComboBox().getSelectedItem();
+		List<CursoDTO> output = new ArrayList<CursoDTO>(), // Will contain the entries that meet the filter
+			aux; // Is used as auxiliary list to avoid concurrent modifications
 
 		// FIRST : WE FILTER THE STATES
 		if (selectedItem.equals(CursoState.CUALQUIERA)) { // If the CB has chosen ANY, the output array will contain all entries
 			output.addAll(this.cursos);
 		} else { // If the CB has chosen something else, the entries are filtered
-			Stream.of((CursoDTO[]) this.cursos.toArray())
+			output = this.cursos.stream()
 			.filter(x -> selectedItem.equals(x.getEstado()))
 			.collect(Collectors.toList());
 		}
@@ -50,15 +52,15 @@ public class ConsultarIngresosGastosController {
 
 		// SECOND : WE FILTER THE DATES
 		java.time.LocalDate
-		start = this.view.getStartDatePicker().getDate(), // All entries' end date must be higher than the filter's start date
-		end = this.view.getEndDatePicker().getDate(); // All entries' start date must be lower than the filter's end date
+		start = this.getView().getStartDatePicker().getDate(), // All entries' end date must be higher than the filter's start date
+		end = this.getView().getEndDatePicker().getDate(); // All entries' start date must be lower than the filter's end date
 		if (start != null) {
-			Stream.of((CursoDTO[]) aux.toArray())
+			aux.stream()
 			.filter(x -> start.toString().compareTo(x.getEnd()) > 0)	// We remove the entries whose end date is lower than the filter's start date
 			.forEach(output::remove);
 		}
 		if (end != null) {
-			Stream.of((CursoDTO[]) aux.toArray())
+			aux.stream()
 			.filter(x -> end.toString().compareTo(x.getStart_inscr()) < 0)	// We remove the entries whose start date is higher than the filter's end date
 			.forEach(output::remove);
 		}
@@ -67,7 +69,7 @@ public class ConsultarIngresosGastosController {
 		output.forEach(
 				x -> x.setBalance(
 						String.format("%.2f",
-								Double.parseDouble(x.getIngresos() == null ? "0.0" : x.getIngresos()) - 
+								Double.parseDouble(x.getIngresos() == null ? "0.0" : x.getIngresos()) -
 								Double.parseDouble(x.getGastos() == null ? "0.0" : x.getGastos()))
 						));
 		return output; // We return the filtered array
@@ -75,33 +77,33 @@ public class ConsultarIngresosGastosController {
 
 	/**
 	 * Creates a new Controller
-	 * 
+	 *
 	 * @param view View that this controller is controlling.
 	 * @param model Model that this controller uses.
 	 */
-	public ConsultarIngresosGastosController (ConsultarIngresosGastosView view, ConsultarIngresosGastosModel model) {
-		this.view = view;
-		this.model = model;
-		this.initView();
+	public ConsultarIngresosGastosController (ConsultarIngresosGastosModel model, ConsultarIngresosGastosView view) {
+		super(view, model);
 	}
 
-	/**
-	 * Initializes the controls that the view needs.
-	 */
-	private void initView () {
-		this.cursos = this.model.getCursosBalance();
-		this.cursos.forEach((x) -> x.setEstado(StateUtilities.getCursoState(x, this.view.getMain().getToday())));
-		this.loadComboBox();
+	@Override
+	public void initVolatileData() {
+		this.cursos = this.getModel().getCursosBalance();
+		this.cursos.forEach((x) -> x.setEstado(StateUtilities.getCursoState(x, this.getView().getMain().getToday(), false)));
 		this.loadTable();
-		this.loadDateListeners();
+	}
+
+	@Override
+	public void initNonVolatileData() {
+		loadComboBox();
+		loadDateListeners();
 	}
 
 	/**
 	 * Loads the listeners and data needed for the different JComboBoxes in the view.
 	 */
 	private void loadComboBox () {
-		Stream.of(CursoState.values()).forEach(e -> this.view.getFilterEstadoComboBox().addItem(e));
-		this.view.getFilterEstadoComboBox().addItemListener((e) -> {
+		Stream.of(CursoState.values()).forEach(e -> this.getView().getFilterEstadoComboBox().addItem(e));
+		this.getView().getFilterEstadoComboBox().addItemListener((e) -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				this.loadTable();
 			}
@@ -112,7 +114,7 @@ public class ConsultarIngresosGastosController {
 	 * Loads the listeners and data needed for the different JTables in the view.
 	 */
 	private void loadTable () {
-		this.view.getMovimientosTable().setModel(
+		this.getView().getMovimientosTable().setModel(
 				SwingUtil.getTableModelFromPojos(
 						this.sup.get(),
 						new String[] { "nombre", "start_inscr", "end_inscr", "start", "end", "ingresos", "gastos", "balance" },
@@ -120,19 +122,27 @@ public class ConsultarIngresosGastosController {
 						null
 						)
 				);
+		this.getView().getOffMovimientosTable().setModel(
+				SwingUtil.getTableModelFromPojos(
+						this.supOutOfRangeDates.get(),
+						new String[] { "nombre", "start_inscr", "end_inscr", "start", "end", "ingresos", "gastos", "balance" },
+						new String[] { "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Ingresos", "Gastos", "Balance" },
+						null
+						)
+				);
+
 	}
 
 	/**
 	 * Loads the listeners and data needed for the different Dates in the view.
 	 */
 	private void loadDateListeners() {
-		BetterDatePicker start = this.view.getStartDatePicker();
-		BetterDatePicker end = this.view.getEndDatePicker();
+		BetterDatePicker start = this.getView().getStartDatePicker();
+		BetterDatePicker end = this.getView().getEndDatePicker();
 		start.addDateChangeListener((e) -> {
 			if (start.getDate() != null && end.getDate() != null && start.compareTo(end) >= 0) {
 				end.setDate(start.getDate().plusDays(1));
 			}
-
 		});
 		end.addDateChangeListener((e) -> {
 			if (end.getDate() != null && start.getDate() != null && start.compareTo(end) >= 0) {

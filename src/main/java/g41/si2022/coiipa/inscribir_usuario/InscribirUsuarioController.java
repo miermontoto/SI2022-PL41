@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.inscribir_usuario;
 
 import java.util.List;
+import java.util.stream.Stream;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
@@ -12,27 +13,29 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
-import g41.si2022.coiipa.dto.AlumnoDTO;
-import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.dto.AlumnoDTO;
+import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
 
-public class InscribirUsuarioController {
-    private InscribirUsuarioModel model;
-    private InscribirUsuarioView view;
+public class InscribirUsuarioController extends g41.si2022.mvc.Controller<InscribirUsuarioView, InscribirUsuarioModel> {
+
     private List<CursoDTO> cursos;
     private String cursoId;
 
     public InscribirUsuarioController(InscribirUsuarioModel m, InscribirUsuarioView v) {
-        this.model = m;
-        view = v;
-        cursoId = null;
-        this.initView();
+    	super(v, m);
+        this.cursoId = null;
     }
 
-    public void initView() {
-        SwingUtil.exceptionWrapper(() -> getListaCursos());
-        view.getTablaCursos().addMouseListener(new MouseAdapter() {
+    @Override
+    public void initVolatileData() {
+    	this.getListaCursos();
+    }
+
+    @Override
+    public void initNonVolatileData() {
+    	this.getView().getTablaCursos().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent ent) {
                 SwingUtil.exceptionWrapper(() -> updateCursoValue());
@@ -40,44 +43,29 @@ public class InscribirUsuarioController {
             }
         });
 
-        view.getTxtEmailLogin().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                SwingUtil.exceptionWrapper(() -> manageForm());
-            }
-        });
+    	KeyAdapter ka = new KeyAdapter () {
+    		@Override
+                public void keyReleased(KeyEvent evt) {
+                    SwingUtil.exceptionWrapper(() -> manageForm());
+                }
+    	};
 
-        view.getTxtEmail().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                SwingUtil.exceptionWrapper(() -> manageForm());
-            }
-        });
+    	Stream.of(
+    		this.getView().getTxtEmailLogin(),
+            this.getView().getTxtEmail(),
+            this.getView().getTxtNombre(),
+            this.getView().getTxtApellidos(),
+            this.getView().getTxtTelefono(),
+            this.getView().getRadioSignin(),
+            this.getView().getRadioSignup()
+    	).forEach(x -> x.addKeyListener(ka));
 
-        view.getTxtNombre().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                SwingUtil.exceptionWrapper(() -> manageForm());
-            }
-        });
+    	Stream.of(
+    		this.getView().getRadioSignin(),
+    		this.getView().getRadioSignup()
+    	).forEach(x -> x.addActionListener(e -> SwingUtil.exceptionWrapper( () -> manageForm())));
 
-        view.getTxtApellidos().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                SwingUtil.exceptionWrapper(() -> manageForm());
-            }
-        });
-
-        view.getTxtTelefono().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                SwingUtil.exceptionWrapper(() -> manageForm());
-            }
-        });
-
-        view.getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageMain()));
-        view.getRadioSignin().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageForm()));
-        view.getRadioSignup().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageForm()));
+        this.getView().getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageMain()));
     }
 
     public void manageMain() {
@@ -85,76 +73,78 @@ public class InscribirUsuarioController {
 
         String email = "";
         AlumnoDTO alumno;
-        switch (view.getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
+        switch (this.getView().getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
             case "sign-in":
-                email = view.getTxtEmailLogin().getText();
+                email = this.getView().getTxtEmailLogin().getText();
                 break;
             case "sign-up":
-                email = view.getTxtEmail().getText();
-                model.insertAlumno(
-                    view.getTxtNombre().getText(),
-                    view.getTxtApellidos().getText(),
-                    view.getTxtEmail().getText(),
-                    view.getTxtTelefono().getText()
+                email = this.getView().getTxtEmail().getText();
+                this.getModel().insertAlumno(
+                    this.getView().getTxtNombre().getText(),
+                    this.getView().getTxtApellidos().getText(),
+                    this.getView().getTxtEmail().getText(),
+                    this.getView().getTxtTelefono().getText()
                 );
                 break;
         }
 
-        alumno = model.getAlumnoFromEmail(email).get(0);
+        alumno = this.getModel().getAlumnoFromEmail(email).get(0);
 
-        model.insertInscripcion(LocalDate.now().toString(), cursoId, alumno.getId());
-
-        if(model.checkAlumnoInCurso(alumno.getId(), cursoId)) {
+        if(this.getModel().checkAlumnoInCurso(alumno.getId(), cursoId)) {
             SwingUtil.showMessage("Ya está inscrito en este curso", "Inscripción de alumno", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        model.insertInscripcion(LocalDate.now().toString(), cursoId, alumno.getId());
+        this.getModel().insertInscripcion(LocalDate.now().toString(), cursoId, alumno.getId());
         getListaCursos();
-        Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(view.getTablaCursos()) + " ha sido realizada con éxito.");
+        Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.");
 
         SwingUtil.showMessage("Inscripción realizada con éxito", "Inscripción de alumno");
     }
 
     public void manageForm() {
-        view.getBtnInscribir().setEnabled(false);
+        this.getView().getBtnInscribir().setEnabled(false);
         if (cursoId == null) return;
-        String signinEmail = view.getTxtEmailLogin().getText();
-        String signupEmail = view.getTxtEmail().getText();
+        String signinEmail = this.getView().getTxtEmailLogin().getText();
+        String signupEmail = this.getView().getTxtEmail().getText();
 
         if(signinEmail.isEmpty() && signupEmail.isEmpty()) return;
 
-        view.getLblSignin().setForeground(Color.RED);
-        view.getLblSignup().setForeground(Color.RED);
+        this.getView().getLblSignin().setForeground(Color.RED);
+        this.getView().getLblSignup().setForeground(Color.RED);
 
         boolean validEmail = false;
         JLabel target = null;
-        switch(view.getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
+        String errorMsg = "";
+        switch(this.getView().getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
             case "sign-in":
-                target = view.getLblSignin();
+                target = this.getView().getLblSignin();
                 if (!Util.verifyEmailStructure(signinEmail)) { // Check basic structure
                     target.setText("");
                     break;
                 }
-                validEmail = model.verifyEmail(signinEmail); // Check if email exists in database
+                validEmail = this.getModel().verifyEmail(signinEmail); // Check if email exists in database
+                errorMsg = "Email desconocido";
                 break;
 
             case "sign-up":
+                target = this.getView().getLblSignup();
                 if (!Util.verifyEmailStructure(signupEmail)) {
-                    view.getLblSignup().setText("");
+                    this.getView().getLblSignup().setText("");
                     break;
                 }
-                validEmail = !model.verifyEmail(signupEmail); // Check if email doesn't already exist in db
+                validEmail = !this.getModel().verifyEmail(signupEmail); // Check if email doesn't already exist in db
+                errorMsg = "El email ya está registrado";
                 break;
         }
-        target.setText(validEmail ? "" : "Email desconocido");
-        view.getBtnInscribir().setEnabled(validEmail);
+        target.setText(validEmail ? "" : errorMsg);
+        this.getView().getBtnInscribir().setEnabled(validEmail);
     }
 
     public void updateCursoValue() {
         cursoId = null;
         for (CursoDTO curso : cursos) {
-            if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
+            if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
                 if (curso.getPlazas_libres().equals("0")) {
                     SwingUtil.showMessage("No quedan plazas libres para este curso", "Inscripción de alumno", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -166,10 +156,10 @@ public class InscribirUsuarioController {
     }
 
     public void getListaCursos() {
-        cursos = model.getListaCursos(view.getMain().getToday().toString());
+        cursos = this.getModel().getListaCursos(this.getView().getMain().getToday().toString());
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas_libres", "start_inscr", "end_inscr" },
         		new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
-        view.getTablaCursos().setModel(tableModel);
-        SwingUtil.autoAdjustColumns(view.getTablaCursos());
+        this.getView().getTablaCursos().setModel(tableModel);
+        SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
     }
 }

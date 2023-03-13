@@ -1,9 +1,12 @@
-package g41.si2022.util;
+package g41.si2022.util.state;
 
 import java.time.LocalDate;
 import java.util.List;
-import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.PagoDTO;
+
+import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.PagoDTO;
+import g41.si2022.util.db.Database;
+import g41.si2022.util.exception.UnexpectedException;
 
 public class StateUtilities {
 
@@ -94,12 +97,12 @@ public class StateUtilities {
 	 */
 	public static InscripcionState getInscripcionState (Double coste, java.util.List<PagoDTO> pagos) {
 		double paid = 0;
-		double devuelto = 0;
+		//double devuelto = 0;
 		for (PagoDTO p : pagos) {
 			paid += Double.parseDouble(p.getImporte());
-			if(p.getImportedevuelto() != null) {
+			/*if(p.getImportedevuelto() != null) {
 				devuelto += Double.parseDouble(p.getImportedevuelto());
-			}
+			}*/
 		}
 
 		if (paid > coste) return InscripcionState.EXCESO;
@@ -120,6 +123,6 @@ public class StateUtilities {
 		if (pagado < coste) return InscripcionState.PENDIENTE;
 		return InscripcionState.PAGADA;
 	}
-	
-	
+
+
 }

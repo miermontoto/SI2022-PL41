@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.dto;
+package g41.si2022.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,13 +23,14 @@ public class CursoDTO {
 		ingresos, // Annadido por ConsultarIngresosGastos
 		gastos, // Annadido por ConsultarIngresosGastos
 		balance, // Annadido por ConsultarIngresosGastos
+		pagoHighestFecha, // Annadido por ConsultarIngresosGastos
+		pagoLowestFecha, // Annadido por ConsultarIngresosGastos
 		inscripcion_fecha, // Annadido por consultarCursos
 		inscripcion_alumno, // Annadido por consultarCursos
 		pago_importe_devuelto; // Annadido por consultarCursos
 
 
-	private g41.si2022.util.InscripcionState inscripcion_estado; // Annadido por consultarCursos
-	private g41.si2022.util.CursoState estado; // Annadido por ?
+	private g41.si2022.util.state.InscripcionState inscripcion_estado; // Annadido por consultarCursos
+	private g41.si2022.util.state.CursoState estado; // Annadido por ?
 
-	public CursoDTO() { }
 }

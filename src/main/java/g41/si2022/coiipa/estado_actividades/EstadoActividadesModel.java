@@ -1,17 +1,21 @@
-package g41.si2022.coiipa.consultar_cursos; 
+package g41.si2022.coiipa.estado_actividades;
+
 import java.util.List;
 
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
+import g41.si2022.util.db.Database;
 
-public class ConsultarCursosModel extends g41.si2022.mvc.Model {
+public class EstadoActividadesModel extends g41.si2022.mvc.Model {
+
+	private Database db = new Database();
 
 	public List<CursoDTO> getListaCursos() {
 		String sql = "SELECT * FROM curso "
 				   + "INNER JOIN inscripcion on inscripcion.id = curso.id ";
 
-		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql);
+		return db.executeQueryPojo(CursoDTO.class, sql);
 	}
 
 	public List<CursoDTO> getListaCursosInscr() {
@@ -21,7 +25,7 @@ public class ConsultarCursosModel extends g41.si2022.mvc.Model {
 				   + "ON curso.id = inscripcion.curso_id "
 				   + "INNER JOIN alumno ON inscripcion.id = alumno.id";
 
-		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql);
+		return db.executeQueryPojo(CursoDTO.class, sql);
 	}
 
 	// Modificar query para que devuelva los valores necesarios de inscripción de tipo CursoDTO
@@ -32,21 +36,21 @@ public class ConsultarCursosModel extends g41.si2022.mvc.Model {
 		+ " INNER JOIN alumno as a ON i.alumno_id = a.id"
 		+ " WHERE curso_id = ?";
 
-		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
+		return db.executeQueryPojo(InscripcionDTO.class, sql, idCurso);
 	}
 
 	public String getGastos(String idCurso) {
 		String sql = "SELECT remuneracion FROM docencia WHERE curso_id = ?";
 
 		try {
-			return String.valueOf((int) this.getDatabase().executeQueryArray(sql, idCurso).get(0)[0]);
+			return String.valueOf((int) db.executeQueryArray(sql, idCurso).get(0)[0]);
 		} catch (IndexOutOfBoundsException ioob) {return "-";}
 	}
 
 	public String getCosteCurso(String idCurso) {
 		String sql = "SELECT coste FROM curso where id = ?";
 		try {
-			return String.valueOf((double) this.getDatabase().executeQueryArray(sql, idCurso).get(0)[0]);
+			return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
 		} catch (IndexOutOfBoundsException ioob) {return "0";}
 	}
 
@@ -55,7 +59,7 @@ public class ConsultarCursosModel extends g41.si2022.mvc.Model {
 				   + "inner join inscripcion on curso.id = inscripcion.curso_id "
 				   + "where curso.id = ?";
 		try {
-			return String.valueOf((double) this.getDatabase().executeQueryArray(sql, idCurso).get(0)[0]);
+			return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
 		} catch (IndexOutOfBoundsException ioob) { return "0"; }
 	}
 
@@ -64,7 +68,7 @@ public class ConsultarCursosModel extends g41.si2022.mvc.Model {
 					 + "INNER JOIN inscripcion ON pago.inscripcion_id = inscripcion.id "
 					 + "WHERE inscripcion.id = ?" ;
 
-		return this.getDatabase().executeQueryPojo(PagoDTO.class, sql, idCurso);
+		return db.executeQueryPojo(PagoDTO.class, sql, idCurso);
 	}
 
 	public String getImportePagos(String idInscripcion) {
@@ -73,7 +77,7 @@ public class ConsultarCursosModel extends g41.si2022.mvc.Model {
 			 		 + "WHERE i.id = ?" ;
 
 		try {
-			return String.valueOf((double) this.getDatabase().executeQueryArray(sql, idInscripcion).get(0)[0]);
+			return String.valueOf((double) db.executeQueryArray(sql, idInscripcion).get(0)[0]);
 		} catch (NullPointerException npe) { return "0.0"; }
 	}
 }

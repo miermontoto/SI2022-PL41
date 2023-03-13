@@ -10,19 +10,21 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
 import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.CursoState;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
+import g41.si2022.util.state.CursoState;
 
 public class ConsultarIngresosGastosView extends g41.si2022.ui.Tab {
 
 	private static final long serialVersionUID = 1L;
 
 	private JTable movimientos;
+	private JTable offMovimientos;
 	private JComboBox<CursoState> filterEstado;
 	private BetterDatePicker startDate, endDate;
 
 	public JTable getMovimientosTable () { return this.movimientos; }
+	public JTable getOffMovimientosTable () { return this.offMovimientos; }
 	public JComboBox<CursoState> getFilterEstadoComboBox () { return this.filterEstado; }
 	public BetterDatePicker getStartDatePicker () { return this.startDate; }
 	public BetterDatePicker getEndDatePicker () { return this.endDate; }
@@ -31,15 +33,11 @@ public class ConsultarIngresosGastosView extends g41.si2022.ui.Tab {
 	 * Create the panel.
 	 */
 	public ConsultarIngresosGastosView(g41.si2022.ui.SwingMain main) {
-		super(main);
-		this.initView();
+		super(main, ConsultarIngresosGastosModel.class, ConsultarIngresosGastosView.class, ConsultarIngresosGastosController.class);
 	}
 
-	/**
-	 * Inits all the components that this View uses.
-	 * All the behaviour and listeners are in the <code>ConsultarIngresosGastosController</code>.
-	 */
-	private void initView () {
+	@Override
+	protected void initView () {
 		this.setLayout(new BorderLayout());
 		// Title
 		this.add(JLabelFactory.getLabel(FontType.title, "Ingresos y Gastos"), BorderLayout.NORTH);
@@ -55,22 +53,35 @@ public class ConsultarIngresosGastosView extends g41.si2022.ui.Tab {
 				filters.add(JLabelFactory.getLabel(" y "));
 				filters.add(this.endDate = new BetterDatePicker());
 				mainPanel.add(filters, BorderLayout.NORTH);
-			} { // Table
-				JScrollPane sp = new JScrollPane();
-				sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-				this.movimientos = new JTable();
-				this.movimientos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				this.movimientos.setDefaultEditor(Object.class, null);
-				sp.setViewportView(this.movimientos);
-				mainPanel.add(sp, BorderLayout.CENTER);
+			} {  // Tables
+				JPanel tablePanel = new JPanel (new java.awt.GridLayout(0, 1));
+				JPanel offsetTablePanel = new JPanel (new BorderLayout());
+				{ // All Table
+					JScrollPane sp = new JScrollPane();
+					sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+					this.movimientos = new JTable();
+					this.movimientos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					this.movimientos.setDefaultEditor(Object.class, null);
+					sp.setViewportView(this.movimientos);
+					tablePanel.add(sp);
+				} { // Message
+					offsetTablePanel.add(JLabelFactory.getLabel(FontType.normal,
+							"De los anteriores cursos, estos han recibido ingresos/gastos fuera de las fechas filtradas."),
+							BorderLayout.NORTH);
+				} { // Offset Table
+					JScrollPane sp = new JScrollPane();
+					sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+					this.offMovimientos = new JTable();
+					this.offMovimientos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					this.offMovimientos.setDefaultEditor(Object.class, null);
+					sp.setViewportView(this.offMovimientos);
+					offsetTablePanel.add(sp, BorderLayout.CENTER);
+				}
+				mainPanel.add(tablePanel, BorderLayout.CENTER);
+				tablePanel.add(offsetTablePanel);
 			}
 		}
 		this.add(mainPanel, BorderLayout.CENTER);
-	}
-
-	@Override
-	protected void initController() {
-		new ConsultarIngresosGastosController(this, new ConsultarIngresosGastosModel());
 	}
 
 }
