@@ -12,6 +12,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import g41.si2022.dto.ProfesorDTO;
+import g41.si2022.ui.Dialog;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.BetterDatePicker;
 
@@ -112,7 +113,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		inscripcionIni.addDateChangeListener((e) -> {
 			// Query on #20879 -> Resolved to: Allow but issue a warning.
 			if (inscripcionIni.compareTo(this.getView().getMain().getTodayPicker()) < 0) {
-				SwingUtil.raiseWarning("Se está seleccionando una fecha anterior al día de hoy.");
+				Dialog.showWarning("Se está seleccionando una fecha anterior al día de hoy.");
 			}
 			if (inscripcionFin.getDate() == null || inscripcionFin.compareTo(inscripcionIni) <= 0) {
 				inscripcionFin.setDate(e.getNewDate().plusDays(1));
@@ -173,7 +174,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				this.getView().getPlazas(), this.getView().getLocalizacion(),
 				profesorElegido.get().getId(), // El curso solo tiene un profesor
 				profesorElegido.get().getRemuneracion());
-		SwingUtil.showMessage("Curso registrado con éxito.", "Registro de cursos");
+		Dialog.show("Curso registrado con éxito.");
 	}
 
 	private Optional<ProfesorDTO> getProfesor () {

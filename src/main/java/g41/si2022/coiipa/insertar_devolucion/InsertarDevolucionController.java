@@ -11,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import g41.si2022.dto.CancelacionDTO;
+import g41.si2022.ui.Dialog;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
 
@@ -90,7 +91,7 @@ public class InsertarDevolucionController extends g41.si2022.mvc.Controller<Inse
 			importedevuelto = Double.parseDouble(this.getView().getLblImporteDevuelto().getText());
 			this.getModel().registrarDevolucion(importedevuelto, Util.dateToIsoString(fechaActual), idInscripcion);
 			enviarEmail(idAlumno, nombreInscrito);
-			SwingUtil.showMessage("La cancelación de la inscripción del alumno " + nombreInscrito + " ha sido realizada con éxito. Se le han devuelto " + importedevuelto + " €", "Servicio de cancelaciones");
+			Dialog.show("La cancelación de la inscripción del alumno " + nombreInscrito + " ha sido realizada con éxito. Se le han devuelto " + importedevuelto + " €");
 			getListaInscripciones();
 			setControls(false);
 		}

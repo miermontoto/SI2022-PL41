@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -38,34 +36,11 @@ public class SwingUtil {
 		try {
 			consumer.run();
 		} catch (ApplicationException e) { // Excepción controlada de la que se puede recuperar la aplicación
-			showMessage(e.getMessage(), "PRECAUCIÓN", JOptionPane.WARNING_MESSAGE);
+			Dialog.showWarning(e.getMessage());
 		} catch (RuntimeException e) { // Resto de excepciones, además de la ventana informativa muestra el stacktrace
 			e.printStackTrace();
-			showMessage(e.toString(), "Excepcion no controlada", JOptionPane.ERROR_MESSAGE);
+			Dialog.showError(e);
 		}
-	}
-
-	/**
-	 * @param consumer Metodo a ejecutar (sin parametros de entrada ni valores de salida)
-	 */
-	public static void raiseWarning (String msg) {
-		showMessage(msg, "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	public static void showMessage(String message, String title, int type) {
-		/* Como este metodo no recibe el contexto de la ventana de la aplicación,
-		 * no usa el metodo estatico showMessageDialog de JOptionPane
-		 * y establece la posicion para que no aparezca en el centro de la pantalla
-		 */
-	    JOptionPane pane = new JOptionPane(message, type, JOptionPane.DEFAULT_OPTION);
-	    pane.setOptions(new Object[] {"ACEPTAR"}); // Fija este valor para que no dependa del idioma
-	    JDialog d = pane.createDialog(pane, title);
-	    d.setLocation(200,200);
-	    d.setVisible(true);
-	}
-
-	public static void showMessage(String message, String title) {
-	    showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**

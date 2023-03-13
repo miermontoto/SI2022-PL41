@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
 import g41.si2022.dto.InscripcionDTO;
+import g41.si2022.ui.Dialog;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
 import g41.si2022.util.state.InscripcionState;
@@ -87,7 +88,7 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 		getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
 		// Si había algún error habilitado en la etiqueta, se deshabilita y mostramos éxito
 		//view.getLblError().setText("Pago insertado con éxito");
-		SwingUtil.showMessage("Pago por importe de " + importe + " € de parte del alumno " + nombreInscrito + " insertado con éxito", "Registro de pagos");
+		Dialog.show("Pago por importe de " + importe + " € de parte del alumno " + nombreInscrito + " insertado con éxito");
 		eraseControls(false); // Entradas en blanco
 	}
 
