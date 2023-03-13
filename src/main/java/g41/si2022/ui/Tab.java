@@ -91,9 +91,9 @@ public abstract class Tab extends javax.swing.JPanel {
 		this.main = main;
 		this.initView();
 		java.util.stream.Stream.of(c.getDeclaredConstructors())
-			.filter(x -> java.util.List.of(x.getParameterTypes()).contains(m) &&
-						 java.util.List.of(x.getParameterTypes()).contains(v))
-			.collect(Collectors.toList())
+			.filter(x -> 
+						 java.util.Arrays.asList(x.getParameterTypes()).contains(m) &&
+						 java.util.Arrays.asList(x.getParameterTypes()).contains(v))
 			.forEach(x -> {
 				try {
 					Tab.this.controller = x.getParameterTypes()[0].equals(m)
