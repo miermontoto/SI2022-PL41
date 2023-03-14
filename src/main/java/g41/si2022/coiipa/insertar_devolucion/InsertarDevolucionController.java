@@ -11,8 +11,8 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import g41.si2022.dto.CancelacionDTO;
-import g41.si2022.ui.Dialog;
 import g41.si2022.ui.SwingUtil;
+import g41.si2022.util.Dialog;
 import g41.si2022.util.Util;
 
 public class InsertarDevolucionController extends g41.si2022.mvc.Controller<InsertarDevolucionView, InsertarDevolucionModel> {

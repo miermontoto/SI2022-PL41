@@ -20,9 +20,9 @@ import javax.swing.table.TableModel;
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 
 import g41.si2022.dto.ProfesorDTO;
-import g41.si2022.ui.Dialog;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.BetterDatePicker;
+import g41.si2022.util.Dialog;
 import g41.si2022.util.exception.UnexpectedException;
 
 public class RegistrarCursoController extends g41.si2022.mvc.Controller<RegistrarCursoView, RegistrarCursoModel> {

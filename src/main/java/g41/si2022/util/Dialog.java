@@ -1,4 +1,4 @@
-package g41.si2022.ui;
+package g41.si2022.util;
 
 import java.util.function.Predicate;
 import javax.swing.JOptionPane;
