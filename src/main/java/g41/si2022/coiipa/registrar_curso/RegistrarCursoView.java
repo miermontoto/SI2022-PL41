@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.registrar_curso;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -34,6 +35,7 @@ public class RegistrarCursoView extends g41.si2022.ui.Tab {
 	private JTextField txtCoste;
 	private JTable tableProfesores;
 	private JButton btnRegistrar;
+	private JComponent[] focusableComponents;
 
 	public void setNombreCurso (String nombreCurso) { this.txtNombre.setText(nombreCurso); }
 	public void setObjetivosDescripcion (String objetivosDescripcion) { this.txtDescripcion.setText(objetivosDescripcion); }
@@ -179,7 +181,7 @@ public class RegistrarCursoView extends g41.si2022.ui.Tab {
 		JScrollPane sp = new JScrollPane();
 		sp.getVerticalScrollBar().setUnitIncrement(20);
 		sp.setPreferredSize(new java.awt.Dimension(
-				this.getWidth(), 150
+			this.getWidth(), 150
 		));
 
 		this.tableProfesores = new JTable();
@@ -196,6 +198,17 @@ public class RegistrarCursoView extends g41.si2022.ui.Tab {
 
 		this.add(bottomPane, BorderLayout.SOUTH);
 		add(JLabelFactory.getLabel(FontType.title, "Registrar Curso"), BorderLayout.NORTH);
+
+		focusableComponents = new JComponent[] {
+			this.txtNombre,
+			this.txtPlazas,
+			this.dateInscrStart,
+			this.dateInscrEnd,
+			this.dateCursoStart,
+			this.dateCursoEnd,
+			this.txtCoste,
+			this.tableProfesores
+		};
 	}
 
 }

@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.awt.event.MouseAdapter;
 
 import g41.si2022.dto.FacturaDTO;
-import g41.si2022.ui.Dialog;
 import g41.si2022.ui.SwingUtil;
+import g41.si2022.util.Dialog;
 
 public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<RegistrarPagoProfesorView, RegistrarPagoProfesorModel> {
 

@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import org.apache.commons.beanutils.PropertyUtils;
 
+import g41.si2022.util.Dialog;
 import g41.si2022.util.TableColumnAdjuster;
 import g41.si2022.util.exception.ApplicationException;
 import g41.si2022.util.exception.UnexpectedException;
