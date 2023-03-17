@@ -35,7 +35,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		return out;
 	};
 
-	public RegistrarCursoController (RegistrarCursoView v, RegistrarCursoModel m) {
+	public RegistrarCursoController(RegistrarCursoView v, RegistrarCursoModel m) {
 		super(v, m);
 		this.profesoresMap = new HashMap<String, ProfesorDTO> ();
 	}
@@ -48,11 +48,13 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		loadTableListeners();
 		loadTextAreaListeners();
 		loadCheckListeners();
+		loadValidateListeners();
+		getView().getBtnRegistrar().setEnabled(false);
 		JTextField coste = getView().getTxtCoste();
 		coste.addKeyListener(new KeyAdapter() {
 
 			@Override
-			public void keyPressed (KeyEvent e) {
+			public void keyPressed(KeyEvent e) {
 				if (!Character.isDigit(e.getKeyChar()) && e.getKeyChar() != '.') {
 					JTextField tf = RegistrarCursoController.this.getView().getTxtCoste();
 					if (tf.getText().length() > 1) {
@@ -77,6 +79,19 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 			}
 		});
 
+	}
+
+	private void loadValidateListeners() {
+		for(JComponent c : getView().getFocusableComponents()) {
+			if(c instanceof BetterDatePicker) {
+				((BetterDatePicker) c).addDateChangeListener((e) -> checkValidity());
+			} else if (c instanceof JTextField) {
+				((JTextField) c).addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) { checkValidity(); }
+				});
+			}
+		}
 	}
 
 	@Override
@@ -123,7 +138,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		getView().getBtnRegistrar().setEnabled(valid);
 	}
 
-	private void loadTextAreaListeners () {
+	private void loadTextAreaListeners() {
 		KeyAdapter ka = new KeyAdapter () {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -134,6 +149,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				}
 			}
 		};
+
 		this.getView().getTxtDescripcion().addKeyListener(ka);
 		this.getView().getTxtLocalizacion().addKeyListener(ka);
 	}
@@ -152,7 +168,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		});
 	}
 
-	private void loadDateListeners () {
+	private void loadDateListeners() {
 		BetterDatePicker
 			inscripcionIni = getView().getDateInscrStart(),
 			inscripcionFin = getView().getDateInscrEnd(),
@@ -229,8 +245,9 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		SwingUtil.autoAdjustColumns(this.getView().getTableProfesores());
 	}
 
-	public void insertCurso () {
+	public void insertCurso() {
 		Optional<ProfesorDTO> profesorElegido = this.getProfesor();
+
 		if (!profesorElegido.isPresent()) {
 			throw new UnexpectedException("No se ha seleccionado a ningún docente.");
 		}
@@ -250,7 +267,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		Dialog.show("Curso registrado con éxito.");
 	}
 
-	private Optional<ProfesorDTO> getProfesor () {
+	private Optional<ProfesorDTO> getProfesor() {
 		TableModel model = this.getView().getTableProfesores().getModel();
 		for (int i = 0 ; i < model.getRowCount() ; i++) {
 			if (model.getValueAt(i, model.getColumnCount()-1) != null) {
