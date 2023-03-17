@@ -124,21 +124,27 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				return;
 			}*/
 
-			if(inscripcionIni.getDate() != null && inscripcionIni.compareTo(getView().getMain().getTodayPicker()) <= 0) {
+			if(inscripcionIni.getDate() != null && inscripcionIni.compareTo(getView().getMain().getTodayPicker()) <= 0
+				&& e.getSource() == inscripcionIni) {
 				Dialog.showWarning("La fecha de inicio de inscripción es anterior a la fecha actual.");
-			}
+			} // Comprobación fecha de inicio de inscripción
 
 			if(inscripcionFin.getDate() == null) return;
 
+			if(inscripcionFin.compareTo(getView().getMain().getTodayPicker()) <= 0
+				&& e.getSource() == inscripcionFin) {
+				Dialog.showWarning("El periodo de inscripción es anterior a la fecha actual y ha finalizado.");
+			} // Comprobación fecha de fin de inscripción
+
 			int diff = inscripcionFin.compareTo(inscripcionIni);
-			if (diff < 0) {
+			if (diff < 0) { // Comprobación de rango válido de fechas
 				inscripcionFin.setDate(null);
 				Dialog.showError("La fecha de fin de inscripción no puede ser anterior a la de inicio.");
 			} else if (diff == 0)  Dialog.showWarning("La fecha de fin de inscripción es igual a la de inicio.");
 
-			if(cursoIni.getDate() != null)
-				if (cursoIni.compareTo(inscripcionFin) <= 0)
-					Dialog.showWarning("Las fechas de curso y de inscripción se solapan.");
+			// Comprobación de overlap de fechas (curso e inscripción)
+			if(cursoIni.getDate() != null && cursoIni.compareTo(inscripcionFin) <= 0)
+				Dialog.showWarning("Las fechas de curso y de inscripción se solapan.");
 			};
 
 		DateChangeListener cursoListener = (e) -> {
