@@ -124,6 +124,10 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				return;
 			}*/
 
+			if(inscripcionIni.getDate() != null && inscripcionIni.compareTo(getView().getMain().getTodayPicker()) <= 0) {
+				Dialog.showWarning("La fecha de inicio de inscripción es anterior a la fecha actual.");
+			}
+
 			if(inscripcionFin.getDate() == null) return;
 
 			int diff = inscripcionFin.compareTo(inscripcionIni);
