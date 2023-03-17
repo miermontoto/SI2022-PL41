@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import java.awt.event.KeyAdapter;
 
+import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
@@ -46,6 +47,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		loadDateListeners();
 		loadTableListeners();
 		loadTextAreaListeners();
+		loadCheckListeners();
 		JTextField coste = getView().getTxtCoste();
 		coste.addKeyListener(new KeyAdapter() {
 
@@ -60,6 +62,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 			}
 
 		});
+
 		coste.addFocusListener(new FocusListener() {
 
 			@Override
@@ -72,7 +75,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 					tf.setText("");
 				}
 			}
-
 		});
 
 	}
@@ -80,6 +82,45 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	@Override
 	public void initVolatileData() {
 		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
+	}
+
+	private void loadCheckListeners() {
+		for(JComponent jc : getView().getFocusableComponents()) {
+			if (jc instanceof JTextField) {
+				JTextField tf = (JTextField) jc;
+				tf.addKeyListener(new KeyAdapter() {
+
+					@Override
+					public void keyReleased(KeyEvent e) {
+						checkValidity();
+					}
+
+				});
+			} else if (jc instanceof BetterDatePicker) {
+				BetterDatePicker dp = (BetterDatePicker) jc;
+				dp.addDateChangeListener((e) -> checkValidity());
+			}
+		}
+	}
+
+	private void checkValidity() {
+		boolean valid = true;
+		for(JComponent jc : getView().getFocusableComponents()) {
+			if (jc instanceof JTextField) {
+				JTextField tf = (JTextField) jc;
+				if (tf.getText().isEmpty()) {
+					valid = false;
+					break;
+				}
+			} else if (jc instanceof BetterDatePicker) {
+				BetterDatePicker dp = (BetterDatePicker) jc;
+				if (dp.getDate() == null) {
+					valid = false;
+					break;
+				}
+			}
+		}
+		getView().getBtnRegistrar().setEnabled(valid);
 	}
 
 	private void loadTextAreaListeners () {
@@ -98,7 +139,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	}
 
 	private void loadTableListeners() {
-		this.getView().getTableProfesores().getModel().addTableModelListener(new TableModelListener () {
+		this.getView().getTableProfesores().getModel().addTableModelListener(new TableModelListener() {
 
 			@Override
 			public void tableChanged(TableModelEvent e) {
@@ -193,6 +234,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		if (!profesorElegido.isPresent()) {
 			throw new UnexpectedException("No se ha seleccionado a ningún docente.");
 		}
+
 		this.getModel().insertCurso(
 				getView().getTxtNombre().getText(),
 				getView().getTxtDescripcion().getText(),
