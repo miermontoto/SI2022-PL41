@@ -19,12 +19,12 @@ import javax.swing.ButtonGroup;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
-import g41.si2022.ui.Tab;
+import g41.si2022.mvc.View;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 
 @Getter
-public class InscribirUsuarioView extends Tab {
+public class InscribirUsuarioView extends View {
 
 	private static final long serialVersionUID = 1L;
 	private static final int textFieldSize = 15;

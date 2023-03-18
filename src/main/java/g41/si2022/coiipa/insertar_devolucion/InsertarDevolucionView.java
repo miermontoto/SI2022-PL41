@@ -12,14 +12,14 @@ import javax.swing.ListSelectionModel;
 
 import net.miginfocom.swing.MigLayout;
 import lombok.Getter;
+import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
-import g41.si2022.ui.Tab;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 
 
 @Getter
-public class InsertarDevolucionView extends Tab {
+public class InsertarDevolucionView extends View {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
@@ -35,7 +35,7 @@ public class InsertarDevolucionView extends Tab {
 	public InsertarDevolucionView(SwingMain main) {
 		super(main, InsertarDevolucionModel.class, InsertarDevolucionView.class, InsertarDevolucionController.class);
 	}
-	
+
 	@Override
 	protected void initView () {
 		formPanel = new JPanel();

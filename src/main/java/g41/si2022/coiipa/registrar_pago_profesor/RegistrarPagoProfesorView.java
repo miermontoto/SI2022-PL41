@@ -14,14 +14,14 @@ import net.miginfocom.swing.MigLayout;
 import lombok.Getter;
 
 import g41.si2022.util.BetterDatePicker;
+import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
-import g41.si2022.ui.Tab;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 import javax.swing.JCheckBox;
 
 @Getter
-public class RegistrarPagoProfesorView extends Tab {
+public class RegistrarPagoProfesorView extends View {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
@@ -41,7 +41,7 @@ public class RegistrarPagoProfesorView extends Tab {
 	public RegistrarPagoProfesorView(SwingMain main) {
 		super(main, RegistrarPagoProfesorModel.class, RegistrarPagoProfesorView.class, RegistrarPagoProfesorController.class);
 	}
-	
+
 	@Override
 	protected void initView () {
 		formPanel = new JPanel();

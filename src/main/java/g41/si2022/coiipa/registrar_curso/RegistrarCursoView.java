@@ -24,7 +24,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 
 @Getter
-public class RegistrarCursoView extends g41.si2022.ui.Tab {
+public class RegistrarCursoView extends g41.si2022.mvc.View {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField txtNombre;

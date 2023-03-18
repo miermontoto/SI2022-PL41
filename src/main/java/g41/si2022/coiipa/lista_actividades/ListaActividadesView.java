@@ -13,12 +13,13 @@ import g41.si2022.util.state.CursoState;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+
+import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
-import g41.si2022.ui.Tab;
 import lombok.Getter;
 
 @Getter
-public class ListaActividadesView extends Tab {
+public class ListaActividadesView extends View {
 
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;

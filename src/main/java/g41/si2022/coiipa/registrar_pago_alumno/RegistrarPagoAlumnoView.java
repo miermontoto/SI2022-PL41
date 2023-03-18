@@ -15,14 +15,14 @@ import javax.swing.text.NumberFormatter;
 import net.miginfocom.swing.MigLayout;
 import com.github.lgooddatepicker.components.DatePicker;
 import lombok.Getter;
+import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
-import g41.si2022.ui.Tab;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 import javax.swing.JCheckBox;
 
 @Getter
-public class RegistrarPagoAlumnoView extends Tab {
+public class RegistrarPagoAlumnoView extends View {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
@@ -41,7 +41,7 @@ public class RegistrarPagoAlumnoView extends Tab {
 	public RegistrarPagoAlumnoView(SwingMain main) {
 		super(main, RegistrarPagoAlumnoModel.class, RegistrarPagoAlumnoView.class, RegistrarPagoAlumnoController.class);
 	}
-	
+
 	@Override
 	protected void initView () {
 		formPanel = new JPanel();

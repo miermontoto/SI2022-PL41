@@ -14,7 +14,7 @@ import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 import g41.si2022.util.state.CursoState;
 
-public class ConsultarIngresosGastosView extends g41.si2022.ui.Tab {
+public class ConsultarIngresosGastosView extends g41.si2022.mvc.View {
 
 	private static final long serialVersionUID = 1L;
 

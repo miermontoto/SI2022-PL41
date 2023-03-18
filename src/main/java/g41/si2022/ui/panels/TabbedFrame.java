@@ -6,13 +6,13 @@ import java.util.TreeMap;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
 
+import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
-import g41.si2022.ui.Tab;
 
 public abstract class TabbedFrame {
     JTabbedPane tabbedPane;
     SwingMain main;
-    Map<String, Tab> tabs;
+    Map<String, View> tabs;
 
     TabbedFrame(SwingMain main) {
         this.main = main;
@@ -26,8 +26,8 @@ public abstract class TabbedFrame {
         	tabbedPane.addTab(name, tab);
         });
     }
-    
-    public Map<String, Tab> getTabs () {
+
+    public Map<String, View> getTabs () {
     	return this.tabs;
     }
 
