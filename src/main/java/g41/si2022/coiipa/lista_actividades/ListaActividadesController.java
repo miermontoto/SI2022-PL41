@@ -29,7 +29,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 			aux; // Is used as auxiliary list to avoid concurrent modifications
 
 		// FIRST : WE FILTER THE STATES
-		if (selectedItem.equals(CursoState.CUALQUIERA)) { // If the CB has chosen ANY, the output array will contain all entries
+		if (selectedItem == null || selectedItem.equals(CursoState.CUALQUIERA)) { // If the CB has chosen ANY, the output array will contain all entries
 			output.addAll(this.cursosActivos);
 		} else { // If the CB has chosen something else, the entries are filtered
             output = this.cursosActivos.stream()

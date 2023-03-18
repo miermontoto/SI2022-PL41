@@ -41,7 +41,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 			aux; // Is used as auxiliary list to avoid concurrent modifications
 
 		// FIRST : WE FILTER THE STATES
-		if (selectedItem.equals(CursoState.CUALQUIERA)) { // If the CB has chosen ANY, the output array will contain all entries
+		if (selectedItem == null || selectedItem.equals(CursoState.CUALQUIERA)) { // If the CB has chosen ANY, the output array will contain all entries
 			output.addAll(this.cursos);
 		} else { // If the CB has chosen something else, the entries are filtered
 			output = this.cursos.stream()

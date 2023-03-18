@@ -17,6 +17,11 @@ public abstract class TabbedFrame {
     TabbedFrame(SwingMain main) {
         this.main = main;
         tabbedPane = new JTabbedPane();
+        tabbedPane.addChangeListener((e) -> {
+        	if (tabbedPane.getSelectedComponent() != null &&
+        		((View) tabbedPane.getSelectedComponent()).isViewCreated())
+        		((View) tabbedPane.getSelectedComponent()).initVolatileData();
+        });
         tabs = new TreeMap<>();
         main.setNavigation(true);
     }

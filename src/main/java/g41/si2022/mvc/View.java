@@ -65,6 +65,8 @@ public abstract class View extends javax.swing.JPanel {
 	 */
 	private int delayCount;
 
+	private boolean viewCreated; 
+	
 	/**
 	 * Creates a new <code>Tab</code>.<br>
 	 * Creating a new <code>Tab</code> will make it so the View is initialized according to this {@link #initView}
@@ -83,11 +85,14 @@ public abstract class View extends javax.swing.JPanel {
 	public View (SwingMain main,
 			Class<? extends Model> m,
 			Class<? extends View> v,
-			Class<? extends Controller<? extends View, ? extends Model>> c
+			Class<? extends Controller<? extends View, ? extends Model>> c,
+			int delayCount
 			) {
-		this.delayCount = 2;
+		this.viewCreated = false;
+		this.delayCount = delayCount;
 		this.main = main;
 		this.initView();
+		this.viewCreated = true;
 		java.util.stream.Stream.of(c.getDeclaredConstructors())
 			.filter(x ->
 						 java.util.Arrays.asList(x.getParameterTypes()).contains(m) &&
@@ -104,6 +109,19 @@ public abstract class View extends javax.swing.JPanel {
 					e.printStackTrace();
 				}
 			});
+	}
+	
+	
+	public View (SwingMain main,
+			Class<? extends Model> m,
+			Class<? extends View> v,
+			Class<? extends Controller<? extends View, ? extends Model>> c
+			) {
+		this(main, m, v, c, 2);
+	}
+	
+	public boolean isViewCreated () {
+		return this.viewCreated;
 	}
 
 	/**
@@ -130,9 +148,13 @@ public abstract class View extends javax.swing.JPanel {
 				this.controller.setNonVolatileLoaded(true);
 				this.controller.initNonVolatileData();
 			}
-			this.controller.initVolatileData();
+			// this.controller.initVolatileData();
 		}
 		super.setVisible(visible);
+	}
+	
+	public void initVolatileData() {
+		this.controller.initVolatileData();
 	}
 
 	/**
