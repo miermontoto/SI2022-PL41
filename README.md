@@ -76,6 +76,7 @@ Solo funciona en JRE 1.8 (Java 8)
 - el único ingreso del curso es el de las inscripciones.
 - se asume que todas las transferencias se realizan con el importe correcto.
 - se asume que el tesorero no se puede equivocar a la hora de realizar transferencias.
+- se asume que es la secretaria administrativa la que se encarga de cancelar inscripciones y no los propios usuarios inscritos.
 
 # sprint2
 
