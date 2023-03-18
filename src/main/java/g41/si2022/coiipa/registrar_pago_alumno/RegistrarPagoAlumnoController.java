@@ -36,6 +36,10 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 	public void initVolatileData() {
 		this.getListaInscripciones();
 		setControls(false); // Inicio la vista con todo deshabilitado
+		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent evt) { handleSelect(); }
+		});
 	}
 
 	private void setControls(boolean status) {
