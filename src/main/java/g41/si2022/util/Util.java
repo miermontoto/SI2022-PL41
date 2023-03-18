@@ -66,7 +66,7 @@ public class Util {
 
 	public static void sendEmail(String address, String subject, String content) {
 		try(FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + address + ".txt")) {
-			fw.write("["+subject+","+LocalDateTime.now()+"] "+content+"\n");
+			fw.write("["+subject+", "+LocalDateTime.now()+"] "+content+"\n");
 			fw.close();
 		} catch (IOException e) { throw new ApplicationException(e); }
 	}
