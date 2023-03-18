@@ -66,7 +66,8 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 		idInscripcion = (String) model.getValueAt(fila, 0);
 		idAlumno = (String) model.getValueAt(fila, 1);
 		getView().getDatePicker().setDateToToday();
-		this.getView().getLblNombreSeleccionado().setText((String) model.getValueAt(fila, 3));
+		this.getView().getLblNombreSeleccionado().setText((String) model.getValueAt(fila, 3)
+			+ " " + (String) model.getValueAt(fila, 4));
 
 		InscripcionState estado = inscripciones.get(fila).getEstado();
 		setControls(estado != InscripcionState.PAGADA && estado != InscripcionState.CANCELADA);
@@ -81,7 +82,6 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 			return;
 		}
 
-		String email = this.getModel().getEmailAlumno(idAlumno);
 		Date fechaPago = java.sql.Date.valueOf(this.getView().getDatePicker().getDate());
 
 		this.getModel().registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion);
@@ -90,8 +90,8 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 
 		InscripcionState estado = StateUtilities.getInscripcionState(idInscripcion); // Estado de la inscr. post inserción
 		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
-			Util.sendEmail(email, "COIIPA: inscripción completada", "El pago de su inscripción ha sido registrado correctamente"
-				+ " y su inscripción ha sido completada. Su plaza está cerrada");
+			Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: inscripción completada",
+				"El pago de su inscripción ha sido registrado correctamente y su inscripción ha sido completada.");
 		} else Dialog.showWarning("El importe total es incorrecto y la inscripción no está comlpeta.");
 
 		eraseControls(false);

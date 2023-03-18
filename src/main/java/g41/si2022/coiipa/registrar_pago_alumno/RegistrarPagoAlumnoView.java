@@ -57,7 +57,7 @@ public class RegistrarPagoAlumnoView extends View {
 		formPanel.setLayout(new MigLayout("", "[122.00px,grow][]", "[28.00,top][20.00px,center][21.00][22.00][22.00][][][][][][]"));
 		this.add(formPanel, BorderLayout.EAST);
 
-		JLabel lblTitulo = JLabelFactory.getLabel(FontType.title, "Insertar un nuevo pago");
+		JLabel lblTitulo = JLabelFactory.getLabel(FontType.title, "Registrar pago");
 
 		formPanel.add(lblTitulo, "cell 0 0,growx,aligny top");
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
@@ -71,10 +71,10 @@ public class RegistrarPagoAlumnoView extends View {
 
 	    NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 	    formatter.setValueClass(Integer.class);
-	    formatter.setMinimum(0);
+	    formatter.setMinimum(Integer.MIN_VALUE);
 	    formatter.setMaximum(Integer.MAX_VALUE);
 	    formatter.setAllowsInvalid(true);
-	    formatter.setCommitsOnValidEdit(false);
+	    formatter.setCommitsOnValidEdit(true);
 
 		formPanel.add(txtImporte = new JFormattedTextField(formatter), "cell 0 4,growx");
 		formPanel.add(datePicker = new DatePicker(), "cell 0 6,growx,aligny center");
