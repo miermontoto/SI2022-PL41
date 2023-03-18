@@ -29,10 +29,6 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 	@Override
 	public void initNonVolatileData() {
 		this.getView().getBtnInsertarPago().addActionListener(e -> handleInsertar());
-		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent evt) { handleSelect(); }
-		});
 		this.getView().getChkAll().addActionListener(e -> getListaInscripciones());
 	}
 
