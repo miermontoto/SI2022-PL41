@@ -5,13 +5,12 @@ import java.util.List;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import org.apache.commons.beanutils.PropertyUtils;
 
+import g41.si2022.util.Dialog;
 import g41.si2022.util.TableColumnAdjuster;
 import g41.si2022.util.exception.ApplicationException;
 import g41.si2022.util.exception.UnexpectedException;
@@ -38,39 +37,11 @@ public class SwingUtil {
 		try {
 			consumer.run();
 		} catch (ApplicationException e) { // Excepción controlada de la que se puede recuperar la aplicación
-			showMessage(e.getMessage(), "PRECAUCIÓN", JOptionPane.WARNING_MESSAGE);
+			Dialog.showWarning(e.getMessage());
 		} catch (RuntimeException e) { // Resto de excepciones, además de la ventana informativa muestra el stacktrace
 			e.printStackTrace();
-			showMessage(e.toString(), "Excepcion no controlada", JOptionPane.ERROR_MESSAGE);
+			Dialog.showError(e);
 		}
-	}
-
-	/**
-	 * Muestra una ventana de aviso con un mensaje.<br>
-	 * Utilizado para avisar al usuario de un comportamiento extranno pero permitido. 
-	 * 
-	 * @author Alex // UO281827
-	 * 
-	 * @param msg {@link String} a mostrar en la pantalla.
-	 */
-	public static void raiseWarning (String msg) {
-		showMessage(msg, "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	public static void showMessage(String message, String title, int type) {
-		/* Como este metodo no recibe el contexto de la ventana de la aplicación,
-		 * no usa el metodo estatico showMessageDialog de JOptionPane
-		 * y establece la posicion para que no aparezca en el centro de la pantalla
-		 */
-	    JOptionPane pane = new JOptionPane(message, type, JOptionPane.DEFAULT_OPTION);
-	    pane.setOptions(new Object[] {"ACEPTAR"}); // Fija este valor para que no dependa del idioma
-	    JDialog d = pane.createDialog(pane, title);
-	    d.setLocation(200,200);
-	    d.setVisible(true);
-	}
-
-	public static void showMessage(String message, String title) {
-	    showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**

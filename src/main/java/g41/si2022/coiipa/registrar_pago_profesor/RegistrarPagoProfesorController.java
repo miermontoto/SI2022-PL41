@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 
 import g41.si2022.dto.FacturaDTO;
 import g41.si2022.ui.SwingUtil;
+import g41.si2022.util.Dialog;
 
 public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<RegistrarPagoProfesorView, RegistrarPagoProfesorModel> {
 
@@ -48,7 +49,7 @@ public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<R
 		String id = table.getModel().getValueAt(row, 0).toString();
 		this.getModel().updateFactura(id, date);
 		getListaFacturas();
-		SwingUtil.showMessage("Pago registrado correctamente", "Registro de pagos");
+		Dialog.show("Pago registrado correctamente");
 	}
 
 	private void handleSelect() {

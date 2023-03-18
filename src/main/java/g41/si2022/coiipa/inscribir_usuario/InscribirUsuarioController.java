@@ -10,12 +10,12 @@ import java.time.LocalDate;
 import java.awt.Color;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
+import g41.si2022.util.Dialog;
 import g41.si2022.util.Util;
 
 public class InscribirUsuarioController extends g41.si2022.mvc.Controller<InscribirUsuarioView, InscribirUsuarioModel> {
@@ -43,7 +43,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
             }
         });
 
-    	KeyAdapter ka = new KeyAdapter () {
+    	KeyAdapter ka = new KeyAdapter() {
     		@Override
                 public void keyReleased(KeyEvent evt) {
                     SwingUtil.exceptionWrapper(() -> manageForm());
@@ -91,7 +91,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
         alumno = this.getModel().getAlumnoFromEmail(email).get(0);
 
         if(this.getModel().checkAlumnoInCurso(alumno.getId(), cursoId)) {
-            SwingUtil.showMessage("Ya está inscrito en este curso", "Inscripción de alumno", JOptionPane.ERROR_MESSAGE);
+            Dialog.showError("Ya está inscrito en este curso");
             return;
         }
 
@@ -99,7 +99,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
         getListaCursos();
         Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.");
 
-        SwingUtil.showMessage("Inscripción realizada con éxito", "Inscripción de alumno");
+        Dialog.show("Inscripción realizada con éxito");
     }
 
     public void manageForm() {
@@ -146,7 +146,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
         for (CursoDTO curso : cursos) {
             if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
                 if (curso.getPlazas_libres().equals("0")) {
-                    SwingUtil.showMessage("No quedan plazas libres para este curso", "Inscripción de alumno", JOptionPane.ERROR_MESSAGE);
+                    Dialog.showError("No quedan plazas libres para este curso");
                     return;
                 }
                 cursoId = curso.getId();
