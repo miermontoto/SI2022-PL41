@@ -19,17 +19,16 @@ public abstract class TabbedFrame {
         tabbedPane = new JTabbedPane();
         tabs = new TreeMap<>();
         main.setNavigation(true);
-
-        /*
-        tabbedPane.addChangeListener(e -> {
-			Tab tab = (Tab) tabbedPane.getSelectedComponent();
-			if (tab != null) tab.initVolatileData();
-		});
-		*/
     }
 
     void addTabs() {
-        tabs.forEach((name, tab) -> tabbedPane.addTab(name, tab));
+        tabs.forEach((name, tab) -> {
+        	tabbedPane.addTab(name, tab);
+        });
+    }
+    
+    public Map<String, Tab> getTabs () {
+    	return this.tabs;
     }
 
     public JComponent getComponent() {
