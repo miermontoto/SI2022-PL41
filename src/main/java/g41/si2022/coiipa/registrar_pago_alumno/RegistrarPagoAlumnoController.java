@@ -9,6 +9,7 @@ import javax.swing.table.TableModel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
+import g41.si2022.util.state.StateUtilities;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Dialog;
@@ -49,7 +50,7 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
-		this.getView().getLblNombreInscripcion().setText("No se ha seleccionado ningún nombre");
+		this.getView().getLblNombreSeleccionado().setText("No se ha seleccionado ningún nombre");
 		this.getView().getTxtImporte().setText("");
 		this.getView().getDatePicker().setText("");
 		if(eliminarAviso) this.getView().getLblError().setText("");
@@ -61,35 +62,39 @@ public class RegistrarPagoAlumnoController extends g41.si2022.mvc.Controller<Reg
 		int fila = this.getView().getTableInscripciones().getSelectedRow();
 		if (fila == -1) return;
 
-		TableModel tempModel = this.getView().getTableInscripciones().getModel();
-		idInscripcion = (String) tempModel.getValueAt(fila, 0);
-		idAlumno = (String) tempModel.getValueAt(fila, 1);
-		//idCurso = (String) tempModel.getValueAt(fila, 2);
-		this.getView().getLblNombreInscripcion().setText((String) tempModel.getValueAt(fila, 3));
+		TableModel model = this.getView().getTableInscripciones().getModel();
+		idInscripcion = (String) model.getValueAt(fila, 0);
+		idAlumno = (String) model.getValueAt(fila, 1);
+		getView().getDatePicker().setDateToToday();
+		this.getView().getLblNombreSeleccionado().setText((String) model.getValueAt(fila, 3));
 
 		InscripcionState estado = inscripciones.get(fila).getEstado();
-		setControls(estado == InscripcionState.PENDIENTE || !(estado == InscripcionState.EXCESO));
+		setControls(estado != InscripcionState.PAGADA && estado != InscripcionState.CANCELADA);
 	}
 
 	private void handleInsertar() {
-		String nombreInscrito = this.getView().getLblNombreInscripcion().getText();
+		String nombreInscrito = this.getView().getLblNombreSeleccionado().getText();
 		String importe = this.getView().getTxtImporte().getText();
 
-		if(nombreInscrito == "No se ha seleccionado ningún nombre" || importe == null || this.getView().getDatePicker().getDate() == null) {
-			this.getView().getLblError().setText("Por favor, rellena todos los campos para continuar"); // Se muestra un error
+		if(importe.length() == 0 || importe == null || this.getView().getDatePicker().getDate() == null) {
+			Dialog.showError("Por favor, rellena todos los campos para continuar"); // Se muestra un error
 			return;
 		}
 
 		String email = this.getModel().getEmailAlumno(idAlumno);
 		Date fechaPago = java.sql.Date.valueOf(this.getView().getDatePicker().getDate());
 
-		this.getModel().registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion); // Registro en la BBDD el pago
-		Util.sendEmail(email, "COIIPA: pago registrado", "Su pago ha sido registrado correctamente."); // Envío un email al alumno
-		getListaInscripciones(); // Refrescamos la tabla al terminar de inscribir a la persona
-		// Si había algún error habilitado en la etiqueta, se deshabilita y mostramos éxito
-		//view.getLblError().setText("Pago insertado con éxito");
+		this.getModel().registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion);
+		getListaInscripciones(); // Refrescar tabla al insertar el pago
 		Dialog.show("Pago por importe de " + importe + " € de parte del alumno " + nombreInscrito + " insertado con éxito");
-		eraseControls(false); // Entradas en blanco
+
+		InscripcionState estado = StateUtilities.getInscripcionState(idInscripcion); // Estado de la inscr. post inserción
+		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
+			Util.sendEmail(email, "COIIPA: inscripción completada", "El pago de su inscripción ha sido registrado correctamente"
+				+ " y su inscripción ha sido completada. Su plaza está cerrada");
+		} else Dialog.showWarning("El importe total es incorrecto y la inscripción no está comlpeta.");
+
+		eraseControls(false);
 	}
 
 	public void getListaInscripciones() {

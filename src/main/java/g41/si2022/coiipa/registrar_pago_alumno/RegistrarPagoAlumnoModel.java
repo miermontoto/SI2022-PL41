@@ -9,49 +9,39 @@ import g41.si2022.dto.PagoDTO;
 public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
 
 	public List<InscripcionDTO> getInscripciones(String date) {
-		String sql =
-				"select i.id,"
-				+ " i.alumno_id as alumno_id,"
-				+ " a.nombre as alumno_nombre,"
-				+ " a.apellidos as alumno_apellidos, "
-				+ " c.coste as curso_coste,"
-				+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as pagado,"
-				+ " c.nombre as curso_nombre,"
-				+ " i.id as inscripcion_id, "
-				+ " i.curso_id as curso_id,"
-				+ " i.fecha as fecha"
-				+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
-				+ " inner join curso as c on c.id = i.curso_id"
-				+ " left join pago as pa on pa.inscripcion_id = i.id"
-				+ " where i.fecha<=? and c.start >=? group by i.id order by i.fecha asc";
+		String sql = "select i.id,"
+			+ " i.alumno_id as alumno_id,"
+			+ " a.nombre as alumno_nombre,"
+			+ " a.apellidos as alumno_apellidos, "
+			+ " c.coste as curso_coste,"
+			+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as pagado,"
+			+ " c.nombre as curso_nombre,"
+			+ " i.id as inscripcion_id, "
+			+ " i.curso_id as curso_id,"
+			+ " i.fecha as fecha"
+			+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
+			+ " inner join curso as c on c.id = i.curso_id"
+			+ " left join pago as pa on pa.inscripcion_id = i.id"
+			+ " where i.fecha<=? and c.start >=? group by i.id order by i.fecha asc";
 		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, date, date);
 	}
 
-	public CursoDTO getCurso (String id) {
-		String sql =
-				" SELECT * "
-				+ " FROM curso "
-				+ " WHERE curso.id = ?";
+	public CursoDTO getCurso(String id) {
+		String sql = "SELECT * FROM curso WHERE curso.id = ?";
 		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, id).get(0);
 	}
 
-	public List<PagoDTO> getPagos () {
-		String sql =
-				"SELECT * "
-				+ " FROM pago "
+	public List<PagoDTO> getPagos() {
+		String sql = "SELECT * FROM pago"
 				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id ";
-
 		return this.getDatabase().executeQueryPojo(PagoDTO.class, sql);
 	}
 
-	public List<PagoDTO> getPagos (String alumnoId, String cursoId) {
-		String sql =
-				"SELECT * "
-				+ " FROM pago "
+	public List<PagoDTO> getPagos(String alumnoId, String cursoId) {
+		String sql = "SELECT * FROM pago"
 				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id "
-				+ " left join inscripcioncancelada on inscripcioncancelada.inscripcion_id = inscripcion.id"
-				+ " WHERE inscripcion.alumno_id = ? "
-				+ " AND inscripcion.curso_id = ?";
+				+ " LEFT JOIN inscripcioncancelada on inscripcioncancelada.inscripcion_id = inscripcion.id"
+				+ " WHERE inscripcion.alumno_id = ? AND inscripcion.curso_id = ?";
 		return this.getDatabase().executeQueryPojo(PagoDTO.class, sql, alumnoId, cursoId);
 	}
 

@@ -28,8 +28,7 @@ public class RegistrarPagoAlumnoView extends View {
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
 	private JScrollPane scrollPane; // Panel de scroll de la tabla
 	private JPanel formPanel;
-	private JLabel lblNombreInscripcion;
-	private JLabel lblTitulo;
+	private JLabel lblNombreSeleccionado;
 	private JButton btnInsertarPago;
 
 	private DatePicker datePicker;
@@ -58,18 +57,16 @@ public class RegistrarPagoAlumnoView extends View {
 		formPanel.setLayout(new MigLayout("", "[122.00px,grow][]", "[28.00,top][20.00px,center][21.00][22.00][22.00][][][][][][]"));
 		this.add(formPanel, BorderLayout.EAST);
 
-		lblTitulo = JLabelFactory.getLabel(FontType.title, "Insertar un nuevo pago");
+		JLabel lblTitulo = JLabelFactory.getLabel(FontType.title, "Insertar un nuevo pago");
 
 		formPanel.add(lblTitulo, "cell 0 0,growx,aligny top");
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 
-				JLabel label = new JLabel("Nombre del inscrito: ");
-				formPanel.add(label, "cell 0 1,alignx left,aligny center");
-		lblNombreInscripcion = new JLabel("No se ha selecciona ningún nombre");
-		formPanel.add(lblNombreInscripcion, "cell 0 2,alignx left,aligny center");
-		JLabel label_1 = new JLabel("Introducir importe recibido (€): ");
-		formPanel.add(label_1, "cell 0 3,alignx left,aligny center");
+		formPanel.add(new JLabel("Nombre del inscrito: "), "cell 0 1,alignx left,aligny center");
+		lblNombreSeleccionado = new JLabel("No se ha selecciona ningún nombre");
+		formPanel.add(lblNombreSeleccionado, "cell 0 2,alignx left,aligny center");
+		formPanel.add(new JLabel("Introducir importe recibido (€): "), "cell 0 3,alignx left,aligny center");
 		formPanel.add(new JLabel("Introducir fecha del pago:"), "cell 0 5");
 
 	    NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
