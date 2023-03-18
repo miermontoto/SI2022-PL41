@@ -45,7 +45,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		// Load the insert curso listener
 		getView().getBtnRegistrar().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> insertCurso()));
 		loadDateListeners();
-		loadTableListeners();
 		loadTextAreaListeners();
 		loadCheckListeners();
 		loadValidateListeners();
@@ -243,6 +242,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 						)
 				);
 		SwingUtil.autoAdjustColumns(this.getView().getTableProfesores());
+		loadTableListeners();
 	}
 
 	public void insertCurso() {
