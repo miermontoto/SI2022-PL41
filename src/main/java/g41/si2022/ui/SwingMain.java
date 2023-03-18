@@ -4,8 +4,8 @@ import java.awt.event.MouseEvent;
 import java.awt.Insets;
 import java.awt.EventQueue;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.io.File;
@@ -26,6 +26,7 @@ import javax.swing.event.MouseInputAdapter;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
+import g41.si2022.mvc.View;
 import g41.si2022.ui.panels.Debug;
 import g41.si2022.ui.panels.TabbedFrame;
 import g41.si2022.ui.panels.TabsProfesional;
@@ -112,20 +113,21 @@ public class SwingMain {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		mainMenu.add(JLabelFactory.getLabel(FontType.title, "  Selección de usuario"), gbc);
 
-		Map<String, Pair<JButton, TabbedFrame>> tabbedFrameButtons = Map.of(
-				"Secretaria Administrativa", new Pair<JButton, TabbedFrame>(new JButton(), new TabsSecretaria(this)),
-				"Responsable de Formacion", new Pair<JButton, TabbedFrame>(new JButton(), new TabsResponsable(this)),
-				"Alumnado", new Pair<JButton, TabbedFrame>(new JButton(), new TabsProfesional(this))
-		);
+		Map<String, Pair<JButton, TabbedFrame>> tabbedFrameButtons = new TreeMap<>();
+
+		tabbedFrameButtons.put("Secretaria Administrativa", new Pair<JButton, TabbedFrame>(new JButton(), new TabsSecretaria(this)));
+		tabbedFrameButtons.put("Responsable de Formacion", new Pair<JButton, TabbedFrame>(new JButton(), new TabsResponsable(this)));
+		tabbedFrameButtons.put("Alumnado", new Pair<JButton, TabbedFrame>(new JButton(), new TabsProfesional(this)));
+
 		tabbedFrameButtons.forEach((name, pair) -> {
 			pair.getFirst().setText(name);
 			pair.getFirst().addActionListener(e -> {
 				// pair.getSecond().getTabs().values().forEach(tab -> tab.setVisible(true));
-				((Tab)pair.getSecond().getTabs().values().toArray()[0]).setVisible(true);
+				((View) pair.getSecond().getTabs().values().toArray()[0]).setVisible(true);
 				setMainPanel(pair.getSecond().getComponent(), name);
 			});
 		});
-		
+
 		gbc.gridy = 1;
 		mainMenu.add(tabbedFrameButtons.get("Secretaria Administrativa").getFirst(), gbc);
 
