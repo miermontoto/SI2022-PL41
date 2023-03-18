@@ -20,11 +20,11 @@ public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<R
 
 	public RegistrarPagoProfesorController(RegistrarPagoProfesorModel modelo, RegistrarPagoProfesorView vista) {
 		super(vista, modelo);
+		this.table = this.getView().getTableInscripciones();
 	}
 
 	@Override
 	public void initNonVolatileData() {
-		this.table = this.getView().getTableInscripciones();
 		this.getView().getBtnInsertarPago().addActionListener(e -> handleInsertar());
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
