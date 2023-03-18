@@ -4,20 +4,29 @@ import java.util.List;
 import java.util.Map;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Optional;
 
+import java.awt.event.KeyAdapter;
+
+import javax.swing.JComponent;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 
-import g41.si2022.coiipa.dto.ProfesorDTO;
+import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
+
+import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.BetterDatePicker;
+import g41.si2022.util.Dialog;
+import g41.si2022.util.exception.UnexpectedException;
 
-public class RegistrarCursoController {
-	private RegistrarCursoModel model;
-	private RegistrarCursoView view;
+public class RegistrarCursoController extends g41.si2022.mvc.Controller<RegistrarCursoView, RegistrarCursoModel> {
 
 	private Map<String, ProfesorDTO> profesoresMap;
 	private final java.util.function.Supplier <List<ProfesorDTO>> sup = () -> {
@@ -26,56 +35,112 @@ public class RegistrarCursoController {
 		return out;
 	};
 
-	public RegistrarCursoController (RegistrarCursoModel m, RegistrarCursoView v) {
-		this.model = m;
-		this.view = v;
-		profesoresMap = new HashMap<String, ProfesorDTO> ();
-		this.initView();
+	public RegistrarCursoController(RegistrarCursoView v, RegistrarCursoModel m) {
+		super(v, m);
+		this.profesoresMap = new HashMap<String, ProfesorDTO> ();
 	}
 
-	public void initView () {
-		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
+	@Override
+	public void initNonVolatileData() {
 		// Load the insert curso listener
-		view.getSubmitButton().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> insertCurso()));
+		getView().getBtnRegistrar().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> insertCurso()));
 		loadDateListeners();
-		loadTableListeners();
 		loadTextAreaListeners();
-		this.view.getCosteTextField().addKeyListener(new java.awt.event.KeyAdapter() {
+		loadCheckListeners();
+		loadValidateListeners();
+		getView().getBtnRegistrar().setEnabled(false);
+		JTextField coste = getView().getTxtCoste();
+		coste.addKeyListener(new KeyAdapter() {
+
 			@Override
-			public void keyPressed (KeyEvent e) {
+			public void keyPressed(KeyEvent e) {
 				if (!Character.isDigit(e.getKeyChar()) && e.getKeyChar() != '.') {
-					javax.swing.JTextField tf = RegistrarCursoController.this.view.getCosteTextField();
+					JTextField tf = RegistrarCursoController.this.getView().getTxtCoste();
 					if (tf.getText().length() > 1) {
 						tf.setText(tf.getText().substring(0, tf.getText().length()-1));
-					} else {
-						tf.setText("");
-					}
+					} else tf.setText("");
 				}
 			}
+
 		});
-		this.view.getCosteTextField().addFocusListener(new java.awt.event.FocusListener() {
+
+		coste.addFocusListener(new FocusListener() {
 
 			@Override
-			public void focusGained(FocusEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void focusGained(FocusEvent e) { }
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				javax.swing.JTextField tf = RegistrarCursoController.this.view.getCosteTextField();
+				JTextField tf = RegistrarCursoController.this.getView().getTxtCoste();
 				if (!Character.isDigit(tf.getText().charAt(0)) && tf.getText().charAt(0) != '.') {
 					tf.setText("");
 				}
 			}
-
 		});
+
 	}
 
-	private void loadTextAreaListeners () {
-		java.awt.event.KeyAdapter ka = new java.awt.event.KeyAdapter () {
+	private void loadValidateListeners() {
+		for(JComponent c : getView().getFocusableComponents()) {
+			if(c instanceof BetterDatePicker) {
+				((BetterDatePicker) c).addDateChangeListener((e) -> checkValidity());
+			} else if (c instanceof JTextField) {
+				((JTextField) c).addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) { checkValidity(); }
+				});
+			}
+		}
+	}
+
+	@Override
+	public void initVolatileData() {
+		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
+	}
+
+	private void loadCheckListeners() {
+		for(JComponent jc : getView().getFocusableComponents()) {
+			if (jc instanceof JTextField) {
+				JTextField tf = (JTextField) jc;
+				tf.addKeyListener(new KeyAdapter() {
+
+					@Override
+					public void keyReleased(KeyEvent e) {
+						checkValidity();
+					}
+
+				});
+			} else if (jc instanceof BetterDatePicker) {
+				BetterDatePicker dp = (BetterDatePicker) jc;
+				dp.addDateChangeListener((e) -> checkValidity());
+			}
+		}
+	}
+
+	private void checkValidity() {
+		boolean valid = true;
+		for(JComponent jc : getView().getFocusableComponents()) {
+			if (jc instanceof JTextField) {
+				JTextField tf = (JTextField) jc;
+				if (tf.getText().isEmpty()) {
+					valid = false;
+					break;
+				}
+			} else if (jc instanceof BetterDatePicker) {
+				BetterDatePicker dp = (BetterDatePicker) jc;
+				if (dp.getDate() == null) {
+					valid = false;
+					break;
+				}
+			}
+		}
+		getView().getBtnRegistrar().setEnabled(valid);
+	}
+
+	private void loadTextAreaListeners() {
+		KeyAdapter ka = new KeyAdapter () {
 			@Override
-			public void keyPressed (KeyEvent e) {
+			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_TAB) {
 					e.consume();
 					KeyboardFocusManager fm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
@@ -83,82 +148,89 @@ public class RegistrarCursoController {
 				}
 			}
 		};
-		this.view.getObjetivosDescripcionTextArea().addKeyListener(ka);
-		this.view.getLocalizacionTextArea().addKeyListener(ka);
+
+		this.getView().getTxtDescripcion().addKeyListener(ka);
+		this.getView().getTxtLocalizacion().addKeyListener(ka);
 	}
 
-	private void loadTableListeners () {
-		view.getTablaProfesores().getModel().addTableModelListener(new TableModelListener () {
-
-			private final javax.swing.JTable tabla = RegistrarCursoController.this.view.getTablaProfesores();
+	private void loadTableListeners() {
+		this.getView().getTableProfesores().getModel().addTableModelListener(new TableModelListener() {
 
 			@Override
 			public void tableChanged(TableModelEvent e) {
+				JTable tabla = RegistrarCursoController.this.getView().getTableProfesores();
 				RegistrarCursoController.this.profesoresMap
-				.get(this.tabla.getValueAt(e.getFirstRow(), 0).toString())
-				.setRemuneracion(this.tabla.getValueAt(e.getFirstRow(), e.getColumn()).toString());
-			}
-
-		});
-		view.getTablaProfesores().getModel().addTableModelListener(new TableModelListener () {
-
-			private final javax.swing.JTable tabla = RegistrarCursoController.this.view.getTablaProfesores();
-
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				RegistrarCursoController.this.profesoresMap
-				.get(this.tabla.getValueAt(e.getFirstRow(), 0).toString())
-				.setRemuneracion(this.tabla.getValueAt(e.getFirstRow(), e.getColumn()).toString());
+				.get(tabla.getValueAt(e.getFirstRow(), 0).toString())
+				.setRemuneracion(tabla.getValueAt(e.getFirstRow(), e.getColumn()).toString());
 			}
 
 		});
 	}
 
-	private void loadDateListeners () {
+	private void loadDateListeners() {
 		BetterDatePicker
-		inscripcionIni = view.getInscripcionIni(),
-		inscripcionFin = view.getInscripcionFin(),
-		cursoIni = view.getCursoIni(),
-		cursoFin = view.getCursoFin();
-		// Load the Inscripcion Ini DatePicker listener (set Fin to next day)
-		inscripcionIni.addDateChangeListener((e) -> {
-			// Query on #20879 -> Resolved to: Allow but issue a warning.
-			if (inscripcionIni.compareTo(this.view.getMain().getTodayPicker()) < 0) {
-				SwingUtil.raiseWarning("Se está seleccionando una fecha anterior al día de hoy.");
-			}
-			if (inscripcionFin.getDate() == null || inscripcionFin.compareTo(inscripcionIni) <= 0) {
-				inscripcionFin.setDate(e.getNewDate().plusDays(1));
-			}
-		});
-		// Load the Curso Ini DatePicker listener (set Fin to next day)
-		cursoIni.addDateChangeListener((e) -> {
-			if (cursoFin.getDate() == null || cursoFin.compareTo(cursoIni) <= 0) {
-				cursoFin.setDate(e.getNewDate().plusDays(1));
-			}
-			if (inscripcionFin == null || inscripcionFin.compareTo(cursoIni) >= 0) {
-				inscripcionFin.setDate(e.getNewDate().minusDays(1));
-			}
-		});
-		// Load the Inscripcion Fin DatePicker listener (set Fin to next day if lower than Ini)
-		inscripcionFin.addDateChangeListener((e) -> {
-			if (cursoIni.getDate() == null || cursoIni.compareTo(inscripcionFin) <= 0) {
-				cursoIni.setDate(e.getNewDate().plusDays(1));
-			}
-			if (inscripcionIni.getDate() == null || inscripcionIni.compareTo(inscripcionFin) >= 0) {
-				inscripcionIni.setDate(e.getNewDate().minusDays(1));
-			}
-		});
-		// Load the Curso Fin DatePicker listener (set Fin to next day if lower than Ini)
-		cursoFin.addDateChangeListener((e) -> {
-			if (cursoIni.getDate() == null || cursoIni.compareTo(cursoFin) >= 0) {
-				cursoIni.setDate(e.getNewDate().minusDays(1));
-			}
-		});
+			inscripcionIni = getView().getDateInscrStart(),
+			inscripcionFin = getView().getDateInscrEnd(),
+			cursoIni = getView().getDateCursoStart(),
+			cursoFin = getView().getDateCursoEnd();
+
+		DateChangeListener inscripcionListener = (e) -> {
+			/*if(inscripcionFin.getDate() == null && inscripcionIni.getDate() != null) {
+				inscripcionFin.setDate(inscripcionIni.getDate().plusDays(1));
+				return;
+			}*/
+
+			if(inscripcionIni.getDate() != null && inscripcionIni.compareTo(getView().getMain().getTodayPicker()) <= 0
+				&& e.getSource() == inscripcionIni) {
+				Dialog.showWarning("La fecha de inicio de inscripción es anterior a la fecha actual.");
+			} // Comprobación fecha de inicio de inscripción
+
+			if(inscripcionFin.getDate() == null) return;
+
+			if(inscripcionFin.compareTo(getView().getMain().getTodayPicker()) <= 0
+				&& e.getSource() == inscripcionFin) {
+				Dialog.showWarning("El periodo de inscripción es anterior a la fecha actual y ha finalizado.");
+			} // Comprobación fecha de fin de inscripción
+
+			int diff = inscripcionFin.compareTo(inscripcionIni);
+			if (diff < 0) { // Comprobación de rango válido de fechas
+				inscripcionFin.setDate(null);
+				Dialog.showError("La fecha de fin de inscripción no puede ser anterior a la de inicio.");
+			} else if (diff == 0)  Dialog.showWarning("La fecha de fin de inscripción es igual a la de inicio.");
+
+			// Comprobación de overlap de fechas (curso e inscripción)
+			if(cursoIni.getDate() != null && cursoIni.compareTo(inscripcionFin) <= 0)
+				Dialog.showWarning("Las fechas de curso y de inscripción se solapan.");
+			};
+
+		DateChangeListener cursoListener = (e) -> {
+			/*if(cursoFin.getDate() == null && cursoIni.getDate() != null) {
+				cursoFin.setDate(cursoIni.getDate().plusDays(1));
+				return;
+			}*/
+
+			if(cursoFin.getDate() == null) return;
+
+			int diff = cursoFin.compareTo(cursoIni);
+			if (diff < 0) {
+				cursoFin.setDate(null);
+				Dialog.showError("La fecha de fin de curso no puede ser anterior a la de inicio.");
+			} else if (diff == 0)  Dialog.showWarning("La fecha de fin de curso es igual a la de inicio.");
+
+			if(inscripcionFin.getDate() != null)
+				if (cursoIni.compareTo(inscripcionFin) <= 0)
+					Dialog.showWarning("Las fechas de curso y de inscripción se solapan.");
+		};
+
+		cursoIni.addDateChangeListener(cursoListener);
+		cursoFin.addDateChangeListener(cursoListener);
+		inscripcionIni.addDateChangeListener(inscripcionListener);
+		inscripcionFin.addDateChangeListener(inscripcionListener);
 	}
 
 	public void getListaProfesores() {
-		model.getListaProfesores().stream().forEach((x) -> profesoresMap.put(x.getDni(), x));
-		view.getTablaProfesores().setModel(
+		this.getModel().getListaProfesores().stream().forEach((x) -> profesoresMap.put(x.getDni(), x));
+		this.getView().getTableProfesores().setModel(
 				SwingUtil.getTableModelFromPojos(
 						this.sup.get(),
 						new String[] { "dni", "nombre", "apellidos", "email", "direccion", "remuneracion" },
@@ -169,26 +241,34 @@ public class RegistrarCursoController {
 						}
 						)
 				);
-		SwingUtil.autoAdjustColumns(view.getTablaProfesores());
+		SwingUtil.autoAdjustColumns(this.getView().getTableProfesores());
+		loadTableListeners();
 	}
 
-	public void insertCurso () {
+	public void insertCurso() {
 		Optional<ProfesorDTO> profesorElegido = this.getProfesor();
+
 		if (!profesorElegido.isPresent()) {
-			throw new g41.si2022.util.UnexpectedException("No se ha seleccionado a ningún docente.");
+			throw new UnexpectedException("No se ha seleccionado a ningún docente.");
 		}
-		this.model.insertCurso(
-				view.getNombreCurso(), view.getObjetivosDescripcion(),
-				view.getCoste(),
-				view.getInscripcionIniDate(), view.getInscripcionFinDate(), view.getCursoIniDate(), view.getCursoFinDate(),
-				view.getPlazas(), view.getLocalizacion(),
+
+		this.getModel().insertCurso(
+				getView().getTxtNombre().getText(),
+				getView().getTxtDescripcion().getText(),
+				getView().getTxtCoste().getText(),
+				getView().getDateInscrStart().getDate().toString(),
+				getView().getDateInscrEnd().getDate().toString(),
+				getView().getDateCursoStart().getDate().toString(),
+				getView().getDateCursoEnd().getDate().toString(),
+				getView().getTxtPlazas().getText(),
+				getView().getTxtLocalizacion().getText(),
 				profesorElegido.get().getId(), // El curso solo tiene un profesor
 				profesorElegido.get().getRemuneracion());
-		SwingUtil.showMessage("Curso registrado con éxito.", "Registro de cursos");
+		Dialog.show("Curso registrado con éxito.");
 	}
 
-	private Optional<ProfesorDTO> getProfesor () {
-		javax.swing.table.TableModel model = view.getTablaProfesores().getModel();
+	private Optional<ProfesorDTO> getProfesor() {
+		TableModel model = this.getView().getTableProfesores().getModel();
 		for (int i = 0 ; i < model.getRowCount() ; i++) {
 			if (model.getValueAt(i, model.getColumnCount()-1) != null) {
 				return Optional.of(this.profesoresMap.get(model.getValueAt(i, 0).toString()));

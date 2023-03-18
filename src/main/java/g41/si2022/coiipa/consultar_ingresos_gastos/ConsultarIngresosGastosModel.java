@@ -1,12 +1,9 @@
 package g41.si2022.coiipa.consultar_ingresos_gastos;
 
-import g41.si2022.util.Database;
-import g41.si2022.coiipa.dto.CursoDTO;
+import g41.si2022.dto.CursoDTO;
 
-public class ConsultarIngresosGastosModel {
+public class ConsultarIngresosGastosModel extends g41.si2022.mvc.Model {
 
-	private Database db = new Database();
-	
 	/**
 	 * Returns a big data set, containing:
 	 * - Gastos (docencia.remuneracion) // TODO: This will be later changed with some sort of SUM()
@@ -17,11 +14,11 @@ public class ConsultarIngresosGastosModel {
 	 * - curso.end_inscr
 	 * - curso.start
 	 * - curso.end
-	 * 
+	 *
 	 * @return List <html>&gt;</html>CursoDTO&<html>&gt;</html> containing all the data needed to display the JTable
 	 */
 	public java.util.List<CursoDTO> getCursosBalance () {
-		String sql = 
+		String sql =
 				"SELECT docencia.remuneracion as gastos, "
 				+ " SUM(pago.importe) as ingresos "
 				+ " ,docencia.remuneracion - SUM(pago.importe) as balance "
@@ -37,7 +34,7 @@ public class ConsultarIngresosGastosModel {
 				+ " LEFT JOIN inscripcion ON inscripcion.curso_id = curso.id "
 				+ " LEFT JOIN pago ON pago.inscripcion_id = inscripcion.id "
 				+ " GROUP BY (curso.id)";
-		return db.executeQueryPojo(CursoDTO.class, sql);
+		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql);
 	}
 
 }

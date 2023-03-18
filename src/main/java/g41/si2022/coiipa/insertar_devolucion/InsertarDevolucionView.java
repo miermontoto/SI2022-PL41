@@ -33,7 +33,11 @@ public class InsertarDevolucionView extends Tab {
 	private JLabel lblImporteDevuelto;
 
 	public InsertarDevolucionView(SwingMain main) {
-		super(main);
+		super(main, InsertarDevolucionModel.class, InsertarDevolucionView.class, InsertarDevolucionController.class);
+	}
+	
+	@Override
+	protected void initView () {
 		formPanel = new JPanel();
 		this.setLayout(new BorderLayout(0, 0));
 
@@ -74,6 +78,4 @@ public class InsertarDevolucionView extends Tab {
 		tableInscripciones.setDefaultEditor(Object.class, null);
 	}
 
-	@Override
-	public void initController() { new InsertarDevolucionController(this, new InsertarDevolucionModel()); }
 }

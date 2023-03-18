@@ -39,7 +39,11 @@ public class RegistrarPagoAlumnoView extends Tab {
 	private JCheckBox chkAll;
 
 	public RegistrarPagoAlumnoView(SwingMain main) {
-		super(main);
+		super(main, RegistrarPagoAlumnoModel.class, RegistrarPagoAlumnoView.class, RegistrarPagoAlumnoController.class);
+	}
+	
+	@Override
+	protected void initView () {
 		formPanel = new JPanel();
 		this.setLayout(new BorderLayout(0, 0));
 
@@ -90,6 +94,4 @@ public class RegistrarPagoAlumnoView extends Tab {
 		tableInscripciones.setDefaultEditor(Object.class, null);
 	}
 
-	@Override
-	public void initController() { new RegistrarPagoAlumnoController(this, new RegistrarPagoAlumnoModel()); }
 }

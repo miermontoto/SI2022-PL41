@@ -1,8 +1,6 @@
 package g41.si2022.coiipa.consultar_ingresos_gastos;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -12,9 +10,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
 import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.CursoState;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
+import g41.si2022.util.state.CursoState;
 
 public class ConsultarIngresosGastosView extends g41.si2022.ui.Tab {
 
@@ -35,15 +33,11 @@ public class ConsultarIngresosGastosView extends g41.si2022.ui.Tab {
 	 * Create the panel.
 	 */
 	public ConsultarIngresosGastosView(g41.si2022.ui.SwingMain main) {
-		super(main);
-		this.initView();
+		super(main, ConsultarIngresosGastosModel.class, ConsultarIngresosGastosView.class, ConsultarIngresosGastosController.class);
 	}
 
-	/**
-	 * Inits all the components that this View uses.
-	 * All the behaviour and listeners are in the <code>ConsultarIngresosGastosController</code>.
-	 */
-	private void initView () {
+	@Override
+	protected void initView () {
 		this.setLayout(new BorderLayout());
 		// Title
 		this.add(JLabelFactory.getLabel(FontType.title, "Ingresos y Gastos"), BorderLayout.NORTH);
@@ -88,11 +82,6 @@ public class ConsultarIngresosGastosView extends g41.si2022.ui.Tab {
 			}
 		}
 		this.add(mainPanel, BorderLayout.CENTER);
-	}
-
-	@Override
-	protected void initController() {
-		new ConsultarIngresosGastosController(this, new ConsultarIngresosGastosModel());
 	}
 
 }

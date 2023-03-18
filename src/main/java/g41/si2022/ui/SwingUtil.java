@@ -5,16 +5,15 @@ import java.util.List;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import org.apache.commons.beanutils.PropertyUtils;
 
-import g41.si2022.util.ApplicationException;
+import g41.si2022.util.Dialog;
 import g41.si2022.util.TableColumnAdjuster;
-import g41.si2022.util.UnexpectedException;
+import g41.si2022.util.exception.ApplicationException;
+import g41.si2022.util.exception.UnexpectedException;
 
 /**
  * Metodos de utilidad para interfaces de usuario con swing (poblar tablas a partir de un objeto POJO
@@ -38,34 +37,11 @@ public class SwingUtil {
 		try {
 			consumer.run();
 		} catch (ApplicationException e) { // Excepción controlada de la que se puede recuperar la aplicación
-			showMessage(e.getMessage(), "PRECAUCIÓN", JOptionPane.WARNING_MESSAGE);
+			Dialog.showWarning(e.getMessage());
 		} catch (RuntimeException e) { // Resto de excepciones, además de la ventana informativa muestra el stacktrace
 			e.printStackTrace();
-			showMessage(e.toString(), "Excepcion no controlada", JOptionPane.ERROR_MESSAGE);
+			Dialog.showError(e);
 		}
-	}
-	
-	/**
-	 * @param consumer Metodo a ejecutar (sin parametros de entrada ni valores de salida)
-	 */
-	public static void raiseWarning (String msg) {
-		showMessage(msg, "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	public static void showMessage(String message, String title, int type) {
-		/* Como este metodo no recibe el contexto de la ventana de la aplicación,
-		 * no usa el metodo estatico showMessageDialog de JOptionPane
-		 * y establece la posicion para que no aparezca en el centro de la pantalla
-		 */
-	    JOptionPane pane = new JOptionPane(message, type, JOptionPane.DEFAULT_OPTION);
-	    pane.setOptions(new Object[] {"ACEPTAR"}); // Fija este valor para que no dependa del idioma
-	    JDialog d = pane.createDialog(pane, title);
-	    d.setLocation(200,200);
-	    d.setVisible(true);
-	}
-
-	public static void showMessage(String message, String title) {
-	    showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -129,13 +105,26 @@ public class SwingUtil {
 	}
 
 	/**
-	 * Modificado por Alex.
-	 *
-	 * Crea un tablemodel a partir de una lista de objetos POJO con las columnas que se indican.
-	 * @param pojos Lista de objetos cuyos atributos se utilizaran para crear el tablemodel
-	 * (utiliza apache commons beanutils). Si es null solamente crea el tablemodel con las cabeceras de columna
-	 * @param colProperties Los nombres de atributo de los objetos (ordenados) que se incluiran en el tablemodel
-	 * (cada uno debe disponer del correspondiente getter)
+	 * Overloaded from {@link #getTableModelFromPojos(List, String[])}.<br>
+	 * <p>
+	 * Recibe un {@link String[]} que corresponde a los titulos que se mostraran en la GUI para cada columna.
+	 * Este array debe tener la misma longitud que <code>colProperties</code>.
+	 * </p> <p>
+	 * Recibe un {@link Map} que se puede utilizar para crear columnas extra que acepten datos introducidos
+	 * por el usuario ({@code null} en caso de ninguna).
+	 * </p> <p>
+	 * Para cada columna, se le asocia un {@link Pattern}. En esa columa solo se podran escribir datos que 
+	 * cumplan con dicho Regex.
+	 * </p>
+	 * 
+	 * @param pojos Plan Old Java Objects a utilizar para rellenar datos.
+	 * @param colProperties Propiedades de los {@code pojos} a obtener.
+	 * @param colNames Nombres de las columnas.
+	 * @param writeableColumns Columnas extra con permiso de escritura.
+	 * 
+	 * @author Alex // UO281827
+	 * 
+	 * @see #getTableModelFromPojos(List, String[])
 	 */
 	public static <E> TableModel getTableModelFromPojos(List<E> pojos, String[] colProperties,
 			String[] colNames, java.util.Map<Integer, java.util.regex.Pattern> writeableColumns) {
