@@ -1,7 +1,7 @@
 package g41.si2022.util.state;
 
 /**
- * 
+ *
  * A <code>CursoState</code> is an <code>Enum</code> that contains the different states a Curso could
  * be in.
  * <br>
@@ -14,7 +14,7 @@ package g41.si2022.util.state;
  * <li> FINALIZADO. A curso whose end date has passed but its teachers have not been paid.
  * <li> CERRADO. A curso whose end date has passed and all its teachers have been paid.
  * </ul>
- * 
+ *
  * @author Alex // UO281827
  *
  */
