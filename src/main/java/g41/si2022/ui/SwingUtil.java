@@ -46,7 +46,12 @@ public class SwingUtil {
 	}
 
 	/**
-	 * @param consumer Metodo a ejecutar (sin parametros de entrada ni valores de salida)
+	 * Muestra una ventana de aviso con un mensaje.<br>
+	 * Utilizado para avisar al usuario de un comportamiento extranno pero permitido. 
+	 * 
+	 * @author Alex // UO281827
+	 * 
+	 * @param msg {@link String} a mostrar en la pantalla.
 	 */
 	public static void raiseWarning (String msg) {
 		showMessage(msg, "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
@@ -129,13 +134,26 @@ public class SwingUtil {
 	}
 
 	/**
-	 * Modificado por Alex.
-	 *
-	 * Crea un tablemodel a partir de una lista de objetos POJO con las columnas que se indican.
-	 * @param pojos Lista de objetos cuyos atributos se utilizaran para crear el tablemodel
-	 * (utiliza apache commons beanutils). Si es null solamente crea el tablemodel con las cabeceras de columna
-	 * @param colProperties Los nombres de atributo de los objetos (ordenados) que se incluiran en el tablemodel
-	 * (cada uno debe disponer del correspondiente getter)
+	 * Overloaded from {@link #getTableModelFromPojos(List, String[])}.<br>
+	 * <p>
+	 * Recibe un {@link String[]} que corresponde a los titulos que se mostraran en la GUI para cada columna.
+	 * Este array debe tener la misma longitud que <code>colProperties</code>.
+	 * </p> <p>
+	 * Recibe un {@link Map} que se puede utilizar para crear columnas extra que acepten datos introducidos
+	 * por el usuario ({@code null} en caso de ninguna).
+	 * </p> <p>
+	 * Para cada columna, se le asocia un {@link Pattern}. En esa columa solo se podran escribir datos que 
+	 * cumplan con dicho Regex.
+	 * </p>
+	 * 
+	 * @param pojos Plan Old Java Objects a utilizar para rellenar datos.
+	 * @param colProperties Propiedades de los {@code pojos} a obtener.
+	 * @param colNames Nombres de las columnas.
+	 * @param writeableColumns Columnas extra con permiso de escritura.
+	 * 
+	 * @author Alex // UO281827
+	 * 
+	 * @see #getTableModelFromPojos(List, String[])
 	 */
 	public static <E> TableModel getTableModelFromPojos(List<E> pojos, String[] colProperties,
 			String[] colNames, java.util.Map<Integer, java.util.regex.Pattern> writeableColumns) {

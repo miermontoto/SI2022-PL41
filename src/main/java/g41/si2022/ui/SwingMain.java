@@ -4,6 +4,8 @@ import java.awt.event.MouseEvent;
 import java.awt.Insets;
 import java.awt.EventQueue;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.io.File;
@@ -32,6 +34,7 @@ import g41.si2022.ui.panels.TabsSecretaria;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
+import g41.si2022.util.Pair;
 import g41.si2022.util.db.Database;
 
 
@@ -100,9 +103,6 @@ public class SwingMain {
 		today = new BetterDatePicker();
 		today.setDateToToday();
 
-		TabbedFrame profesional = new TabsProfesional(this);
-		TabbedFrame responsable = new TabsResponsable(this);
-		TabbedFrame secretaria = new TabsSecretaria(this);
 		mainMenu.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
@@ -112,20 +112,28 @@ public class SwingMain {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		mainMenu.add(JLabelFactory.getLabel(FontType.title, "  Selección de usuario"), gbc);
 
+		Map<String, Pair<JButton, TabbedFrame>> tabbedFrameButtons = Map.of(
+				"Secretaria Administrativa", new Pair<JButton, TabbedFrame>(new JButton(), new TabsSecretaria(this)),
+				"Responsable de Formacion", new Pair<JButton, TabbedFrame>(new JButton(), new TabsResponsable(this)),
+				"Alumnado", new Pair<JButton, TabbedFrame>(new JButton(), new TabsProfesional(this))
+		);
+		tabbedFrameButtons.forEach((name, pair) -> {
+			pair.getFirst().setText(name);
+			pair.getFirst().addActionListener(e -> {
+				// pair.getSecond().getTabs().values().forEach(tab -> tab.setVisible(true));
+				((Tab)pair.getSecond().getTabs().values().toArray()[0]).setVisible(true);
+				setMainPanel(pair.getSecond().getComponent(), name);
+			});
+		});
+		
 		gbc.gridy = 1;
-		JButton btnSecretaria = new JButton("Secretaria administrativa");
-		btnSecretaria.addActionListener(e -> {setMainPanel(secretaria.getComponent(), "Secretaría administrativa");});
-		mainMenu.add(btnSecretaria, gbc);
+		mainMenu.add(tabbedFrameButtons.get("Secretaria Administrativa").getFirst(), gbc);
 
 		gbc.gridy = 2;
-		JButton btnResponsable = new JButton("Responsable de formación");
-		btnResponsable.addActionListener(e -> {setMainPanel(responsable.getComponent(), "Responsable de formación");});
-		mainMenu.add(btnResponsable, gbc);
+		mainMenu.add(tabbedFrameButtons.get("Responsable de Formacion").getFirst(), gbc);
 
 		gbc.gridy = 3;
-		JButton btnProfesional = new JButton("Profesional (alumnado)");
-		btnProfesional.addActionListener(e -> {setMainPanel(profesional.getComponent(), "Alumnado");});
-		mainMenu.add(btnProfesional, gbc);
+		mainMenu.add(tabbedFrameButtons.get("Alumnado").getFirst(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 6;
@@ -164,14 +172,6 @@ public class SwingMain {
 	public JFrame getFrame() { return this.frame; }
 
 	public void setMainPanel(JComponent panel, String title) {
-		/*
-		if (panel instanceof JTabbedPane) {
-			Tab t;
-			if (!(t = ((Tab) ((JTabbedPane) panel).getSelectedComponent())).isNonVolatileLoaded()) {
-				t.initController();
-			}
-		}
-		*/
 		GridBagConstraints gbc = new GridBagConstraints();
 		total.removeAll();
 

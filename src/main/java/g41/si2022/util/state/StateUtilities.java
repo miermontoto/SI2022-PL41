@@ -15,26 +15,29 @@ public class StateUtilities {
 	}
 
 	/**
-	 * Returns the current state of a course for a given date.
+	 * Returns the current state ({@link CursoState}) of a course for a given date.
 	 * NOTE: Calling this function will execute a query.
 	 *
-	 * @param curso Course to be checked.
+	 * @param curso {@link CursoDTO} to be checked.
 	 * @param today Reference date to be used.
-	 * @return State of the course for the given date.
+	 * @return {@link CursoState} of the course for the given date.
+	 * 
+	 * @see CursoDTO
+	 * @see CursoState
 	 */
 	public static CursoState getCursoState (CursoDTO curso, LocalDate today) {
 		return getCursoState(curso, today, false);
 	}
 
 	/**
-	 * Returns the current state of a course for a given date.
+	 * Returns the current state ({@link CursoState}) of a course for a given date.
 	 * NOTE: Calling this function will execute a query
 	 * if the parameter <code>canBeCerrado</code> is set to <code>true</code>.
 	 *
-	 * @param curso Course to be checked.
+	 * @param curso {@link CursoDTO} to be checked.
 	 * @param today Reference date to be used.
 	 * @param canBeCerrado true if the curso can be cerrado, false if not.
-	 * @return State of the course for the given date.
+	 * @return {@link CursoState} of the course for the given date.
 	 */
 	public static CursoState getCursoState (CursoDTO curso, LocalDate today, boolean canBeCerrado) {
 		if (canBeCerrado && getCursosWithStates(curso.getId(), today).get(0).getCursoEstado() != null) {
@@ -54,8 +57,9 @@ public class StateUtilities {
 	}
 
 	/**
-	 * Returns the cursos with the states.
-	 * This function will return the CERRADO state in particular, which is not returned by <code>getCursoState</code>.
+	 * Returns the cursos with the {@link CursoState}.
+	 * This function will return the {@link CursoState#CERRADO} state in particular,
+	 * which is not returned by {@link #getCursoState(CursoDTO, LocalDate)}.
 	 *
 	 * @return Cursos with states.
 	 */

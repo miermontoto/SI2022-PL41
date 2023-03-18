@@ -2,6 +2,15 @@ package g41.si2022.util;
 
 import com.github.lgooddatepicker.components.DatePicker;
 
+/**
+ * Updated version of {@link DatePicker} implementing the {@link Comparable}
+ * interface.
+ *
+ * @see DatePicker
+ * @see Comparable
+ * 
+ * @author Alex // UO281827
+ */
 public class BetterDatePicker extends DatePicker implements Comparable<DatePicker> {
 
 	private static final long serialVersionUID = 1L;
