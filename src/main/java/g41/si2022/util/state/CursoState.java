@@ -46,5 +46,9 @@ public enum CursoState {
 	/**
 	 * A curso whose end date has passed and all its teachers have been paid.
 	 */
-	CERRADO ;
+	CERRADO,
+	/**
+	 * A cancelled curso.
+	 */
+	CANCELADO;
 }

@@ -1,12 +1,13 @@
-package g41.si2022.coiipa.registrar_pago_alumno;
+package g41.si2022.coiipa.gestionar_inscripciones;
 
 import java.util.List;
 
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
+import g41.si2022.util.Util;
 
-public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
+public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 
 	public List<InscripcionDTO> getInscripciones(String date) {
 		String sql = "select i.id,"
@@ -56,7 +57,12 @@ public class RegistrarPagoAlumnoModel extends g41.si2022.mvc.Model {
 	}
 
 	public boolean isCancelled(String idInscripcion) {
-		String sql = "select count(id) from inscripcioncancelada where inscripcion_id=?";
-		return (int) this.getDatabase().executeQueryArray(sql, idInscripcion).get(0)[0] > 0;
+		String sql = "select count(id) from inscripcioncancelada where inscripcion_id = ?";
+		return (int) this.getDatabase().executeQueryArray(sql, idInscripcion).get(0)[0] != 0;
+	}
+
+	public void registrarDevolucion(double importe, String fecha, String idInscripcion) {
+		String sql = "INSERT INTO inscripcioncancelada (importedevuelto, fechacancelacion, inscripcion_id) VALUES(?,?,?)";
+		this.getDatabase().executeUpdate(sql, importe, Util.isoStringToDate(fecha), idInscripcion);
 	}
 }

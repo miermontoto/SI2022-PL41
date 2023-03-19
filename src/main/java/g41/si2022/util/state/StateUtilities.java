@@ -26,7 +26,7 @@ public class StateUtilities {
 	 * @see CursoDTO
 	 * @see CursoState
 	 */
-	public static CursoState getCursoState (CursoDTO curso, LocalDate today) {
+	public static CursoState getCursoState(CursoDTO curso, LocalDate today) {
 		return getCursoState(curso, today, false);
 	}
 
@@ -41,7 +41,7 @@ public class StateUtilities {
 	 * @return {@link CursoState} of the course for the given date.
 	 */
 	public static CursoState getCursoState (CursoDTO curso, LocalDate today, boolean canBeCerrado) {
-		if (canBeCerrado && getCursosWithStates(curso.getId(), today).get(0).getCursoEstado() != null) {
+		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getCursoEstado() != null) {
 			return CursoState.CERRADO;
 		}
 		if (curso.getStart_inscr().compareTo(today.toString()) > 0) { // if inscription start is before today
@@ -57,6 +57,10 @@ public class StateUtilities {
 		}
 	}
 
+	public static CursoState getCursoState(String idCurso, LocalDate today) {
+		return getCursoState(getCursoDTOWithState(idCurso, today).get(0), today);
+	}
+
 	/**
 	 * Returns the cursos with the {@link CursoState}.
 	 * This function will return the {@link CursoState#CERRADO} state in particular,
@@ -64,7 +68,7 @@ public class StateUtilities {
 	 *
 	 * @return Cursos with states.
 	 */
-	public static List<CursoDTO> getCursosWithStates (LocalDate today) {
+	private static List<CursoDTO> getCursosWithStates(LocalDate today) {
 		String sql =
 				"SELECT *, CASE WHEN fecha_pago IS NOT NULL THEN 'CERRADO' ELSE NULL END AS cursoEstado\r\n "
 				+ "FROM curso "
@@ -81,14 +85,14 @@ public class StateUtilities {
 	 *
 	 * @return Cursos with states.
 	 */
-	public static List<CursoDTO> getCursosWithStates (String cursoId, LocalDate today) {
+	public static List<CursoDTO> getCursoDTOWithState(String cursoId, LocalDate today) {
 		String sql =
 				"SELECT *, CASE WHEN fecha_pago IS NOT NULL THEN 'CERRADO' ELSE NULL END AS cursoEstado\r\n "
 				+ "FROM curso "
 				+ "LEFT JOIN docencia ON curso.id = docencia.curso_id "
 				+ "LEFT JOIN factura ON factura.docencia_id = docencia.id "
 				+ "WHERE curso.id = ?";
-		List<CursoDTO> lc = new Database().executeQueryPojo(CursoDTO.class, sql);
+		List<CursoDTO> lc = new Database().executeQueryPojo(CursoDTO.class, sql, cursoId);
 		lc.forEach(x -> x.setCursoEstado(x.getCursoEstado() == null ? getCursoState(x, today, false).toString() : x.getCursoEstado()));
 		return lc;
 	}
