@@ -75,7 +75,7 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 					new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "estado" },
 						new String[] { "Fecha de inscripción", "Nombre", "Apellidos", "Estado" }, null);
 				table.setModel(tableModel);
-				SwingUtil.autoAdjustColumns(table);
+				//SwingUtil.autoAdjustColumns(table);
 				table.getColumnModel().getColumn(3).setCellRenderer(new InscripcionStatusCellRenderer(3));
 
 				return;
@@ -92,9 +92,7 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 				costeCurso = this.getModel().getCosteCurso(curso.getId());
 
 				listaPagos = this.getModel().getListaPagos(curso.getId());
-				InscripcionState estado = StateUtilities.getInscripcionState(Double.valueOf(Double.parseDouble(costeCurso)), listaPagos);
-
-				ingresosReales = estado == InscripcionState.PAGADA ? this.getModel().getImportePagos(curso.getId()) : "0";
+				ingresosReales = this.getModel().getImportePagosFromCurso(curso.getId());
 
 				String balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Integer.parseInt(gastos));
 

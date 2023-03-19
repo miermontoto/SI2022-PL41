@@ -113,6 +113,10 @@ public class StateUtilities {
 		return getInscripcionState(inscr, pagos);
 	}
 
+	public static InscripcionState getInscripcionState(InscripcionDTO inscr) {
+		return getInscripcionState(inscr, new Database().executeQueryPojo(PagoDTO.class, "SELECT * FROM pago WHERE inscripcion_id = ?", inscr.getId()));
+	}
+
 	/**
 	 * Returns the current state ({@link InscripcionState}) of an inscription.
 	 * @param inscr {@link InscripcionDTO} to be checked.
@@ -131,7 +135,7 @@ public class StateUtilities {
 	 * @param pagos Payments of this student and this course.
 	 * @return State of the inscription
 	 */
-	public static InscripcionState getInscripcionState(Double coste, java.util.List<PagoDTO> pagos) {
+	public static InscripcionState getInscripcionState(Double coste, List<PagoDTO> pagos) {
 		double paid = 0;
 		for (PagoDTO p : pagos) paid += Double.parseDouble(p.getImporte());
 		return getInscripcionState(coste, paid);

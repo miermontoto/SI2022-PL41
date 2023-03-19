@@ -40,11 +40,11 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 	}
 
 	public String getGastos(String idCurso) {
-		String sql = "SELECT remuneracion FROM docencia WHERE curso_id = ?";
+		String sql = "SELECT sum(remuneracion) FROM docencia WHERE curso_id = ?";
 
 		try {
 			return String.valueOf((int) db.executeQueryArray(sql, idCurso).get(0)[0]);
-		} catch (IndexOutOfBoundsException ioob) {return "-";}
+		} catch (Exception ex) {return "-";}
 	}
 
 	public String getCosteCurso(String idCurso) {
@@ -71,13 +71,23 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 		return db.executeQueryPojo(PagoDTO.class, sql, idCurso);
 	}
 
-	public String getImportePagos(String idInscripcion) {
+	public String getImportePagosFromInscripcion(String idInscripcion) {
 		String sql = "SELECT sum(importe) FROM pago as p "
 					 + "INNER JOIN inscripcion as i ON p.inscripcion_id = i.id "
 			 		 + "WHERE i.id = ?" ;
 
 		try {
 			return String.valueOf((double) db.executeQueryArray(sql, idInscripcion).get(0)[0]);
+		} catch (NullPointerException npe) { return "0.0"; }
+	}
+
+	public String getImportePagosFromCurso(String idCurso) {
+		String sql = "SELECT sum(importe) FROM pago as p "
+					 + "INNER JOIN inscripcion as i ON p.inscripcion_id = i.id "
+			 		 + "WHERE i.curso_id = ?" ;
+
+		try {
+			return String.valueOf((double) db.executeQueryArray(sql, idCurso).get(0)[0]);
 		} catch (NullPointerException npe) { return "0.0"; }
 	}
 }
