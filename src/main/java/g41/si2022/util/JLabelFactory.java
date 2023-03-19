@@ -4,11 +4,14 @@ import java.awt.Font;
 import javax.swing.JLabel;
 
 /**
+ * Factory Method used to generate new {@link JLabel}.
+ * This uses the {@link FontType} enum to generate titles, subtitles and general-purpose {@link JLabel}.
+ * 
+ * @see JLabel
+ * @see FontType
+ * @see <a href="https://en.wikipedia.org/wiki/Factory_method_pattern">Factory Method</a>
  * 
  * @author Alex // UO281827
- *
- * Factory Method used to generate new Labels.
- * This uses the FontType enum to generate titles, subtitles and general-purpose labels.
  */
 public class JLabelFactory {
 
@@ -18,21 +21,28 @@ public class JLabelFactory {
 	private JLabelFactory () { }
 	
 	/**
-	 * Gets a new Label with general-purpose font.
+	 * Gets a new {@link JLabel} with {@link FontType#NORMAL} {@link Font}.
 	 * 
-	 * @param txt Text contained in the label
-	 * @return normal JLabel
+	 * @param txt Text contained in the {@link JLabel}
+	 * @return normal {@link JLabel}
+	 * 
+	 * @see FontType
+	 * @see Font
+	 * @see JLabel
 	 */
 	public static JLabel getLabel (String txt) {
 		return JLabelFactory.getLabel(FontType.normal, txt);
 	}
 
 	/**
-	 * Gets a new Label with custom font.
+	 * Gets a new {@link JLabel} with custom {@link Font}.
 	 * 
-	 * @param type Type of font to be used (title, subtitle or normal)
-	 * @param txt Text contained int he label
-	 * @return custom label
+	 * @param type {@link FontType} to be used ({@link FontType#TITLE}, {@link FontType#SUBTITLE} or {@link FontType#NORMAL})
+	 * @param txt Text contained int he {@link JLabel}
+	 * @return custom {@link JLabel}
+	 * 
+	 * @see FontType
+	 * @see JLabel
 	 */
 	public static JLabel getLabel (FontType type, String txt) {
 		JLabel output = new JLabel (txt);
@@ -41,13 +51,18 @@ public class JLabelFactory {
 	}
 	
 	/**
-	 * Gets a font given its FontType.
-	 * 	-> FontType.title
-	 *  -> FontType.subtitle
-	 *  -> FontType.normal
+	 * Gets a {@link Font} given its {@link FontType}.
+	 * <ul>
+	 * 	<li>FontType.title</li>
+	 *  <li>FontType.subtitle</li>
+	 *  <li>FontType.normal</li>
+	 * </ul>
 	 * 
 	 * @param type Type of font to be returned
 	 * @return The font that was specified
+	 * 
+	 * @see Font
+	 * @see FontType
 	 */
 	private static Font getFont (FontType type) {
 		switch (type) {

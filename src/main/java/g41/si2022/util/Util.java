@@ -16,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import g41.si2022.coiipa.dto.PagoDTO;
+import g41.si2022.util.db.Database;
+import g41.si2022.util.exception.ApplicationException;
 
 /**
  * Utilidades varias con metodos generales de serializacion, conversion a csv y conversion de fechas
@@ -65,7 +66,7 @@ public class Util {
 
 	public static void sendEmail(String address, String subject, String content) {
 		try(FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + address + ".txt")) {
-			fw.write("["+subject+","+LocalDateTime.now()+"] "+content+"\n");
+			fw.write("["+subject+", "+LocalDateTime.now()+"] "+content+"\n");
 			fw.close();
 		} catch (IOException e) { throw new ApplicationException(e); }
 	}
