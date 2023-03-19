@@ -15,6 +15,19 @@ public class StateUtilities {
 		throw new UnexpectedException("StateUtilities");
 	}
 
+	/* --- CURSO STATE --- */
+
+	/**
+	 * Returns the current state ({@link CursoState}) of a course for a given date.
+	 * @param idCurso id of the course to be checked.
+	 * @param today Reference date to be used.
+	 * @return {@link CursoState} of the course for the given date.
+	 */
+	public static CursoState getCursoState(String idCurso, LocalDate today) {
+		String sql = "select * from curso where id = ?";
+		return getCursoState(new Database().executeQueryPojo(CursoDTO.class, sql, idCurso).get(0), today);
+	}
+
 	/**
 	 * Returns the current state ({@link CursoState}) of a course for a given date.
 	 * NOTE: Calling this function will execute a query.
@@ -57,28 +70,6 @@ public class StateUtilities {
 		}
 	}
 
-	public static CursoState getCursoState(String idCurso, LocalDate today) {
-		return getCursoState(getCursoDTOWithState(idCurso, today).get(0), today);
-	}
-
-	/**
-	 * Returns the cursos with the {@link CursoState}.
-	 * This function will return the {@link CursoState#CERRADO} state in particular,
-	 * which is not returned by {@link #getCursoState(CursoDTO, LocalDate)}.
-	 *
-	 * @return Cursos with states.
-	 */
-	private static List<CursoDTO> getCursosWithStates(LocalDate today) {
-		String sql =
-				"SELECT *, CASE WHEN fecha_pago IS NOT NULL THEN 'CERRADO' ELSE NULL END AS cursoEstado\r\n "
-				+ "FROM curso "
-				+ "LEFT JOIN docencia ON curso.id = docencia.curso_id "
-				+ "LEFT JOIN factura ON factura.docencia_id = docencia.id";
-		List<CursoDTO> lc = new Database().executeQueryPojo(CursoDTO.class, sql);
-		lc.forEach(x -> x.setCursoEstado(x.getCursoEstado() == null ? getCursoState(x, today, false).toString() : x.getCursoEstado()));
-		return lc;
-	}
-
 	/**
 	 * Returns the cursos with the states.
 	 * This function will return the CERRADO state in particular, which is not returned by <code>getCursoState</code>.
@@ -96,6 +87,8 @@ public class StateUtilities {
 		lc.forEach(x -> x.setCursoEstado(x.getCursoEstado() == null ? getCursoState(x, today, false).toString() : x.getCursoEstado()));
 		return lc;
 	}
+
+	/* --- INSCRIPCION STATES --- */
 
 	/**
 	 * Returns the current state ({@link InscripcionState}) of an inscription for a given id.
