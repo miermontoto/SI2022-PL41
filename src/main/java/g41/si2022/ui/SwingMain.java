@@ -115,7 +115,7 @@ public class SwingMain {
 
 		Map<String, Pair<JButton, TabbedFrame>> tabbedFrameButtons = new TreeMap<>();
 
-		tabbedFrameButtons.put("Secretaria administrativa", new Pair<JButton, TabbedFrame>(new JButton(), new TabsSecretaria(this)));
+		tabbedFrameButtons.put("Secretaría administrativa", new Pair<JButton, TabbedFrame>(new JButton(), new TabsSecretaria(this)));
 		tabbedFrameButtons.put("Responsable de formación", new Pair<JButton, TabbedFrame>(new JButton(), new TabsResponsable(this)));
 		tabbedFrameButtons.put("Alumnado", new Pair<JButton, TabbedFrame>(new JButton(), new TabsProfesional(this)));
 
@@ -128,14 +128,11 @@ public class SwingMain {
 			});
 		});
 
-		gbc.gridy = 1;
-		mainMenu.add(tabbedFrameButtons.get("Secretaria administrativa").getFirst(), gbc);
-
-		gbc.gridy = 2;
-		mainMenu.add(tabbedFrameButtons.get("Responsable de formación").getFirst(), gbc);
-
-		gbc.gridy = 3;
-		mainMenu.add(tabbedFrameButtons.get("Alumnado").getFirst(), gbc);
+		int i = 1;
+		for(Pair<JButton, TabbedFrame> v : tabbedFrameButtons.values()) {
+			gbc.gridy = i++;
+			mainMenu.add(v.getFirst(), gbc);
+		}
 
 		gbc.gridx = 0;
 		gbc.gridy = 6;
