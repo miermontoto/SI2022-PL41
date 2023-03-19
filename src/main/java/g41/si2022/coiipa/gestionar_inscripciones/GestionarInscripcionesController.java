@@ -104,7 +104,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		// sobre el cálculo anterior.
 		if(importePagado > costeCurso) aDevolver += importePagado - costeCurso;
 
-		this.getView().getLblCalculoDevolucion().setText(Double.toString(aDevolver));
+		this.getView().getLblCalculoDevolucion().setText(aDevolver+"€");
 	}
 
 	private void handleDevolver() {
