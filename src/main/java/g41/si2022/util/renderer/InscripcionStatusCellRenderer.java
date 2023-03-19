@@ -49,7 +49,7 @@ public class InscripcionStatusCellRenderer extends DefaultTableCellRenderer {
                 l.setBackground(new Color(255, 255, 0, COLOR_TRANSPARENCY));
                 break;
             default:
-                l.setBackground(Color.WHITE);
+                l.setBackground(new Color(0, 0, 0, 0));
                 break;
         }
 
