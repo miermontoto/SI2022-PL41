@@ -1,6 +1,9 @@
 package g41.si2022.coiipa.gestionar_inscripciones;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.text.NumberFormat;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -63,45 +66,88 @@ public class GestionarInscripcionesView extends View {
 		chkAll.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(chkAll);
 
-		pagarPanel.setLayout(new MigLayout("", "[122.00px,grow][]", "[28.00,top][20.00px,center][21.00][22.00][22.00][][][][][][]"));
-		handlePanel.add(pagarPanel, BorderLayout.NORTH);
-		JSeparator separator = new JSeparator();
-		separator.setOrientation(SwingConstants.HORIZONTAL);
-		devolverPanel.add(separator, "cell 0 0,	growx,aligny center");
-		handlePanel.add(devolverPanel, BorderLayout.CENTER);
-		this.add(handlePanel, BorderLayout.EAST);
-
-		JLabel lblPagarTitulo = JLabelFactory.getLabel(FontType.title, "Registrar pago");
-
-		pagarPanel.add(lblPagarTitulo, "cell 0 0,growx,aligny top");
-		lblPagarTitulo.setVerticalAlignment(SwingConstants.TOP);
-		lblPagarTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-
-		pagarPanel.add(new JLabel("Nombre del inscrito: "), "cell 0 1,alignx left,aligny center");
-		pagarPanel.add(lblNombreSeleccionado1, "cell 0 2,alignx left,aligny center");
-		pagarPanel.add(new JLabel("Introducir importe recibido (€): "), "cell 0 3,alignx left,aligny center");
-		pagarPanel.add(new JLabel("Introducir fecha del pago:"), "cell 0 5");
-
-	    NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
+		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 	    formatter.setValueClass(Integer.class);
 	    formatter.setMinimum(Integer.MIN_VALUE);
 	    formatter.setMaximum(Integer.MAX_VALUE);
 	    formatter.setAllowsInvalid(true);
 	    formatter.setCommitsOnValidEdit(true);
 
-		pagarPanel.add(txtImporte = new JFormattedTextField(formatter), "cell 0 4,growx");
-		pagarPanel.add(datePicker = new DatePicker(), "cell 0 6,growx,aligny center");
+		handlePanel.add(pagarPanel, BorderLayout.NORTH);
+		JSeparator separator = new JSeparator();
+		separator.setOrientation(SwingConstants.HORIZONTAL);
+		handlePanel.add(devolverPanel, BorderLayout.CENTER);
+		this.add(handlePanel, BorderLayout.EAST);
 
-		btnInsertarPago = new JButton("Insertar pago");
-		pagarPanel.add(btnInsertarPago, "cell 0 8");
+		pagarPanel.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		Insets spacer = new Insets(5, 5, 5, 5);
+		Insets next = new Insets(0, 5, 5, 5);
+
+		JLabel lblPagarTitulo = JLabelFactory.getLabel(FontType.title, "Registrar pago");
+		lblPagarTitulo.setVerticalAlignment(SwingConstants.TOP);
+		lblPagarTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+
+		gbc.insets = spacer;
+		gbc.gridx = 0;
+		gbc.gridy = -1;
+
+
+
+		gbc.gridy = 0;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.NORTH;
+		pagarPanel.add(lblPagarTitulo, gbc);
+
+		gbc.gridy = 1;
+		gbc.gridwidth = 1;
+		gbc.anchor = GridBagConstraints.WEST;
+		pagarPanel.add(new JLabel("Inscrito: "), gbc);
+
+		gbc.insets = next;
+		gbc.gridy = 2;
+		pagarPanel.add(lblNombreSeleccionado1, gbc);
+
+		gbc.insets = spacer;
+		gbc.gridy = 3;
+		pagarPanel.add(new JLabel("Introducir importe recibido (€): "), gbc);
+
+		gbc.insets = next;
+		gbc.gridy = 4;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		pagarPanel.add(txtImporte = new JFormattedTextField(formatter), gbc);
+
+		gbc.insets = spacer;
+		gbc.gridy = 5;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.weightx = 0.0;
+		pagarPanel.add(new JLabel("Introducir fecha del pago:"), gbc);
+
+		gbc.insets = next;
+		gbc.gridy = 6;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.CENTER;
+		pagarPanel.add(datePicker = new DatePicker(), gbc);
+
+		gbc.insets = spacer;
+		gbc.gridy = 7;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.anchor = GridBagConstraints.CENTER;
+		pagarPanel.add(btnInsertarPago = new JButton("Insertar pago"), gbc);
+
+		gbc.gridy = 8;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		pagarPanel.add(separator, gbc);
 
 		devolverPanel.setLayout(new MigLayout("", "[122.00px,grow][]", "[28.00,top][20.00px,center][21.00][22.00][22.00][][][][][][]"));
 		JLabel lblDevolverTitulo = JLabelFactory.getLabel(FontType.title, "Cancelar inscripción");
-
 		devolverPanel.add(lblDevolverTitulo, "cell 0 0,growx,aligny top");
 		lblDevolverTitulo.setVerticalAlignment(SwingConstants.TOP);
 		lblDevolverTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-
 		devolverPanel.add(new JLabel("Nombre del inscrito: "), "cell 0 1,alignx left,aligny center");
 		devolverPanel.add(lblNombreSeleccionado2, "cell 0 2,alignx left,aligny center");
 		devolverPanel.add(new JLabel("Importe a devolver:"), "cell 0 3,alignx left,aligny center");
@@ -112,7 +158,6 @@ public class GestionarInscripcionesView extends View {
 
 		tableInscripciones = new JTable();
 		this.add(new JScrollPane(tableInscripciones), BorderLayout.CENTER);
-
 		tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableInscripciones.setDefaultEditor(Object.class, null);
 	}

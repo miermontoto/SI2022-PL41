@@ -45,9 +45,9 @@ public class StateUtilities {
 			return CursoState.CERRADO;
 		}
 		if (curso.getStart_inscr().compareTo(today.toString()) > 0) { // if inscription start is before today
-			return CursoState.INSCRIPCION_SIN_ABRIR;
+			return CursoState.PLANEADO;
 		} else if (curso.getEnd_inscr().compareTo(today.toString()) > 0) { // if inscription end is before today
-			return CursoState.INSCRIPCION_ABIERTA;
+			return CursoState.EN_INSCRIPCION;
 		} else if (curso.getStart().compareTo(today.toString()) > 0) { // if course start is before today
 			return CursoState.INSCRIPCION_CERRADA;
 		} else if (curso.getEnd().compareTo(today.toString()) > 0) { // if course end is before today
@@ -107,14 +107,19 @@ public class StateUtilities {
 		String sql = "SELECT *, c.coste as curso_coste FROM inscripcion"
 			+ " LEFT JOIN curso c ON c.id = inscripcion.curso_id"
 			+ " WHERE inscripcion.id = ?";
-		Database db = new Database();
-		InscripcionDTO inscr = db.executeQueryPojo(InscripcionDTO.class, sql, idInscripcion).get(0);
-		List<PagoDTO> pagos = db.executeQueryPojo(PagoDTO.class, "SELECT * FROM pago WHERE inscripcion_id = ?", idInscripcion);
-		return getInscripcionState(inscr, pagos);
+		InscripcionDTO inscr = new Database().executeQueryPojo(InscripcionDTO.class, sql, idInscripcion).get(0);
+		return getInscripcionState(inscr);
 	}
 
+	/**
+	 * Returns the current state ({@link InscripcionState}) of an inscription.
+	 * @param inscr {@link InscripcionDTO} to be checked.
+	 * @return {@link InscripcionState} of the inscription.
+	 */
 	public static InscripcionState getInscripcionState(InscripcionDTO inscr) {
-		return getInscripcionState(inscr, new Database().executeQueryPojo(PagoDTO.class, "SELECT * FROM pago WHERE inscripcion_id = ?", inscr.getId()));
+		return getInscripcionState(inscr,
+			new Database().executeQueryPojo(PagoDTO.class,
+				"SELECT * FROM pago WHERE inscripcion_id = ?", inscr.getId()));
 	}
 
 	/**

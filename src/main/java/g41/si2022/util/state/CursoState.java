@@ -26,11 +26,11 @@ public enum CursoState {
 	/**
 	 * A curso whose inscription start has not began yet.
 	 */
-	INSCRIPCION_SIN_ABRIR,
+	PLANEADO,
 	/**
 	 * A curso whose inscripcion start has passed but its inscripcion end has not passed.
 	 */
-	INSCRIPCION_ABIERTA,
+	EN_INSCRIPCION,
 	/**
 	 * A curso whose inscription end has passed.
 	 */
