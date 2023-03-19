@@ -25,7 +25,8 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	private String idInscripcion = null;
 	private String idAlumno = null;
 	private String idCurso = null;
-	private String nombreCompleto = "";
+	private String nombreCompleto = null;
+	private String nombreCurso = null;
 	private List<InscripcionDTO> inscripciones;
 	private double aDevolver;
 	private LocalDate today;
@@ -77,6 +78,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		idCurso = (String) model.getValueAt(fila, 2);
 		getView().getDatePicker().setDateToToday();
 		nombreCompleto = (String) model.getValueAt(fila, 3) + " " + (String) model.getValueAt(fila, 4);
+		nombreCurso = (String) model.getValueAt(fila, 5);
 		this.getView().getLblNombreSeleccionado1().setText(nombreCompleto);
 		this.getView().getLblNombreSeleccionado2().setText(nombreCompleto);
 
@@ -104,7 +106,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		// sobre el cálculo anterior.
 		if(importePagado > costeCurso) aDevolver += importePagado - costeCurso;
 
-		this.getView().getLblCalculoDevolucion().setText(aDevolver+"€");
+		this.getView().getLblCalculoDevolucion().setText(aDevolver + "€");
 	}
 
 	private void handleDevolver() {
@@ -115,7 +117,8 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		}
 
 		this.getModel().registrarDevolucion(aDevolver, getView().getMain().getToday().toString(), idInscripcion);
-		Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: Cancelación de inscripción", "Se ha cancelado la inscripción del alumno " + nombreCompleto + " con éxito. Se le ha devuelto " + aDevolver + "€.");
+		Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: Cancelación de inscripción", "Se ha cancelado su inscripción"
+			+ " al curso \"" + nombreCurso + "\" con éxito. Se le devolverán " + aDevolver + "€.");
 		Dialog.show("La cancelación de la inscripción del alumno " + nombreCompleto + " ha sido realizada con éxito. Se le han devuelto " + aDevolver + "€");
 		getListaInscripciones();
 		setControls(false);
@@ -158,11 +161,11 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 				inscripciones.remove(x);
 			}
 		});
-//alumno_id
+
 		table.setModel(SwingUtil.getTableModelFromPojos(
 			inscripciones,
 			new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "alumno_apellidos", "curso_nombre", "fecha", "curso_coste","pagado", "estado" },	//La primera columna estará oculta
-			new String[] { "ID", "ID Alumno", "ID Curso", "Nombre Alumno", "Apellidos del alumno", "Nombre Curso", "Fecha", "Coste", "Pagado", "Estado" },
+			new String[] { "", "", "", "Nombre", "Apellidos", "Curso", "Fecha", "Coste", "Importe pagado", "Estado" },
 			null
 		));
 
@@ -170,6 +173,6 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(0));
 		table.setDefaultEditor(Object.class, null); // Deshabilitar edición
 
-		//SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas
+		SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas
 	}
 }
