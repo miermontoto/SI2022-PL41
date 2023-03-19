@@ -9,6 +9,7 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 
 import g41.si2022.util.BetterDatePicker;
+import g41.si2022.util.JLabelFactory;
 import g41.si2022.util.state.CursoState;
 
 import java.awt.BorderLayout;
@@ -41,7 +42,7 @@ public class ListaActividadesView extends View {
         JPanel mainNorthPanel = new JPanel(new BorderLayout());
 
         // Elements of mainNnorthPanel
-        JLabel lblCursos = new JLabel("Cursos:");
+        JLabel lblCursos = JLabelFactory.getLabel("Cursos:");
         tablaCursos = new JTable();
         tablaCursos.setDefaultEditor(Object.class, null);
 		tablaCursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -54,7 +55,7 @@ public class ListaActividadesView extends View {
         JPanel centerPanel = new JPanel(new BorderLayout());
 
         // eastPanel's elements
-        JLabel lblFiltro = new JLabel("Filtrar por:");
+        JLabel lblFiltro = JLabelFactory.getLabel("Filtrar por:");
         cbFiltro = new JComboBox<CursoState>();
 
         JPanel anotherNorthPanel = new JPanel(new GridLayout());
@@ -86,11 +87,11 @@ public class ListaActividadesView extends View {
         JPanel mainCenterPanel = new JPanel(new GridLayout(4, 2));
 
         // Elements of mainCenterPanel
-        JLabel lblDescripcion = new JLabel("Objetivos y contenidos del curso:");
+        JLabel lblDescripcion = JLabelFactory.getLabel("Objetivos y contenidos del curso:");
         txtDescripcion = new JTextArea();
-        JLabel lblLugar = new JLabel("Lugar:");
+        JLabel lblLugar = JLabelFactory.getLabel("Lugar:");
         txtLugar = new JTextArea();
-        JLabel lblProfesor = new JLabel("Profesor:");
+        JLabel lblProfesor = JLabelFactory.getLabel("Profesor:");
         txtProfesor = new JTextArea();
 
         // Add elements to mainCenterPanel

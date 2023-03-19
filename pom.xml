@@ -46,7 +46,6 @@
 		  <artifactId>visual-assert</artifactId>
 		  <version>2.3.0</version>
 		</dependency>
-
 		<!-- drivers de base de datos -->
 		<dependency>
 			<groupId>org.xerial</groupId>

@@ -4,6 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -94,15 +95,20 @@ public class Debug {
 		gbc.gridx = 2;
 		for(int i = 1; i < 4; i++) {
 			gbc.gridy = i;
-			all.add(new JLabel("          "), gbc);
+			all.add(JLabelFactory.getLabel("          "), gbc);
 		}
 
 		gbc.gridx = 3;
+		gbc.gridy = 2;
+		JButton dark = new JButton("Toggle dark mode");
+		dark.addActionListener(e -> {
+			main.toggleDarkMode();
+		});
+		all.add(dark, gbc);
+
 		gbc.gridy = 3;
 		JButton close = new JButton("Close window");
-		close.addActionListener(e -> {
-			System.exit(0);
-		});
+		close.addActionListener(e -> { System.exit(0); });
 		all.add(close, gbc);
 
 		gbc.gridy = 4;

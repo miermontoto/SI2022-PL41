@@ -61,8 +61,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
-		this.getView().getLblNombreSeleccionado1().setText("");
-		this.getView().getLblNombreSeleccionado2().setText("");
+		this.getView().getLblNombreSeleccionado().setText("");
 		this.getView().getTxtImporte().setText("");
 		this.getView().getDatePicker().setText("");
 		setControls(false);
@@ -80,8 +79,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		getView().getDatePicker().setDateToToday();
 		nombreCompleto = (String) model.getValueAt(fila, 3) + " " + (String) model.getValueAt(fila, 4);
 		nombreCurso = (String) model.getValueAt(fila, 5);
-		this.getView().getLblNombreSeleccionado1().setText(nombreCompleto);
-		this.getView().getLblNombreSeleccionado2().setText(nombreCompleto);
+		this.getView().getLblNombreSeleccionado().setText(nombreCompleto);
 
 		InscripcionState estado = inscripciones.get(fila).getEstado();
 		setControls(estado != InscripcionState.PAGADA && estado != InscripcionState.CANCELADA);
