@@ -15,14 +15,4 @@ public class AlumnoDTO {
         id;
 
     public AlumnoDTO() { }
-
-    public AlumnoDTO(String id, String nombre, String apellidos, String email, String telefono) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.email = email;
-        this.telefono = telefono;
-    }
-
-    public static String getSqlQuery() { return "select * from alumno order by id asc"; }
 }

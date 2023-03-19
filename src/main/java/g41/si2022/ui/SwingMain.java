@@ -1,24 +1,28 @@
 package g41.si2022.ui;
 
+import java.awt.event.MouseEvent;
 import java.awt.Insets;
 import java.awt.EventQueue;
 import java.time.LocalDate;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.io.File;
-import java.io.IOException;
+import java.net.URL;
 import java.awt.GridBagConstraints;
+import java.awt.Desktop;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
+import javax.swing.event.MouseInputAdapter;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
@@ -45,6 +49,7 @@ public class SwingMain {
 	private JPanel navigation;
 	private JPanel total;
 	private JLabel lblTitle;
+	private JComponent[] passProtected;
 
 	/**
 	 * Launch the application.
@@ -97,6 +102,9 @@ public class SwingMain {
 		TabbedFrame profesional = new TabsProfesional(this);
 		TabbedFrame responsable = new TabsResponsable(this);
 		TabbedFrame secretaria = new TabsSecretaria(this);
+
+		passProtected = new JComponent[] {responsable.getComponent(), secretaria.getComponent()};
+
 		mainMenu.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
@@ -137,8 +145,17 @@ public class SwingMain {
 			gbc.gridx = 2;
 			gbc.gridy = 0;
 			gbc.gridheight = 6;
-			mainMenu.add(new JLabel(new ImageIcon(ImageIO.read(new File("src/main/resources/logo.png")))), gbc);
-		} catch (IOException ioe) {}
+			JLabel img = new JLabel(new ImageIcon(ImageIO.read(new File("src/main/resources/logo.png"))));
+			mainMenu.add(img, gbc);
+			img.addMouseListener(new MouseInputAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					try {
+						Desktop.getDesktop().browse(new URL("https://www.coiipa.org/").toURI());
+					} catch (Exception ex) {}
+				}
+			});
+		} catch (Exception e) {}
 
 		setMainPanel(mainMenu);
 		setNavigation(false);
@@ -148,6 +165,15 @@ public class SwingMain {
 
 	public JFrame getFrame() { return this.frame; }
 	public void setMainPanel(JComponent panel, String title) {
+		/*for(JComponent c : passProtected) {
+			if (c == panel) {
+				if (!SwingUtil.passwordDialog()) {
+					SwingUtil.showMessage("Contraseña incorrecta", "Contraseña incorrecta", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				break;
+			}
+		}*/
 		if (panel instanceof JTabbedPane) {
 			((Tab) ((JTabbedPane) panel).getSelectedComponent()).initController();
 		}

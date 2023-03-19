@@ -1,7 +1,6 @@
 package g41.si2022.coiipa.consultar_cursos;
 
 import g41.si2022.coiipa.dto.CursoDTO;
-import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.ui.SwingUtil;
 
@@ -18,8 +17,7 @@ public class ConsultarCursosController {
 	private ConsultarCursosModel model;
 	private ConsultarCursosView view;
 
-	private List<CursoDTO> cursos;
-	private List<InscripcionDTO> inscripciones;
+	private List<CursoDTO> cursosAndInscr;
 	private List<PagoDTO> listaPagos;
 	private String gastos;
 	private String ingresosEstimados;
@@ -38,27 +36,40 @@ public class ConsultarCursosController {
 	public void initView()
 	{
 		getListaCursos();
-		view.getTablaCursos().addMouseListener(new MouseAdapter() {
+		view.getTablaCursos().addMouseListener(new MouseAdapter()
+		{
 			@Override
 			public void mouseReleased(MouseEvent ent) {
-				SwingUtil.exceptionWrapper(() -> getValueCurso());
+				SwingUtil.exceptionWrapper(() -> getListaInscr());
 				SwingUtil.exceptionWrapper(() -> balance());
 			}
 		});
 	}
 
 	public void getListaCursos() {
-		cursos = model.getListaCursos();
-        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "estado", "plazas", "start", "end" },
+		cursosAndInscr = model.getListaCursos();
+
+		for (CursoDTO curso : cursosAndInscr)
+			curso.setEstado(StateUtilities.getCursoState(curso, this.view.getMain().getToday()));
+
+        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosAndInscr, new String[] { "nombre", "estado", "plazas", "start", "end" },
         		new String[] { "Nombre", "Estado", "Plazas", "Fecha ini. curso", "Fecha fin curso" }, null);
         view.getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(view.getTablaCursos());
 	}
 
-	public void getValueCurso() {
-		for (CursoDTO curso : cursos) {
+	public void getListaInscr() {
+		for (CursoDTO curso : cursosAndInscr) {
+			listaPagos = model.getListaPagos(curso.getId());
+
+			curso.setInscripcion_estado(StateUtilities.getInscripcionState(Double.parseDouble(curso.getCoste()), listaPagos));
+
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
-				getListaInscripciones(curso.getId());
+				TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosAndInscr, new String[] { "inscripcion_fecha", "inscripcion_alumno", "inscripcion_estado" },
+						new String[] { "Fecha de inscripción", "Alumno", "Estado"}, null);
+				view.getTablaInscr().setModel(tableModel);
+				SwingUtil.autoAdjustColumns(view.getTablaInscr());
+
 				return;
 			}
 		}
@@ -66,7 +77,7 @@ public class ConsultarCursosController {
 	}
 
 	public void balance() {
-		for (CursoDTO curso : cursos) {
+		for (CursoDTO curso : cursosAndInscr) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(view.getTablaCursos()))) {
 				gastos = model.getGastos(curso.getId());
 				ingresosEstimados = model.getIngresosEstimados(curso.getId());
@@ -84,7 +95,7 @@ public class ConsultarCursosController {
 				InscripcionState estado = StateUtilities.getInscripcionState(Double.valueOf(Double.parseDouble(costeCurso)), listaPagos);
 
 				if (estado == InscripcionState.PAGADA)
-					ingresosReales =  model.getImportePagos(curso.getId());
+					ingresosReales = model.getImportePagos(curso.getId());
 				else
 					ingresosReales = "0";
 
@@ -101,11 +112,11 @@ public class ConsultarCursosController {
 		throw new ApplicationException("Curso seleccionado desconocido");
 	}
 
-	public void getListaInscripciones(String idCurso) {
-		inscripciones = model.getListaInscr(idCurso);
-		TableModel tableModel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] { "inscripcion_fecha", "alumno_nombre" },
-				new String[] { "Fecha de inscripción", "Alumno"}, null);
-		view.getTablaInscr().setModel(tableModel);
-		SwingUtil.autoAdjustColumns(view.getTablaInscr());
-	}
+	// public void getListaInscripciones(String idCurso) {
+	// 	inscripciones = model.getListaInscr(idCurso);
+	// 	TableModel tableModel = SwingUtil.getTableModelFromPojos(inscripciones, new String[] { "inscripcion_fecha", "alumno_nombre" },
+	// 			new String[] { "Fecha de inscripción", "Alumno"}, null);
+	// 	view.getTablaInscr().setModel(tableModel);
+	// 	SwingUtil.autoAdjustColumns(view.getTablaInscr());
+	// }
 }

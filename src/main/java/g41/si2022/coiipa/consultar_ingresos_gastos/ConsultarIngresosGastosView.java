@@ -9,7 +9,6 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
-import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.BetterDatePicker;
 import g41.si2022.util.CursoState;
 import g41.si2022.util.FontType;

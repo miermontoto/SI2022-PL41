@@ -1,15 +1,13 @@
-package g41.si2022.coiipa.registrar_pago;
+package g41.si2022.coiipa.registrar_pago_alumno;
 
-import java.util.Date;
 import java.util.List;
 
 import g41.si2022.coiipa.dto.CursoDTO;
 import g41.si2022.coiipa.dto.InscripcionDTO;
 import g41.si2022.coiipa.dto.PagoDTO;
 import g41.si2022.util.Database;
-import g41.si2022.util.Util;
 
-public class RegistrarPagoModel {
+public class RegistrarPagoAlumnoModel {
 	private Database db = new Database();
 
 	public List<InscripcionDTO> getInscripciones(String date) {
@@ -18,7 +16,7 @@ public class RegistrarPagoModel {
 				+ " i.alumno_id as inscripcion_alumno_id, "
 				+ " a.nombre as alumno_nombre, "
 				+ " c.coste as curso_coste, "
-				+ " sum(pa.importe) as inscripcion_pagado, "
+				+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as inscripcion_pagado, "
 				+ " c.nombre as curso_nombre, "
 				+ " i.curso_id as inscripcion_curso_id, "
 				+ " i.fecha as inscripcion_fecha"
@@ -28,9 +26,9 @@ public class RegistrarPagoModel {
 				+ " where i.fecha<=? and c.start >=? group by i.id order by i.fecha asc ";
 		return db.executeQueryPojo(InscripcionDTO.class, sql, date, date);
 	}
-	
+
 	public CursoDTO getCurso (String id) {
-		String sql = 
+		String sql =
 				" SELECT * "
 				+ " FROM curso "
 				+ " WHERE curso.id = ?";
@@ -42,10 +40,10 @@ public class RegistrarPagoModel {
 				"SELECT * "
 				+ " FROM pago "
 				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id ";
-		
+
 		return db.executeQueryPojo(PagoDTO.class, sql);
 	}
-	
+
 	public List<PagoDTO> getPagos (String alumnoId, String cursoId) {
 		String sql =
 				"SELECT * "
@@ -65,5 +63,14 @@ public class RegistrarPagoModel {
 	public String getEmailAlumno(String idAlumno) {
 		String sql = "select email from alumno where id=?";
 		return (String) db.executeQueryArray(sql, idAlumno).get(0)[0];
+	}
+
+	public boolean isCancelled(String idInscripcion) {
+		String sql = "select count(id) from inscripcioncancelada where inscripcion_id=?";
+		int test = (int) db.executeQueryArray(sql, idInscripcion).get(0)[0];
+
+		if(test > 0) { return true;}
+	else { return false;}
+
 	}
 }

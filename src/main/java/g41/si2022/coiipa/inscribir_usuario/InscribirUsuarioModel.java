@@ -20,7 +20,7 @@ public class InscribirUsuarioModel {
     }
 
     public List<CursoDTO> getListaCursos() {
-        return db.executeQueryPojo(CursoDTO.class, CursoDTO.getSqlQuery());
+        return db.executeQueryPojo(CursoDTO.class, "select * from curso");
     }
 
     public List<AlumnoDTO> getAlumnoFromEmail(String email) {
