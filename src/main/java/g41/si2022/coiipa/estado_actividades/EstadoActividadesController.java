@@ -8,26 +8,24 @@ import g41.si2022.ui.SwingUtil;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+
+import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import g41.si2022.util.exception.ApplicationException;
+import g41.si2022.util.renderer.InscripcionStatusCellRenderer;
 import g41.si2022.util.state.InscripcionState;
 import g41.si2022.util.state.StateUtilities;
 
 public class EstadoActividadesController extends g41.si2022.mvc.Controller<EstadoActividadesView, EstadoActividadesModel> {
 
-	// private ConsultarCursosView view;
-	// private ConsultarCursosModel model;
-
 	private List<CursoDTO> cursos;
 	private List<CursoDTO> cursosAndInscr;
 	private List<PagoDTO> listaPagos;
+	private List<InscripcionDTO> listaInscr;
 	private String gastos;
 	private String ingresosEstimados;
 	private String ingresosReales;
-	// dont needed
-	// private String balanceEstimado;
-	// private String balanceReal;
 	private String costeCurso;
 
 	public EstadoActividadesController(EstadoActividadesModel m, EstadoActividadesView t) {
@@ -65,18 +63,20 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
 
-				List<InscripcionDTO> listaInscr = this.getModel().getListaInscr(curso.getId());
+				listaInscr = this.getModel().getListaInscr(curso.getId());
 				Double valorCurso = Double.parseDouble(curso.getCoste());
 				for(InscripcionDTO inscripcion : listaInscr) {
 					listaPagos = this.getModel().getListaPagos(inscripcion.getId());
 					inscripcion.setEstado(StateUtilities.getInscripcionState(valorCurso, listaPagos));
 				}
 
+				JTable table = this.getView().getTablaInscr();
 				TableModel tableModel = SwingUtil.getTableModelFromPojos(listaInscr,
 					new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "estado" },
 						new String[] { "Fecha de inscripción", "Nombre", "Apellidos", "Estado" }, null);
-				this.getView().getTablaInscr().setModel(tableModel);
-				SwingUtil.autoAdjustColumns(this.getView().getTablaInscr());
+				table.setModel(tableModel);
+				SwingUtil.autoAdjustColumns(table);
+				table.getColumnModel().getColumn(3).setCellRenderer(new InscripcionStatusCellRenderer(3));
 
 				return;
 			}

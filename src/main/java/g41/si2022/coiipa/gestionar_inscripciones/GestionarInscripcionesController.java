@@ -17,6 +17,7 @@ import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Dialog;
 import g41.si2022.util.Util;
+import g41.si2022.util.renderer.InscripcionStatusCellRenderer;
 import g41.si2022.util.state.CursoState;
 import g41.si2022.util.state.InscripcionState;
 
@@ -172,6 +173,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		// Ocultar foreign keys de la tabla
 		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(0));
 		table.setDefaultEditor(Object.class, null); // Deshabilitar edición
+		table.getColumnModel().getColumn(6).setCellRenderer(new InscripcionStatusCellRenderer(9));
 
 		SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas
 	}
