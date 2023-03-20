@@ -54,7 +54,7 @@ public class StateUtilities {
 	 * @return {@link CursoState} of the course for the given date.
 	 */
 	public static CursoState getCursoState (CursoDTO curso, LocalDate today, boolean canBeCerrado) {
-		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getCursoEstado() != null) {
+		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getEstado() != null) {
 			return CursoState.CERRADO;
 		}
 		if (curso.getStart_inscr().compareTo(today.toString()) > 0) { // if inscription start is before today
@@ -84,7 +84,7 @@ public class StateUtilities {
 				+ "LEFT JOIN factura ON factura.docencia_id = docencia.id "
 				+ "WHERE curso.id = ?";
 		List<CursoDTO> lc = new Database().executeQueryPojo(CursoDTO.class, sql, cursoId);
-		lc.forEach(x -> x.setCursoEstado(x.getCursoEstado() == null ? getCursoState(x, today, false).toString() : x.getCursoEstado()));
+		lc.forEach(x -> x.updateEstado(today));
 		return lc;
 	}
 
