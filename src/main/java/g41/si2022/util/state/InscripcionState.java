@@ -32,5 +32,13 @@ public enum InscripcionState {
 	/**
 	 * An inscripcion that was cancelled.
 	 */
-	CANCELADA;
+	CANCELADA,
+	/**
+	 * An inscripcion whose payment is delayed.
+	 */
+	RETRASADA,
+	/**
+	 * An inscripcion whose payment is delayed and has an excess.
+	 */
+	RETRASADA_EXCESO
 }

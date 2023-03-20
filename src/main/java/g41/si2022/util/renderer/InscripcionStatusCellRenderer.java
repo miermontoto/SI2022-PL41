@@ -48,6 +48,12 @@ public class InscripcionStatusCellRenderer extends DefaultTableCellRenderer {
             case EXCESO:
                 l.setBackground(new Color(255, 255, 0, COLOR_TRANSPARENCY));
                 break;
+            case RETRASADA:
+                l.setBackground(new Color(255, 165, 0, COLOR_TRANSPARENCY));
+                break;
+            case RETRASADA_EXCESO:
+                l.setBackground(new Color(255, 100, 0, COLOR_TRANSPARENCY));
+                break;
             default:
                 l.setBackground(new Color(0, 0, 0, 0));
                 break;

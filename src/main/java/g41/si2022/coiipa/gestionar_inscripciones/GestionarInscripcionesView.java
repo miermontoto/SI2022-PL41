@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.text.NumberFormat;
+
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -33,8 +34,10 @@ public class GestionarInscripcionesView extends View {
 	private static final long serialVersionUID = 1L;
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
 	private JScrollPane scrollPane; // Panel de scroll de la tabla
-	private JLabel lblNombreSeleccionado;
-	private JLabel lblCalculoDevolucion;
+	private JLabel lblInfoNombre;
+	private JLabel lblInfoDias;
+	private JLabel lblInfoDiferencia;
+	private JLabel lblDevolverCalculo;
 	private JButton btnInsertarPago;
 	private JButton btnCancelarInscripcion;
 
@@ -74,8 +77,6 @@ public class GestionarInscripcionesView extends View {
 		chkAll.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(chkAll);
 
-		lblNombreSeleccionado = JLabelFactory.getLabel("");
-
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 	    formatter.setValueClass(Integer.class);
 	    formatter.setMinimum(Integer.MIN_VALUE);
@@ -99,7 +100,23 @@ public class GestionarInscripcionesView extends View {
 
 		gbc.insets = next;
 		gbc.gridy = 1;
-		infoPanelContent.add(lblNombreSeleccionado, gbc);
+		infoPanelContent.add(lblInfoNombre = JLabelFactory.getLabel("N/A"), gbc);
+
+		gbc.insets = spacer;
+		gbc.gridy = 2;
+		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Días desde inscripción | hasta curso"), gbc);
+
+		gbc.insets = next;
+		gbc.gridy = 3;
+		infoPanelContent.add(lblInfoDias = JLabelFactory.getLabel("N/A"), gbc);
+
+		gbc.insets = spacer;
+		gbc.gridy = 4;
+		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Diferencia"), gbc);
+
+		gbc.insets = next;
+		gbc.gridy = 5;
+		infoPanelContent.add(lblInfoDiferencia = JLabelFactory.getLabel("N/A"), gbc);
 
 		pagarPanelContent.setLayout(new GridBagLayout());
 
@@ -138,7 +155,7 @@ public class GestionarInscripcionesView extends View {
 		devolverPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Importe a devolver (€)"), gbc);
 
 		gbc.gridy = 4;
-		devolverPanelContent.add(lblCalculoDevolucion = new JLabel(), gbc);
+		devolverPanelContent.add(lblDevolverCalculo = JLabelFactory.getLabel("N/A"), gbc);
 
 		gbc.gridy = 8;
 		devolverPanelContent.add(btnCancelarInscripcion = new JButton("Cancelar inscripción"), gbc);

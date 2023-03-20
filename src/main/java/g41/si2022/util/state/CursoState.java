@@ -13,6 +13,7 @@ package g41.si2022.util.state;
  * <li> EN_CURSO. A curso whose start date has passed.
  * <li> FINALIZADO. A curso whose end date has passed but its teachers have not been paid.
  * <li> CERRADO. A curso whose end date has passed and all its teachers have been paid.
+ * <li> CANCELADO. A cancelled curso.
  * </ul>
  *
  * @author Alex // UO281827

@@ -60,7 +60,7 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
 
 				listaInscr = this.getModel().getListaInscr(curso.getId());
-				for(InscripcionDTO inscripcion : listaInscr) inscripcion.updateEstado();
+				for(InscripcionDTO inscripcion : listaInscr) inscripcion.updateEstado(getView().getMain().getToday());
 
 				JTable table = this.getView().getTablaInscr();
 				TableModel tableModel = SwingUtil.getTableModelFromPojos(listaInscr,

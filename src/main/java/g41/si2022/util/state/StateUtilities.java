@@ -11,6 +11,8 @@ import g41.si2022.util.exception.UnexpectedException;
 
 public class StateUtilities {
 
+	public static final byte INSCRIPCION_DELAY_TIME = 2;
+
 	private StateUtilities () {
 		throw new UnexpectedException("StateUtilities");
 	}
@@ -96,12 +98,12 @@ public class StateUtilities {
 	 * @return {@link InscripcionState} of the inscription.
 	 * @see InscripcionState
 	 */
-	public static InscripcionState getInscripcionState(String idInscripcion) {
+	public static InscripcionState getInscripcionState(String idInscripcion, LocalDate today) {
 		String sql = "SELECT *, c.coste as curso_coste FROM inscripcion"
 			+ " LEFT JOIN curso c ON c.id = inscripcion.curso_id"
 			+ " WHERE inscripcion.id = ?";
 		InscripcionDTO inscr = new Database().executeQueryPojo(InscripcionDTO.class, sql, idInscripcion).get(0);
-		return getInscripcionState(inscr);
+		return getInscripcionState(inscr, today);
 	}
 
 	/**
@@ -109,10 +111,10 @@ public class StateUtilities {
 	 * @param inscr {@link InscripcionDTO} to be checked.
 	 * @return {@link InscripcionState} of the inscription.
 	 */
-	public static InscripcionState getInscripcionState(InscripcionDTO inscr) {
+	public static InscripcionState getInscripcionState(InscripcionDTO inscr, LocalDate today) {
 		return getInscripcionState(inscr,
 			new Database().executeQueryPojo(PagoDTO.class,
-				"SELECT * FROM pago WHERE inscripcion_id = ?", inscr.getId()));
+				"SELECT * FROM pago WHERE inscripcion_id = ?", inscr.getId()), today);
 	}
 
 	/**
@@ -122,8 +124,13 @@ public class StateUtilities {
 	 * @return {@link InscripcionState} of the inscription.
 	 * @see InscripcionState.
 	 */
-	public static InscripcionState getInscripcionState(InscripcionDTO inscr, List<PagoDTO> pagos) {
-		return getInscripcionState(Double.parseDouble(inscr.getCurso_coste()), pagos);
+	public static InscripcionState getInscripcionState(InscripcionDTO inscr, List<PagoDTO> pagos, LocalDate today) {
+		InscripcionState state = getInscripcionState(Double.parseDouble(inscr.getCurso_coste()), pagos);
+		if (isDelayed(inscr, today)) {
+			if (state == InscripcionState.PENDIENTE) return InscripcionState.RETRASADA;
+			if (state == InscripcionState.EXCESO) return InscripcionState.RETRASADA_EXCESO;
+		}
+		return state;
 	}
 
 	/**
@@ -152,5 +159,15 @@ public class StateUtilities {
 		return InscripcionState.PAGADA;
 	}
 
+	/**
+	 * Returns true if the inscription is delayed.
+	 * @param inscr {@link InscripcionDTO} to be checked.
+	 * @param today Reference date to be used.
+	 * @return {@code true} if the inscription is delayed, {@code false} if not.
+	 */
+	public static boolean isDelayed(InscripcionDTO inscr, LocalDate today) {
+		LocalDate inscrDate = LocalDate.parse(inscr.getFecha());
+		return inscrDate.plusDays(INSCRIPCION_DELAY_TIME).compareTo(today) < 0;
+	}
 
 }

@@ -2,6 +2,9 @@ package g41.si2022.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+
 import g41.si2022.util.state.InscripcionState;
 import g41.si2022.util.state.StateUtilities;
 import lombok.Data;
@@ -21,8 +24,8 @@ public class InscripcionDTO {
     	curso_nombre;
     private InscripcionState estado;
 
-	public void updateEstado() {
-		this.estado = StateUtilities.getInscripcionState(this);
+	public void updateEstado(LocalDate today) {
+		this.estado = StateUtilities.getInscripcionState(this, today);
 	}
 
 }
