@@ -22,6 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.event.MouseInputAdapter;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -55,6 +56,8 @@ public class SwingMain {
 	private JPanel navigation;
 	private JPanel total;
 	private JLabel lblTitle;
+	private JComponent[] passProtected;
+	private static boolean isDark = false;
 
 	/**
 	 * Launch the application.
@@ -64,13 +67,27 @@ public class SwingMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Database db = new Database();
+					Database db = new Database(); // Avoid crashing if the db is not created
 					if (db.createDatabase(true)) db.loadDatabase();
 					SwingMain window = new SwingMain();
 					window.frame.setVisible(true);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
 		});
+	}
+
+	public void refresh() {
+		frame.revalidate();
+		frame.repaint();
+	}
+
+	public void toggleDarkMode() {
+		isDark = !isDark;
+		try {
+			if (isDark) UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
+			else UIManager.setLookAndFeel("com.formdev.flatlaf.FlatLightLaf");
+		} catch (Exception e) { e.printStackTrace(); }
+		refresh();
 	}
 
 	/**
@@ -136,7 +153,7 @@ public class SwingMain {
 
 		gbc.gridx = 0;
 		gbc.gridy = 6;
-		mainMenu.add(new JLabel("Hoy:"), gbc);
+		mainMenu.add(JLabelFactory.getLabel("Hoy:"), gbc);
 		gbc.gridx = 1;
 		mainMenu.add(today, gbc);
 
