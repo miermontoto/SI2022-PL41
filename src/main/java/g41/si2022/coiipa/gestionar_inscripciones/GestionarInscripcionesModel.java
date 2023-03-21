@@ -53,16 +53,21 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 
 	public String getEmailAlumno(String idAlumno) {
 		String sql = "select email from alumno where id=?";
-		return (String) this.getDatabase().executeQueryArray(sql, idAlumno).get(0)[0];
+		return (String) this.getDatabase().executeQuerySingle(sql, idAlumno);
 	}
 
 	public boolean isCancelled(String idInscripcion) {
 		String sql = "select count(id) from inscripcioncancelada where inscripcion_id = ?";
-		return (int) this.getDatabase().executeQueryArray(sql, idInscripcion).get(0)[0] != 0;
+		return (int) this.getDatabase().executeQuerySingle(sql, idInscripcion) != 0;
 	}
 
 	public void registrarDevolucion(double importe, String fecha, String idInscripcion) {
 		String sql = "INSERT INTO inscripcioncancelada (importedevuelto, fechacancelacion, inscripcion_id) VALUES(?,?,?)";
 		this.getDatabase().executeUpdate(sql, importe, Util.isoStringToDate(fecha), idInscripcion);
+	}
+
+	public String getFechaCurso(String idCurso) {
+		String sql = "select start from curso where id=?";
+		return getDatabase().executeQuerySingle(sql, idCurso).toString();
 	}
 }

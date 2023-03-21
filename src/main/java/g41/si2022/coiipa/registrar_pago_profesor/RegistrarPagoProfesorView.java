@@ -64,23 +64,23 @@ public class RegistrarPagoProfesorView extends View {
 		lblTitulo.setVerticalAlignment(SwingConstants.TOP);
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 
-		JLabel lblDocente = new JLabel("Nombre del docente: ");
+		JLabel lblDocente = JLabelFactory.getLabel("Nombre del docente: ");
 		formPanel.add(lblDocente, "cell 0 1,alignx left,aligny center");
-		lblNombreDocente = new JLabel("N/A");
+		lblNombreDocente = JLabelFactory.empty();
 		formPanel.add(lblNombreDocente, "cell 0 2,alignx left,aligny center");
 
-		JLabel lblCurso = new JLabel("Nombre del curso: ");
+		JLabel lblCurso = JLabelFactory.getLabel("Nombre del curso: ");
 		formPanel.add(lblCurso, "cell 0 3,alignx left,aligny center");
-		lblNombreCurso = new JLabel("N/A");
+		lblNombreCurso = JLabelFactory.empty();
 		formPanel.add(lblNombreCurso, "cell 0 4,alignx left,aligny center");
 
-		formPanel.add(new JLabel("Introducir fecha del pago:"), "cell 0 5");
+		formPanel.add(JLabelFactory.getLabel("Introducir fecha del pago:"), "cell 0 5");
 		formPanel.add(datePicker = new BetterDatePicker(), "cell 0 6,growx,aligny center");
 
 		btnInsertarPago = new JButton("Registrar pago");
 		formPanel.add(btnInsertarPago, "cell 0 8");
 
-		lblError = new JLabel("");
+		lblError = JLabelFactory.getLabel("");
 		formPanel.add(lblError, "cell 0 10");
 		tableInscripciones = new JTable();
 		this.add(new JScrollPane(tableInscripciones), BorderLayout.CENTER);

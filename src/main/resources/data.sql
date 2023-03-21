@@ -10,23 +10,23 @@ insert into docente (nombre, apellidos, dni, email, telefono, direccion) values
     ('María', 'Jiménez García', '56789012I', 'maria.jimenez@hotmail.com', '678492736', 'C/ Hortaleza 8'),
     ('David', 'Gutiérrez Sánchez', '67890123J', 'david.gutierrez@yahoo.com', '675849234', 'C/ Mayor 25');
 
-insert into curso (nombre, descripcion, coste, start_inscr, end_inscr, plazas, start, end, localizacion, docente_id) values
-    ('Desarrollo de aplicaciones móviles con React Native', 'Curso sobre el desarrollo de aplicaciones móviles con React Native', 50.0, '2023-04-01', '2023-04-15', 30, '2023-04-20', '2023-05-20', 'Aula 1', 10),
-    ('Big Data y análisis de datos con Hadoop', 'Curso avanzado sobre Big Data y análisis de datos con Hadoop', 100.0, '2023-05-01', '2023-05-15', 25, '2023-05-20', '2023-06-20', 'Aula 2', 11),
-    ('Blockchain y criptomonedas', 'Curso sobre la tecnología blockchain y criptomonedas', 80.0, '2023-01-01', '2023-12-01', 20, '2023-06-20', '2023-07-20', 'Aula 3', 12),
-    ('Diseño gráfico con Adobe Illustrator', 'Curso sobre diseño gráfico con Adobe Illustrator', 75.0, '2022-11-01', '2022-11-15', 15, '2022-11-20', '2022-11-27', 'Aula 4', 13),
-    ('Introducción a la ciberseguridad', 'Curso de introducción a la ciberseguridad', 40.0, '2023-08-01', '2023-08-15', 20, '2023-08-20', '2023-09-20', 'Aula 5', 14),
-    ('Desarrollo de aplicaciones web con Angular', 'Curso sobre el desarrollo de aplicaciones web con Angular', 60.0, '2023-09-01', '2023-09-15', 30, '2023-09-20', '2023-10-20', 'Aula 6', 15),
-    ('Inteligencia artificial con Python', 'Curso sobre inteligencia artificial con Python', 90.0, '2023-10-01', '2023-10-15', 25, '2023-10-20', '2023-11-20', 'Aula 7', 16),
-    ('Diseño de interiores', 'Curso sobre diseño de interiores', 50.0, '2023-11-01', '2023-11-15', 15, '2023-11-20', '2023-12-20', 'Aula 8', 17),
-    ('Marketing digital para emprendedores', 'Curso sobre marketing digital para emprendedores', 70.0, '2023-06-01', '2023-06-15', 20, '2023-06-20', '2023-07-20', 'Aula 1', 18),
-    ('Inglés para negocios', 'Curso de inglés enfocado en el mundo empresarial', 65.0, '2023-07-01', '2023-07-15', 30, '2023-07-20', '2023-08-20', 'Aula 2', 19),
-    ('Desarrollo de videojuegos con Unity', 'Curso sobre desarrollo de videojuegos con Unity', 90.0, '2023-08-01', '2023-08-15', 15, '2023-08-20', '2023-09-20', 'Aula 3', 20),
-    ('Fotografía digital', 'Curso de fotografía digital', 60.0, '2023-09-01', '2023-09-15', 25, '2023-09-20', '2023-10-20', 'Aula 4', 21),
-    ('Introducción a la programación en Python', 'Curso introductorio a la programación en Python', 50.0, '2023-10-01', '2023-10-15', 20, '2023-10-20', '2023-11-20', 'Aula 5', 22),
-    ('Diseño de moda', 'Curso sobre diseño de moda', 80.0, '2023-11-01', '2023-11-15', 15, '2023-11-20', '2023-12-20', 'Aula 6', 23),
-    ('Marketing en redes sociales', 'Curso sobre marketing en redes sociales', 75.0, '2024-01-01', '2024-01-15', 25, '2024-01-20', '2024-02-20', 'Aula 7', 24),
-    ('Gestión de proyectos', 'Curso sobre gestión de proyectos', 100.0, '2024-02-01', '2024-02-15', 20, '2024-02-20', '2024-03-20', 'Aula 8', 25);
+insert into curso (nombre, descripcion, coste, start_inscr, end_inscr, plazas, start, end, localizacion) values
+    ('Desarrollo de aplicaciones móviles con React Native', 'Curso sobre el desarrollo de aplicaciones móviles con React Native', 50.0, '2023-04-01', '2023-04-15', 30, '2023-04-20', '2023-05-20', 'Aula 1'),
+    ('Big Data y análisis de datos con Hadoop', 'Curso avanzado sobre Big Data y análisis de datos con Hadoop', 100.0, '2023-05-01', '2023-05-15', 25, '2023-05-20', '2023-06-20', 'Aula 2'),
+    ('Blockchain y criptomonedas', 'Curso sobre la tecnología blockchain y criptomonedas', 80.0, '2023-01-01', '2023-12-01', 20, '2023-06-20', '2023-07-20', 'Aula 3'),
+    ('Diseño gráfico con Adobe Illustrator', 'Curso sobre diseño gráfico con Adobe Illustrator', 75.0, '2022-11-01', '2022-11-15', 15, '2022-11-20', '2022-11-27', 'Aula 4'),
+    ('Introducción a la ciberseguridad', 'Curso de introducción a la ciberseguridad', 40.0, '2023-08-01', '2023-08-15', 20, '2023-08-20', '2023-09-20', 'Aula 5'),
+    ('Desarrollo de aplicaciones web con Angular', 'Curso sobre el desarrollo de aplicaciones web con Angular', 60.0, '2023-09-01', '2023-09-15', 30, '2023-09-20', '2023-10-20', 'Aula 6'),
+    ('Inteligencia artificial con Python', 'Curso sobre inteligencia artificial con Python', 90.0, '2023-10-01', '2023-10-15', 25, '2023-10-20', '2023-11-20', 'Aula 7'),
+    ('Diseño de interiores', 'Curso sobre diseño de interiores', 50.0, '2023-11-01', '2023-11-15', 15, '2023-11-20', '2023-12-20', 'Aula 8'),
+    ('Marketing digital para emprendedores', 'Curso sobre marketing digital para emprendedores', 70.0, '2023-06-01', '2023-06-15', 20, '2023-06-20', '2023-07-20', 'Aula 1'),
+    ('Inglés para negocios', 'Curso de inglés enfocado en el mundo empresarial', 65.0, '2023-07-01', '2023-07-15', 30, '2023-07-20', '2023-08-20', 'Aula 2'),
+    ('Desarrollo de videojuegos con Unity', 'Curso sobre desarrollo de videojuegos con Unity', 90.0, '2023-08-01', '2023-08-15', 15, '2023-08-20', '2023-09-20', 'Aula 3'),
+    ('Fotografía digital', 'Curso de fotografía digital', 60.0, '2023-09-01', '2023-09-15', 25, '2023-09-20', '2023-10-20', 'Aula 4'),
+    ('Introducción a la programación en Python', 'Curso introductorio a la programación en Python', 50.0, '2023-10-01', '2023-10-15', 20, '2023-10-20', '2023-11-20', 'Aula 5'),
+    ('Diseño de moda', 'Curso sobre diseño de moda', 80.0, '2023-11-01', '2023-11-15', 15, '2023-11-20', '2023-12-20', 'Aula 6'),
+    ('Marketing en redes sociales', 'Curso sobre marketing en redes sociales', 75.0, '2024-01-01', '2024-01-15', 25, '2024-01-20', '2024-02-20', 'Aula 7'),
+    ('Gestión de proyectos', 'Curso sobre gestión de proyectos', 100.0, '2024-02-01', '2024-02-15', 20, '2024-02-20', '2024-03-20', 'Aula 8');
 
 insert into alumno (nombre, apellidos, email, telefono) values
     ('Juan', 'García Pérez', 'juan.garcia_92@gmail.com', '634527893'),
