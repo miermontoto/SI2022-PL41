@@ -2,7 +2,6 @@ package g41.si2022.coiipa.registrar_curso;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
