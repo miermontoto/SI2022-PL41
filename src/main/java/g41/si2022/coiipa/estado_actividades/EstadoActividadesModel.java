@@ -7,7 +7,7 @@ import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
 
 public class EstadoActividadesModel extends g41.si2022.mvc.Model {
-
+	// messi
 	public List<CursoDTO> getListaCursos() {
 		String sql = "SELECT * FROM curso "
 				   + "INNER JOIN inscripcion on inscripcion.id = curso.id ";
