@@ -108,7 +108,7 @@ public class InscribirUsuarioView extends View {
 		txtEmail = new JTextField();
 		txtTelefono = new JTextField();
 
-		lblSignup = new JLabel("");
+		lblSignup = JLabelFactory.getLabel("");
 
 		JPanel signupPanel = new JPanel();
 		output.add(signupPanel, BorderLayout.CENTER);
@@ -118,19 +118,19 @@ public class InscribirUsuarioView extends View {
 		signupPanel.setLayout(new GridLayout(0, 2)); // any rows, 2 columns
 
 		{ // Nombre
-			signupPanel.add(new JLabel("Nombre:"));
+			signupPanel.add(JLabelFactory.getLabel("Nombre:"));
 			signupPanel.add(txtNombre);
 		} { // Apellidos
-			signupPanel.add(new JLabel("Apellidos:"));
+			signupPanel.add(JLabelFactory.getLabel("Apellidos:"));
 			signupPanel.add(txtApellidos);
 		} { // Email
-			signupPanel.add(new JLabel("Email:"));
+			signupPanel.add(JLabelFactory.getLabel("Email:"));
 			signupPanel.add(txtEmail);
 		} { // Teléfono
-			signupPanel.add(new JLabel("Teléfono (opcional):"));
+			signupPanel.add(JLabelFactory.getLabel("Teléfono (opcional):"));
 			signupPanel.add(txtTelefono);
 		} { // Label (estado)
-			signupPanel.add(new JLabel("")); // padding
+			signupPanel.add(JLabelFactory.getLabel("")); // padding
 			signupPanel.add(lblSignup);
 		}
 
@@ -139,7 +139,7 @@ public class InscribirUsuarioView extends View {
 
 	private JPanel signinPanel () {
 		txtEmailLogin = new JTextField("", InscribirUsuarioView.textFieldSize);
-		lblSignin = new JLabel("");
+		lblSignin = JLabelFactory.getLabel("");
 
 		JPanel output = new JPanel(new BorderLayout());
 		output.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
@@ -154,7 +154,7 @@ public class InscribirUsuarioView extends View {
 			gbc.gridx = 0;
 			gbc.gridy = 1;
 			gbc.weighty = 0.4;
-			signinPanel.add(new JLabel("email:"), gbc);
+			signinPanel.add(JLabelFactory.getLabel("email:"), gbc);
 			gbc.gridx = 1;
 			signinPanel.add(txtEmailLogin, gbc);
 			gbc.gridy = -1;
@@ -176,7 +176,7 @@ public class InscribirUsuarioView extends View {
     	));
 
 		JPanel inscribirPanel = new JPanel();
-		lblStatus = new JLabel("");
+		lblStatus = JLabelFactory.getLabel("");
 		inscribirPanel.add(btnInscribir);
 		inscribirPanel.add(lblStatus);
 

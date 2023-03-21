@@ -5,14 +5,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import g41.si2022.util.BetterDatePicker;
+import g41.si2022.util.JLabelFactory;
 import g41.si2022.util.state.CursoState;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
@@ -24,9 +28,9 @@ public class ListaActividadesView extends View {
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
     private JComboBox<CursoState> cbFiltro;
-    private JTextArea txtDescripcion;
-    private JTextArea txtProfesor;
-    private JTextArea txtLugar;
+    private JLabel txtDescripcion;
+    private JLabel txtProfesor;
+    private JLabel txtLugar;
     private BetterDatePicker startDate, endDate;
 
     public ListaActividadesView(SwingMain main) {
@@ -34,27 +38,26 @@ public class ListaActividadesView extends View {
     }
 
     @Override
-    protected void initView () {
+    protected void initView() {
         this.setLayout(new BorderLayout());
 
         // ------------- main.BorderLayout.NORTH -------------
         JPanel mainNorthPanel = new JPanel(new BorderLayout());
 
         // Elements of mainNnorthPanel
-        JLabel lblCursos = new JLabel("Cursos:");
+        JLabel lblCursos = JLabelFactory.getLabel("Cursos:");
         tablaCursos = new JTable();
         tablaCursos.setDefaultEditor(Object.class, null);
 		tablaCursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrCursos = new JScrollPane(tablaCursos);
 
-        // Add mainNorthPanel to this
         this.add(mainNorthPanel, BorderLayout.NORTH);
 
         // centerPanel (BorderLayout.CENTER) with label and table
         JPanel centerPanel = new JPanel(new BorderLayout());
 
         // eastPanel's elements
-        JLabel lblFiltro = new JLabel("Filtrar por:");
+        JLabel lblFiltro = JLabelFactory.getLabel("Filtrar por:");
         cbFiltro = new JComboBox<CursoState>();
 
         JPanel anotherNorthPanel = new JPanel(new GridLayout());
@@ -68,38 +71,37 @@ public class ListaActividadesView extends View {
         centerPanel.add(lblCursos, BorderLayout.CENTER);
         centerPanel.add(scrCursos, BorderLayout.CENTER);
 
-        // rightPanel (BorderLayout.EAST) with label and comboBox
-        // JPanel eastPanel = new JPanel(new GridLayout());
-
-
-        // Add items to eastPanel
-        // eastPanel.add(lblFiltro);
-        // eastPanel.add(cbFiltro);
-        // eastPanel.add(startDate = new BetterDatePicker());
-        // eastPanel.add(endDate = new BetterDatePicker());
-
         // Add elements to mainNorthPanel
         mainNorthPanel.add(centerPanel, BorderLayout.NORTH);
-        // mainNorthPanel.add(eastPanel, BorderLayout.EAST);
 
         // ------------- main.BorderLayout.CENTER -------------
-        JPanel mainCenterPanel = new JPanel(new GridLayout(4, 2));
+        JPanel mainCenterPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
         // Elements of mainCenterPanel
-        JLabel lblDescripcion = new JLabel("Objetivos y contenidos del curso:");
-        txtDescripcion = new JTextArea();
-        JLabel lblLugar = new JLabel("Lugar:");
-        txtLugar = new JTextArea();
-        JLabel lblProfesor = new JLabel("Profesor:");
-        txtProfesor = new JTextArea();
+        txtDescripcion = JLabelFactory.empty();
+        txtLugar = JLabelFactory.empty();
+        txtProfesor = JLabelFactory.empty();
 
         // Add elements to mainCenterPanel
-        mainCenterPanel.add(lblDescripcion);
-        mainCenterPanel.add(txtDescripcion);
-        mainCenterPanel.add(lblLugar);
-        mainCenterPanel.add(txtLugar);
-        mainCenterPanel.add(lblProfesor);
-        mainCenterPanel.add(txtProfesor);
+        gbc.insets = new Insets(5, 1, 5, 1);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        mainCenterPanel.add(JLabelFactory.getLabel("Descripción del curso:"), gbc);
+        gbc.gridy = 1;
+        mainCenterPanel.add(JLabelFactory.getLabel("Localizaciones:"), gbc);
+        gbc.gridy = 2;
+        mainCenterPanel.add(JLabelFactory.getLabel("Docentes:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        //gbc.anchor = GridBagConstraints.LINE_END;
+        mainCenterPanel.add(txtDescripcion, gbc);
+        gbc.gridy = 1;
+        mainCenterPanel.add(txtLugar, gbc);
+        gbc.gridy = 2;
+        mainCenterPanel.add(txtProfesor, gbc);
 
         // Add mainCenterPanel to this
         this.add(mainCenterPanel, BorderLayout.CENTER);

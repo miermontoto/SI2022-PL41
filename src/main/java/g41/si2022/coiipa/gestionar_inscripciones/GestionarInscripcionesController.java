@@ -1,10 +1,14 @@
 package g41.si2022.coiipa.gestionar_inscripciones;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.List; // <- cabronazo
 
 import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
@@ -50,7 +54,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent evt) { handleSelect(); }
-		});
+		}); // FIXME: esto resulta en múltiples queries por selección. Urgente optimizar.
 		today = getView().getMain().getToday();
 	}
 
@@ -61,8 +65,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
-		this.getView().getLblNombreSeleccionado1().setText("");
-		this.getView().getLblNombreSeleccionado2().setText("");
+		this.getView().getLblInfoNombre().setText("");
 		this.getView().getTxtImporte().setText("");
 		this.getView().getDatePicker().setText("");
 		setControls(false);
@@ -80,8 +83,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		getView().getDatePicker().setDateToToday();
 		nombreCompleto = (String) model.getValueAt(fila, 3) + " " + (String) model.getValueAt(fila, 4);
 		nombreCurso = (String) model.getValueAt(fila, 5);
-		this.getView().getLblNombreSeleccionado1().setText(nombreCompleto);
-		this.getView().getLblNombreSeleccionado2().setText(nombreCompleto);
+		this.getView().getLblInfoNombre().setText(nombreCompleto);
 
 		InscripcionState estado = inscripciones.get(fila).getEstado();
 		setControls(estado != InscripcionState.PAGADA && estado != InscripcionState.CANCELADA);
@@ -90,11 +92,19 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		Double costeCurso = Double.valueOf((String) model.getValueAt(fila,  7));
 		Double importePagado = Double.valueOf((String) model.getValueAt(fila, 8));
 		Double calculoDevolver = Math.min(costeCurso, importePagado);
+		getView().getLblInfoDiferencia().setText(String.valueOf(importePagado - costeCurso)+"€");
 
 		// Calculamos el número de días que quedan
 		Date fechaActual = Date.from(this.getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
-		Date fechaCurso = Util.isoStringToDate((String) model.getValueAt(fila, 6));
+		Date fechaInscr = Util.isoStringToDate((String) model.getValueAt(fila, 6));
+		Date fechaCurso = Util.isoStringToDate(getModel().getFechaCurso(idCurso));
+
 		long dias = ChronoUnit.DAYS.between(fechaActual.toInstant(), fechaCurso.toInstant());
+
+;		String diasDesdeInscr = String.valueOf(ChronoUnit.DAYS.between(fechaInscr.toInstant(), fechaActual.toInstant()));
+		String diasHastaCurso = String.valueOf(dias);
+		getView().getLblInfoDias().setText(diasDesdeInscr + " | " + diasHastaCurso);
+
 
 		// Calculamos le importe que le será devuelto al usuario.
 		aDevolver = 0;
@@ -107,7 +117,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		// sobre el cálculo anterior.
 		if(importePagado > costeCurso) aDevolver += importePagado - costeCurso;
 
-		this.getView().getLblCalculoDevolucion().setText(aDevolver + "€");
+		this.getView().getLblDevolverCalculo().setText(aDevolver + "€");
 	}
 
 	private void handleDevolver() {
@@ -139,7 +149,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		getListaInscripciones(); // Refrescar tabla al insertar el pago
 		Dialog.show("Pago por importe de " + importe + " € de parte del alumno " + nombreCompleto + " insertado con éxito");
 
-		InscripcionState estado = StateUtilities.getInscripcionState(idInscripcion); // Estado de la inscr. post inserción
+		InscripcionState estado = StateUtilities.getInscripcionState(idInscripcion, getView().getMain().getToday()); // Estado de la inscr. post inserción
 		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
 			Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: inscripción completada",
 				"El pago de su inscripción ha sido registrado correctamente y su inscripción ha sido completada.");
@@ -155,10 +165,12 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		inscripciones = this.getModel().getInscripciones(date);
 
 		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
-			x.setEstado(g41.si2022.util.state.StateUtilities.getInscripcionState(Double.parseDouble(x.getCurso_coste()), Double.parseDouble(x.getPagado())));
-			if(this.getModel().isCancelled(x.getId()))
-				x.setEstado(InscripcionState.CANCELADA);
-			if (!this.getView().getChkAll().isSelected() && x.getEstado() != InscripcionState.PENDIENTE && x.getEstado() != InscripcionState.EXCESO) {
+			x.updateEstado(getView().getMain().getToday());
+			if(this.getModel().isCancelled(x.getId())) x.setEstado(InscripcionState.CANCELADA);
+			if (!this.getView().getChkAll().isSelected()
+				&& x.getEstado() != InscripcionState.PENDIENTE
+				&& x.getEstado() != InscripcionState.EXCESO
+				&& x.getEstado() != InscripcionState.RETRASADA) {
 				inscripciones.remove(x);
 			}
 		});
@@ -174,6 +186,12 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(0));
 		table.setDefaultEditor(Object.class, null); // Deshabilitar edición
 		table.getColumnModel().getColumn(6).setCellRenderer(new InscripcionStatusCellRenderer(9));
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
+		table.setRowSorter(sorter);
+		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+		sortKeys.add(new RowSorter.SortKey(5, SortOrder.ASCENDING));
+		sortKeys.add(new RowSorter.SortKey(6, SortOrder.ASCENDING));
+		sorter.setSortKeys(sortKeys);
 
 		SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas
 	}

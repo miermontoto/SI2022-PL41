@@ -3,6 +3,8 @@ package g41.si2022.coiipa.consultar_ingresos_gastos;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.swing.JTable;
+
 import java.util.List;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -113,24 +115,25 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 	/**
 	 * Loads the listeners and data needed for the different JTables in the view.
 	 */
-	private void loadTable () {
-		this.getView().getMovimientosTable().setModel(
-				SwingUtil.getTableModelFromPojos(
-						this.sup.get(),
-						new String[] { "nombre", "start_inscr", "end_inscr", "start", "end", "ingresos", "gastos", "balance" },
-						new String[] { "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Ingresos", "Gastos", "Balance" },
-						null
-						)
-				);
-		this.getView().getOffMovimientosTable().setModel(
-				SwingUtil.getTableModelFromPojos(
-						this.supOutOfRangeDates.get(),
-						new String[] { "nombre", "start_inscr", "end_inscr", "start", "end", "ingresos", "gastos", "balance" },
-						new String[] { "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Ingresos", "Gastos", "Balance" },
-						null
-						)
-				);
-
+	private void loadTable() {
+		JTable table = this.getView().getMovimientosTable();
+		table.setModel(
+			SwingUtil.getTableModelFromPojos(
+				this.sup.get(),
+				new String[] { "nombre", "start_inscr", "end_inscr", "start", "end", "ingresos", "gastos", "balance" },
+				new String[] { "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Ingresos", "Gastos", "Balance" },
+				null
+			)
+		);
+		getView().getOffMovimientosTable().setModel(
+			SwingUtil.getTableModelFromPojos(
+				this.supOutOfRangeDates.get(),
+				new String[] { "nombre", "start_inscr", "end_inscr", "start", "end", "ingresos", "gastos", "balance" },
+				new String[] { "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Ingresos", "Gastos", "Balance" },
+				null
+			)
+		);
+		SwingUtil.autoAdjustColumns(table);
 	}
 
 	/**

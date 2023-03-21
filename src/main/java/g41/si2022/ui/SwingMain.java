@@ -22,6 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.event.MouseInputAdapter;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -37,7 +38,6 @@ import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
 import g41.si2022.util.Pair;
 import g41.si2022.util.db.Database;
-
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas
@@ -55,6 +55,8 @@ public class SwingMain {
 	private JPanel navigation;
 	private JPanel total;
 	private JLabel lblTitle;
+	private JComponent[] passProtected;
+	private static boolean isDark = false;
 
 	/**
 	 * Launch the application.
@@ -64,13 +66,27 @@ public class SwingMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Database db = new Database();
+					Database db = new Database(); // Avoid crashing if the db is not created
 					if (db.createDatabase(true)) db.loadDatabase();
 					SwingMain window = new SwingMain();
 					window.frame.setVisible(true);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
 		});
+	}
+
+	public void refresh() {
+		frame.revalidate();
+		frame.repaint();
+	}
+
+	public void toggleDarkMode() {
+		isDark = !isDark;
+		try {
+			if (isDark) UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
+			else UIManager.setLookAndFeel("com.formdev.flatlaf.FlatLightLaf");
+		} catch (Exception e) { e.printStackTrace(); }
+		refresh();
 	}
 
 	/**
@@ -116,8 +132,6 @@ public class SwingMain {
 				((View) pair.getSecond().getComponent()).initVolatileData();
 			});
 		});
-
-		//hola
 		
 		int i = 1;
 		for(Pair<JButton, TabbedFrame> v : tabbedFrameButtons.values()) {

@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -42,6 +45,30 @@ public class SwingUtil {
 			e.printStackTrace();
 			Dialog.showError(e);
 		}
+	}
+
+	public static void showMessage(String message, String title, int type) {
+		/* Como este metodo no recibe el contexto de la ventana de la aplicación,
+		 * no usa el metodo estatico showMessageDialog de JOptionPane
+		 * y establece la posicion para que no aparezca en el centro de la pantalla
+		 */
+	    JOptionPane pane = new JOptionPane(message, type, JOptionPane.DEFAULT_OPTION);
+	    pane.setOptions(new Object[] {"ACEPTAR"}); // Fija este valor para que no dependa del idioma
+	    JDialog d = pane.createDialog(pane, title);
+	    d.setLocation(200,200);
+	    d.setVisible(true);
+	}
+
+	public static void showMessage(String message, String title) {
+	    showMessage(message, title, JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public static boolean passwordDialog() {
+		JPasswordField jpf = new JPasswordField();
+		int option = JOptionPane.showConfirmDialog(null, jpf, "Introduzca la contraseña", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		if (option == JOptionPane.OK_OPTION) {
+			return new String(jpf.getPassword()).equals("test");
+		} else return false;
 	}
 
 	/**
@@ -113,17 +140,17 @@ public class SwingUtil {
 	 * Recibe un {@link Map} que se puede utilizar para crear columnas extra que acepten datos introducidos
 	 * por el usuario ({@code null} en caso de ninguna).
 	 * </p> <p>
-	 * Para cada columna, se le asocia un {@link Pattern}. En esa columa solo se podran escribir datos que 
+	 * Para cada columna, se le asocia un {@link Pattern}. En esa columa solo se podran escribir datos que
 	 * cumplan con dicho Regex.
 	 * </p>
-	 * 
+	 *
 	 * @param pojos Plan Old Java Objects a utilizar para rellenar datos.
 	 * @param colProperties Propiedades de los {@code pojos} a obtener.
 	 * @param colNames Nombres de las columnas.
 	 * @param writeableColumns Columnas extra con permiso de escritura.
-	 * 
+	 *
 	 * @author Alex // UO281827
-	 * 
+	 *
 	 * @see #getTableModelFromPojos(List, String[])
 	 */
 	public static <E> TableModel getTableModelFromPojos(List<E> pojos, String[] colProperties,

@@ -6,10 +6,14 @@ import g41.si2022.ui.SwingUtil;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import g41.si2022.util.exception.ApplicationException;
 import g41.si2022.util.renderer.InscripcionStatusCellRenderer;
@@ -18,7 +22,6 @@ import g41.si2022.util.state.StateUtilities;
 public class EstadoActividadesController extends g41.si2022.mvc.Controller<EstadoActividadesView, EstadoActividadesModel> {
 
 	private List<CursoDTO> cursos;
-	private List<CursoDTO> cursosAndInscr;
 	private List<InscripcionDTO> listaInscr;
 	private String gastos;
 	private String ingresosEstimados;
@@ -43,13 +46,13 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 	}
 
 	public void getListaCursos() {
-		cursosAndInscr = this.getModel().getListaCursosInscr();
+		cursos = this.getModel().getListaCursos();
 
-		for (CursoDTO curso : cursosAndInscr)
+		for (CursoDTO curso : cursos)
 			curso.setEstado(StateUtilities.getCursoState(curso, this.getTab().getMain().getToday()));
 
-        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursosAndInscr, new String[] { "nombre", "estado", "plazas", "start", "end" },
-        		new String[] { "Nombre", "Estado", "Plazas", "Fecha ini. curso", "Fecha fin curso" }, null);
+        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "estado", "plazas", "start_inscr", "end_inscr", "start", "end" },
+        		new String[] { "Nombre", "Estado", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr.", "Fecha ini. curso", "Fecha fin curso" }, null);
         this.getView().getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
 	}
@@ -60,7 +63,7 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
 
 				listaInscr = this.getModel().getListaInscr(curso.getId());
-				for(InscripcionDTO inscripcion : listaInscr) inscripcion.updateEstado();
+				for(InscripcionDTO inscripcion : listaInscr) inscripcion.updateEstado(getView().getMain().getToday());
 
 				JTable table = this.getView().getTablaInscr();
 				TableModel tableModel = SwingUtil.getTableModelFromPojos(listaInscr,
@@ -70,6 +73,11 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 				//SwingUtil.autoAdjustColumns(table);
 				table.setDefaultEditor(Object.class, null);
 				table.getColumnModel().getColumn(3).setCellRenderer(new InscripcionStatusCellRenderer(3));
+				TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
+				table.setRowSorter(sorter);
+				List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+				sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
+				sorter.setSortKeys(sortKeys);
 
 				return;
 			}
@@ -78,7 +86,7 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 	}
 
 	public void balance() {
-		for (CursoDTO curso : cursosAndInscr) {
+		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
 				gastos = this.getModel().getGastos(curso.getId());
 				ingresosEstimados = this.getModel().getIngresosEstimados(curso.getId());

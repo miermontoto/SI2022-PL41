@@ -11,8 +11,23 @@ import g41.si2022.util.exception.UnexpectedException;
 
 public class StateUtilities {
 
+	public static final byte INSCRIPCION_DELAY_TIME = 2;
+
 	private StateUtilities () {
 		throw new UnexpectedException("StateUtilities");
+	}
+
+	/* --- CURSO STATE --- */
+
+	/**
+	 * Returns the current state ({@link CursoState}) of a course for a given date.
+	 * @param idCurso id of the course to be checked.
+	 * @param today Reference date to be used.
+	 * @return {@link CursoState} of the course for the given date.
+	 */
+	public static CursoState getCursoState(String idCurso, LocalDate today) {
+		String sql = "select * from curso where id = ?";
+		return getCursoState(new Database().executeQueryPojo(CursoDTO.class, sql, idCurso).get(0), today);
 	}
 
 	/**
@@ -41,7 +56,7 @@ public class StateUtilities {
 	 * @return {@link CursoState} of the course for the given date.
 	 */
 	public static CursoState getCursoState (CursoDTO curso, LocalDate today, boolean canBeCerrado) {
-		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getCursoEstado() != null) {
+		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getEstado() != null) {
 			return CursoState.CERRADO;
 		}
 		if (curso.getStart_inscr().compareTo(today.toString()) > 0) { // if inscription start is before today
@@ -55,28 +70,6 @@ public class StateUtilities {
 		} else { // if course end is after today
 			return CursoState.FINALIZADO;
 		}
-	}
-
-	public static CursoState getCursoState(String idCurso, LocalDate today) {
-		return getCursoState(getCursoDTOWithState(idCurso, today).get(0), today);
-	}
-
-	/**
-	 * Returns the cursos with the {@link CursoState}.
-	 * This function will return the {@link CursoState#CERRADO} state in particular,
-	 * which is not returned by {@link #getCursoState(CursoDTO, LocalDate)}.
-	 *
-	 * @return Cursos with states.
-	 */
-	private static List<CursoDTO> getCursosWithStates(LocalDate today) {
-		String sql =
-				"SELECT *, CASE WHEN fecha_pago IS NOT NULL THEN 'CERRADO' ELSE NULL END AS cursoEstado\r\n "
-				+ "FROM curso "
-				+ "LEFT JOIN docencia ON curso.id = docencia.curso_id "
-				+ "LEFT JOIN factura ON factura.docencia_id = docencia.id";
-		List<CursoDTO> lc = new Database().executeQueryPojo(CursoDTO.class, sql);
-		lc.forEach(x -> x.setCursoEstado(x.getCursoEstado() == null ? getCursoState(x, today, false).toString() : x.getCursoEstado()));
-		return lc;
 	}
 
 	/**
@@ -93,9 +86,11 @@ public class StateUtilities {
 				+ "LEFT JOIN factura ON factura.docencia_id = docencia.id "
 				+ "WHERE curso.id = ?";
 		List<CursoDTO> lc = new Database().executeQueryPojo(CursoDTO.class, sql, cursoId);
-		lc.forEach(x -> x.setCursoEstado(x.getCursoEstado() == null ? getCursoState(x, today, false).toString() : x.getCursoEstado()));
+		lc.forEach(x -> x.updateEstado(today));
 		return lc;
 	}
+
+	/* --- INSCRIPCION STATES --- */
 
 	/**
 	 * Returns the current state ({@link InscripcionState}) of an inscription for a given id.
@@ -103,12 +98,12 @@ public class StateUtilities {
 	 * @return {@link InscripcionState} of the inscription.
 	 * @see InscripcionState
 	 */
-	public static InscripcionState getInscripcionState(String idInscripcion) {
+	public static InscripcionState getInscripcionState(String idInscripcion, LocalDate today) {
 		String sql = "SELECT *, c.coste as curso_coste FROM inscripcion"
 			+ " LEFT JOIN curso c ON c.id = inscripcion.curso_id"
 			+ " WHERE inscripcion.id = ?";
 		InscripcionDTO inscr = new Database().executeQueryPojo(InscripcionDTO.class, sql, idInscripcion).get(0);
-		return getInscripcionState(inscr);
+		return getInscripcionState(inscr, today);
 	}
 
 	/**
@@ -116,10 +111,10 @@ public class StateUtilities {
 	 * @param inscr {@link InscripcionDTO} to be checked.
 	 * @return {@link InscripcionState} of the inscription.
 	 */
-	public static InscripcionState getInscripcionState(InscripcionDTO inscr) {
+	public static InscripcionState getInscripcionState(InscripcionDTO inscr, LocalDate today) {
 		return getInscripcionState(inscr,
 			new Database().executeQueryPojo(PagoDTO.class,
-				"SELECT * FROM pago WHERE inscripcion_id = ?", inscr.getId()));
+				"SELECT * FROM pago WHERE inscripcion_id = ?", inscr.getId()), today);
 	}
 
 	/**
@@ -129,8 +124,13 @@ public class StateUtilities {
 	 * @return {@link InscripcionState} of the inscription.
 	 * @see InscripcionState.
 	 */
-	public static InscripcionState getInscripcionState(InscripcionDTO inscr, List<PagoDTO> pagos) {
-		return getInscripcionState(Double.parseDouble(inscr.getCurso_coste()), pagos);
+	public static InscripcionState getInscripcionState(InscripcionDTO inscr, List<PagoDTO> pagos, LocalDate today) {
+		InscripcionState state = getInscripcionState(Double.parseDouble(inscr.getCurso_coste()), pagos);
+		if (isDelayed(inscr, today)) {
+			if (state == InscripcionState.PENDIENTE) return InscripcionState.RETRASADA;
+			if (state == InscripcionState.EXCESO) return InscripcionState.RETRASADA_EXCESO;
+		}
+		return state;
 	}
 
 	/**
@@ -159,5 +159,15 @@ public class StateUtilities {
 		return InscripcionState.PAGADA;
 	}
 
+	/**
+	 * Returns true if the inscription is delayed.
+	 * @param inscr {@link InscripcionDTO} to be checked.
+	 * @param today Reference date to be used.
+	 * @return {@code true} if the inscription is delayed, {@code false} if not.
+	 */
+	public static boolean isDelayed(InscripcionDTO inscr, LocalDate today) {
+		LocalDate inscrDate = LocalDate.parse(inscr.getFecha());
+		return inscrDate.plusDays(INSCRIPCION_DELAY_TIME).compareTo(today) < 0;
+	}
 
 }
