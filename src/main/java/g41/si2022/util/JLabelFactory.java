@@ -76,4 +76,8 @@ public class JLabelFactory {
 		}
 	}
 
+	public static JLabel empty() {
+		return getLabel("N/A");
+	}
+
 }
