@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+import g41.si2022.coiipa.registrar_curso.RegistrarCursoModel;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.util.FontType;
 import g41.si2022.util.JLabelFactory;
@@ -99,6 +100,22 @@ public class Debug {
 		}
 
 		gbc.gridx = 3;
+
+		gbc.gridy = 1;
+		JButton insertCurso = new JButton("Insert test curso");
+		insertCurso.addActionListener(e -> {
+			if (db.exists()) {
+				try {
+					new RegistrarCursoModel().insertCurso("CSGO S2", "", "5", "2023-03-01", "2023-03-31", "2023-04-01", "2023-04-30", "1", "");
+					status.setText("Inserted test curso using RegistrarCursoModel().insertCurso");
+				} catch (Exception ex) {
+					status.setText("Failed to insert test curso");
+					throw new ApplicationException(ex);
+				}
+			} else status.setText("Failed to insert test curso (db hasn't been created yet)");
+		});
+		all.add(insertCurso, gbc);
+
 		gbc.gridy = 2;
 		JButton dark = new JButton("Toggle dark mode");
 		dark.addActionListener(e -> {
