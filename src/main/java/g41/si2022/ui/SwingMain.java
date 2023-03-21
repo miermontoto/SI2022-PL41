@@ -85,19 +85,9 @@ public class SwingMain {
 
 		total = new JPanel();
 		total.setLayout(new GridBagLayout());
+		
+		this.makeNavigation();
 
-		navigation = new JPanel();
-		navigation.setLayout(new BorderLayout());
-
-		JButton btnBack = new JButton("← Volver");
-		btnBack.addActionListener(e -> {
-			setMainPanel(mainMenu);
-			setNavigation(false);
-		});
-		lblTitle = JLabelFactory.getLabel(FontType.subtitle, "test");
-		navigation.add(btnBack, BorderLayout.WEST);
-		navigation.add(lblTitle, BorderLayout.EAST);
-		navigation.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.SOUTH);
 		// mainMenu
 		mainMenu = new JPanel();
 
@@ -122,30 +112,29 @@ public class SwingMain {
 		tabbedFrameButtons.forEach((name, pair) -> {
 			pair.getFirst().setText(name);
 			pair.getFirst().addActionListener(e -> {
-				// pair.getSecond().getTabs().values().forEach(tab -> tab.setVisible(true));
-				((View) pair.getSecond().getTabs().values().toArray()[0]).setVisible(true);
 				setMainPanel(pair.getSecond().getComponent(), name);
+				((View) pair.getSecond().getComponent()).initVolatileData();
 			});
 		});
 
+		//hola
+		
 		int i = 1;
 		for(Pair<JButton, TabbedFrame> v : tabbedFrameButtons.values()) {
 			gbc.gridy = i++;
 			mainMenu.add(v.getFirst(), gbc);
 		}
 
-		gbc.gridx = 0;
-		gbc.gridy = 6;
-		mainMenu.add(new JLabel("Hoy:"), gbc);
-		gbc.gridx = 1;
-		mainMenu.add(today, gbc);
+		this.makeDebug(gbc);
+		this.makeLogo(gbc);
 
-		gbc.gridx = 2;
-		gbc.gridy = 6;
-		JButton btnDebug = new JButton("Debug menu");
-		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent(), "Debug menu");});
-		mainMenu.add(btnDebug, gbc);
+		setMainPanel(mainMenu);
+		setNavigation(false);
 
+		frame.getContentPane().add(total);
+	}
+	
+	private void makeLogo (GridBagConstraints gbc) {
 		try {
 			gbc.gridx = 2;
 			gbc.gridy = 0;
@@ -161,11 +150,35 @@ public class SwingMain {
 				}
 			});
 		} catch (Exception e) {}
+	}
+	
+	private void makeDebug (GridBagConstraints gbc) {
+		gbc.gridx = 0;
+		gbc.gridy = 6;
+		mainMenu.add(new JLabel("Hoy:"), gbc);
+		gbc.gridx = 1;
+		mainMenu.add(today, gbc);
 
-		setMainPanel(mainMenu);
-		setNavigation(false);
+		gbc.gridx = 2;
+		gbc.gridy = 6;
+		JButton btnDebug = new JButton("Debug menu");
+		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent(), "Debug menu");});
+		mainMenu.add(btnDebug, gbc);	
+	}
+	
+	private void makeNavigation () {
+		this.navigation = new JPanel();
+		this.navigation.setLayout(new BorderLayout());
 
-		frame.getContentPane().add(total);
+		JButton btnBack = new JButton("← Volver");
+		btnBack.addActionListener(e -> {
+			setMainPanel(mainMenu);
+			setNavigation(false);
+		});
+		lblTitle = JLabelFactory.getLabel(FontType.subtitle, "test");
+		this.navigation.add(btnBack, BorderLayout.WEST);
+		this.navigation.add(lblTitle, BorderLayout.EAST);
+		this.navigation.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.SOUTH);
 	}
 
 	public JFrame getFrame() { return this.frame; }
