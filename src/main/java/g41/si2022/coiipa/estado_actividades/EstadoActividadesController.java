@@ -6,10 +6,14 @@ import g41.si2022.ui.SwingUtil;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import g41.si2022.util.exception.ApplicationException;
 import g41.si2022.util.renderer.InscripcionStatusCellRenderer;
@@ -70,6 +74,11 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 				//SwingUtil.autoAdjustColumns(table);
 				table.setDefaultEditor(Object.class, null);
 				table.getColumnModel().getColumn(3).setCellRenderer(new InscripcionStatusCellRenderer(3));
+				TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
+				table.setRowSorter(sorter);
+				List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+				sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
+				sorter.setSortKeys(sortKeys);
 
 				return;
 			}
