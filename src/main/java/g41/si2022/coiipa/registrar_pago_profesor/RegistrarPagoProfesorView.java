@@ -66,12 +66,12 @@ public class RegistrarPagoProfesorView extends View {
 
 		JLabel lblDocente = JLabelFactory.getLabel("Nombre del docente: ");
 		formPanel.add(lblDocente, "cell 0 1,alignx left,aligny center");
-		lblNombreDocente = JLabelFactory.getLabel("N/A");
+		lblNombreDocente = JLabelFactory.empty();
 		formPanel.add(lblNombreDocente, "cell 0 2,alignx left,aligny center");
 
 		JLabel lblCurso = JLabelFactory.getLabel("Nombre del curso: ");
 		formPanel.add(lblCurso, "cell 0 3,alignx left,aligny center");
-		lblNombreCurso = JLabelFactory.getLabel("N/A");
+		lblNombreCurso = JLabelFactory.empty();
 		formPanel.add(lblNombreCurso, "cell 0 4,alignx left,aligny center");
 
 		formPanel.add(JLabelFactory.getLabel("Introducir fecha del pago:"), "cell 0 5");

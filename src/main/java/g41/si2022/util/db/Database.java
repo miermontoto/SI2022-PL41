@@ -24,7 +24,6 @@ public class Database extends DbUtil {
 	private String url;
 	private static File databaseFile = null;
 
-
 	// Crea una instancia, leyendo los parametros de driver y url de application.properties
 	public Database() {
 		Properties prop = new Properties();

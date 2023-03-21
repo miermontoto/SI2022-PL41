@@ -9,20 +9,31 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		return this.getDatabase().executeQueryPojo(ProfesorDTO.class, sql);
 	}
 
-	public void insertCurso(
+	/**
+	 * Inserta un curso en la base de datos.
+	 * @param nombre Nombre del curso
+	 * @param descripcion Descripcion del curso
+	 * @param coste Coste de la inscripción del curso
+	 * @param inscrStart Fecha de inicio de inscripción
+	 * @param inscrEnd Fecha de fin de inscripción
+	 * @param start Fecha de inicio del curso
+	 * @param end Fecha de fin del curso
+	 * @param plazas Cantidad de plazas disponibles
+	 * @param localizacion Localización del curso
+	 * @return El ID del curso insertado
+	 */
+	public String insertCurso(
 			String nombre, String descripcion, String coste,
 			String inscrStart, String inscrEnd, String start, String end,
-			String plazas, String localizacion, String docenteId, String remuneracion
-			) {
-		String sql = "INSERT INTO curso (nombre, descripcion, coste, start_inscr, end_inscr, plazas, start, end, localizacion, docente_id) "
-						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String plazas, String localizacion) {
+		String sql = "INSERT INTO curso (nombre, descripcion, coste, start_inscr, end_inscr, plazas, start, end, localizacion) "
+						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		this.getDatabase().executeUpdate(sql,
 				nombre, descripcion, coste,
-				inscrStart, inscrEnd, plazas, start, end, localizacion, docenteId
-				);
-		sql = "SELECT curso.id FROM curso ORDER BY curso.id DESC LIMIT(1)";
-		this.insertDocencia(remuneracion, docenteId,
-				this.getDatabase().executeQueryPojo(g41.si2022.dto.CursoDTO.class, sql).get(0).getId());
+				inscrStart, inscrEnd, plazas, start, end, localizacion);
+		return String.valueOf(this.getDatabase().executeQuerySingle("select id from curso"
+		 + " where nombre = ? and start_inscr = ? and start = ? and coste = ? and plazas = ?",
+		  nombre, inscrStart, start, coste, plazas));
 	}
 
 	public void insertDocencia (String remuneracion, String profesor_id, String curso_id) {

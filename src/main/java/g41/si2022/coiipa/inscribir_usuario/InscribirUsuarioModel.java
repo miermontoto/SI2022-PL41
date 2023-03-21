@@ -28,7 +28,7 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
 
     public boolean checkAlumnoInCurso(String alumno_id, String curso_id) {
         String sql = "select count(*) from inscripcion where alumno_id = ? and curso_id = ?";
-        return this.getDatabase().executeQueryArray(sql, alumno_id, curso_id).get(0)[0].equals("0");
+        return this.getDatabase().executeQuerySingle(sql, alumno_id, curso_id).equals("0");
     }
 
     public void insertAlumno(String nombre, String apellidos, String email, String telefono) {
