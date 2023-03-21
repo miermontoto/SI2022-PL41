@@ -71,6 +71,18 @@ public abstract class DbUtil {
 		} catch (SQLException e) { throw new UnexpectedException(e); } finally { DbUtils.closeQuietly(conn); }
 	}
 
+	/**
+	 * Ejecuta una query sql con los parámetros especificados que devuelve un único valor.
+	 * @param sql Sentencia sql
+	 * @param params Parámetros de la sentencia
+	 * @return El primer valor de la primera fila de la consulta
+	 */
+	public Object executeQuerySingle(String sql, Object... params) {
+		List<Object[]> result = executeQueryArray(sql, params);
+		if (result.size() == 0) return null;
+		return result.get(0)[0];
+	}
+
 
 	public List<Map<String,Object>> executeQueryMap(String sql, Object... params) {
 		Connection conn = null;

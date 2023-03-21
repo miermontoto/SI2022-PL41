@@ -28,9 +28,9 @@ public class ListaActividadesView extends View {
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
     private JComboBox<CursoState> cbFiltro;
-    private JTextField txtDescripcion;
-    private JTextField txtProfesor;
-    private JTextField txtLugar;
+    private JLabel txtDescripcion;
+    private JLabel txtProfesor;
+    private JLabel txtLugar;
     private BetterDatePicker startDate, endDate;
 
     public ListaActividadesView(SwingMain main) {
@@ -79,13 +79,9 @@ public class ListaActividadesView extends View {
         GridBagConstraints gbc = new GridBagConstraints();
 
         // Elements of mainCenterPanel
-        txtDescripcion = new JTextField();
-        txtLugar = new JTextField();
-        txtProfesor = new JTextField();
-
-        txtDescripcion.setEditable(false);
-        txtLugar.setEditable(false);
-        txtProfesor.setEditable(false);
+        txtDescripcion = JLabelFactory.empty();
+        txtLugar = JLabelFactory.empty();
+        txtProfesor = JLabelFactory.empty();
 
         // Add elements to mainCenterPanel
         gbc.insets = new Insets(5, 1, 5, 1);

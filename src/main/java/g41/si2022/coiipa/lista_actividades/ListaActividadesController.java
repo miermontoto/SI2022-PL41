@@ -128,10 +128,15 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
                 docentes = this.getModel().getDocentesCurso(curso.getId());
                 this.getView().getTxtProfesor().setText("");
 
+                boolean first = true;
                 for (ProfesorDTO docente : docentes) {
+                    if(!first) {
+                        this.getView().getTxtProfesor().setText(this.getView().getTxtProfesor().getText() + ", ");
+                    } else first = false;
                     this.getView().getTxtProfesor().setText(this.getView().getTxtProfesor().getText()
-                     + " " + docente.getNombre() + " " + docente.getApellidos());
+                     + docente.getNombre() + " " + docente.getApellidos());
                 }
+
                 // Mostrar lugar en el que se imparte el curso
                 this.getView().getTxtLugar().setText(" " + this.getModel().getLugarCurso(curso.getId()));
             }

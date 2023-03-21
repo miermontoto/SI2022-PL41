@@ -6,8 +6,8 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
 
 import java.awt.event.KeyAdapter;
 
@@ -246,13 +246,11 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	}
 
 	public void insertCurso() {
-		Optional<ProfesorDTO> profesorElegido = this.getProfesor();
+		List<ProfesorDTO> docentes = this.getDocentes();
 
-		if (!profesorElegido.isPresent()) {
-			throw new UnexpectedException("No se ha seleccionado a ningún docente.");
-		}
+		if (docentes.size() == 0) throw new UnexpectedException("No se ha seleccionado a ningún docente.");
 
-		this.getModel().insertCurso(
+		String idCurso = this.getModel().insertCurso(
 				getView().getTxtNombre().getText(),
 				getView().getTxtDescripcion().getText(),
 				getView().getTxtCoste().getText(),
@@ -261,19 +259,21 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				getView().getDateCursoStart().getDate().toString(),
 				getView().getDateCursoEnd().getDate().toString(),
 				getView().getTxtPlazas().getText(),
-				getView().getTxtLocalizacion().getText(),
-				profesorElegido.get().getId(), // El curso solo tiene un profesor
-				profesorElegido.get().getRemuneracion());
+				getView().getTxtLocalizacion().getText());
+
+		docentes.forEach((x) -> getModel().insertDocencia(x.getRemuneracion(), x.getId(), idCurso));
+
 		Dialog.show("Curso registrado con éxito.");
 	}
 
-	private Optional<ProfesorDTO> getProfesor() {
+	private List<ProfesorDTO> getDocentes() {
+		List<ProfesorDTO> docentes = new ArrayList<>();
 		TableModel model = this.getView().getTableProfesores().getModel();
 		for (int i = 0 ; i < model.getRowCount() ; i++) {
 			if (model.getValueAt(i, model.getColumnCount()-1) != null) {
-				return Optional.of(this.profesoresMap.get(model.getValueAt(i, 0).toString()));
+				docentes.add(this.profesoresMap.get(model.getValueAt(i, 0)));
 			}
 		}
-		return Optional.empty();
+		return docentes;
 	}
 }
