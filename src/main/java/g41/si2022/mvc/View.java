@@ -153,6 +153,11 @@ public abstract class View extends javax.swing.JPanel {
 		super.setVisible(visible);
 	}
 	
+	/**
+	 * Updates the volatile data.
+	 * 
+	 * @see Controller#initVolatileData()
+	 */
 	public void initVolatileData() {
 		this.controller.initVolatileData();
 	}
