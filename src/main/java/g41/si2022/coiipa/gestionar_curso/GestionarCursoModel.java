@@ -2,7 +2,7 @@ package g41.si2022.coiipa.gestionar_curso;
 
 import g41.si2022.dto.CursoDTO;
 
-public class RetrasarFechasModel extends g41.si2022.mvc.Model{
+public class GestionarCursoModel extends g41.si2022.mvc.Model{
 	
 	public java.util.List<CursoDTO> getCursos () {
 		String sql =

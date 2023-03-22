@@ -29,7 +29,7 @@ import g41.si2022.util.JLabelFactory;
 import javax.swing.JCheckBox;
 
 @Getter
-public class RetrasarFechasView extends View {
+public class GestionarCursoView extends View {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
@@ -46,8 +46,8 @@ public class RetrasarFechasView extends View {
 	private JPanel panel;
 	private JCheckBox chkAll;
 
-	public RetrasarFechasView(SwingMain main) {
-		super(main, RetrasarFechasModel.class, RetrasarFechasView.class, RetrasarFechasController.class);
+	public GestionarCursoView(SwingMain main) {
+		super(main, GestionarCursoModel.class, GestionarCursoView.class, GestionarCursoController.class);
 	}
 
 	@Override
