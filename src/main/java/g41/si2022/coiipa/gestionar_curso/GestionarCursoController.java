@@ -5,10 +5,10 @@ import java.util.List;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
 
-public class RetrasarFechasController extends g41.si2022.mvc.Controller<RetrasarFechasView, RetrasarFechasModel> {
+public class GestionarCursoController extends g41.si2022.mvc.Controller<GestionarCursoView, GestionarCursoModel> {
 
 
-	public RetrasarFechasController(RetrasarFechasView myTab, RetrasarFechasModel myModel) {
+	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
 		super(myTab, myModel);
 		// TODO Auto-generated constructor stub
 	}
