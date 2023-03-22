@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.registrar_curso;
+package g41.si2022.coiipa.gestionar_curso;
 
 import g41.si2022.dto.ProfesorDTO;
 

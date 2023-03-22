@@ -35,8 +35,8 @@ public class RetrasarFechasView extends View {
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
 	private JScrollPane scrollPane; // Panel de scroll de la tabla
 	private JLabel lblInfoNombre;
-	private JLabel lblInfoDias;
-	private JLabel lblInfoDiferencia;
+	//private JLabel lblInfoDias;
+	private JLabel lblFechaCurso;
 	private JLabel lblDevolverCalculo;
 	private JButton btnInsertarPago;
 	private JButton btnCancelarInscripcion;
@@ -59,7 +59,7 @@ public class RetrasarFechasView extends View {
 
 		JXTitledPanel pagarPanel = new JXTitledPanel("Registrar pagos");
 		JXTitledPanel devolverPanel = new JXTitledPanel("Registrar devolución");
-		JXTitledPanel infoPanel = new JXTitledPanel("Información de la inscripción");
+		JXTitledPanel infoPanel = new JXTitledPanel("Información del curso");
 
 		JPanel pagarPanelContent = new JPanel();
 		JPanel devolverPanelContent = new JPanel();
@@ -96,7 +96,7 @@ public class RetrasarFechasView extends View {
 		infoPanelContent.setLayout(new GridBagLayout());
 		gbc.insets = spacer;
 		gbc.gridy = 0;
-		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nombre del inscrito"), gbc);
+		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Curso seleccionado:"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 1;
@@ -104,25 +104,25 @@ public class RetrasarFechasView extends View {
 
 		gbc.insets = spacer;
 		gbc.gridy = 2;
-		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Días desde inscripción | hasta curso"), gbc);
+		/*infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Días desde inscripción | hasta curso"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 3;
-		infoPanelContent.add(lblInfoDias = JLabelFactory.getLabel("N/A"), gbc);
+		infoPanelContent.add(lblInfoDias = JLabelFactory.getLabel("N/A"), gbc);*/
 
 		gbc.insets = spacer;
 		gbc.gridy = 4;
-		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Diferencia"), gbc);
+		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Fecha de fin del curso"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 5;
-		infoPanelContent.add(lblInfoDiferencia = JLabelFactory.getLabel("N/A"), gbc);
+		infoPanelContent.add(lblFechaCurso = JLabelFactory.getLabel("N/A"), gbc);
 
 		pagarPanelContent.setLayout(new GridBagLayout());
 
 		gbc.insets = spacer;
 		gbc.gridy = 3;
-		pagarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Importe recibido (€)"), gbc);
+		pagarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Importe del curso (€)"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 4;

@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.registrar_curso;
+package g41.si2022.coiipa.gestionar_curso;
 
 import java.util.List;
 import java.util.Map;
