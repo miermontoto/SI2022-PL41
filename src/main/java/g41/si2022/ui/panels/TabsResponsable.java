@@ -12,7 +12,7 @@ public class TabsResponsable extends TabbedFrame {
 
         tabs.put("Consultar ingresos y gastos", new ConsultarIngresosGastosView(main));
         tabs.put("Registrar cursos", new RegistrarCursoView(main));
-        tabs.put("Cancelar cursos", new CancelarCursosView(main));
+        // tabs.put("Cancelar cursos", new CancelarCursosView(main));
 
         addTabs();
     }
