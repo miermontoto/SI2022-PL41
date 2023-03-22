@@ -129,7 +129,7 @@ public class SwingMain {
 			pair.getFirst().setText(name);
 			pair.getFirst().addActionListener(e -> {
 				setMainPanel(pair.getSecond().getComponent(), name);
-				((View) pair.getSecond().getComponent()).initVolatileData();
+				((View) ((javax.swing.JTabbedPane) pair.getSecond().getComponent()).getSelectedComponent()).initVolatileData();
 			});
 		});
 		
