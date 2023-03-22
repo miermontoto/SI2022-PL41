@@ -31,7 +31,7 @@ public class RetrasarFechasController extends g41.si2022.mvc.Controller<Retrasar
 		
 		List <CursoDTO> listacursos = this.getModel().getCursos();
 		
-		this.getView().getCursos().setModel(
+		this.getView().getTableInscripciones().setModel(
 				SwingUtil.getTableModelFromPojos(
 						listacursos,
 						new String[] { "nombre", "start_inscr", "end_inscr", "start", "end"},
