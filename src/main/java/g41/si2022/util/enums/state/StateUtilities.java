@@ -1,4 +1,4 @@
-package g41.si2022.util.state;
+package g41.si2022.util.enums.state;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -9,10 +9,10 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
-import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.FontType;
-import g41.si2022.util.JLabelFactory;
-import g41.si2022.util.state.CursoState;
+import g41.si2022.ui.components.BetterDatePicker;
+import g41.si2022.ui.components.JLabelFactory;
+import g41.si2022.util.enums.FontType;
+import g41.si2022.util.enums.state.CursoState;
 
 public class ConsultarIngresosGastosView extends g41.si2022.mvc.View {
 

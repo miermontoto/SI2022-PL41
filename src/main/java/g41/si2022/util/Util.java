@@ -92,10 +92,9 @@ public class Util {
 	 * @return el string que representa la lista serializada en csv
 	 */
 	public static String pojosToCsv(List<?> pojoList, String[] fields, boolean headers, String separator, String begin, String end, String nullAs) {
-		StringBuilder sb=new StringBuilder();
-		if (headers)
-			addPojoLineToCsv(sb,null,fields,separator,begin,end,nullAs);
-		for (int i=0; i<pojoList.size(); i++) {
+		StringBuilder sb = new StringBuilder();
+		if (headers) addPojoLineToCsv(sb,null,fields,separator,begin,end,nullAs);
+		for (int i = 0; i < pojoList.size(); i++) {
 			try {
 				//utiliza Apache commons BeanUtils para obtener los atributos del objeto en un map
 				Map<String, String> objectAsMap = BeanUtils.describe(pojoList.get(i));
@@ -109,13 +108,12 @@ public class Util {
 
 	private static void addPojoLineToCsv(StringBuilder sb, Map<String, String> objectAsMap, String[] fields, String separator, String begin, String end, String nullAs) {
 		sb.append(begin);
-		for (int j=0; j<fields.length; j++) {
+		for (int j = 0; j < fields.length; j++) {
 			String value;
-			if (objectAsMap==null) //nombre del campo si no hay map
-				value = fields[j];
+			if (objectAsMap == null) value = fields[j]; //nombre del campo si no hay map
 			else //valor del campo o el especificado para null
-				value = objectAsMap.get(fields[j])==null ? nullAs : objectAsMap.get(fields[j]);
-			sb.append((j==0 ? "" : separator) + value);
+				value = objectAsMap.get(fields[j]) == null ? nullAs : objectAsMap.get(fields[j]);
+			sb.append((j == 0 ? "" : separator) + value);
 		}
 		sb.append(end + "\n");
 	}
@@ -132,17 +130,14 @@ public class Util {
 	 * (usado para comparaciones del ui con AssertJ Swing y JBehave)
 	 */
 	public static String arraysToCsv(String[][] arrays, String[] fields, String separator, String begin, String end) {
-		StringBuilder sb=new StringBuilder();
-		if (fields!=null)
-			addArrayLineToCsv(sb,fields,separator,begin,end);
-		for (int i=0; i<arrays.length; i++)
-			addArrayLineToCsv(sb,arrays[i],separator,begin,end);
+		StringBuilder sb = new StringBuilder();
+		if (fields != null) addArrayLineToCsv(sb, fields, separator, begin, end);
+		for (int i = 0; i < arrays.length; i++) addArrayLineToCsv(sb, arrays[i], separator, begin, end);
 		return sb.toString();
 	}
 	private static void addArrayLineToCsv(StringBuilder sb, String[] array, String separator, String begin, String end) {
 		sb.append(begin);
-		for (int j=0; j<array.length; j++)
-			sb.append((j==0 ? "" : separator) + array[j]);
+		for (int j = 0; j<array.length; j++) sb.append((j == 0 ? "" : separator) + array[j]);
 		sb.append(end);
 		sb.append("\n");
 	}
@@ -151,19 +146,15 @@ public class Util {
 	 * Convierte fecha repesentada como un string iso a fecha java (para conversion de entradas de tipo fecha)
 	 */
 	public static Date isoStringToDate(String isoDateString) {
-		try {
-		return new SimpleDateFormat("yyyy-MM-dd").parse(isoDateString);
-		} catch (ParseException e) {
-			throw new ApplicationException("Formato ISO incorrecto para fecha: "+isoDateString);
-		}
+		try { return new SimpleDateFormat("yyyy-MM-dd").parse(isoDateString); }
+		catch (ParseException e) { throw new ApplicationException("Formato ISO incorrecto para fecha: " + isoDateString); }
 	}
 
 	/**
 	 * Convierte fecha java a un string formato iso (para display o uso en sql)
 	 */
 	public static String dateToIsoString(Date javaDate) {
-		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-		return formatter.format(javaDate);
+		return new SimpleDateFormat("yyyy-MM-dd").format(javaDate);
 	}
 
 }

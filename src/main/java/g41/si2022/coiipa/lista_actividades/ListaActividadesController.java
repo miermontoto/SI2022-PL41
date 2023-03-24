@@ -10,11 +10,12 @@ import javax.swing.JTable;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
-import g41.si2022.util.state.CursoState;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.EventoDTO;
 import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
+import g41.si2022.util.enums.state.CursoState;
+
 import java.util.stream.Collectors;
 
 
@@ -165,7 +166,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 	}
 
     private void loadDates() {
-        g41.si2022.util.BetterDatePicker start = this.getView().getStartDate(),
+        g41.si2022.ui.components.BetterDatePicker start = this.getView().getStartDate(),
         end = this.getView().getEndDate();
         start.addDateChangeListener((e) -> {
 			if (start.getDate() != null && end.getDate() != null && start.compareTo(end) >= 0) {

@@ -12,12 +12,12 @@ import javax.swing.ListSelectionModel;
 
 import net.miginfocom.swing.MigLayout;
 import lombok.Getter;
-
-import g41.si2022.util.BetterDatePicker;
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
-import g41.si2022.util.FontType;
-import g41.si2022.util.JLabelFactory;
+import g41.si2022.ui.components.BetterDatePicker;
+import g41.si2022.ui.components.JLabelFactory;
+import g41.si2022.util.enums.FontType;
+
 import javax.swing.JCheckBox;
 
 @Getter

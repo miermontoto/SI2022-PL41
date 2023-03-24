@@ -5,8 +5,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-import g41.si2022.util.state.InscripcionState;
-import g41.si2022.util.state.StateUtilities;
+import g41.si2022.util.enums.state.InscripcionState;
+import g41.si2022.util.enums.state.StateUtilities;
 import lombok.Data;
 
 @Getter @Setter @Data

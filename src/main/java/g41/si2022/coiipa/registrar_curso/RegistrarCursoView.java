@@ -7,11 +7,9 @@ import javax.swing.ListSelectionModel;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 import lombok.Getter;
-
-import g41.si2022.util.FontType;
-import g41.si2022.util.JLabelFactory;
-
-import g41.si2022.util.BetterDatePicker;
+import g41.si2022.ui.components.BetterDatePicker;
+import g41.si2022.ui.components.JLabelFactory;
+import g41.si2022.util.enums.FontType;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;

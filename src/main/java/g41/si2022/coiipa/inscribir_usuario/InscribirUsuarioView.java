@@ -20,8 +20,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
 import g41.si2022.mvc.View;
-import g41.si2022.util.FontType;
-import g41.si2022.util.JLabelFactory;
+import g41.si2022.ui.components.JLabelFactory;
+import g41.si2022.util.enums.FontType;
 
 @Getter
 public class InscribirUsuarioView extends View {

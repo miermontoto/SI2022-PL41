@@ -7,9 +7,9 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-import g41.si2022.util.state.CursoState;
-import g41.si2022.util.state.InscripcionState;
-import g41.si2022.util.state.StateUtilities;
+import g41.si2022.util.enums.state.CursoState;
+import g41.si2022.util.enums.state.InscripcionState;
+import g41.si2022.util.enums.state.StateUtilities;
 
 @Setter @Getter @Data
 public class CursoDTO {
