@@ -7,12 +7,13 @@ import lombok.Data;
 @Setter @Getter @Data
 public class CancelacionDTO {
 
-	private int id;
-	private int alumno_id;
-	private String nombre;
-	private String apellidos;
-	private String coste;
-	private String nombre_curso;
-	private String inicio_curso;
+	private String
+		id,
+		alumno_id,
+		nombre,
+		apellidos,
+		coste,
+		nombre_curso,
+		inicio_curso;
 
 }

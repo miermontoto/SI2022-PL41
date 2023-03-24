@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Setter @Getter @Data
 public class EventoDTO {
+
     private String
         id,
         curso_id,
@@ -13,5 +14,4 @@ public class EventoDTO {
         fecha,
         hora,
         duracion;
-
 }
