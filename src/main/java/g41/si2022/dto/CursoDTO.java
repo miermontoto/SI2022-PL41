@@ -2,13 +2,14 @@ package g41.si2022.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Data;
+
 
 import java.time.LocalDate;
 
 import g41.si2022.util.state.CursoState;
 import g41.si2022.util.state.InscripcionState;
 import g41.si2022.util.state.StateUtilities;
-import lombok.Data;
 
 @Setter @Getter @Data
 public class CursoDTO {
