@@ -106,7 +106,7 @@ public class Debug {
 		insertCurso.addActionListener(e -> {
 			if (db.exists()) {
 				try {
-					new RegistrarCursoModel().insertCurso("CSGO S2", "", "5", "2023-03-01", "2023-03-31", "2023-04-01", "2023-04-30", "1", "");
+					new RegistrarCursoModel().insertCurso("CSGO S2", "", "5", "2023-03-01", "2023-03-31", "2023-04-01", "2023-04-30", "1");
 					status.setText("Inserted test curso using RegistrarCursoModel().insertCurso");
 				} catch (Exception ex) {
 					status.setText("Failed to insert test curso");
@@ -122,6 +122,9 @@ public class Debug {
 			main.toggleDarkMode();
 		});
 		all.add(dark, gbc);
+
+		insertCurso.setEnabled(false);
+		dark.setEnabled(false);
 
 		gbc.gridy = 3;
 		JButton close = new JButton("Close window");

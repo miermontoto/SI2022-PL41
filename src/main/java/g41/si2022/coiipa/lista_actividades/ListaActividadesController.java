@@ -98,8 +98,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
         for (CursoDTO curso : cursos) {
             CursoState estadoCurso = curso.updateEstado(getView().getMain().getToday());
 
-            if (estadoCurso != CursoState.FINALIZADO && estadoCurso != CursoState.CERRADO)
-            {
+            if (estadoCurso != CursoState.FINALIZADO && estadoCurso != CursoState.CERRADO) {
                 // Añadir número de plazas libres al curso activo (para mostrarlas)
                 // Sumatorio de plazas totales menos las inscripciones NO canceladas
                 curso.setPlazas_libres(String.valueOf((Integer.valueOf(curso.getPlazas()) - Integer.valueOf(this.getModel().getNumInscripciones(curso.getId())))));
@@ -143,14 +142,19 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 
             // Mostrar las localizaciones del curso
             JLabel txtLugar = this.getView().getTxtLugar();
+            List<EventoDTO> eventos = getModel().getLugarCurso(curso);
             txtLugar.setText("");
 
             first = true;
-            for(EventoDTO evento : getModel().getLugarCurso(curso)) {
-                if(!first) txtLugar.setText(txtLugar.getText() + ", ");
-                else first = false;
-                txtLugar.setText(txtLugar.getText() + evento.getLoc());
+            if (eventos.isEmpty()) txtLugar.setText("N/A");
+            else {
+                for(EventoDTO evento : eventos) {
+                    if(!first) txtLugar.setText(txtLugar.getText() + ", ");
+                    else first = false;
+                    txtLugar.setText(txtLugar.getText() + evento.getLoc());
+                }
             }
+
         }
     }
 

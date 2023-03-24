@@ -57,7 +57,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				if (!Character.isDigit(e.getKeyChar()) && e.getKeyChar() != '.') {
 					JTextField tf = RegistrarCursoController.this.getView().getTxtCoste();
 					if (tf.getText().length() > 1) {
-						tf.setText(tf.getText().substring(0, tf.getText().length()-1));
+						tf.setText(tf.getText().substring(0, tf.getText().length() - 1));
 					} else tf.setText("");
 				}
 			}
@@ -150,7 +150,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		};
 
 		this.getView().getTxtDescripcion().addKeyListener(ka);
-		this.getView().getTxtLocalizacion().addKeyListener(ka);
 	}
 
 	private void loadTableListeners() {
@@ -258,8 +257,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				getView().getDateInscrEnd().getDate().toString(),
 				getView().getDateCursoStart().getDate().toString(),
 				getView().getDateCursoEnd().getDate().toString(),
-				getView().getTxtPlazas().getText(),
-				getView().getTxtLocalizacion().getText());
+				getView().getTxtPlazas().getText());
 
 		docentes.forEach((x) -> getModel().insertDocencia(x.getRemuneracion(), x.getId(), idCurso));
 

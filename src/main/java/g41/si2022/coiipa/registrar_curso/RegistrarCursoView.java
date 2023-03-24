@@ -1,31 +1,33 @@
 package g41.si2022.coiipa.registrar_curso;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-
-import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
-import lombok.Getter;
-import g41.si2022.ui.components.BetterDatePicker;
-import g41.si2022.ui.components.JLabelFactory;
-import g41.si2022.util.enums.FontType;
-
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+
+import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
+
+import g41.si2022.ui.components.BetterDatePicker;
+import g41.si2022.ui.components.JLabelFactory;
+import g41.si2022.util.enums.FontType;
+import lombok.Getter;
 
 @Getter
 public class RegistrarCursoView extends g41.si2022.mvc.View {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField txtNombre;
-	private JTextArea txtDescripcion, txtLocalizacion;
+	private JTextArea txtDescripcion;
 	private JIntegerTextField txtPlazas;
 	private BetterDatePicker dateInscrStart, dateInscrEnd;
 	private BetterDatePicker dateCursoStart, dateCursoEnd;
@@ -84,9 +86,10 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			} { // Input
 				right.gridy = 1;
 				right.weighty = 2;
-				this.txtDescripcion = new JTextArea();
-				this.txtDescripcion.setLineWrap(true);
-				this.txtDescripcion.setRows(5);
+				txtDescripcion = new JTextArea();
+				txtDescripcion.setLineWrap(true);
+				txtDescripcion.setRows(5);
+				//txtDescripcion.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 				centerPanel.add(this.txtDescripcion, right);
 			}
 		} { // Plazas
@@ -98,13 +101,22 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				right.gridy = 2;
 				centerPanel.add(this.txtPlazas = new JIntegerTextField(), right);
 			}
-		} { // Inscripcion
+		} { // Coste
 			{ // Label
 				left.gridy = 3;
+				centerPanel.add(JLabelFactory.getLabel("Coste de inscripción:"), left);
+			} { // Input
+				right.gridy = 3;
+				right.fill = GridBagConstraints.BOTH;
+				centerPanel.add(this.txtCoste = new JTextField(), right);
+			}
+		} { // Inscripcion
+			{ // Label
+				left.gridy = 4;
 				centerPanel.add(JLabelFactory.getLabel("Inscripción:"), left);
 			} { // Input
 				JPanel panelInscripciones = new JPanel(new BorderLayout());
-				right.gridy = 3;
+				right.gridy = 4;
 				right.fill = GridBagConstraints.WEST;
 				centerPanel.add(panelInscripciones, right);
 				{ // Desde
@@ -125,11 +137,11 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			}
 		} { // Curso
 			{ // Label
-				left.gridy = 4;
+				left.gridy = 5;
 				centerPanel.add(JLabelFactory.getLabel("Curso:"), left);
 			} { // Input
 				JPanel panelInscripciones = new JPanel(new BorderLayout());
-				right.gridy = 4;
+				right.gridy = 5;
 				right.fill = GridBagConstraints.WEST;
 				centerPanel.add(panelInscripciones, right);
 				{ // Desde
@@ -147,27 +159,6 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 					panelInscHasta.add(this.dateCursoEnd = new BetterDatePicker(), BorderLayout.EAST);
 					panelInscripciones.add(panelInscHasta, BorderLayout.EAST);
 				}
-			}
-		} { // Localizacion
-			{ // Label
-				left.gridy = 5;
-				centerPanel.add(JLabelFactory.getLabel("Localizacion:"), left);
-			} { // Input
-				right.gridy = 5;
-				right.fill = GridBagConstraints.BOTH;
-				this.txtLocalizacion = new JTextArea();
-				this.txtLocalizacion.setLineWrap(true);
-				this.txtLocalizacion.setRows(2);
-				centerPanel.add(this.txtLocalizacion, right);
-			}
-		} { // Coste
-			{ // Label
-				left.gridy = 6;
-				centerPanel.add(JLabelFactory.getLabel("Coste Inscripción:"), left);
-			} { // Input
-				right.gridy = 6;
-				right.fill = GridBagConstraints.BOTH;
-				centerPanel.add(this.txtCoste = new JTextField(), right);
 			}
 		}
 
