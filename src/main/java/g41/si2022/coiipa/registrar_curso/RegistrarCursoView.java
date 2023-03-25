@@ -1,11 +1,10 @@
 package g41.si2022.coiipa.registrar_curso;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -36,11 +35,11 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 	private JButton btnRegistrar;
 	private JComponent[] focusableComponents;
 
-	public void setNombreCurso (String nombreCurso) { this.txtNombre.setText(nombreCurso); }
-	public void setObjetivosDescripcion (String objetivosDescripcion) { this.txtDescripcion.setText(objetivosDescripcion); }
-	public void setPlazas (int plazas) { this.txtPlazas.setText(String.format("%d", Math.max(0, plazas))); }
+	public void setNombreCurso(String nombreCurso) { this.txtNombre.setText(nombreCurso); }
+	public void setObjetivosDescripcion(String objetivosDescripcion) { this.txtDescripcion.setText(objetivosDescripcion); }
+	public void setPlazas(int plazas) { this.txtPlazas.setText(String.format("%d", Math.max(0, plazas))); }
 
-	public RegistrarCursoView (g41.si2022.ui.SwingMain main) {
+	public RegistrarCursoView(g41.si2022.ui.SwingMain main) {
 		super(main, RegistrarCursoModel.class, RegistrarCursoView.class, RegistrarCursoController.class);
 	}
 
@@ -64,14 +63,14 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 
 		{ // Nombre del curso
 			{ // Label
-				left.insets = new java.awt.Insets(15, 0, 0, 0);
+				left.insets = new Insets(15, 0, 0, 0);
 				left.fill = GridBagConstraints.BOTH;
 				left.gridx = 0;
 				left.gridy = 0;
 				left.weighty = 1;
 				centerPanel.add(JLabelFactory.getLabel("Nombre:"), left);
 			} { // Input
-				right.insets = new java.awt.Insets(15, 15, 0, 0);
+				right.insets = new Insets(15, 15, 0, 0);
 				right.fill = GridBagConstraints.BOTH;
 				right.gridx = 1;
 				right.gridy = 0;
@@ -185,7 +184,6 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 		bottomPane.add(this.btnRegistrar, BorderLayout.SOUTH);
 
 		this.add(bottomPane, BorderLayout.SOUTH);
-		add(JLabelFactory.getLabel(FontType.title, "Registrar Curso"), BorderLayout.NORTH);
 
 		focusableComponents = new JComponent[] {
 			this.txtNombre,

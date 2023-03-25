@@ -39,8 +39,6 @@ public class ConsultarIngresosGastosView extends g41.si2022.mvc.View {
 	@Override
 	protected void initView () {
 		this.setLayout(new BorderLayout());
-		// Title
-		this.add(JLabelFactory.getLabel(FontType.title, "Ingresos y Gastos"), BorderLayout.NORTH);
 
 		JPanel mainPanel = new JPanel (new BorderLayout());
 		{ // Main Panel

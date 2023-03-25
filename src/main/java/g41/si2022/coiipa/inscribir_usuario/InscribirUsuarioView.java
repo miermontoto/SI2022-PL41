@@ -12,6 +12,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+
+import org.jdesktop.swingx.JXTitledPanel;
+
 import javax.swing.JRadioButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -30,6 +33,9 @@ public class InscribirUsuarioView extends View {
 	private static final int textFieldSize = 15;
 	private static final int panelBorder = 10;
 
+	private static final String signinTitle = "Iniciar sesión";
+	private static final String signupTitle = "Registro de usuario";
+
 	private JButton btnInscribir;
 	private JTable tablaCursos;
 
@@ -37,12 +43,13 @@ public class InscribirUsuarioView extends View {
 	private JTextField txtApellidos;
 	private JTextField txtEmail;
 	private JTextField txtTelefono;
-
 	private JTextField txtEmailLogin;
 
     private ButtonGroup decideUserSelection;
     private JRadioButton radioSignin;
     private JRadioButton radioSignup;
+
+	private JXTitledPanel containerPanel;
 
 	private JLabel lblSignin;
 	private JLabel lblSignup;
@@ -54,24 +61,18 @@ public class InscribirUsuarioView extends View {
 
     private void toggle() {
 		boolean isSignin = radioSignin.isSelected();
-		txtEmail.setEnabled(!isSignin);
-		txtNombre.setEnabled(!isSignin);
-		txtApellidos.setEnabled(!isSignin);
-		txtTelefono.setEnabled(!isSignin);
-		txtEmailLogin.setEnabled(isSignin);
-		lblSignin.setText("");
-		lblSignup.setText("");
+		containerPanel.setTitle(isSignin ? signinTitle : signupTitle);
+		containerPanel.setContentContainer(isSignin ? signinPanel() : signupPanel());
     }
 
     @Override
-	protected void initView () {
+	protected void initView() {
 		this.setLayout(new BorderLayout());
-		this.add(JLabelFactory.getLabel(FontType.title, "Inscripción de alumnado"), BorderLayout.NORTH);
 		btnInscribir = new JButton("Inscribirse");
 
 		decideUserSelection = new ButtonGroup();
-		radioSignin = new JRadioButton("Iniciar sesión");
-		radioSignup = new JRadioButton("Registrarse");
+		radioSignin = new JRadioButton(signinTitle);
+		radioSignup = new JRadioButton(signupTitle);
 		decideUserSelection.add(radioSignin);
 		decideUserSelection.add(radioSignup);
 
@@ -80,29 +81,29 @@ public class InscribirUsuarioView extends View {
 		panel.add(radioPanel(), BorderLayout.NORTH);
 
 		JPanel mainPanel = new JPanel(new GridLayout(1, 0));
-		mainPanel.add(this.signupPanel());
-		mainPanel.add(this.signinPanel());
+		mainPanel.add(containerPanel = new JXTitledPanel(signupTitle));
+		containerPanel.setContentContainer(signupPanel());
+		signinPanel();
+
 		panel.add(mainPanel, BorderLayout.CENTER);
 		this.add(makeBottomPanel(), BorderLayout.SOUTH);
 
 		radioSignup.setSelected(true);
 		btnInscribir.setEnabled(false);
-		txtEmailLogin.setEnabled(false);
 	}
 
-	private JPanel radioPanel () {
+	private JPanel radioPanel() {
 		JPanel radioPanel = new JPanel(new java.awt.FlowLayout());
-		radioPanel.add(radioSignup);
 		radioPanel.add(radioSignin);
+		radioPanel.add(radioSignup);
 		radioSignin.addActionListener( e -> toggle() );
 		radioSignup.addActionListener( e -> toggle() );
 		return radioPanel;
 	}
 
-	private JPanel signupPanel () {
+	private JPanel signupPanel() {
 		JPanel output = new JPanel (new BorderLayout());
 		output.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK));
-		output.add(JLabelFactory.getLabel(FontType.subtitle, "Registro de usuario"), BorderLayout.NORTH);
 		txtNombre = new JTextField("", InscribirUsuarioView.textFieldSize);
 		txtApellidos = new JTextField();
 		txtEmail = new JTextField();
@@ -137,13 +138,12 @@ public class InscribirUsuarioView extends View {
 		return output;
 	}
 
-	private JPanel signinPanel () {
+	private JPanel signinPanel() {
 		txtEmailLogin = new JTextField("", InscribirUsuarioView.textFieldSize);
 		lblSignin = JLabelFactory.getLabel("");
 
 		JPanel output = new JPanel(new BorderLayout());
 		output.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
-		output.add(JLabelFactory.getLabel(FontType.subtitle, "Inicio de sesión"), BorderLayout.NORTH);
 
 		JPanel signinPanel = new JPanel(new GridBagLayout());
 		output.add(signinPanel, BorderLayout.CENTER);
@@ -164,7 +164,7 @@ public class InscribirUsuarioView extends View {
 		return output;
 	}
 
-	private JPanel makeBottomPanel () {
+	private JPanel makeBottomPanel() {
 		JPanel bottomPane = new JPanel(new BorderLayout());
 
 		tablaCursos = new JTable();

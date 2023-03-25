@@ -50,23 +50,21 @@ public class Util {
 	 */
 	public static String serializeToJson(Class<?> pojoClass, List<?> pojoList, boolean asArray) {
 		try {
-			ObjectMapper mapper=new ObjectMapper();
+			ObjectMapper mapper = new ObjectMapper();
 			if (asArray) {
 		        mapper.configOverride(pojoClass).setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.ARRAY));
-		        String value=mapper.writeValueAsString(pojoList);
+		        String value = mapper.writeValueAsString(pojoList);
 		    	return value.replace("],", "],\n").replace("\"", ""); // Con saltos de linea y sin comillas
 				// Otra alternativa es utilizar las clases especificas para csv que suministra Jackson (jackson-dataformat-csv)
-			} else {
-				return mapper.writeValueAsString(pojoList).replaceAll("},", "},\n"); // Con saltos de linea
-			}
+			} else return mapper.writeValueAsString(pojoList).replaceAll("},", "},\n"); // Con saltos de linea
 		} catch (JsonProcessingException e) {
 			throw new ApplicationException(e);
 		}
 	}
 
 	public static void sendEmail(String address, String subject, String content) {
-		try(FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + address + ".txt")) {
-			fw.write("["+subject+", "+LocalDateTime.now()+"] "+content+"\n");
+		try (FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + address + ".txt")) {
+			fw.write("[" + subject + ", " + LocalDateTime.now() + "] " + content + "\n");
 			fw.close();
 		} catch (IOException e) { throw new ApplicationException(e); }
 	}
