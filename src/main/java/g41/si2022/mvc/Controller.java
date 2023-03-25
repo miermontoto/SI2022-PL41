@@ -15,20 +15,20 @@ package g41.si2022.mvc;
  *
  * @author Alex // UO281827
  *
- * @param <T> Type representing the View. This must <code>extend {@link View}</code>
+ * @param <V> Type representing the View. This must <code>extend {@link View}</code>
  * @param <M> Type representing the Model. This must <code>extend {@link Model}</code>
  *
  * @see Model
  * @see View
  */
-public abstract class Controller <T extends View, M extends Model> {
+public abstract class Controller <V extends View, M extends Model> {
 
 	/**
 	 * {@link View} that this <code>Controller</code> is supposed to supply data to.
 	 *
 	 * @see View
 	 */
-	private T myTab;
+	private V myView;
 
 	/**
 	 * {@link Model} that this <code>Controller</code> is supposed to get data from.
@@ -46,20 +46,20 @@ public abstract class Controller <T extends View, M extends Model> {
 	/**
 	 * Creates a new <code>Controller</code>.
 	 *
-	 * @param myTab The tab that this controller uses.
+	 * @param myView The tab that this controller uses.
 	 * @param myModel The model that this controller uses.
 	 *
 	 * @see View
 	 * @see Model
 	 */
-	public Controller (T myTab, M myModel) {
-		this.myTab = myTab;
+	public Controller (V myView, M myModel) {
+		this.myView = myView;
 		this.myModel = myModel;
 		this.nonVolatileLoaded = false;
 	}
 
-	public T getTab () { return this.myTab; }
-	public T getView () { return this.getTab(); }
+	public V getTab () { return this.myView; }
+	public V getView () { return this.getTab(); }
 	public M getModel () { return this.myModel; }
 
 	/**

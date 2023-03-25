@@ -11,8 +11,8 @@ import javax.swing.ScrollPaneConstants;
 
 import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.components.JLabelFactory;
-import g41.si2022.util.enums.FontType;
-import g41.si2022.util.enums.state.CursoState;
+import g41.si2022.ui.util.FontType;
+import g41.si2022.util.state.CursoState;
 
 public class ConsultarIngresosGastosView extends g41.si2022.mvc.View {
 
@@ -63,7 +63,7 @@ public class ConsultarIngresosGastosView extends g41.si2022.mvc.View {
 					sp.setViewportView(this.movimientos);
 					tablePanel.add(sp);
 				} { // Message
-					offsetTablePanel.add(JLabelFactory.getLabel(FontType.normal,
+					offsetTablePanel.add(JLabelFactory.getLabel(FontType.subtitle,
 							"De los anteriores cursos, estos han recibido ingresos/gastos fuera de las fechas filtradas."),
 							BorderLayout.NORTH);
 				} { // Offset Table

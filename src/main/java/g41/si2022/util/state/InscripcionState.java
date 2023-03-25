@@ -1,4 +1,4 @@
-package g41.si2022.util.enums.state;
+package g41.si2022.util.state;
 
 /**
  * A <code>InscripcionState</code> is an <code>Enum</code> that contains all the possible states of an

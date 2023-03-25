@@ -35,9 +35,9 @@ import g41.si2022.ui.panels.TabbedFrame;
 import g41.si2022.ui.panels.TabsProfesional;
 import g41.si2022.ui.panels.TabsResponsable;
 import g41.si2022.ui.panels.TabsSecretaria;
+import g41.si2022.ui.util.FontType;
 import g41.si2022.util.Pair;
 import g41.si2022.util.db.Database;
-import g41.si2022.util.enums.FontType;
 
 
 /**

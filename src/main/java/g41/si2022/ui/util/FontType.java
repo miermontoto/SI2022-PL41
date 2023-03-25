@@ -1,4 +1,4 @@
-package g41.si2022.util.enums;
+package g41.si2022.ui.util;
 
 import g41.si2022.ui.components.JLabelFactory;
 

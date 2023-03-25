@@ -14,7 +14,7 @@ import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.EventoDTO;
 import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
-import g41.si2022.util.enums.state.CursoState;
+import g41.si2022.util.state.CursoState;
 
 import java.util.stream.Collectors;
 

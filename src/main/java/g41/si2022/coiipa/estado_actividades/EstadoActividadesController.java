@@ -3,6 +3,7 @@ package g41.si2022.coiipa.estado_actividades;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
+import g41.si2022.ui.util.InscripcionStatusCellRenderer;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -15,9 +16,8 @@ import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import g41.si2022.util.enums.state.StateUtilities;
 import g41.si2022.util.exception.ApplicationException;
-import g41.si2022.util.renderer.InscripcionStatusCellRenderer;
+import g41.si2022.util.state.StateUtilities;
 
 public class EstadoActividadesController extends g41.si2022.mvc.Controller<EstadoActividadesView, EstadoActividadesModel> {
 

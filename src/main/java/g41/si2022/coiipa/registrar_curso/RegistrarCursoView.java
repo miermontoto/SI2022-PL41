@@ -18,7 +18,7 @@ import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
 import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.components.JLabelFactory;
-import g41.si2022.util.enums.FontType;
+import g41.si2022.ui.util.FontType;
 import lombok.Getter;
 
 @Getter

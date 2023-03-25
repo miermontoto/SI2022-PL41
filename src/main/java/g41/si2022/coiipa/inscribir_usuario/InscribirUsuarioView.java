@@ -24,7 +24,7 @@ import java.awt.GridBagConstraints;
 
 import g41.si2022.mvc.View;
 import g41.si2022.ui.components.JLabelFactory;
-import g41.si2022.util.enums.FontType;
+import g41.si2022.ui.util.FontType;
 
 @Getter
 public class InscribirUsuarioView extends View {

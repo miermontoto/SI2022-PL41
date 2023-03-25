@@ -1,4 +1,4 @@
-package g41.si2022.util.renderer;
+package g41.si2022.ui.util;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -8,7 +8,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
-import g41.si2022.util.enums.state.InscripcionState;
+import g41.si2022.util.state.InscripcionState;
 
 /**
  * Custom cell renderer for the {@link InscripcionState} enum.

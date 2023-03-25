@@ -96,7 +96,7 @@ public class Util {
 			try {
 				//utiliza Apache commons BeanUtils para obtener los atributos del objeto en un map
 				Map<String, String> objectAsMap = BeanUtils.describe(pojoList.get(i));
-				addPojoLineToCsv(sb,objectAsMap,fields,separator,begin,end,nullAs);
+				addPojoLineToCsv(sb,objectAsMap, fields, separator, begin, end, nullAs);
 			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 				throw new ApplicationException(e);
 			}
