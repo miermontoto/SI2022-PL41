@@ -14,4 +14,11 @@ public class EventoDTO {
         fecha,
         hora,
         duracion;
+
+    public EventoDTO(String loc, String fecha, String hora, String duracion) {
+        this.loc = loc;
+        this.fecha = fecha;
+        this.hora = hora;
+        this.duracion = duracion;
+    }
 }

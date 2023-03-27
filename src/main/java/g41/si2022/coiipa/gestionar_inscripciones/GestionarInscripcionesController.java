@@ -19,7 +19,7 @@ import java.awt.event.MouseAdapter;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
-import g41.si2022.ui.util.InscripcionStatusCellRenderer;
+import g41.si2022.util.InscripcionStatusCellRenderer;
 import g41.si2022.util.Util;
 import g41.si2022.util.state.CursoState;
 import g41.si2022.util.state.InscripcionState;

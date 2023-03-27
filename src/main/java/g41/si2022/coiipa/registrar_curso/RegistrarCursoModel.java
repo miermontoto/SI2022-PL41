@@ -37,8 +37,13 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		  nombre, inscrStart, start, coste, plazas));
 	}
 
-	public void insertDocencia (String remuneracion, String profesor_id, String curso_id) {
+	public void insertDocencia(String remuneracion, String profesor_id, String curso_id) {
 		String sql = "INSERT INTO docencia (remuneracion, docente_id, curso_id) VALUES (?, ?, ?)";
 		this.getDatabase().executeUpdate(sql, remuneracion, profesor_id, curso_id);
 	}
+
+    public void insertEvento(String loc, String date, String start, String duration, String cursoId) {
+		String sql = "INSERT INTO evento (loc, fecha, hora, duracion, curso_id) VALUES (?, ?, ?, ?, ?)";
+		this.getDatabase().executeUpdate(sql, loc, date, start, duration, cursoId);
+    }
 }
