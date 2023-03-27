@@ -7,7 +7,7 @@ import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
 
 public class EstadoActividadesModel extends g41.si2022.mvc.Model {
-
+	
 	public List<CursoDTO> getListaCursos() {
 		String sql = "select id, nombre, coste, plazas, start, end, start_inscr, end_inscr from curso";
 		return getDatabase().executeQueryPojo(CursoDTO.class, sql);
