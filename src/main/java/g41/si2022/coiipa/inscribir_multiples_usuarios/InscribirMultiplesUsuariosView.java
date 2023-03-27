@@ -5,6 +5,8 @@ import java.awt.Color;
 
 import lombok.Getter;
 import java.awt.GridLayout;
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,6 +14,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+
+import org.jdesktop.swingx.JXTitledPanel;
+
 import javax.swing.JRadioButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -20,8 +25,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
 import g41.si2022.mvc.View;
-import g41.si2022.util.FontType;
-import g41.si2022.util.JLabelFactory;
+import g41.si2022.ui.util.FontType;
+import g41.si2022.ui.util.JLabelFactory;
 
 @Getter
 public class InscribirMultiplesUsuariosView extends View {
@@ -30,19 +35,23 @@ public class InscribirMultiplesUsuariosView extends View {
 	private static final int textFieldSize = 15;
 	private static final int panelBorder = 10;
 
+	private static final String signinTitle = "Iniciar sesión";
+	private static final String signupTitle = "Registro de usuario";
+
 	private JButton btnInscribir;
 	private JTable tablaCursos;
+	private JTable tablaInscritos;
 
 	private JTextField txtNombre;
-	private JTextField txtApellidos;
 	private JTextField txtEmail;
 	private JTextField txtTelefono;
-
 	private JTextField txtEmailLogin;
 
-    private ButtonGroup decideUserSelection;
-    private JRadioButton radioSignin;
-    private JRadioButton radioSignup;
+	private ButtonGroup decideUserSelection;
+	private JRadioButton radioSignin;
+	private JRadioButton radioSignup;
+
+	private JXTitledPanel containerPanel;
 
 	private JLabel lblSignin;
 	private JLabel lblSignup;
@@ -52,59 +61,81 @@ public class InscribirMultiplesUsuariosView extends View {
 		super(main, InscribirMultiplesUsuariosModel.class, InscribirMultiplesUsuariosView.class, InscribirMultiplesUsuariosController.class);
 	}
 
-    private void toggle() {
-		boolean isSignin = radioSignin.isSelected();
-		txtEmail.setEnabled(!isSignin);
-		txtNombre.setEnabled(!isSignin);
-		txtApellidos.setEnabled(!isSignin);
-		txtTelefono.setEnabled(!isSignin);
-		txtEmailLogin.setEnabled(isSignin);
-		lblSignin.setText("");
-		lblSignup.setText("");
-    }
+	public Entity getGroup () {
+		return new Entity(this.getName(), this.getTxtEmail().getText(), this.getTxtTelefono().getText());
+	}
 
-    @Override
-	protected void initView () {
+	public List<Entity> getInscritos () {
+		List<Entity> out = new java.util.LinkedList<Entity> ();
+		for (int i = 0 ; i < this.tablaInscritos.getRowCount() ; i++) {
+			out.add(new Entity(
+					this.tablaInscritos.getValueAt(i, 0).toString(), // Nombre
+					this.tablaInscritos.getValueAt(i, 1).toString(), // Apellidos
+					this.tablaInscritos.getValueAt(i, 2).toString(), // Email
+					this.tablaInscritos.getValueAt(i, 3).toString()  // Tel
+					));
+		}
+		return out;
+	}
+
+	private void toggle() {
+		boolean isSignin = radioSignin.isSelected();
+		containerPanel.setTitle(isSignin ? signinTitle : signupTitle);
+		containerPanel.setContentContainer(isSignin ? signinPanel() : signupPanel());
+	}
+
+	@Override
+	protected void initView() {
 		this.setLayout(new BorderLayout());
-		this.add(JLabelFactory.getLabel(FontType.title, "Inscripción de alumnado"), BorderLayout.NORTH);
 		btnInscribir = new JButton("Inscribirse");
 
 		decideUserSelection = new ButtonGroup();
-		radioSignin = new JRadioButton("Iniciar sesión");
-		radioSignup = new JRadioButton("Registrarse");
+		radioSignin = new JRadioButton(signinTitle);
+		radioSignup = new JRadioButton(signupTitle);
 		decideUserSelection.add(radioSignin);
 		decideUserSelection.add(radioSignup);
 
-		JPanel panel = new JPanel(new BorderLayout());
-		this.add(panel, BorderLayout.CENTER);
-		panel.add(radioPanel(), BorderLayout.NORTH);
+		JScrollPane sp = new JScrollPane ();
+		sp.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		JPanel inscrollPanel = makeLoginPanel();
+		inscrollPanel.add(this.tablaInscritos = new g41.si2022.ui.components.RowAppendableJTable (
+				new String[]{"Nombre", "Apellidos", "Email", "Telefono"}), BorderLayout.SOUTH);
 
-		JPanel mainPanel = new JPanel(new GridLayout(1, 0));
-		mainPanel.add(this.signupPanel());
-		mainPanel.add(this.signinPanel());
-		panel.add(mainPanel, BorderLayout.CENTER);
+		sp.setViewportView(inscrollPanel);
+
+		this.add(sp, BorderLayout.CENTER);
 		this.add(makeBottomPanel(), BorderLayout.SOUTH);
 
 		radioSignup.setSelected(true);
 		btnInscribir.setEnabled(false);
-		txtEmailLogin.setEnabled(false);
 	}
 
-	private JPanel radioPanel () {
+	private JPanel makeLoginPanel () {
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(radioPanel(), BorderLayout.NORTH);
+
+		JPanel mainPanel = new JPanel(new GridLayout(1, 0));
+		mainPanel.add(containerPanel = new JXTitledPanel(signupTitle));
+		containerPanel.setContentContainer(signupPanel());
+		signinPanel();
+
+		panel.add(mainPanel, BorderLayout.CENTER);
+		return panel;
+	}
+
+	private JPanel radioPanel() {
 		JPanel radioPanel = new JPanel(new java.awt.FlowLayout());
-		radioPanel.add(radioSignup);
 		radioPanel.add(radioSignin);
+		radioPanel.add(radioSignup);
 		radioSignin.addActionListener( e -> toggle() );
 		radioSignup.addActionListener( e -> toggle() );
 		return radioPanel;
 	}
 
-	private JPanel signupPanel () {
+	private JPanel signupPanel() {
 		JPanel output = new JPanel (new BorderLayout());
 		output.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK));
-		output.add(JLabelFactory.getLabel(FontType.subtitle, "Registro de usuario"), BorderLayout.NORTH);
 		txtNombre = new JTextField("", InscribirMultiplesUsuariosView.textFieldSize);
-		txtApellidos = new JTextField();
 		txtEmail = new JTextField();
 		txtTelefono = new JTextField();
 
@@ -113,16 +144,13 @@ public class InscribirMultiplesUsuariosView extends View {
 		JPanel signupPanel = new JPanel();
 		output.add(signupPanel, BorderLayout.CENTER);
 		signupPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(
-			InscribirMultiplesUsuariosView.panelBorder, 10, 10, InscribirMultiplesUsuariosView.panelBorder
-		));
+				InscribirMultiplesUsuariosView.panelBorder, 10, 10, InscribirMultiplesUsuariosView.panelBorder
+				));
 		signupPanel.setLayout(new GridLayout(0, 2)); // any rows, 2 columns
 
 		{ // Nombre
 			signupPanel.add(JLabelFactory.getLabel("Nombre:"));
 			signupPanel.add(txtNombre);
-		} { // Apellidos
-			signupPanel.add(JLabelFactory.getLabel("Apellidos:"));
-			signupPanel.add(txtApellidos);
 		} { // Email
 			signupPanel.add(JLabelFactory.getLabel("Email:"));
 			signupPanel.add(txtEmail);
@@ -137,19 +165,18 @@ public class InscribirMultiplesUsuariosView extends View {
 		return output;
 	}
 
-	private JPanel signinPanel () {
+	private JPanel signinPanel() {
 		txtEmailLogin = new JTextField("", InscribirMultiplesUsuariosView.textFieldSize);
 		lblSignin = JLabelFactory.getLabel("");
 
 		JPanel output = new JPanel(new BorderLayout());
 		output.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
-		output.add(JLabelFactory.getLabel(FontType.subtitle, "Inicio de sesión"), BorderLayout.NORTH);
 
 		JPanel signinPanel = new JPanel(new GridBagLayout());
 		output.add(signinPanel, BorderLayout.CENTER);
 		GridBagConstraints gbc = new GridBagConstraints();
 		signinPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(InscribirMultiplesUsuariosView.panelBorder, 10, 10, InscribirMultiplesUsuariosView.panelBorder));
-        { // email
+		{ // email
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.gridx = 0;
 			gbc.gridy = 1;
@@ -164,7 +191,7 @@ public class InscribirMultiplesUsuariosView extends View {
 		return output;
 	}
 
-	private JPanel makeBottomPanel () {
+	private JPanel makeBottomPanel() {
 		JPanel bottomPane = new JPanel(new BorderLayout());
 
 		tablaCursos = new JTable();
@@ -173,7 +200,7 @@ public class InscribirMultiplesUsuariosView extends View {
 
 		sp.setPreferredSize(new java.awt.Dimension(
 				this.getWidth(), 200
-    	));
+				));
 
 		JPanel inscribirPanel = new JPanel();
 		lblStatus = JLabelFactory.getLabel("");
@@ -187,4 +214,37 @@ public class InscribirMultiplesUsuariosView extends View {
 		return bottomPane;
 	}
 
+	@Getter
+	private final class Entity {
+
+		/**
+		 * 
+		 * @param nombre
+		 * @param apellidos
+		 * @param email
+		 * @param telefono
+		 */
+		public Entity (String nombre, String apellidos, String email, String telefono) {
+			this.nombre = nombre;
+			this.apellidos = apellidos;
+			this.email = email;
+			this.telefono = telefono;
+		}
+
+		/**
+		 * 
+		 * @param nombre
+		 * @param email
+		 * @param telefono
+		 */
+		public Entity (String nombre, String email, String telefono) {
+			this(nombre, null, email, telefono);
+		}
+
+		private String
+		nombre,
+		apellidos,
+		email,
+		telefono;
+	}
 }

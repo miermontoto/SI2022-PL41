@@ -15,7 +15,7 @@ import javax.swing.table.TableModel;
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
-import g41.si2022.util.Dialog;
+import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.Util;
 
 public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Controller<InscribirMultiplesUsuariosView, InscribirMultiplesUsuariosModel> {
@@ -54,7 +54,6 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
     		this.getView().getTxtEmailLogin(),
             this.getView().getTxtEmail(),
             this.getView().getTxtNombre(),
-            this.getView().getTxtApellidos(),
             this.getView().getTxtTelefono(),
             this.getView().getRadioSignin(),
             this.getView().getRadioSignup()
@@ -79,11 +78,9 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
                 break;
             case "sign-up":
                 email = this.getView().getTxtEmail().getText();
-                this.getModel().insertAlumno(
-                    this.getView().getTxtNombre().getText(),
-                    this.getView().getTxtApellidos().getText(),
-                    this.getView().getTxtEmail().getText(),
-                    this.getView().getTxtTelefono().getText()
+                this.getModel().insertAlumnos(
+                		this.getView().getGroup(),
+                		this.getView().getInscritos()
                 );
                 break;
         }
