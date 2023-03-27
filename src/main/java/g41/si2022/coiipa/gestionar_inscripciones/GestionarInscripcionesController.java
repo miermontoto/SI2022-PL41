@@ -45,16 +45,16 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		this.getView().getBtnInsertarPago().addActionListener(e -> handlePagar());
 		this.getView().getChkAll().addActionListener(e -> getListaInscripciones());
 		this.getView().getBtnCancelarInscripcion().addActionListener(e -> handleDevolver());
+		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent evt) { handleSelect(); }
+		}); // FIXME: esto resulta en múltiples queries por selección. Urgente optimizar.
 	}
 
 	@Override
 	public void initVolatileData() {
 		this.getListaInscripciones();
 		setControls(false); // Inicio la vista con todo deshabilitado
-		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent evt) { handleSelect(); }
-		}); // FIXME: esto resulta en múltiples queries por selección. Urgente optimizar.
 		today = getView().getMain().getToday();
 	}
 
