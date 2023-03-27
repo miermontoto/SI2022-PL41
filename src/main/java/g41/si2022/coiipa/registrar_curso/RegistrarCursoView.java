@@ -18,8 +18,8 @@ import javax.swing.ListSelectionModel;
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
 import g41.si2022.ui.components.BetterDatePicker;
-import g41.si2022.ui.components.JLabelFactory;
 import g41.si2022.ui.util.FontType;
+import g41.si2022.ui.util.JLabelFactory;
 import lombok.Getter;
 
 @Getter

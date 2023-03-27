@@ -11,8 +11,8 @@ import java.awt.Insets;
 
 import g41.si2022.coiipa.registrar_curso.RegistrarCursoModel;
 import g41.si2022.ui.SwingMain;
-import g41.si2022.ui.components.JLabelFactory;
 import g41.si2022.ui.util.FontType;
+import g41.si2022.ui.util.JLabelFactory;
 import g41.si2022.util.db.Database;
 import g41.si2022.util.exception.ApplicationException;
 
