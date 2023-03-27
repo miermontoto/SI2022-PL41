@@ -111,13 +111,12 @@ public abstract class View extends javax.swing.JPanel {
 			});
 	}
 	
-	
 	public View (SwingMain main,
 			Class<? extends Model> m,
 			Class<? extends View> v,
 			Class<? extends Controller<? extends View, ? extends Model>> c
 			) {
-		this(main, m, v, c, 2);
+		this(main, m, v, c, 1);
 	}
 	
 	public boolean isViewCreated () {

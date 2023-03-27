@@ -42,6 +42,15 @@ public abstract class DbUtil {
 	}
 
 	/**
+	 * Retorna el ID de la última inserción en la tabla.
+	 * @note NO FUNCIONA! siempre devuelve 0 :)
+	 * @return El ID de la última inserción en la tabla.
+	 */
+	public String getLastInsertedId() {
+		return String.valueOf(this.executeQuerySingle("select last_insert_rowid()"));
+	}
+
+	/**
 	 * Ejecuta una query sql con los parametros especificados mapeando el resultet en una lista de objetos
 	 * de la clase indicada en pojoClass;
 	 * Utiliza apache commons-dbutils para realizar el mapeo y el manejo del resto de aspectos de jdbc

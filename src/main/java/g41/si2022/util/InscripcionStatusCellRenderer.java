@@ -1,4 +1,4 @@
-package g41.si2022.util.renderer;
+package g41.si2022.util;
 
 import java.awt.Color;
 import java.awt.Component;

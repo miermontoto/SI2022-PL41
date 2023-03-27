@@ -28,14 +28,14 @@ import javax.swing.event.MouseInputAdapter;
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
 import g41.si2022.mvc.View;
+import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.panels.Debug;
 import g41.si2022.ui.panels.TabbedFrame;
 import g41.si2022.ui.panels.TabsProfesional;
 import g41.si2022.ui.panels.TabsResponsable;
 import g41.si2022.ui.panels.TabsSecretaria;
-import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.FontType;
-import g41.si2022.util.JLabelFactory;
+import g41.si2022.ui.util.FontType;
+import g41.si2022.ui.util.JLabelFactory;
 import g41.si2022.util.Pair;
 import g41.si2022.util.db.Database;
 
@@ -101,7 +101,7 @@ public class SwingMain {
 
 		total = new JPanel();
 		total.setLayout(new GridBagLayout());
-		
+
 		this.makeNavigation();
 
 		// mainMenu
@@ -132,7 +132,7 @@ public class SwingMain {
 				((View) ((javax.swing.JTabbedPane) pair.getSecond().getComponent()).getSelectedComponent()).initVolatileData();
 			});
 		});
-		
+
 		int i = 1;
 		for(Pair<JButton, TabbedFrame> v : tabbedFrameButtons.values()) {
 			gbc.gridy = i++;
@@ -147,7 +147,7 @@ public class SwingMain {
 
 		frame.getContentPane().add(total);
 	}
-	
+
 	private void makeLogo (GridBagConstraints gbc) {
 		try {
 			gbc.gridx = 2;
@@ -165,7 +165,7 @@ public class SwingMain {
 			});
 		} catch (Exception e) {}
 	}
-	
+
 	private void makeDebug (GridBagConstraints gbc) {
 		gbc.gridx = 0;
 		gbc.gridy = 6;
@@ -177,9 +177,9 @@ public class SwingMain {
 		gbc.gridy = 6;
 		JButton btnDebug = new JButton("Debug menu");
 		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent(), "Debug menu");});
-		mainMenu.add(btnDebug, gbc);	
+		mainMenu.add(btnDebug, gbc);
 	}
-	
+
 	private void makeNavigation () {
 		this.navigation = new JPanel();
 		this.navigation.setLayout(new BorderLayout());

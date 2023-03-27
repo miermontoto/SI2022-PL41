@@ -11,7 +11,7 @@ import java.awt.event.MouseAdapter;
 
 import g41.si2022.dto.FacturaDTO;
 import g41.si2022.ui.SwingUtil;
-import g41.si2022.util.Dialog;
+import g41.si2022.ui.util.Dialog;
 
 public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<RegistrarPagoProfesorView, RegistrarPagoProfesorModel> {
 
@@ -82,7 +82,7 @@ public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<R
 			new String[] {"", "Nombre", "Apellidos", "Curso", "€", "Fecha int.", "Fecha pago"},
 			null));
 		table.removeColumn(table.getColumnModel().getColumn(0));
-		//SwingUtil.autoAdjustColumns(table);
+		SwingUtil.autoAdjustColumns(table);
 	}
 
 	private void eraseControls(boolean eliminarAviso) {

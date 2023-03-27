@@ -16,14 +16,14 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.awt.event.MouseAdapter;
 
-import g41.si2022.util.state.StateUtilities;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
-import g41.si2022.util.Dialog;
+import g41.si2022.ui.util.Dialog;
+import g41.si2022.util.InscripcionStatusCellRenderer;
 import g41.si2022.util.Util;
-import g41.si2022.util.renderer.InscripcionStatusCellRenderer;
 import g41.si2022.util.state.CursoState;
 import g41.si2022.util.state.InscripcionState;
+import g41.si2022.util.state.StateUtilities;
 
 public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<GestionarInscripcionesView, GestionarInscripcionesModel> {
 
@@ -45,16 +45,16 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		this.getView().getBtnInsertarPago().addActionListener(e -> handlePagar());
 		this.getView().getChkAll().addActionListener(e -> getListaInscripciones());
 		this.getView().getBtnCancelarInscripcion().addActionListener(e -> handleDevolver());
+		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent evt) { handleSelect(); }
+		}); // FIXME: esto resulta en múltiples queries por selección. Urgente optimizar.
 	}
 
 	@Override
 	public void initVolatileData() {
 		this.getListaInscripciones();
 		setControls(false); // Inicio la vista con todo deshabilitado
-		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent evt) { handleSelect(); }
-		}); // FIXME: esto resulta en múltiples queries por selección. Urgente optimizar.
 		today = getView().getMain().getToday();
 	}
 

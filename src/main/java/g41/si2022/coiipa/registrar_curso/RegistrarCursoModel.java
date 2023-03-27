@@ -25,19 +25,25 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	public String insertCurso(
 			String nombre, String descripcion, String coste,
 			String inscrStart, String inscrEnd, String start, String end,
-			String plazas, String localizacion) {
-		String sql = "INSERT INTO curso (nombre, descripcion, coste, start_inscr, end_inscr, plazas, start, end, localizacion) "
-						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String plazas) {
+		String sql = "INSERT INTO curso (nombre, descripcion, coste, start_inscr, end_inscr, plazas, start, end) "
+						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		this.getDatabase().executeUpdate(sql,
 				nombre, descripcion, coste,
-				inscrStart, inscrEnd, plazas, start, end, localizacion);
+				inscrStart, inscrEnd, plazas, start, end);
+		//return getDatabase().getLastInsertedId();
 		return String.valueOf(this.getDatabase().executeQuerySingle("select id from curso"
 		 + " where nombre = ? and start_inscr = ? and start = ? and coste = ? and plazas = ?",
 		  nombre, inscrStart, start, coste, plazas));
 	}
 
-	public void insertDocencia (String remuneracion, String profesor_id, String curso_id) {
+	public void insertDocencia(String remuneracion, String profesor_id, String curso_id) {
 		String sql = "INSERT INTO docencia (remuneracion, docente_id, curso_id) VALUES (?, ?, ?)";
 		this.getDatabase().executeUpdate(sql, remuneracion, profesor_id, curso_id);
 	}
+
+    public void insertEvento(String loc, String fecha, String horaIni, String horaFin, String cursoId) {
+		String sql = "INSERT INTO evento (loc, fecha, hora_ini, hora_fin, curso_id) VALUES (?, ?, ?, ?, ?)";
+		this.getDatabase().executeUpdate(sql, loc, fecha, horaIni, horaFin, cursoId);
+    }
 }
