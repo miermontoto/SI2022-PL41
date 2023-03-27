@@ -149,6 +149,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
             if (eventos.isEmpty()) txtLugar.setText("N/A");
             else {
                 for(EventoDTO evento : eventos) {
+                    if (txtLugar.getText().contains(", " + evento.getLoc() + ",")) continue;
                     if(!first) txtLugar.setText(txtLugar.getText() + ", ");
                     else first = false;
                     txtLugar.setText(txtLugar.getText() + evento.getLoc());

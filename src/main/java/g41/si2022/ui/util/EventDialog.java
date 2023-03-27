@@ -2,6 +2,7 @@ package g41.si2022.ui.util;
 
 import java.awt.GridBagConstraints;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -10,6 +11,7 @@ import javax.swing.JTextField;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.github.lgooddatepicker.components.TimePicker;
+import com.github.lgooddatepicker.components.TimePickerSettings;
 
 import g41.si2022.ui.components.BetterDatePicker;
 
@@ -64,17 +66,18 @@ public class EventDialog extends javax.swing.JDialog {
         return inputStartHour.getText();
     }
 
-    public String getDuration() {
-        String start = inputStartHour.getText();
-        String end = inputEndHour.getText();
-        double diff = Double.parseDouble(end.substring(0, 2)) - Double.parseDouble(start.substring(0, 2));
-        return String.valueOf(diff);
+    public String getEnd() {
+        return inputEndHour.getText();
     }
 
     private void initComponents() {
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setResizable(false);
         this.setSize(400, 250);
+
+        TimePickerSettings tps = new TimePickerSettings();
+        tps.use24HourClockFormat();
+        tps.generatePotentialMenuTimes(TimePickerSettings.TimeIncrement.FifteenMinutes, LocalTime.parse("09:00"), LocalTime.parse("21:00"));
 
         this.setLayout(new java.awt.GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -105,7 +108,7 @@ public class EventDialog extends javax.swing.JDialog {
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.LINE_END;
-        inputStartHour = new TimePicker();
+        inputStartHour = new TimePicker(tps);
         this.add(inputStartHour, gbc);
 
         gbc.gridx = 0;
@@ -115,7 +118,7 @@ public class EventDialog extends javax.swing.JDialog {
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.LINE_END;
-        inputEndHour = new TimePicker();
+        inputEndHour = new TimePicker(tps);
         this.add(inputEndHour, gbc);
 
         okButton = new JButton("Aceptar");
@@ -160,31 +163,34 @@ public class EventDialog extends javax.swing.JDialog {
     }
 
     private void checkValidity() {
+        if(inputStartHour.getTime() != null && inputEndHour.getTime() != null) {
+            if (inputEndHour.getTime().isBefore(inputStartHour.getTime()) ||
+                    inputStartHour.getTime().equals(inputEndHour.getTime())) {
+                okButton.setEnabled(false);
+                Dialog.showError("Rango horario inválido");
+                inputEndHour.setTime(null);
+                return;
+            }
+        }
+
+        if(inputDate.getDate() != null) {
+            if (inputDate.getDate().isBefore(startDate)) {
+                okButton.setEnabled(false);
+                Dialog.showError("Fecha de inicio fuera de rango.");
+                inputDate.setDate(null);
+                return;
+            }
+
+            if(inputDate.getDate().isAfter(endDate) || inputDate.getDate().isBefore(startDate)) {
+                okButton.setEnabled(false);
+                Dialog.showError("Fecha fuera de rango.");
+                inputDate.setDate(null);
+                return;
+            }
+        }
+
         if(inputLocation.getText().isEmpty() || inputDate.getDate() == null || inputStartHour.getText().isEmpty() || inputEndHour.getText().isEmpty()) {
             okButton.setEnabled(false);
-            return;
-        }
-
-        if(inputStartHour.getTime().isBefore(inputEndHour.getTime()) || inputStartHour.getTime().equals(inputEndHour.getTime())) {
-            okButton.setEnabled(false);
-            Dialog.showError("Rango horario inválido");
-            return;
-        }
-
-        System.out.println(startDate.toString());
-        System.out.println(inputDate.getDate().toString());
-        System.out.println(endDate.toString());
-
-        if(inputDate.getDate().isBefore(startDate)) {
-            okButton.setEnabled(false);
-            Dialog.showError("Fecha de inicio fuera de rango.");
-            return;
-        }
-
-        if(inputDate.getDate().isAfter(endDate) || inputDate.getDate().isBefore(startDate)) {
-            okButton.setEnabled(false);
-            Dialog.showError("Fecha fuera de rango.");
-            inputDate.setDate(null);
             return;
         }
 

@@ -95,10 +95,16 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 			start = getView().getDateCursoStart(),
 			end = getView().getDateCursoEnd();
 
+		JTable table = getView().getTableEventos();
+
 		btnAdd.addActionListener( (e) -> { // Add new event listener
 			EventDialog ed = new EventDialog(start.getDate(), end.getDate());
 			if(ed.showDialog()) {
-				eventos.add(new EventoDTO(ed.getLoc(), ed.getDate(), ed.getStart(), ed.getDuration()));
+				eventos.add(new EventoDTO(ed.getLoc(), ed.getDate(), ed.getStart(), ed.getEnd()));
+				table.setModel(SwingUtil.getTableModelFromPojos(eventos,
+					new String[] {"loc", "fecha", "horaIni", "horaFin"},
+					new String[] {"Localizacion", "Fecha", "Hora de inicio", "Hora de fin"},
+					null));
 				btnRemove.setEnabled(true);
 			}
 		});
@@ -271,7 +277,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 			SwingUtil.getTableModelFromPojos(
 				this.sup.get(),
 				new String[] { "dni", "nombre", "apellidos", "email", "direccion", "remuneracion" },
-				new String[] { "DNI", "Nombre", "Apellidos", "email", "Dirección", "Remuneración" },
+				new String[] { "DNI", "Nombre", "Apellidos", "Email", "Dirección", "Remuneración" },
 				new HashMap<Integer, Pattern> () {
 					{ put(5, Pattern.compile("\\d+(\\.\\d+)?")); }
 				}
@@ -296,7 +302,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				getView().getTxtPlazas().getText());
 
 		docentes.forEach((x) -> getModel().insertDocencia(x.getRemuneracion(), x.getId(), idCurso));
-		eventos.forEach((e) -> getModel().insertEvento(e.getLoc(), e.getFecha(), e.getHora(), e.getDuracion(), idCurso));
+		eventos.forEach((e) -> getModel().insertEvento(e.getLoc(), e.getFecha(), e.getHoraIni(), e.getHoraFin(), idCurso));
 
 		Dialog.show("Curso registrado con éxito.");
 	}
