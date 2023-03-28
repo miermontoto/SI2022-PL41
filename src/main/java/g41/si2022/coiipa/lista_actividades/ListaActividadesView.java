@@ -1,5 +1,11 @@
 package g41.si2022.coiipa.lista_actividades;
 
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -7,6 +13,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import org.jdesktop.swingx.JXComboBox;
+import org.jdesktop.swingx.JXTextArea;
+import org.jdesktop.swingx.JXTitledPanel;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,7 +25,7 @@ import java.awt.Insets;
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.components.BetterDatePicker;
-import g41.si2022.ui.components.JLabelFactory;
+import g41.si2022.ui.util.JLabelFactory;
 import g41.si2022.util.state.CursoState;
 import lombok.Getter;
 
@@ -26,9 +35,10 @@ public class ListaActividadesView extends View {
     private static final long serialVersionUID = 1L;
     private JTable tablaCursos;
     private JComboBox<CursoState> cbFiltro;
-    private JLabel txtDescripcion;
-    private JLabel txtProfesor;
-    private JLabel txtLugar;
+    private JXTextArea infoDescripcion;
+    private JXComboBox infoProfesores;
+    private JXComboBox infoLocalizaciones;
+    private JTable tableEventos;
     private BetterDatePicker startDate, endDate;
 
     public ListaActividadesView(SwingMain main) {
@@ -39,70 +49,75 @@ public class ListaActividadesView extends View {
     protected void initView() {
         this.setLayout(new BorderLayout());
 
-        // ------------- main.BorderLayout.NORTH -------------
-        JPanel mainNorthPanel = new JPanel(new BorderLayout());
-
-        // Elements of mainNnorthPanel
-        JLabel lblCursos = JLabelFactory.getLabel("Cursos:");
         tablaCursos = new JTable();
         tablaCursos.setDefaultEditor(Object.class, null);
 		tablaCursos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrCursos = new JScrollPane(tablaCursos);
 
-        this.add(mainNorthPanel, BorderLayout.NORTH);
-
-        // centerPanel (BorderLayout.CENTER) with label and table
-        JPanel centerPanel = new JPanel(new BorderLayout());
-
-        // eastPanel's elements
         JLabel lblFiltro = JLabelFactory.getLabel("Filtrar por:");
         cbFiltro = new JComboBox<CursoState>();
 
-        JPanel anotherNorthPanel = new JPanel(new GridLayout());
+        JPanel filterPanel = new JPanel(new GridLayout());
 
         // Add elements to centerPanel
-        anotherNorthPanel.add(lblFiltro);
-        anotherNorthPanel.add(cbFiltro);
-        anotherNorthPanel.add(startDate = new BetterDatePicker());
-        anotherNorthPanel.add(endDate = new BetterDatePicker());
-        centerPanel.add(anotherNorthPanel, BorderLayout.NORTH);
-        centerPanel.add(lblCursos, BorderLayout.CENTER);
-        centerPanel.add(scrCursos, BorderLayout.CENTER);
+        filterPanel.add(lblFiltro);
+        filterPanel.add(cbFiltro);
+        filterPanel.add(startDate = new BetterDatePicker());
+        filterPanel.add(endDate = new BetterDatePicker());
 
         // Add elements to mainNorthPanel
-        mainNorthPanel.add(centerPanel, BorderLayout.NORTH);
+        this.add(filterPanel, BorderLayout.NORTH);
+        this.add(scrCursos, BorderLayout.CENTER);
 
         // ------------- main.BorderLayout.CENTER -------------
-        JPanel mainCenterPanel = new JPanel(new GridBagLayout());
+        JPanel infoPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
         // Elements of mainCenterPanel
-        txtDescripcion = JLabelFactory.empty();
-        txtLugar = JLabelFactory.empty();
-        txtProfesor = JLabelFactory.empty();
+        infoDescripcion = new JXTextArea("N/A");
+        infoLocalizaciones = new JXComboBox();
+        infoProfesores = new JXComboBox();
 
         // Add elements to mainCenterPanel
         gbc.insets = new Insets(5, 1, 5, 1);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.LINE_START;
-        mainCenterPanel.add(JLabelFactory.getLabel("Descripción del curso:"), gbc);
+        infoPanel.add(JLabelFactory.getLabel("Descripción:"), gbc);
         gbc.gridy = 1;
-        mainCenterPanel.add(JLabelFactory.getLabel("Localizaciones:"), gbc);
+        infoPanel.add(JLabelFactory.getLabel("Localizaciones:"), gbc);
         gbc.gridy = 2;
-        mainCenterPanel.add(JLabelFactory.getLabel("Docentes:"), gbc);
+        infoPanel.add(JLabelFactory.getLabel("Docentes:"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
         //gbc.anchor = GridBagConstraints.LINE_END;
-        mainCenterPanel.add(txtDescripcion, gbc);
+        infoPanel.add(infoDescripcion, gbc);
+        infoDescripcion.setEditable(false);
         gbc.gridy = 1;
-        mainCenterPanel.add(txtLugar, gbc);
+        infoPanel.add(infoLocalizaciones, gbc);
         gbc.gridy = 2;
-        mainCenterPanel.add(txtProfesor, gbc);
+        infoPanel.add(infoProfesores, gbc);
 
-        // Add mainCenterPanel to this
-        this.add(mainCenterPanel, BorderLayout.CENTER);
+        JPanel eventosPanel = new JPanel(new BorderLayout());
+        tableEventos = new JTable();
+        tableEventos.setDefaultEditor(Object.class, null);
+        tableEventos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrEventos = new JScrollPane(tableEventos);
+        eventosPanel.add(scrEventos, BorderLayout.CENTER);
+        eventosPanel.add(JLabelFactory.getLabel("Eventos:"), BorderLayout.NORTH);
+
+        JXTitledPanel eventosTitledPanel = new JXTitledPanel("Eventos", eventosPanel);
+        eventosTitledPanel.setContentContainer(scrEventos);
+
+        JXTitledPanel infoTitledPanel = new JXTitledPanel("Información del curso", infoPanel);
+        infoTitledPanel.setContentContainer(infoPanel);
+
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
+        bottomPanel.add(infoTitledPanel);
+        bottomPanel.add(eventosTitledPanel);
+        bottomPanel.setPreferredSize(new java.awt.Dimension(SwingMain.WINDOW_WIDTH, 200));
+        this.add(bottomPanel, BorderLayout.SOUTH);
     }
 
 }

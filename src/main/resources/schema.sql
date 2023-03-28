@@ -86,9 +86,9 @@ create table factura (
 create table evento (
     id integer primary key autoincrement,
     fecha date not null,
-    hora time not null,
+    hora_ini time not null,
+    hora_fin time not null,
     loc text not null,
-    duracion float not null,
     curso_id integer not null,
     foreign key (curso_id) references curso(id)
 );

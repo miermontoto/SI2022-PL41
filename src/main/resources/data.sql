@@ -107,6 +107,6 @@ insert into factura (fecha_introd, fecha_pago, docencia_id) values
     ('2022-09-15', '2022-09-15', 3), ('2022-09-15', '2022-09-15', 4),
     ('2022-09-15', '', 5), ('2022-09-15', '', 6);
 
-insert into evento (fecha, hora, loc, duracion, curso_id) values
-    ('2023-06-21', '18:00:00', 'Aula AN-B6', '1.0', '3'),
-    ('2023-06-25', '10:00:00', 'Aula AN-S4', '1.5', '3');
+insert into evento (fecha, hora_ini, hora_fin, loc, curso_id) values
+    ('2023-06-21', '18:00:00', '19:00:00', 'Aula AN-B6', '3'),
+    ('2023-06-25', '10:00:00', '11:00:00', 'Aula AN-S4', '3');

@@ -5,8 +5,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -20,9 +18,9 @@ import javax.swing.ListSelectionModel;
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
 import g41.si2022.ui.components.BetterDatePicker;
-import g41.si2022.ui.components.JLabelFactory;
 import g41.si2022.ui.util.FontType;
-import g41.si2022.dto.EventoDTO;
+import g41.si2022.ui.util.JLabelFactory;
+
 import lombok.Getter;
 
 @Getter
@@ -173,7 +171,6 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				left.fill = GridBagConstraints.BOTH;
 				left.weighty = 1;
 				centerPanel.add(JLabelFactory.getLabel("Eventos:"), left);
-
 			}
 			right.gridy = 6;
 			right.fill = GridBagConstraints.BOTH;
@@ -232,6 +229,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			this.dateCursoStart,
 			this.dateCursoEnd,
 			this.txtCoste,
+			this.tableEventos,
 			this.tableProfesores
 		};
 	}

@@ -15,8 +15,8 @@ import lombok.Getter;
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.components.BetterDatePicker;
-import g41.si2022.ui.components.JLabelFactory;
 import g41.si2022.ui.util.FontType;
+import g41.si2022.ui.util.JLabelFactory;
 
 import javax.swing.JCheckBox;
 
