@@ -1,5 +1,6 @@
 package g41.si2022.coiipa.registrar_curso;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -18,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableModel;
 
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 
@@ -32,7 +34,7 @@ import g41.si2022.util.exception.UnexpectedException;
 public class RegistrarCursoController extends g41.si2022.mvc.Controller<RegistrarCursoView, RegistrarCursoModel> {
 
 	private Map<String, ProfesorDTO> profesoresMap;
-	private List<EventoDTO> eventos;
+	private LinkedList<EventoDTO> eventos;
 
 	private final java.util.function.Supplier <List<ProfesorDTO>> sup = () -> {
 		java.util.ArrayList<ProfesorDTO> out = new java.util.ArrayList<ProfesorDTO> ();
@@ -43,7 +45,12 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	public RegistrarCursoController(RegistrarCursoView v, RegistrarCursoModel m) {
 		super(v, m);
 		profesoresMap = new HashMap<>();
-		eventos = new ArrayList<>();
+		eventos = new LinkedList<>();
+	}
+
+	@Override
+	public void initVolatileData() {
+		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
 	}
 
 	@Override
@@ -52,7 +59,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		getView().getBtnRegistrar().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> insertCurso()));
 		loadDateListeners();
 		loadTextAreaListeners();
-		loadCheckListeners();
 		loadValidateListeners();
 		loadEventListeners();
 		getView().getBtnRegistrar().setEnabled(false);
@@ -98,23 +104,27 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		JTable table = getView().getTableEventos();
 
 		btnAdd.addActionListener( (e) -> { // Add new event listener
-			EventDialog ed = new EventDialog(start.getDate(), end.getDate());
+			EventDialog ed;
+			if(eventos.isEmpty()) ed = new EventDialog(start.getDate(), end.getDate());
+			else ed = new EventDialog(start.getDate(), end.getDate(), eventos.getLast());
+
 			if(ed.showDialog()) {
-				eventos.add(new EventoDTO(ed.getLoc(), ed.getDate(), ed.getStart(), ed.getEnd()));
+				eventos.addAll(ed.getEventos());
 				table.setModel(SwingUtil.getTableModelFromPojos(eventos,
 					new String[] {"loc", "fecha", "horaIni", "horaFin"},
 					new String[] {"Localizacion", "Fecha", "Hora de inicio", "Hora de fin"},
 					null));
-				btnRemove.setEnabled(true);
 			}
 		});
 
 		btnRemove.addActionListener( (e) -> {
-			int row = getView().getTableEventos().getSelectedRow();
-			if(row != -1) {
-				eventos.remove(row);
-				if(eventos.size() == 0) btnRemove.setEnabled(false);
-			} else Dialog.showError("Evento seleccionado desconocido");
+			int[] rows = table.getSelectedRows();
+			for(int i = 0; i < rows.length; i++) {
+				eventos.remove(rows[i]);
+				((DefaultTableModel) table.getModel()).removeRow(rows[i]);
+				for(int j = i; j < rows.length; j++) if(rows[j] > rows[i]) rows[j]--;
+			}
+			btnRemove.setEnabled(false);
 		});
 
 		for(BetterDatePicker dp : new BetterDatePicker[] {start, end}) { // Check for date validity beofre allowing to add events
@@ -122,6 +132,13 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				btnAdd.setEnabled(start.getDate() != null && end.getDate() != null);
 			});
 		}
+
+		table.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				btnRemove.setEnabled(table.getSelectedRows().length > 0);
+			}
+		});
 
 		btnAdd.setEnabled(false);
 		btnRemove.setEnabled(false);
@@ -136,30 +153,13 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 					@Override
 					public void keyReleased(KeyEvent e) { checkValidity(); }
 				});
-			}
-		}
-	}
-
-	@Override
-	public void initVolatileData() {
-		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
-	}
-
-	private void loadCheckListeners() {
-		for(JComponent jc : getView().getFocusableComponents()) {
-			if (jc instanceof JTextField) {
-				JTextField tf = (JTextField) jc;
-				tf.addKeyListener(new KeyAdapter() {
-
+			} else if (c instanceof JTable) {
+				((JTable) c).addMouseListener(new java.awt.event.MouseAdapter() {
 					@Override
-					public void keyReleased(KeyEvent e) {
-						checkValidity();
-					}
-
+					public void mouseClicked(java.awt.event.MouseEvent e) { checkValidity(); }
 				});
-			} else if (jc instanceof BetterDatePicker) {
-				BetterDatePicker dp = (BetterDatePicker) jc;
-				dp.addDateChangeListener((e) -> checkValidity());
+
+				( (JTable) c).getModel().addTableModelListener((e) -> checkValidity());
 			}
 		}
 	}
@@ -181,6 +181,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				}
 			}
 		}
+		valid &= !eventos.isEmpty();
 		getView().getBtnRegistrar().setEnabled(valid);
 	}
 
