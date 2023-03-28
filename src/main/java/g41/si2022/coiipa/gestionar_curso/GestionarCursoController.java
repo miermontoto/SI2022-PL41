@@ -1,5 +1,7 @@
 package g41.si2022.coiipa.gestionar_curso;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
@@ -13,6 +15,7 @@ import javax.swing.table.TableModel;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
+import g41.si2022.util.state.CursoState;
 
 public class GestionarCursoController extends g41.si2022.mvc.Controller<GestionarCursoView, GestionarCursoModel> {
 
@@ -26,21 +29,26 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
 		super(myTab, myModel);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void initNonVolatileData() {
-		// TODO Auto-generated method stub
-
+		// Acción del botón para cancelar cursos
+		this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Obtener el curso seleccionado
+				CursoDTO selectedCurso = getModel().getCurso(String.valueOf(idCurso));
+				// Modificar estado del curso a CANCELADO
+				selectedCurso.setEstado(CursoState.CANCELADO);
+				System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
+			}
+		});
 	}
 
 	@Override
 	public void initVolatileData() {
-		// TODO Auto-generated method stub
 		this.initThings();
 		this.updateTables();
-
 	}
 
 	public void initThings() {
@@ -73,7 +81,6 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		fechaCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 4).toString();
 
 		//DEBUG
-
 		System.out.printf("ID: %s, nombre: %s, fecha del curso: %s, fecha de inscripciones: %s \n", idCurso, nombreCurso, fechaCurso, fechaInscripciones);
 
 		if(idCurso == -1) { //Lo que se ha seleccionado está mal.

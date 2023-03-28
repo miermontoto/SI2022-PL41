@@ -27,4 +27,10 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model{
 		
 	}
 
+	public CursoDTO getCurso(String idCurso) {
+
+		String sql = "SELECT * FROM curso where id = ?";
+
+		return (CursoDTO) this.getDatabase().executeQuerySingle(sql, idCurso);
+	}
 }
