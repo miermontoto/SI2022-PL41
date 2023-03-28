@@ -36,6 +36,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	private Map<String, ProfesorDTO> profesoresMap;
 	private LinkedList<EventoDTO> eventos;
 
+
 	private final java.util.function.Supplier <List<ProfesorDTO>> sup = () -> {
 		java.util.ArrayList<ProfesorDTO> out = new java.util.ArrayList<ProfesorDTO> ();
 		out.addAll(RegistrarCursoController.this.profesoresMap.values());
@@ -51,6 +52,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	@Override
 	public void initVolatileData() {
 		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
+
 	}
 
 	@Override

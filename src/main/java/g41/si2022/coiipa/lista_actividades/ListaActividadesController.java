@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -20,7 +21,6 @@ import g41.si2022.dto.EventoDTO;
 import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.state.CursoState;
-
 
 public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaActividadesView, ListaActividadesModel> {
 
@@ -175,7 +175,9 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
                     locs.add(evento.getLoc());
                     comboLocs.addItem(evento.getLoc());
                 }
+
             }
+
         }
     }
 

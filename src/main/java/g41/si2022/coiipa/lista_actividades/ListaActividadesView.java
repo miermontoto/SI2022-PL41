@@ -16,6 +16,11 @@ import javax.swing.ListSelectionModel;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTextArea;
 import org.jdesktop.swingx.JXTitledPanel;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
