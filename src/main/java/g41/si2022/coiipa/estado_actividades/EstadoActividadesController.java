@@ -15,8 +15,8 @@ import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import g41.si2022.util.InscripcionStatusCellRenderer;
 import g41.si2022.util.exception.ApplicationException;
-import g41.si2022.util.renderer.InscripcionStatusCellRenderer;
 import g41.si2022.util.state.StateUtilities;
 
 public class EstadoActividadesController extends g41.si2022.mvc.Controller<EstadoActividadesView, EstadoActividadesModel> {

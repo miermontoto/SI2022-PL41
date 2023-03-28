@@ -16,14 +16,14 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.awt.event.MouseAdapter;
 
-import g41.si2022.util.state.StateUtilities;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
-import g41.si2022.util.Dialog;
+import g41.si2022.ui.util.Dialog;
+import g41.si2022.util.InscripcionStatusCellRenderer;
 import g41.si2022.util.Util;
-import g41.si2022.util.renderer.InscripcionStatusCellRenderer;
 import g41.si2022.util.state.CursoState;
 import g41.si2022.util.state.InscripcionState;
+import g41.si2022.util.state.StateUtilities;
 
 public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<GestionarInscripcionesView, GestionarInscripcionesModel> {
 

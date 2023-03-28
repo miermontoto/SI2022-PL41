@@ -5,12 +5,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-
-import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.JLabelFactory;
-import g41.si2022.util.state.CursoState;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -20,6 +15,9 @@ import java.awt.Insets;
 
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
+import g41.si2022.ui.components.BetterDatePicker;
+import g41.si2022.ui.components.JLabelFactory;
+import g41.si2022.util.state.CursoState;
 import lombok.Getter;
 
 @Getter

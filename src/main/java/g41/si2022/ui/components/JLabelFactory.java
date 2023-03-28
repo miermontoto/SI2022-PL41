@@ -1,7 +1,9 @@
-package g41.si2022.util;
+package g41.si2022.ui.components;
 
 import java.awt.Font;
 import javax.swing.JLabel;
+
+import g41.si2022.ui.util.FontType;
 
 /**
  * Factory Method used to generate new {@link JLabel}.

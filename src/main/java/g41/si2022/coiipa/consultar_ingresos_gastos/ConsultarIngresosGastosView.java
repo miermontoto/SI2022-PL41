@@ -9,9 +9,9 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
-import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.FontType;
-import g41.si2022.util.JLabelFactory;
+import g41.si2022.ui.components.BetterDatePicker;
+import g41.si2022.ui.components.JLabelFactory;
+import g41.si2022.ui.util.FontType;
 import g41.si2022.util.state.CursoState;
 
 public class ConsultarIngresosGastosView extends g41.si2022.mvc.View {
@@ -39,8 +39,6 @@ public class ConsultarIngresosGastosView extends g41.si2022.mvc.View {
 	@Override
 	protected void initView () {
 		this.setLayout(new BorderLayout());
-		// Title
-		this.add(JLabelFactory.getLabel(FontType.title, "Ingresos y Gastos"), BorderLayout.NORTH);
 
 		JPanel mainPanel = new JPanel (new BorderLayout());
 		{ // Main Panel
@@ -65,7 +63,7 @@ public class ConsultarIngresosGastosView extends g41.si2022.mvc.View {
 					sp.setViewportView(this.movimientos);
 					tablePanel.add(sp);
 				} { // Message
-					offsetTablePanel.add(JLabelFactory.getLabel(FontType.normal,
+					offsetTablePanel.add(JLabelFactory.getLabel(FontType.subtitle,
 							"De los anteriores cursos, estos han recibido ingresos/gastos fuera de las fechas filtradas."),
 							BorderLayout.NORTH);
 				} { // Offset Table

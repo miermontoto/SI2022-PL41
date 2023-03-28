@@ -1,4 +1,6 @@
-package g41.si2022.util;
+package g41.si2022.ui.util;
+
+import g41.si2022.ui.components.JLabelFactory;
 
 /**
  *

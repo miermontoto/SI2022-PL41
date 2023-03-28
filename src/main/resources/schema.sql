@@ -7,9 +7,9 @@ drop table if exists inscripcioncancelada;
 drop table if exists alumno;
 drop table if exists docente;
 drop table if exists docencia;
-drop table if exists clase;
 drop table if exists pago;
 drop table if exists factura;
+drop table if exists evento;
 
 create table curso (
     id integer primary key autoincrement,
@@ -20,8 +20,7 @@ create table curso (
     end_inscr date not null,
     plazas integer not null,
     start date not null,
-    end date not null,
-    localizacion text
+    end date not null
 );
 
 create table inscripcion (
@@ -82,4 +81,14 @@ create table factura (
     fecha_pago date,
     docencia_id integer not null,
     foreign key (docencia_id) references docencia(id)
+);
+
+create table evento (
+    id integer primary key autoincrement,
+    fecha date not null,
+    hora time not null,
+    loc text not null,
+    duracion float not null,
+    curso_id integer not null,
+    foreign key (curso_id) references curso(id)
 );
