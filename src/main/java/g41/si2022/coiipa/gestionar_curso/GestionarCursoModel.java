@@ -12,6 +12,8 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model{
 				+ " ,curso.end_inscr "
 				+ " ,curso.start "
 				+ " ,curso.end"
+				+ " ,curso.plazas"
+				+ " ,curso.plazas - count(inscripcion.id) as plazas_libres"
 				+ " FROM curso "
 				+ " LEFT JOIN docencia ON curso.id = docencia.curso_id " // Change for INNER JOIN. To do this, INSERT INTO docencia when creating a new course
 				+ " LEFT JOIN inscripcion ON inscripcion.curso_id = curso.id "

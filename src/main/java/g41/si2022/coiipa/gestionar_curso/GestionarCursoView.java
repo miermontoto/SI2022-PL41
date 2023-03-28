@@ -44,6 +44,9 @@ public class GestionarCursoView extends View {
 	//Datepicker para cambiar la fecha del curso y de las inscripciones
 	private DatePicker datePickerNewDateCurso;
 	private DatePicker datePickerNewDateInscripciones;
+	private DatePicker datePickerNewDateFinCurso;
+	private DatePicker datePickerNewDateFinInscripciones;
+
 	
 	private JFormattedTextField txtImporte;
 	private JPanel panel;
@@ -135,6 +138,16 @@ public class GestionarCursoView extends View {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
 		retrasarPanelContent.add(datePickerNewDateCurso = new DatePicker(), gbc);
+		
+		gbc.insets = spacer;
+		gbc.gridy = 3;
+		retrasarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nueva fecha de fin del curso"), gbc);
+
+		gbc.insets = next;
+		gbc.gridy = 4;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		retrasarPanelContent.add(datePickerNewDateFinCurso = new DatePicker(), gbc);
 
 		gbc.insets = spacer;
 		gbc.gridy = 5;
@@ -148,9 +161,23 @@ public class GestionarCursoView extends View {
 		gbc.weightx = 1.0;
 		gbc.anchor = GridBagConstraints.CENTER;
 		retrasarPanelContent.add(datePickerNewDateInscripciones = new DatePicker(), gbc);
+		
+		gbc.insets = spacer;
+		gbc.gridy = 5;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.weightx = 0.0;
+		retrasarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nueva fecha para el fin de inscripciones"), gbc);
+
+		gbc.insets = next;
+		gbc.gridy = 6;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.CENTER;
+		retrasarPanelContent.add(datePickerNewDateFinInscripciones = new DatePicker(), gbc);
 
 		gbc.insets = spacer;
 		gbc.gridy = 7;
+		gbc.weightx = 1.0;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.CENTER;
 		retrasarPanelContent.add(btnCambiarFechas = new JButton("Cambiar fechas"), gbc);
