@@ -1,20 +1,23 @@
 package g41.si2022.ui.components;
 
 import javax.swing.table.DefaultTableModel;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public class RowAppendableJTable extends javax.swing.JTable {
 
 	private static final long serialVersionUID = 1L;
 
 	private String[] columnNames;
-	private java.util.Map<Integer, java.util.regex.Pattern> columnMatchers;
+	private Map<Integer, Pattern> columnMatchers;
 
-	public RowAppendableJTable (String[] columnNames) {
+	public RowAppendableJTable (String[] columnNames, Map<Integer, Pattern> columnMatchers) {
 		super();
 		this.columnNames = columnNames;
+		this.columnMatchers = columnMatchers;
 		// FIXME: Column Names are not displayed
 		//		  (Check g41.si2022.coiipa.inscribir_multiples_usuarios.InscribirMultiplesUsuariosView.java)
-		DefaultTableModel tm = new DefaultTableModel(this.columnNames, 1) {
+		javax.swing.table.TableModel tm = new DefaultTableModel(this.columnNames, 0) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -31,15 +34,21 @@ public class RowAppendableJTable extends javax.swing.JTable {
 			if (row == this.getRowCount() - 1) {
 				boolean emptyCell = false;
 				for (int i = 0 ; i < this.getColumnCount() && !emptyCell ; i++)
-					if (this.getValueAt(row, i) == null || this.getValueAt(row, i).equals("")) emptyCell = true;
+					if (this.getValueAt(row, i) == null || this.getValueAt(row, i).equals("") || this.getValueAt(row,  i).equals(columnNames[i]))
+						emptyCell = true;
 				if (!emptyCell) {
 					// Add a new empty row to the table when the last row is edited
 					String[] emptyRow = new String[this.columnNames.length];
-					for (int i = 0 ; i < this.columnNames.length ; i++) emptyRow[i] = "";
+					for (int i = 0 ; i < this.columnNames.length ; i++) emptyRow[i] = columnNames[i];
 					((DefaultTableModel) this.getModel()).addRow(emptyRow);
 				}
 			}
 		});	
+		((DefaultTableModel)tm).addRow(columnNames);
 		this.setModel(tm);
+	}
+	
+	public RowAppendableJTable (String[] columnNames) {
+		this(columnNames, null);
 	}
 }
