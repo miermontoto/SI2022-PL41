@@ -2,7 +2,7 @@
 \[[proyecto base original](https://github.com/javiertuya/samples-test-dev)\] |
 \[[redkanban](https://in2test.lsi.uniovi.es/redkanban/)\] |
 \[[teams doc](https://unioviedo.sharepoint.com/sites/CV22_SistemasdeInformacinGradoenIngenieraInformticaenTecnolo-SI2022-PL41/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fsites%2FCV22%5FSistemasdeInformacinGradoenIngenieraInformticaenTecnolo%2DSI2022%2DPL41%2FDocumentos%20compartidos%2FSI2022%2DPL41&p=true&ga=1)\] |
-\[[modelo de dominio](src/main/resources/mod_dominio.md)\]
+\[[Documentacion](/docs/SI2022-PL41.md)\]
 
  
 ## instalar (temporal)
