@@ -38,10 +38,13 @@ public class GestionarCursoView extends View {
 	//private JLabel lblInfoDias;
 	private JLabel lblFechaCurso;
 	private JLabel lblDevolverCalculo;
-	private JButton btnInsertarPago;
+	private JButton btnCambiarFechas;
 	private JButton btnCancelarInscripcion;
 
-	private DatePicker datePicker;
+	//Datepicker para cambiar la fecha del curso y de las inscripciones
+	private DatePicker datePickerNewDateCurso;
+	private DatePicker datePickerNewDateInscripciones;
+	
 	private JFormattedTextField txtImporte;
 	private JPanel panel;
 	private JCheckBox chkAll;
@@ -57,15 +60,15 @@ public class GestionarCursoView extends View {
 		JPanel handlePanel = new JPanel();
 		handlePanel.setLayout(new GridLayout(3, 1));
 
-		JXTitledPanel pagarPanel = new JXTitledPanel("Registrar pagos");
+		JXTitledPanel retrasarPanel = new JXTitledPanel("Cambiar fechas");
 		JXTitledPanel devolverPanel = new JXTitledPanel("Registrar devolución");
 		JXTitledPanel infoPanel = new JXTitledPanel("Información del curso");
 
-		JPanel pagarPanelContent = new JPanel();
+		JPanel retrasarPanelContent = new JPanel();
 		JPanel devolverPanelContent = new JPanel();
 		JPanel infoPanelContent = new JPanel();
 
-		pagarPanel.setContentContainer(pagarPanelContent);
+		retrasarPanel.setContentContainer(retrasarPanelContent);
 		devolverPanel.setContentContainer(devolverPanelContent);
 		infoPanel.setContentContainer(infoPanelContent);
 
@@ -85,7 +88,7 @@ public class GestionarCursoView extends View {
 	    formatter.setCommitsOnValidEdit(true);
 
 		handlePanel.add(infoPanel);
-		handlePanel.add(pagarPanel);
+		handlePanel.add(retrasarPanel);
 		handlePanel.add(devolverPanel);
 		this.add(handlePanel, BorderLayout.EAST);
 
@@ -111,43 +114,46 @@ public class GestionarCursoView extends View {
 		infoPanelContent.add(lblInfoDias = JLabelFactory.getLabel("N/A"), gbc);*/
 
 		gbc.insets = spacer;
-		gbc.gridy = 4;
-		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Fecha de fin del curso"), gbc);
+		gbc.gridy = 3;
+		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Fecha de inicio del curso"), gbc);
 
 		gbc.insets = next;
-		gbc.gridy = 5;
+		gbc.gridy = 4;
 		infoPanelContent.add(lblFechaCurso = JLabelFactory.getLabel("N/A"), gbc);
 
-		pagarPanelContent.setLayout(new GridBagLayout());
+		
+		//Parte del panel de cambio de fechas
+		
+		retrasarPanelContent.setLayout(new GridBagLayout());
 
 		gbc.insets = spacer;
 		gbc.gridy = 3;
-		pagarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Importe del curso (€)"), gbc);
+		retrasarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nueva fecha de inicio para el curso"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 4;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		pagarPanelContent.add(txtImporte = new JFormattedTextField(formatter), gbc);
+		retrasarPanelContent.add(datePickerNewDateCurso = new DatePicker(), gbc);
 
 		gbc.insets = spacer;
 		gbc.gridy = 5;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weightx = 0.0;
-		pagarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Fecha del pago"), gbc);
+		retrasarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nueva fecha para el inicio de inscripciones"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 6;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
 		gbc.anchor = GridBagConstraints.CENTER;
-		pagarPanelContent.add(datePicker = new DatePicker(), gbc);
+		retrasarPanelContent.add(datePickerNewDateInscripciones = new DatePicker(), gbc);
 
 		gbc.insets = spacer;
 		gbc.gridy = 7;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.CENTER;
-		pagarPanelContent.add(btnInsertarPago = new JButton("Insertar pago"), gbc);
+		retrasarPanelContent.add(btnCambiarFechas = new JButton("Cambiar fechas"), gbc);
 
 		devolverPanelContent.setLayout(new GridBagLayout());
 
