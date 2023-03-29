@@ -138,6 +138,8 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		
 	}
 	
+	//Función que implementa un sistema para comprobar las fechas que se introducen
+	//En caso de que algo esté mal, devuelve falso yun mensaje de error.
 	public boolean checkFechas() {
 		
 		String fechaCursoInicio;
