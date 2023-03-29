@@ -130,7 +130,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		
 		if(checkFechas())
 		{
-			//this.getModel()fechaCurso.updateFechas(fechaCurso, fechaFinCurso, fechaInscripciones, fechaFinInscripciones);
+			this.getModel().updateFechas(idCurso, fechaCurso, fechaFinCurso, fechaInscripciones, fechaFinInscripciones);
 			alert("Éxito", "Se han modificado las fechas del curso con éxito", JOptionPane.INFORMATION_MESSAGE);
 
 		}

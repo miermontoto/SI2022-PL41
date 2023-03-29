@@ -22,16 +22,17 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model{
 		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql);
 	}
 	
-	public void retrasarFechaCurso(String fecha, String idCurso) {
+	/*public void retrasarFechaCurso(String fecha, String idCurso) {
 		
 		String sql = "	UPDATE curso SET start = ? WHERE id= ?";
 		this.getDatabase().executeUpdate(sql, fecha, idCurso);
 		
-	}
+	}*/
 	
-	public void updateFechas(String idCurso, String fechaCurso, String fechaFinCurso, String fechaInscripciones, String fechaFinInscripciones) {
+	public void updateFechas(int idCurso, String fechaCurso, String fechaFinCurso, String fechaInscripciones, String fechaFinInscripciones) {
 		
 		String sql = "	UPDATE curso SET start = ?, end = ? , start_insc = ?, end_insc = ? WHERE id= ?";
+		
 		this.getDatabase().executeUpdate(sql, fechaCurso, fechaFinCurso, fechaInscripciones, fechaFinInscripciones, idCurso);
 		
 		
