@@ -52,8 +52,8 @@ import g41.si2022.util.db.Database;
 @Getter
 public class SwingMain {
 
-	public static final int WINDOW_WIDTH = 1280;
-	public static final int WINDOW_HEIGHT = 720;
+	public static final int DEFAULT_WINDOW_WIDTH = 1280;
+	public static final int DEFAULT_WINDOW_HEIGHT = 720;
 
 	private JFrame frame;
 	private BetterDatePicker today;
@@ -97,20 +97,16 @@ public class SwingMain {
 
 	/**
 	 * Create the application.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public SwingMain() throws IOException {
-	
 
-		
+
+
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
-		frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		Image logo = new ImageIcon(ImageIO.read(new File("src/main/resources/logoBlanco.png"))).getImage();
-		frame.setIconImage(logo);
-		frame.setSize(1280, 720);
-
-		frame.setResizable(false);
+		frame.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+		frame.setResizable(true);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		total = new JPanel();
