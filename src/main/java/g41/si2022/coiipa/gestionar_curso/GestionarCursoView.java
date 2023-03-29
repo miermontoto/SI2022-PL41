@@ -39,7 +39,7 @@ public class GestionarCursoView extends View {
 	private JLabel lblFechaCurso;
 	private JLabel lblDevolverCalculo;
 	private JButton btnCambiarFechas;
-	private JButton btnCambiarPlazas;
+	private JButton btnCambiarDetalles;
 
 	//Datepicker para cambiar la fecha del curso y de las inscripciones
 	private DatePicker datePickerNewDateCurso;
@@ -200,7 +200,7 @@ public class GestionarCursoView extends View {
 	   
 
 		gbc.gridy = 8;
-		devolverPanelContent.add(btnCambiarPlazas = new JButton("Cambiar plazas"), gbc);
+		devolverPanelContent.add(btnCambiarDetalles = new JButton("Cambiar detalles"), gbc);
 
 		tableInscripciones = new JTable();
 		this.add(new JScrollPane(tableInscripciones), BorderLayout.CENTER);

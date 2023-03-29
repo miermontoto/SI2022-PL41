@@ -37,5 +37,14 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model{
 		
 		
 	}
+	
+	public void updateDetalles(int idCurso, String plazas) {
+		
+		String sql = "	UPDATE curso SET plazas = ? WHERE id= ?";
+		
+		this.getDatabase().executeUpdate(sql, plazas, idCurso);
+		
+		
+	}
 
 }

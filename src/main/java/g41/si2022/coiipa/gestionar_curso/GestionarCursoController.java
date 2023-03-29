@@ -22,6 +22,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 	//Variables globales para los valores seleccionados
 	int idCurso;
+	int idTabla;
 	String nombreCurso;
 	String fechaCurso;
 	String fechaInscripciones;
@@ -32,6 +33,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	String fechaFinCurso;
 	String fechaFinInscripciones;
 	String plazas;
+	String plazasLibres;
 
 
 	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
@@ -62,6 +64,12 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		{
 			public void mousePressed(MouseEvent e)
 			{
+				
+				  	JTable source = (JTable)e.getSource();
+		            int row = source.rowAtPoint(e.getPoint() );
+		            int column = source.columnAtPoint(e.getPoint() );
+		            
+		            idTabla = row;
 
 				handleSelect(); //Que handleSelect() se encargue de todo lo relacionado con esta selección.
 
@@ -69,6 +77,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		});
 		
 		this.getView().getBtnCambiarFechas().addActionListener(e -> handleCambiarFechas());
+		this.getView().getBtnCambiarDetalles().addActionListener(e -> handleCambiarDetalles());
 
 	}
 
@@ -79,13 +88,14 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 		//Obtengo los datos de la tabla y los almaceno en variables globales (por si a otros métodos les hacen falta)
 
-		idCurso = this.getView().getTableInscripciones().getSelectedRow();
-		nombreCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 1).toString();
-		fechaInscripciones = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 2).toString();
-		fechaCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 4).toString();
-		fechaFinInscripciones = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 3).toString();
-		fechaFinCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 5).toString();
-		plazas = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 6).toString();
+		idCurso = Integer.parseInt(this.getView().getTableInscripciones().getModel().getValueAt(idTabla, 0).toString());
+		nombreCurso = this.getView().getTableInscripciones().getModel().getValueAt(idTabla, 1).toString();
+		fechaCurso = this.getView().getTableInscripciones().getModel().getValueAt(idTabla, 2).toString();
+		fechaFinCurso = this.getView().getTableInscripciones().getModel().getValueAt(idTabla, 3).toString();
+		fechaInscripciones = this.getView().getTableInscripciones().getModel().getValueAt(idTabla, 4).toString();
+		fechaFinInscripciones = this.getView().getTableInscripciones().getModel().getValueAt(idTabla, 5).toString();
+		plazas = this.getView().getTableInscripciones().getModel().getValueAt(idTabla, 6).toString();
+		plazasLibres = this.getView().getTableInscripciones().getModel().getValueAt(idTabla, 7).toString();
 
 		//DEBUG
 
@@ -134,12 +144,14 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		if(checkFechas())
 		{
 			this.getModel().updateFechas(idCurso, fechaCurso, fechaFinCurso, fechaInscripciones, fechaFinInscripciones);
+			updateTables(); //Actualizamos la tabla de los datos tras producir la inserción
 			alert("Éxito", "Se han modificado las fechas del curso con éxito", JOptionPane.INFORMATION_MESSAGE);
+
 
 		}
 		else
 		{
-			alert("ERROR", "No hemos modificado nada, ya que había parámetros incorrectos", JOptionPane.ERROR_MESSAGE);
+			alert("ERROR", "No hemos modificado nada, ya que había parámetros incorrectos. Por favor, corrígelos e inténtalo de nuevo.", JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}
@@ -191,7 +203,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		stop = LocalDate.parse( fechaInscripcionFin , f );
 		
 		if(!(start.isBefore( stop ))) {
-			alert("ERROR", "No pueden acabar las inscripciones antes de empezar", JOptionPane.ERROR_MESSAGE);
+			alert("ERROR", "No pueden acabar las inscripciones antes de empezar las inscripciones", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		
@@ -218,6 +230,35 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		
 	}
 	
+	
+	public void handleCambiarDetalles() {
+		
+		String plazasNuevas = this.getView().getTxtFieldPlazas().getText(); //Obtengo el texto.
+		
+		int ocupadas = Integer.parseInt(plazas) - Integer.parseInt(plazasLibres);
+		
+		if(Integer.parseInt(plazasNuevas) >= ocupadas)
+		{
+			if(Integer.parseInt(plazasNuevas) <= 0) 
+			{
+				alert("ERROR", "No puedes poner plazas negativas. Corrígelo", JOptionPane.ERROR_MESSAGE);
+
+			}
+			else 
+			{
+				this.plazas = plazasNuevas; //Actualizo variable global de control.
+				this.getModel().updateDetalles(idCurso, plazasNuevas); //Llamo a la BBDD
+				updateTables(); //Llamo a la función de actualización de tablas
+				alert("Éxito", "Se han cambiado los detalles indicados con éxito.", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+		else
+		{
+			alert("ERROR", "No puedes poner menos plazas que inscritos ya hay. Ahora mismo hay ocupadas " + ocupadas, JOptionPane.ERROR_MESSAGE);
+		}
+
+	}
+	
 	public void alert(String title, String msg, int level) {
 		
 		JOptionPane.showMessageDialog(null,msg , title, level);
@@ -231,8 +272,14 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		this.getView().getDatePickerNewDateInscripciones().setEnabled(status);
 		this.getView().getDatePickerNewDateFinCurso().setEnabled(status);
 		this.getView().getDatePickerNewDateFinInscripciones().setEnabled(status);
+		
 		//Habilito el botón de cambiar las fechas.
 		this.getView().getBtnCambiarFechas().setEnabled(status);
+		
+		//Habilito panel de cambiar otros detalles
+		this.getView().getTxtFieldPlazas().setEnabled(status);
+		this.getView().getBtnCambiarDetalles().setEnabled(status);
+		
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
@@ -246,6 +293,8 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		this.getView().getDatePickerNewDateInscripciones().setText("");
 		this.getView().getDatePickerNewDateFinCurso().setText("");
 		this.getView().getDatePickerNewDateFinInscripciones().setText("");
+		
+		this.getView().getTxtFieldPlazas().setText("");
 		
 		setControls(false); //Apagamos los controles
 
@@ -264,14 +313,14 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		this.getView().getTableInscripciones().setModel(
 				SwingUtil.getTableModelFromPojos(
 						listacursos,
-						new String[] { "id", "nombre", "start_inscr", "end_inscr", "start", "end", "plazas", "plazas_libres"},
-						new String[] { "Id", "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Plazas disponibles", "Plazas libres"},
+						new String[] { "id", "nombre", "start", "end", "start_inscr", "end_inscr",  "plazas", "plazas_libres"},
+						new String[] { "Id", "Nombre", "Inicio Curso", "Fin Curso", "Inicio Inscripciones", "Fin Inscripciones",  "Plazas disponibles", "Plazas libres"},
 						null
 						)
 				);
 		//Ocultamos la columna 0 de la vista.
 		this.getView().getTableInscripciones().removeColumn(this.getView().getTableInscripciones().getColumnModel().getColumn(0));
-
+		eraseControls(false); //Borramos los controles.
 	}
 
 }
