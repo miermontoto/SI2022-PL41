@@ -56,6 +56,11 @@ public class StateUtilities {
 	 * @return {@link CursoState} of the course for the given date.
 	 */
 	public static CursoState getCursoState (CursoDTO curso, LocalDate today, boolean canBeCerrado) {
+		try {
+			
+		} catch (NullPointerException e){
+
+		}
 		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getEstado() != null) {
 			return CursoState.CERRADO;
 		}
@@ -88,6 +93,13 @@ public class StateUtilities {
 		List<CursoDTO> lc = new Database().executeQueryPojo(CursoDTO.class, sql, cursoId);
 		lc.forEach(x -> x.updateEstado(today));
 		return lc;
+	}
+
+	public static String getCancelledAttribute(String idCurso) {
+		String sql = "SELECT isCancelled FROM curso WHERE id = ?";
+		String isCancelled = String.valueOf(new Database().executeQueryPojo(null, sql, idCurso).get(0));
+		
+		return isCancelled;
 	}
 
 	/* --- INSCRIPCION STATES --- */

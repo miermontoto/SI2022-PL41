@@ -16,6 +16,7 @@ import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
 import g41.si2022.util.state.CursoState;
+import g41.si2022.util.state.StateUtilities;
 
 public class GestionarCursoController extends g41.si2022.mvc.Controller<GestionarCursoView, GestionarCursoModel> {
 
@@ -38,9 +39,14 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 			public void actionPerformed(ActionEvent e) {
 				// Obtener el curso seleccionado
 				CursoDTO selectedCurso = getModel().getCurso(String.valueOf(idCurso));
-				// Modificar estado del curso a CANCELADO
-				selectedCurso.setEstado(CursoState.CANCELADO);
-				System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
+				// Si el curso no está cancelado, se cancela
+				if (!selectedCurso.updateEstado(localDateCurso).equals(CursoState.CANCELADO)) {
+					// Modificar estado del curso a CANCELADO
+					getModel().updateCursoStateToCancelled(String.valueOf(CursoState.CANCELADO), selectedCurso.getId());
+					selectedCurso.setEstado(selectedCurso.updateEstado(localDateCurso));
+					
+					System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
+				}
 			}
 		});
 	}

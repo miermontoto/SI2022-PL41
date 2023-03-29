@@ -20,7 +20,8 @@ create table curso (
     end_inscr date not null,
     plazas integer not null,
     start date not null,
-    end date not null
+    end date not null,
+    estado text,
 );
 
 create table inscripcion (

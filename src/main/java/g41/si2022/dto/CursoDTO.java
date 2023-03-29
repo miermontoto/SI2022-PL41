@@ -30,15 +30,16 @@ public class CursoDTO {
 		balance, // Annadido por ConsultarIngresosGastos
 		pagoHighestFecha, // Annadido por ConsultarIngresosGastos
 		pagoLowestFecha, // Annadido por ConsultarIngresosGastos
-		pago_importe_devuelto; // Annadido por consultarCursos
+		pago_importe_devuelto; // Annadido por consultarCursos 
 
 
 	private InscripcionState inscripcion_estado; // Annadido por consultarCursos
 	private CursoState estado; // Annadido por ?
 
+	private boolean isCancelled; // Annadido por GestionarCursos
+
 	public CursoState updateEstado(LocalDate today) {
 		this.estado = StateUtilities.getCursoState(this.getId(), today);
 		return this.estado;
 	}
-
 }

@@ -36,13 +36,13 @@ public class GestionarCursoView extends View {
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
 	private JScrollPane scrollPane; // Panel de scroll de la tabla
 	private JLabel lblInfoNombre;
-	//private JLabel lblInfoDias;
+	// private JLabel lblInfoDias;
 	private JLabel lblFechaCurso;
 	private JLabel lblDevolverCalculo;
 	private JButton btnCambiarFechas;
 	private JButton btnCancelarInscripcion;
 
-	//Datepicker para cambiar la fecha del curso y de las inscripciones
+	// Datepicker para cambiar la fecha del curso y de las inscripciones
 	private DatePicker datePickerNewDateCurso;
 	private DatePicker datePickerNewDateInscripciones;
 	
@@ -124,7 +124,7 @@ public class GestionarCursoView extends View {
 		infoPanelContent.add(lblFechaCurso = JLabelFactory.getLabel("N/A"), gbc);
 
 		
-		//Parte del panel de cambio de fechas
+		// Parte del panel de cambio de fechas
 		
 		retrasarPanelContent.setLayout(new GridBagLayout());
 
