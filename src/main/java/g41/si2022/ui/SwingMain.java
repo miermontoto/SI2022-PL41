@@ -8,7 +8,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.awt.GridBagConstraints;
 import java.awt.Desktop;
@@ -94,11 +97,19 @@ public class SwingMain {
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
 	 */
-	public SwingMain() {
+	public SwingMain() throws IOException {
+	
+
+		
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
 		frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		Image logo = new ImageIcon(ImageIO.read(new File("src/main/resources/logoBlanco.png"))).getImage();
+		frame.setIconImage(logo);
+		frame.setSize(1280, 720);
+
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
