@@ -36,7 +36,7 @@ public class InscripcionStatusCellRenderer extends DefaultTableCellRenderer {
         JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 
         TableModel tableModel = table.getModel();
-        InscripcionState status = (InscripcionState) tableModel.getValueAt(row, statusColIndex);
+        InscripcionState status = (InscripcionState) tableModel.getValueAt(table.convertRowIndexToModel(row), statusColIndex);
 
         switch(status) {
             case PAGADA:
