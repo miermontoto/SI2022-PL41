@@ -15,7 +15,7 @@ import javax.swing.table.TableModel;
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
-import g41.si2022.util.Dialog;
+import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.Util;
 
 public class InscribirUsuarioController extends g41.si2022.mvc.Controller<InscribirUsuarioView, InscribirUsuarioModel> {

@@ -1,20 +1,26 @@
 package g41.si2022.coiipa.lista_actividades;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.JTable;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
-
-import g41.si2022.util.state.CursoState;
-import g41.si2022.dto.CursoDTO;
-import g41.si2022.dto.ProfesorDTO;
-import g41.si2022.ui.SwingUtil;
 import java.util.stream.Collectors;
 
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
+import org.jdesktop.swingx.JXComboBox;
+
+import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.EventoDTO;
+import g41.si2022.dto.ProfesorDTO;
+import g41.si2022.ui.SwingUtil;
+import g41.si2022.util.state.CursoState;
 
 public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaActividadesView, ListaActividadesModel> {
 
@@ -68,6 +74,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
             @Override
             public void mouseReleased(MouseEvent evt) {
                 SwingUtil.exceptionWrapper(() -> showDetallesCurso());
+                SwingUtil.exceptionWrapper(() -> showListaEventos());
             }
         });
         // Filtrar los cursos en función de su fecha ó estado
@@ -95,11 +102,10 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
         for (CursoDTO curso : cursos) {
             CursoState estadoCurso = curso.updateEstado(getView().getMain().getToday());
 
-            if (estadoCurso != CursoState.FINALIZADO && estadoCurso != CursoState.CERRADO)
-            {
+            if (estadoCurso != CursoState.FINALIZADO && estadoCurso != CursoState.CERRADO) {
                 // Añadir número de plazas libres al curso activo (para mostrarlas)
                 // Sumatorio de plazas totales menos las inscripciones NO canceladas
-                curso.setPlazas_libres(String.valueOf((Integer.valueOf(curso.getPlazas()) - Integer.valueOf(this.getModel().getNumIscripciones(curso.getId())))));
+                curso.setPlazas_libres(String.valueOf((Integer.valueOf(curso.getPlazas()) - Integer.valueOf(this.getModel().getNumInscripciones(curso.getId())))));
                 cursosActivos.add(curso); // Añadir curso a la lista de cursos activos
             }
         }
@@ -109,41 +115,73 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
         JTable table = this.getView().getTablaCursos();
         table.setModel(SwingUtil.getTableModelFromPojos(
             this.sup.get(),
-            new String[] { "nombre", "estado", "start_inscr", "end_inscr", "plazas", "plazas_libres", "start" },
-            new String[] { "Nombre", "Estado", "Inicio de inscripciones", "Fin de inscripciones", "Plazas", "Plazas vacantes" , "Inicio del curso" },
+            new String[] { "id", "nombre", "estado", "start_inscr", "end_inscr", "plazas", "plazas_libres", "start" },
+            new String[] { "", "Nombre", "Estado", "Inicio de inscripciones", "Fin de inscripciones", "Plazas", "Plazas vacantes" , "Inicio del curso" },
             null
         ));
+        table.getColumnModel().removeColumn(table.getColumnModel().getColumn(0));
         SwingUtil.autoAdjustColumns(table);
     }
 
-    private void showDetallesCurso()
-    {
-        List<ProfesorDTO> docentes;
+    private void showListaEventos() {
+        JTable table = this.getView().getTableEventos();
+        String cursoId = SwingUtil.getSelectedKey(this.getView().getTablaCursos());
+        List<EventoDTO> eventos = this.getModel().getEventosCurso(cursoId);
+        table.setModel(SwingUtil.getTableModelFromPojos(eventos,
+            new String[] {"loc", "fecha", "horaIni", "horaFin"},
+            new String[] {"Localización (aula)", "Fecha", "Hora de inicio", "Hora de fin"},
+            null));
 
+
+        // Order by date and then by time
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+        sorter.setComparator(1, (String o1, String o2) -> {
+            LocalDate date1 = LocalDate.parse(o1);
+            LocalDate date2 = LocalDate.parse(o2);
+            return date1.compareTo(date2);
+        });
+        sorter.setComparator(2, (String o1, String o2) -> {
+            LocalTime time1 = LocalTime.parse(o1);
+            LocalTime time2 = LocalTime.parse(o2);
+            return time1.compareTo(time2);
+        });
+        table.setRowSorter(sorter);
+    }
+
+    @SuppressWarnings("unchecked") // <- no tiene sentido que se necesite esto!! (raw type en comboboxes)
+    private void showDetallesCurso() {
         for (CursoDTO curso : cursosActivos) {
-            if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
-                // Mostrar la descripción del curso
-                this.getView().getTxtDescripcion().setText(" " + this.getModel().getDescripcionCurso(curso.getId()));
-                // Obtener docente/s que imparten el curso
-                docentes = this.getModel().getDocentesCurso(curso.getId());
-                this.getView().getTxtProfesor().setText("");
+            if (!curso.getId().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) continue;
+            // Mostrar la descripción del curso
+            this.getView().getInfoDescripcion().setText(" " + this.getModel().getDescripcionCurso(curso.getId()));
 
-                boolean first = true;
-                for (ProfesorDTO docente : docentes) {
-                    if(!first) {
-                        this.getView().getTxtProfesor().setText(this.getView().getTxtProfesor().getText() + ", ");
-                    } else first = false;
-                    this.getView().getTxtProfesor().setText(this.getView().getTxtProfesor().getText()
-                     + docente.getNombre() + " " + docente.getApellidos());
+            // Obtener docente/s que imparten el curso
+            JXComboBox comboProf = this.getView().getInfoProfesores();
+            comboProf.removeAllItems();
+            List<ProfesorDTO> docentes = getModel().getDocentesCurso(curso);
+
+            if (docentes.isEmpty()) comboProf.addItem("N/A");
+            else for (ProfesorDTO docente : docentes) comboProf.addItem(docente.getNombre() + " " + docente.getApellidos() + " (" + docente.getRemuneracion() + "€)");
+
+            // Mostrar las localizaciones del curso
+            JXComboBox comboLocs = this.getView().getInfoLocalizaciones();
+            comboLocs.removeAllItems();
+            List<EventoDTO> eventos = getModel().getEventosCurso(curso);
+            ArrayList<String> locs = new ArrayList<>();
+
+            if (eventos.isEmpty()) comboLocs.addItem("N/A");
+            else for(EventoDTO evento : eventos) {
+                if(!locs.contains(evento.getLoc())) {
+                    locs.add(evento.getLoc());
+                    comboLocs.addItem(evento.getLoc());
                 }
 
-                // Mostrar lugar en el que se imparte el curso
-                this.getView().getTxtLugar().setText(" " + this.getModel().getLugarCurso(curso.getId()));
             }
+
         }
     }
 
-    private void loadComboBox () {
+    private void loadComboBox() {
 		java.util.stream.Stream.of(CursoState.values())
         .filter(x -> !x.equals(CursoState.CERRADO) && !x.equals(CursoState.FINALIZADO))
         .forEach(e -> this.getView().getCbFiltro().addItem(e));
@@ -154,10 +192,10 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 		});
 	}
 
-    private void loadDates () {
-        g41.si2022.util.BetterDatePicker start = this.getView().getStartDate(),
-        end =  this.getView().getEndDate();
-       start.addDateChangeListener((e) -> {
+    private void loadDates() {
+        g41.si2022.ui.components.BetterDatePicker start = this.getView().getStartDate(),
+        end = this.getView().getEndDate();
+        start.addDateChangeListener((e) -> {
 			if (start.getDate() != null && end.getDate() != null && start.compareTo(end) >= 0) {
 				end.setDate(start.getDate().plusDays(1));
 			}

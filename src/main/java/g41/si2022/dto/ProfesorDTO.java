@@ -11,9 +11,7 @@ public class ProfesorDTO {
 		dni, id,
 		email,
 		telefono,
-		remuneracion,
+		remuneracion, // Necesario para almacenar remuneración al registrar cursos.
 		direccion;
-	// La remuneracion es por curso, es neceasaria para que se pueda
-	// generar la columa extra en la JTable de RegistrarCurso
 
 }

@@ -7,7 +7,14 @@ import lombok.Data;
 @Getter @Setter @Data
 public class FacturaDTO {
 
-    private String id, remuneracion, fecha_introd, fecha_pago,
-        docencia_id, doc_nombre, doc_apellidos, curso_nombre;
+    private String
+        id,
+        remuneracion,
+        fecha_introd,
+        fecha_pago,
+        docencia_id,
+        doc_nombre,
+        doc_apellidos,
+        curso_nombre;
 
 }

@@ -28,14 +28,14 @@ import javax.swing.event.MouseInputAdapter;
 import com.formdev.flatlaf.FlatLightLaf;
 import lombok.Getter;
 import g41.si2022.mvc.View;
+import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.panels.Debug;
 import g41.si2022.ui.panels.TabbedFrame;
 import g41.si2022.ui.panels.TabsProfesional;
 import g41.si2022.ui.panels.TabsResponsable;
 import g41.si2022.ui.panels.TabsSecretaria;
-import g41.si2022.util.BetterDatePicker;
-import g41.si2022.util.FontType;
-import g41.si2022.util.JLabelFactory;
+import g41.si2022.ui.util.FontType;
+import g41.si2022.ui.util.JLabelFactory;
 import g41.si2022.util.Pair;
 import g41.si2022.util.db.Database;
 
@@ -48,6 +48,9 @@ import g41.si2022.util.db.Database;
  */
 @Getter
 public class SwingMain {
+
+	public static final int WINDOW_WIDTH = 1280;
+	public static final int WINDOW_HEIGHT = 720;
 
 	private JFrame frame;
 	private BetterDatePicker today;
@@ -95,13 +98,13 @@ public class SwingMain {
 	public SwingMain() {
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
-		frame.setSize(1280, 720);
+		frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		total = new JPanel();
 		total.setLayout(new GridBagLayout());
-		
+
 		this.makeNavigation();
 
 		// mainMenu
@@ -132,7 +135,7 @@ public class SwingMain {
 				((View) ((javax.swing.JTabbedPane) pair.getSecond().getComponent()).getSelectedComponent()).initVolatileData();
 			});
 		});
-		
+
 		int i = 1;
 		for(Pair<JButton, TabbedFrame> v : tabbedFrameButtons.values()) {
 			gbc.gridy = i++;
@@ -147,7 +150,7 @@ public class SwingMain {
 
 		frame.getContentPane().add(total);
 	}
-	
+
 	private void makeLogo (GridBagConstraints gbc) {
 		try {
 			gbc.gridx = 2;
@@ -165,7 +168,7 @@ public class SwingMain {
 			});
 		} catch (Exception e) {}
 	}
-	
+
 	private void makeDebug (GridBagConstraints gbc) {
 		gbc.gridx = 0;
 		gbc.gridy = 6;
@@ -177,9 +180,9 @@ public class SwingMain {
 		gbc.gridy = 6;
 		JButton btnDebug = new JButton("Debug menu");
 		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent(), "Debug menu");});
-		mainMenu.add(btnDebug, gbc);	
+		mainMenu.add(btnDebug, gbc);
 	}
-	
+
 	private void makeNavigation () {
 		this.navigation = new JPanel();
 		this.navigation.setLayout(new BorderLayout());

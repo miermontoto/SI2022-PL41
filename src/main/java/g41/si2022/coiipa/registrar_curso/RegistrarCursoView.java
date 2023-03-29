@@ -1,46 +1,50 @@
 package g41.si2022.coiipa.registrar_curso;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-
-import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
-import lombok.Getter;
-
-import g41.si2022.util.FontType;
-import g41.si2022.util.JLabelFactory;
-
-import g41.si2022.util.BetterDatePicker;
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+
+import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
+
+import g41.si2022.ui.components.BetterDatePicker;
+import g41.si2022.ui.util.FontType;
+import g41.si2022.ui.util.JLabelFactory;
+
+import lombok.Getter;
 
 @Getter
 public class RegistrarCursoView extends g41.si2022.mvc.View {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField txtNombre;
-	private JTextArea txtDescripcion, txtLocalizacion;
+	private JTextArea txtDescripcion;
 	private JIntegerTextField txtPlazas;
 	private BetterDatePicker dateInscrStart, dateInscrEnd;
 	private BetterDatePicker dateCursoStart, dateCursoEnd;
 	private JTextField txtCoste;
 	private JTable tableProfesores;
+	private JTable tableEventos;
+	private JButton btnAddEvento;
+	private JButton btnRemoveEvento;
 	private JButton btnRegistrar;
 	private JComponent[] focusableComponents;
 
-	public void setNombreCurso (String nombreCurso) { this.txtNombre.setText(nombreCurso); }
-	public void setObjetivosDescripcion (String objetivosDescripcion) { this.txtDescripcion.setText(objetivosDescripcion); }
-	public void setPlazas (int plazas) { this.txtPlazas.setText(String.format("%d", Math.max(0, plazas))); }
+	public void setNombreCurso(String nombreCurso) { this.txtNombre.setText(nombreCurso); }
+	public void setObjetivosDescripcion(String objetivosDescripcion) { this.txtDescripcion.setText(objetivosDescripcion); }
+	public void setPlazas(int plazas) { this.txtPlazas.setText(String.format("%d", Math.max(0, plazas))); }
 
-	public RegistrarCursoView (g41.si2022.ui.SwingMain main) {
+	public RegistrarCursoView(g41.si2022.ui.SwingMain main) {
 		super(main, RegistrarCursoModel.class, RegistrarCursoView.class, RegistrarCursoController.class);
 	}
 
@@ -50,28 +54,29 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		JScrollPane mainSp = new JScrollPane();
-		mainSp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		mainSp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		mainSp.setViewportView(centerPanel);
-		this.add(mainSp, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+		scrollPane.setViewportView(centerPanel);
+		this.add(scrollPane, BorderLayout.CENTER);
 		centerPanel.setLayout(new GridBagLayout());
 		GridBagConstraints left = new GridBagConstraints();
 		GridBagConstraints right = new GridBagConstraints();
 
 		// Título
-		mainSp.setColumnHeaderView(JLabelFactory.getLabel(FontType.subtitle, "Información sobre el curso"));
+		scrollPane.setColumnHeaderView(JLabelFactory.getLabel(FontType.subtitle, "Información sobre el curso"));
 
 		{ // Nombre del curso
 			{ // Label
-				left.insets = new java.awt.Insets(15, 0, 0, 0);
+				left.insets = new Insets(15, 0, 0, 0);
 				left.fill = GridBagConstraints.BOTH;
 				left.gridx = 0;
 				left.gridy = 0;
 				left.weighty = 1;
 				centerPanel.add(JLabelFactory.getLabel("Nombre:"), left);
 			} { // Input
-				right.insets = new java.awt.Insets(15, 15, 0, 0);
+				right.insets = new Insets(15, 15, 0, 0);
 				right.fill = GridBagConstraints.BOTH;
 				right.gridx = 1;
 				right.gridy = 0;
@@ -86,9 +91,10 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			} { // Input
 				right.gridy = 1;
 				right.weighty = 2;
-				this.txtDescripcion = new JTextArea();
-				this.txtDescripcion.setLineWrap(true);
-				this.txtDescripcion.setRows(5);
+				txtDescripcion = new JTextArea();
+				txtDescripcion.setLineWrap(true);
+				txtDescripcion.setRows(5);
+				//txtDescripcion.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 				centerPanel.add(this.txtDescripcion, right);
 			}
 		} { // Plazas
@@ -100,13 +106,22 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				right.gridy = 2;
 				centerPanel.add(this.txtPlazas = new JIntegerTextField(), right);
 			}
-		} { // Inscripcion
+		} { // Coste
 			{ // Label
 				left.gridy = 3;
+				centerPanel.add(JLabelFactory.getLabel("Coste de inscripción:"), left);
+			} { // Input
+				right.gridy = 3;
+				right.fill = GridBagConstraints.BOTH;
+				centerPanel.add(this.txtCoste = new JTextField(), right);
+			}
+		} { // Inscripcion
+			{ // Label
+				left.gridy = 4;
 				centerPanel.add(JLabelFactory.getLabel("Inscripción:"), left);
 			} { // Input
 				JPanel panelInscripciones = new JPanel(new BorderLayout());
-				right.gridy = 3;
+				right.gridy = 4;
 				right.fill = GridBagConstraints.WEST;
 				centerPanel.add(panelInscripciones, right);
 				{ // Desde
@@ -127,11 +142,11 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			}
 		} { // Curso
 			{ // Label
-				left.gridy = 4;
+				left.gridy = 5;
 				centerPanel.add(JLabelFactory.getLabel("Curso:"), left);
 			} { // Input
 				JPanel panelInscripciones = new JPanel(new BorderLayout());
-				right.gridy = 4;
+				right.gridy = 5;
 				right.fill = GridBagConstraints.WEST;
 				centerPanel.add(panelInscripciones, right);
 				{ // Desde
@@ -150,26 +165,35 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 					panelInscripciones.add(panelInscHasta, BorderLayout.EAST);
 				}
 			}
-		} { // Localizacion
-			{ // Label
-				left.gridy = 5;
-				centerPanel.add(JLabelFactory.getLabel("Localizacion:"), left);
-			} { // Input
-				right.gridy = 5;
-				right.fill = GridBagConstraints.BOTH;
-				this.txtLocalizacion = new JTextArea();
-				this.txtLocalizacion.setLineWrap(true);
-				this.txtLocalizacion.setRows(2);
-				centerPanel.add(this.txtLocalizacion, right);
-			}
-		} { // Coste
+		} { // Eventos
 			{ // Label
 				left.gridy = 6;
-				centerPanel.add(JLabelFactory.getLabel("Coste Inscripción:"), left);
-			} { // Input
-				right.gridy = 6;
-				right.fill = GridBagConstraints.BOTH;
-				centerPanel.add(this.txtCoste = new JTextField(), right);
+				left.fill = GridBagConstraints.BOTH;
+				left.weighty = 1;
+				centerPanel.add(JLabelFactory.getLabel("Eventos:"), left);
+			}
+			right.gridy = 6;
+			right.fill = GridBagConstraints.BOTH;
+			right.weighty = 1;
+			JPanel eventosPanel = new JPanel(new BorderLayout());
+			centerPanel.add(eventosPanel, right);
+			{ // Tabla de eventos
+				this.tableEventos = new JTable();
+				this.tableEventos.setName("Eventos:");
+
+				JScrollPane sp = new JScrollPane();
+				sp.getVerticalScrollBar().setUnitIncrement(20);
+				sp.setPreferredSize(new java.awt.Dimension(
+					this.getWidth(), 150
+				));
+				sp.setViewportView(this.tableEventos);
+				eventosPanel.add(sp, BorderLayout.CENTER);
+			} { // Botones
+				JPanel btnPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+				btnPanel.add(this.btnAddEvento = new JButton("Añadir evento"));
+				btnPanel.add(this.btnRemoveEvento = new JButton("Eliminar evento"));
+				eventosPanel.add(btnPanel, BorderLayout.SOUTH);
+				btnAddEvento.setToolTipText("Necesario rango de fechas de curso");
 			}
 		}
 
@@ -192,11 +216,10 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 		bottomPane.add(sp, BorderLayout.CENTER);
 
 		this.btnRegistrar = new JButton();
-		this.btnRegistrar.setText("Registrar Curso");
+		this.btnRegistrar.setText("Registrar curso");
 		bottomPane.add(this.btnRegistrar, BorderLayout.SOUTH);
 
 		this.add(bottomPane, BorderLayout.SOUTH);
-		add(JLabelFactory.getLabel(FontType.title, "Registrar Curso"), BorderLayout.NORTH);
 
 		focusableComponents = new JComponent[] {
 			this.txtNombre,
@@ -206,6 +229,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			this.dateCursoStart,
 			this.dateCursoEnd,
 			this.txtCoste,
+			this.tableEventos,
 			this.tableProfesores
 		};
 	}

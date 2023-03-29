@@ -1,4 +1,4 @@
-package g41.si2022.util;
+package g41.si2022.ui.components;
 
 import com.github.lgooddatepicker.components.DatePicker;
 
@@ -8,7 +8,7 @@ import com.github.lgooddatepicker.components.DatePicker;
  *
  * @see DatePicker
  * @see Comparable
- * 
+ *
  * @author Alex // UO281827
  */
 public class BetterDatePicker extends DatePicker implements Comparable<DatePicker> {
