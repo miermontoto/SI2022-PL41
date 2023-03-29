@@ -73,7 +73,8 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 	private void handleSelect() {
 		eraseControls(true); // Borramos también el aviso de pago insertado con éxito/error
-		int fila = this.getView().getTableInscripciones().getSelectedRow();
+		JTable table = getView().getTableInscripciones();
+		int fila = table.convertRowIndexToModel(table.getSelectedRow());
 		if (fila == -1) return;
 
 		TableModel model = this.getView().getTableInscripciones().getModel();
@@ -92,7 +93,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		Double costeCurso = Double.valueOf((String) model.getValueAt(fila,  7));
 		Double importePagado = Double.valueOf((String) model.getValueAt(fila, 8));
 		Double calculoDevolver = Math.min(costeCurso, importePagado);
-		getView().getLblInfoDiferencia().setText(String.valueOf(importePagado - costeCurso)+"€");
+		getView().getLblInfoDiferencia().setText(String.valueOf(importePagado - costeCurso) + "€");
 
 		// Calculamos el número de días que quedan
 		Date fechaActual = Date.from(this.getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -127,7 +128,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 			return;
 		}
 
-		this.getModel().registrarDevolucion(aDevolver, getView().getMain().getToday().toString(), idInscripcion);
+		this.getModel().cancelarInscripcion(idInscripcion);
 		Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: Cancelación de inscripción", "Se ha cancelado su inscripción"
 			+ " al curso \"" + nombreCurso + "\" con éxito. Se le devolverán " + aDevolver + "€.");
 		Dialog.show("La cancelación de la inscripción del alumno " + nombreCompleto + " ha sido realizada con éxito. Se le han devuelto " + aDevolver + "€");
@@ -166,7 +167,6 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
 			x.updateEstado(getView().getMain().getToday());
-			if(this.getModel().isCancelled(x.getId())) x.setEstado(InscripcionState.CANCELADA);
 			if (!this.getView().getChkAll().isSelected()
 				&& x.getEstado() != InscripcionState.PENDIENTE
 				&& x.getEstado() != InscripcionState.EXCESO
@@ -185,13 +185,14 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		// Ocultar foreign keys de la tabla
 		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(0));
 		table.setDefaultEditor(Object.class, null); // Deshabilitar edición
-		table.getColumnModel().getColumn(6).setCellRenderer(new InscripcionStatusCellRenderer(9));
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
 		table.setRowSorter(sorter);
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new RowSorter.SortKey(5, SortOrder.ASCENDING));
 		sortKeys.add(new RowSorter.SortKey(6, SortOrder.ASCENDING));
 		sorter.setSortKeys(sortKeys);
+		table.getColumnModel().getColumn(6).setCellRenderer(new InscripcionStatusCellRenderer(9));
+		table.repaint();
 
 		SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas
 	}

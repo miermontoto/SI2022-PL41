@@ -19,10 +19,9 @@ public class ListaActividadesModel extends g41.si2022.mvc.Model {
     }
 
     public String getNumInscripciones(String idCurso) {
-        String sql = "SELECT count(inscripcion.id) - count(inscripcioncancelada.id) from CURSO "
-                   + "INNER JOIN inscripcion on curso.id = inscripcion.curso_id "
-                   + "LEFT JOIN inscripcioncancelada ON inscripcioncancelada.inscripcion_id = inscripcion.id "
-                   + "WHERE inscripcion.curso_id = ?";
+        String sql = "SELECT count(i.id) from CURSO as c "
+                   + "INNER JOIN inscripcion as i on c.id = i.curso_id "
+                   + "WHERE i.curso_id = ? AND i.cancelada = FALSE";
 
         return String.valueOf((Integer) getDatabase().executeQuerySingle(sql, idCurso));
     }

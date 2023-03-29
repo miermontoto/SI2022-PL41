@@ -17,6 +17,7 @@ public class InscripcionDTO {
     	fecha,
     	pagado,
     	curso_id,
+		cancelada,
     	alumno_id,
     	alumno_nombre,
 		alumno_apellidos,

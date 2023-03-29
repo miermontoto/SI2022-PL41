@@ -125,6 +125,7 @@ public class StateUtilities {
 	 * @see InscripcionState.
 	 */
 	public static InscripcionState getInscripcionState(InscripcionDTO inscr, List<PagoDTO> pagos, LocalDate today) {
+		if(Integer.parseInt(inscr.getCancelada()) == 1) return InscripcionState.CANCELADA;
 		InscripcionState state = getInscripcionState(Double.parseDouble(inscr.getCurso_coste()), pagos);
 		if (isDelayed(inscr, today)) {
 			if (state == InscripcionState.PENDIENTE) return InscripcionState.RETRASADA;

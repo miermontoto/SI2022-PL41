@@ -5,7 +5,6 @@ import java.util.List;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
-import g41.si2022.util.Util;
 
 public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 
@@ -15,11 +14,12 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 			+ " a.nombre as alumno_nombre,"
 			+ " a.apellidos as alumno_apellidos, "
 			+ " c.coste as curso_coste,"
-			+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as pagado,"
+			+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as pagado," // no borrar :)
 			+ " c.nombre as curso_nombre,"
 			+ " i.id as inscripcion_id, "
 			+ " i.curso_id as curso_id,"
-			+ " i.fecha as fecha"
+			+ " i.fecha as fecha,"
+			+ " i.cancelada as cancelada"
 			+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
 			+ " inner join curso as c on c.id = i.curso_id"
 			+ " left join pago as pa on pa.inscripcion_id = i.id"
@@ -39,10 +39,9 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 	}
 
 	public List<PagoDTO> getPagos(String alumnoId, String cursoId) {
-		String sql = "SELECT * FROM pago"
-				+ " INNER JOIN inscripcion ON inscripcion.id = pago.inscripcion_id "
-				+ " LEFT JOIN inscripcioncancelada on inscripcioncancelada.inscripcion_id = inscripcion.id"
-				+ " WHERE inscripcion.alumno_id = ? AND inscripcion.curso_id = ?";
+		String sql = "SELECT * FROM pago as p"
+				+ " INNER JOIN inscripcion as i ON i.id = p.inscripcion_id "
+				+ " WHERE i.alumno_id = ? AND i.curso_id = ?";
 		return this.getDatabase().executeQueryPojo(PagoDTO.class, sql, alumnoId, cursoId);
 	}
 
@@ -56,14 +55,9 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 		return (String) this.getDatabase().executeQuerySingle(sql, idAlumno);
 	}
 
-	public boolean isCancelled(String idInscripcion) {
-		String sql = "select count(id) from inscripcioncancelada where inscripcion_id = ?";
-		return (int) this.getDatabase().executeQuerySingle(sql, idInscripcion) != 0;
-	}
-
-	public void registrarDevolucion(double importe, String fecha, String idInscripcion) {
-		String sql = "INSERT INTO inscripcioncancelada (importedevuelto, fechacancelacion, inscripcion_id) VALUES(?,?,?)";
-		this.getDatabase().executeUpdate(sql, importe, Util.isoStringToDate(fecha), idInscripcion);
+	public void cancelarInscripcion(String idInscripcion) {
+		String sql = "UPDATE inscripcion SET cancelada = TRUE WHERE id = ?";
+		this.getDatabase().executeUpdate(sql, idInscripcion);
 	}
 
 	public String getFechaCurso(String idCurso) {
