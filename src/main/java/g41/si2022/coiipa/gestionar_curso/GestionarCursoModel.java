@@ -28,5 +28,13 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model{
 		this.getDatabase().executeUpdate(sql, fecha, idCurso);
 		
 	}
+	
+	public void updateFechas(String idCurso, String fechaCurso, String fechaFinCurso, String fechaInscripciones, String fechaFinInscripciones) {
+		
+		String sql = "	UPDATE curso SET start = ?, end = ? , start_insc = ?, end_insc = ? WHERE id= ?";
+		this.getDatabase().executeUpdate(sql, fechaCurso, fechaFinCurso, fechaInscripciones, fechaFinInscripciones, idCurso);
+		
+		
+	}
 
 }

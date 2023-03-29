@@ -20,17 +20,18 @@ import g41.si2022.util.Util;
 
 public class GestionarCursoController extends g41.si2022.mvc.Controller<GestionarCursoView, GestionarCursoModel> {
 
-
+	//Variables globales para los valores seleccionados
 	int idCurso;
 	String nombreCurso;
 	String fechaCurso;
 	String fechaInscripciones;
 	LocalDate localDateCurso;
 	LocalDate localDateInscripciones;
-	String fechaFinCurso;
-	String fechaFinInscripciones;
 	LocalDate localDateFinCurso;
 	LocalDate localDateFinInscripciones;
+	String fechaFinCurso;
+	String fechaFinInscripciones;
+
 
 	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
 		super(myTab, myModel);
@@ -130,10 +131,12 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		if(checkFechas())
 		{
 			//this.getModel()fechaCurso.updateFechas(fechaCurso, fechaFinCurso, fechaInscripciones, fechaFinInscripciones);
+			alert("Éxito", "Se han modificado las fechas del curso con éxito", JOptionPane.INFORMATION_MESSAGE);
+
 		}
 		else
 		{
-			alert("Éxito", "Se han modificado las fechas del curso con éxito", JOptionPane.INFORMATION_MESSAGE);
+			alert("ERROR", "No hemos modificado nada, ya que había parámetros incorrectos", JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}
@@ -148,48 +151,60 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		String fechaInscripcionFin;
 		
 		fechaCursoInicio = this.getView().getDatePickerNewDateCurso().getDateStringOrEmptyString();
-		fechaCursoFin = this.getView().getDatePickerNewDateInscripciones().getDateStringOrEmptyString();
-		fechaInscripcionInicio = this.getView().getDatePickerNewDateFinCurso().getDateStringOrEmptyString();
+		fechaCursoFin = this.getView().getDatePickerNewDateFinCurso().getDateStringOrEmptyString(); 
+		fechaInscripcionInicio = this.getView().getDatePickerNewDateInscripciones().getDateStringOrEmptyString();
 		fechaInscripcionFin = this.getView().getDatePickerNewDateFinInscripciones().getDateStringOrEmptyString();
 		
-		DateTimeFormatter f = DateTimeFormatter.ofPattern( "yyyy-MM-dd" ); //Formateador de fechas
+		//DEBUG
+		
+		System.out.printf("Fecha del inico del curso es: %s \n", fechaCursoInicio);
+		System.out.printf("Fecha del fin del curso es: %s \n", fechaCursoFin);
+		System.out.printf("Fecha del inico de inscripciones es: %s \n", fechaInscripcionInicio);
+		System.out.printf("Fecha del fin de inscripciones es: %s \n", fechaInscripcionFin);
+		
 		
 		if (fechaCursoInicio == "" || fechaCursoFin == "" || fechaInscripcionInicio == "" || fechaInscripcionFin == "") 
 		{
 			
-			alert("Las fechas no pueden ser nulas", "ERROR", JOptionPane.ERROR_MESSAGE);
+			alert("ERROR","Las fechas no pueden ser nulas", JOptionPane.ERROR_MESSAGE);
 			
 		}
 
+		DateTimeFormatter f = DateTimeFormatter.ofPattern( "yyyy-MM-dd"); //Formateador de fechas
+
+		//Acabamos el curso antes de empezar el curso
 		
-		LocalDateTime start = LocalDateTime.parse( fechaCursoInicio , f );
-		LocalDateTime stop = LocalDateTime.parse( fechaCursoFin , f );
-		
+		LocalDate start = LocalDate.parse( fechaCursoInicio , f );
+		LocalDate stop = LocalDate.parse( fechaCursoFin , f );
+				
 		if(!(start.isBefore( stop ))) {
-			alert("No puede acabar el curso antes de la fecha de inicio", "ERROR", JOptionPane.ERROR_MESSAGE);
+			alert("ERROR", "No puede acabar el curso antes de la fecha de inicio del curso", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		
-		 start = LocalDateTime.parse( fechaInscripcionInicio , f );
-		 stop = LocalDateTime.parse( fechaInscripcionFin , f );
+		//Acabamos las inscripciones antes de empezar las inscripciones.
+		
+		start = LocalDate.parse( fechaInscripcionInicio , f );
+		stop = LocalDate.parse( fechaInscripcionFin , f );
 		
 		if(!(start.isBefore( stop ))) {
-			alert("No pueden acabar las inscripciones antes de empezar", "ERROR", JOptionPane.ERROR_MESSAGE);
+			alert("ERROR", "No pueden acabar las inscripciones antes de empezar", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		
-		start = LocalDateTime.parse( fechaInscripcionInicio , f );
-		 stop = LocalDateTime.parse( fechaCursoInicio , f );
+		//El inicio de inscripciones es después del inicio del curso.
+		
+		start = LocalDate.parse( fechaInscripcionInicio , f );
+		stop = LocalDate.parse( fechaCursoInicio , f );
 		
 		if(!(start.isBefore( stop ))) {
-			alert("No pueden empezar las inscripciones más tarde que el curso", "ERROR", JOptionPane.ERROR_MESSAGE);
+			alert("ERROR", "No pueden empezar las inscripciones más tarde que el curso", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		
 		
 		//Todo ha ido bien
 		
-		//Asigno las inscripciones a la variable global
+		//Asigno las inscripciones a la variable global, y devuelvo verdadero
 		
 		this.fechaCurso = fechaCursoInicio;
 		this.fechaFinCurso = fechaCursoFin;
