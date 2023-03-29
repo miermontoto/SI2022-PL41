@@ -31,6 +31,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	LocalDate localDateFinInscripciones;
 	String fechaFinCurso;
 	String fechaFinInscripciones;
+	String plazas;
 
 
 	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
@@ -84,6 +85,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		fechaCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 4).toString();
 		fechaFinInscripciones = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 3).toString();
 		fechaFinCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 5).toString();
+		plazas = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 6).toString();
 
 		//DEBUG
 
@@ -110,6 +112,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		this.getView().getDatePickerNewDateInscripciones().setDate(localDateInscripciones);
 		this.getView().getDatePickerNewDateFinCurso().setDate(localDateFinCurso);
 		this.getView().getDatePickerNewDateFinInscripciones().setDate(localDateFinInscripciones);
+		this.getView().getTxtFieldPlazas().setText(plazas);
 
 		//Hemos terminado el proceso, habilitamos los controles
 		setControls(true);
