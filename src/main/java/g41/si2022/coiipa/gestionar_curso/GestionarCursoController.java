@@ -49,6 +49,16 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	public void initVolatileData() {
 		this.initThings();
 		this.updateTables();
+
+		// this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
+		// 	public void actionPerformed(ActionEvent e) {
+		// 		// Obtener el curso seleccionado
+		// 		CursoDTO selectedCurso = getModel().getCurso(String.valueOf(idCurso));
+		// 		// Modificar estado del curso a CANCELADO
+		// 		selectedCurso.setEstado(CursoState.CANCELADO);
+		// 		System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
+		// 	}
+		// });
 	}
 
 	public void initThings() {
