@@ -7,7 +7,7 @@ import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
 
 public class EstadoActividadesModel extends g41.si2022.mvc.Model {
-	
+
 	public List<CursoDTO> getListaCursos() {
 		String sql = "select id, nombre, coste, plazas, start, end, start_inscr, end_inscr from curso";
 		return getDatabase().executeQueryPojo(CursoDTO.class, sql);
@@ -15,8 +15,9 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 
 	// Modificar query para que devuelva los valores necesarios de inscripción de tipo CursoDTO
 	public List<InscripcionDTO> getListaInscr(String idCurso) {
-		String sql = "SELECT i.id, i.fecha, a.nombre as alumno_nombre, "
-		+ " a.apellidos as alumno_apellidos, c.coste as curso_coste"
+		String sql = "SELECT i.id, i.fecha, a.nombre as alumno_nombre,"
+		+ " a.apellidos as alumno_apellidos, c.coste as curso_coste,"
+		+ " i.cancelada as cancelada"
 		+ " FROM inscripcion as i"
 		+ " INNER JOIN alumno as a ON i.alumno_id = a.id"
 		+ " INNER JOIN curso as c ON i.curso_id = c.id"

@@ -72,8 +72,7 @@ create table pago (
 
 create table factura (
     id integer primary key autoincrement,
-    fecha_introd date not null,
-    fecha_pago date,
+    fecha date not null,
     docencia_id integer not null,
     foreign key (docencia_id) references docencia(id)
 );

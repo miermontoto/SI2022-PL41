@@ -8,7 +8,7 @@ import g41.si2022.dto.PagoDTO;
 
 public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 
-	public List<InscripcionDTO> getInscripciones(String date) {
+	public List<InscripcionDTO> getInscripciones() {
 		String sql = "select i.id,"
 			+ " i.alumno_id as alumno_id,"
 			+ " a.nombre as alumno_nombre,"
@@ -23,8 +23,8 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 			+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
 			+ " inner join curso as c on c.id = i.curso_id"
 			+ " left join pago as pa on pa.inscripcion_id = i.id"
-			+ " where i.fecha<=? and c.start >=? group by i.id order by i.fecha asc";
-		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, date, date);
+			+ " group by i.id order by i.fecha asc";
+		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql);
 	}
 
 	public CursoDTO getCurso(String id) {

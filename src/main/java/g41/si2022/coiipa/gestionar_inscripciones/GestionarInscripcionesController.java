@@ -162,8 +162,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	public void getListaInscripciones() {
 		JTable table = this.getView().getTableInscripciones();
 
-		String date = this.getView().getMain().getToday().toString();
-		inscripciones = this.getModel().getInscripciones(date);
+		inscripciones = this.getModel().getInscripciones();
 
 		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
 			x.updateEstado(getView().getMain().getToday());
@@ -183,7 +182,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		));
 
 		// Ocultar foreign keys de la tabla
-		for(int i=0;i<3;i++) table.removeColumn(table.getColumnModel().getColumn(0));
+		for(int i = 0; i < 3; i++) table.removeColumn(table.getColumnModel().getColumn(0));
 		table.setDefaultEditor(Object.class, null); // Deshabilitar edición
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
 		table.setRowSorter(sorter);
@@ -192,7 +191,6 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		sortKeys.add(new RowSorter.SortKey(6, SortOrder.ASCENDING));
 		sorter.setSortKeys(sortKeys);
 		table.getColumnModel().getColumn(6).setCellRenderer(new InscripcionStatusCellRenderer(9));
-		table.repaint();
 
 		SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas
 	}
