@@ -98,7 +98,7 @@ public class InscribirMultiplesUsuariosView extends View {
 		JScrollPane sp = new JScrollPane ();
 		sp.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		JPanel inscrollPanel = makeLoginPanel();
-		inscrollPanel.add(this.tablaInscritos = new g41.si2022.ui.components.RowAppendableJTable (
+		inscrollPanel.add(this.tablaInscritos = new g41.si2022.ui.components.table.RowAppendableJTable (
 				new String[]{"Nombre", "Apellidos", "Email", "Telefono"}), BorderLayout.SOUTH);
 
 		sp.setViewportView(inscrollPanel);
