@@ -45,17 +45,23 @@ end_two_months_ago = Date.new(year, month - 2, -1)
 
 
 cursos.push(Curso.new('[G] Curso ya finalizado', 'Curso generado que ya ha finalizado',
-    rng.rand(1..500), start_two_months_ago, end_two_months_ago, rng.rand(1..alumnos.length), start_last_month, end_last_month))
+    rng.rand(1..500), start_two_months_ago, end_two_months_ago, rng.rand(1..alumnos.length),
+    start_last_month, end_last_month))
 cursos.push(Curso.new('[G] Curso en progreso', 'Curso generado que está en progreso',
-    rng.rand(1..500), start_last_month, end_last_month, rng.rand(1..alumnos.length), start_this_month, end_this_month))
+    rng.rand(1..500), start_last_month, end_last_month, rng.rand(1..alumnos.length),
+    start_this_month, end_this_month))
 cursos.push(Curso.new('[G] Curso con inscripción cerrada', 'Curso generado que ya ha cerrado la inscripción pero no ha empezado',
-    rng.rand(1..500), start_last_month, end_last_month, rng.rand(1..alumnos.length), start_next_month, end_next_month))
+    rng.rand(1..500), start_last_month, end_last_month, rng.rand(1..alumnos.length),
+    start_next_month, end_next_month))
 cursos.push(Curso.new('[G] Curso con inscripción abierta', 'Curso generado que está abierto a inscripciones',
-    rng.rand(1..500), start_this_month, end_this_month, rng.rand(1..alumnos.length), start_next_month, end_next_month))
+    rng.rand(1..500), start_this_month, end_this_month, rng.rand(1..alumnos.length),
+    start_next_month, end_next_month))
 cursos.push(Curso.new('[G] Curso esperando a inscripción', 'Curso generado que está esperando a que se abra la inscripción',
-    rng.rand(1..500), start_next_month, end_next_month, rng.rand(1..alumnos.length), start_two_months_ago, end_two_months_ago))
+    rng.rand(1..500), start_next_month, end_next_month, rng.rand(1..alumnos.length),
+    start_two_months_ago, end_two_months_ago))
 cursos.push(Curso.new('[G] Curso con una plaza', 'Curso generado que tiene una plaza',
-    rng.rand(1..500), start_this_month, end_this_month, 1, start_next_month, end_next_month))
+    rng.rand(1..500), start_this_month, end_this_month, 1,
+    start_next_month, end_next_month))
 
 
 # Generar docentes
