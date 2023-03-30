@@ -27,6 +27,8 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	String fechaInscripciones;
 	LocalDate localDateCurso;
 	LocalDate localDateInscripciones;
+	CursoDTO selectedCurso;
+	
 
 	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
 		super(myTab, myModel);
@@ -36,17 +38,19 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	public void initNonVolatileData() {
 		// Acción del botón para cancelar cursos
 		this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
-				// Obtener el curso seleccionado
-				CursoDTO selectedCurso = getModel().getCurso(String.valueOf(idCurso));
+				
+				selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, localDateCurso));
+				System.out.printf("Estado actual del curso: %s\n", String.valueOf(selectedCurso.getEstado()));
 				// Si el curso no está cancelado, se cancela
-				if (!selectedCurso.updateEstado(localDateCurso).equals(CursoState.CANCELADO)) {
+				if (!String.valueOf(selectedCurso.getEstado()).equals(String.valueOf(CursoState.CANCELADO))) {
 					// Modificar estado del curso a CANCELADO
 					getModel().updateCursoStateToCancelled(String.valueOf(CursoState.CANCELADO), selectedCurso.getId());
-					selectedCurso.setEstado(selectedCurso.updateEstado(localDateCurso));
 					
 					System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
 				}
+				System.out.printf("Estado actual del curso: %s\n", String.valueOf(selectedCurso.getEstado()));
 			}
 		});
 	}
@@ -86,20 +90,20 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 	private void handleSelect() { //Función para manejar la fila seleccionada de la tabla
 
-
+		JTable table = getView().getTableInscripciones();
 		TableModel model = this.getView().getTableInscripciones().getModel();
 
 		//Obtengo los datos de la tabla y los almaceno en variables globales (por si a otros métodos les hacen falta)
 
-		idCurso = this.getView().getTableInscripciones().getSelectedRow();
+		idCurso = table.convertRowIndexToModel(table.getSelectedRow());
 		nombreCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 1).toString();
 		fechaInscripciones = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 2).toString();
 		fechaCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 4).toString();
-
+		selectedCurso = getModel().getCurso(String.valueOf(idCurso));
 		//DEBUG
 		System.out.printf("ID: %s, nombre: %s, fecha del curso: %s, fecha de inscripciones: %s \n", idCurso, nombreCurso, fechaCurso, fechaInscripciones);
 
-		if(idCurso == -1) { //Lo que se ha seleccionado está mal.
+		if (idCurso == -1) { //Lo que se ha seleccionado está mal.
 			eraseControls(true);
 			return;
 		}

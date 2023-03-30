@@ -21,7 +21,7 @@ create table curso (
     plazas integer not null,
     start date not null,
     end date not null,
-    estado text,
+    estado text
 );
 
 create table inscripcion (

@@ -60,24 +60,25 @@ public class StateUtilities {
 			return CursoState.CERRADO;
 		}
 		
-		try {
-			if (!curso.getEstado().equals(CursoState.CANCELADO))
-				return CursoState.CANCELADO;
+		if (getCursoCancelled(String.valueOf(curso.getId())).equals("CANCELADO")) {
+			return CursoState.CANCELADO;
+		} else if (curso.getStart_inscr().compareTo(today.toString()) > 0) { // if inscription start is before today
+			return CursoState.PLANEADO;
+		} else if (curso.getEnd_inscr().compareTo(today.toString()) > 0) { // if inscription end is before today
+			return CursoState.EN_INSCRIPCION;
+		} else if (curso.getStart().compareTo(today.toString()) > 0) { // if course start is before today
+			return CursoState.INSCRIPCION_CERRADA;
+		} else if (curso.getEnd().compareTo(today.toString()) > 0) { // if course end is before today
+			return CursoState.EN_CURSO;
+		} else { // if course end is after today
+			return CursoState.FINALIZADO;
+		}	
+	}
 
-		} catch (NullPointerException e){
-			if (curso.getStart_inscr().compareTo(today.toString()) > 0) { // if inscription start is before today
-				return CursoState.PLANEADO;
-			} else if (curso.getEnd_inscr().compareTo(today.toString()) > 0) { // if inscription end is before today
-				return CursoState.EN_INSCRIPCION;
-			} else if (curso.getStart().compareTo(today.toString()) > 0) { // if course start is before today
-				return CursoState.INSCRIPCION_CERRADA;
-			} else if (curso.getEnd().compareTo(today.toString()) > 0) { // if course end is before today
-				return CursoState.EN_CURSO;
-			} 
-		}
-		return CursoState.FINALIZADO;
-		
-		
+	public static String getCursoCancelled(String idCurso) {
+		String sql = "SELECT estado FROM curso WHERE id = ?";
+
+		return String.valueOf(new Database().executeQuerySingle(sql, idCurso));
 	}
 
 	/**
@@ -97,6 +98,7 @@ public class StateUtilities {
 		lc.forEach(x -> x.updateEstado(today));
 		return lc;
 	}
+
 
 	/* --- INSCRIPCION STATES --- */
 

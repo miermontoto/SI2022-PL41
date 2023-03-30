@@ -36,10 +36,19 @@ public class CursoDTO {
 	private InscripcionState inscripcion_estado; // Annadido por consultarCursos
 	private CursoState estado; // Annadido por ?
 
-	private boolean isCancelled; // Annadido por GestionarCursos
+	// private boolean isCancelled = false; // Annadido por gestionarCursos
 
 	public CursoState updateEstado(LocalDate today) {
 		this.estado = StateUtilities.getCursoState(this.getId(), today);
 		return this.estado;
 	}
+
+	// // Annadido por gestionarCursos
+	// public void setCancelled(boolean isCancelled) {
+	// 	this.isCancelled = isCancelled;
+	// }
+
+	// public boolean getCancelled() {
+	// 	return this.isCancelled;
+	// }
 }
