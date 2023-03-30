@@ -17,6 +17,8 @@ import g41.si2022.util.db.Database;
 import g41.si2022.util.exception.ApplicationException;
 
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Debug {
 
@@ -59,11 +61,31 @@ public class Debug {
 		});
 		all.add(data, gbc);
 
+		gbc.gridx = 1;
+		gbc.gridy = 3;
+		JButton ruby = new JButton("Ruby!");
+		ruby.addActionListener(e -> {
+			try {
+				Process process = Runtime.getRuntime().exec("ruby src/main/resources/generator/main.rb");
+				process.waitFor();
+				BufferedReader processIn = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+				String line;
+				String output = "";
+				while ((line = processIn.readLine()) != null) {
+					output += line + "\n";
+				}
+				status.setText(output);
+			} catch(java.io.IOException | InterruptedException io) {}
+		});
+		all.add(ruby, gbc);
+
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.gridheight = 2;
-		JButton refreshDb = new JButton("⟳ Refresh db");
+		JButton refreshDb = new JButton("⟳ Regenerate");
 		refreshDb.addActionListener(e -> {
+			ruby.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 			schema.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 			data.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 			status.setText("Database regenerated");
@@ -72,35 +94,15 @@ public class Debug {
 
 		gbc.gridy = 3;
 		gbc.gridheight = 1;
-		JButton delete = new JButton("Delete");
-		delete.addActionListener(e -> {
-			if (db.exists()) {
-				try {
-					db.deleteDatabase();
-					status.setText("Database deleted");
-				} catch (Exception ex) {
-					status.setText("Failed to delete database");
-					throw new ApplicationException(ex);
-				}
-			} else status.setText("There is no database to delete");
+		JButton smallRefresh = new JButton("⟳ Refresh");
+		smallRefresh.addActionListener(e -> {
+			schema.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+			data.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+			status.setText("Database refreshed");
 		});
-		all.add(delete, gbc);
-
-		gbc.gridx = 1;
-		JButton isFile = new JButton("Status");
-		isFile.addActionListener(e -> {
-			status.setText(db.exists() ? "Database exists" : "Database doesn't exist");
-		});
-		all.add(isFile, gbc);
-
-		gbc.gridx = 2;
-		for(int i = 1; i < 4; i++) {
-			gbc.gridy = i;
-			all.add(JLabelFactory.getLabel("          "), gbc);
-		}
+		all.add(smallRefresh, gbc);
 
 		gbc.gridx = 3;
-
 		gbc.gridy = 1;
 		JButton insertCurso = new JButton("Insert test curso");
 		insertCurso.addActionListener(e -> {
@@ -132,11 +134,13 @@ public class Debug {
 		all.add(close, gbc);
 
 		gbc.gridy = 4;
-		gbc.gridx = 1;
-		gbc.gridwidth = 2;
+		gbc.gridx = 0;
+		gbc.gridwidth = 5;
 		all.add(status, gbc);
 
 		gbc.gridy = 0;
+		// align center
+		gbc.gridwidth = 3;
 		all.add(JLabelFactory.getLabel(FontType.title, "Database control panel"), gbc);
 	}
 
