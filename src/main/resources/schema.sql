@@ -28,9 +28,18 @@ create table inscripcion (
     fecha date not null,
     curso_id integer not null,
     alumno_id integer not null,
+    grupo_id integer,
     foreign key (curso_id) references curso(id),
     foreign key (alumno_id) references alumno(id)
+    foreign key (grupo_id) references grupo(id)
 );
+
+create table grupo { 
+	id integer primary key autoincrement,
+    nombre text not null,
+    email text,
+    telefono text
+}
 
 create table inscripcioncancelada (
 	id integer primary key autoincrement,

@@ -36,7 +36,7 @@ public class InscribirMultiplesUsuariosView extends View {
 	private static final int panelBorder = 10;
 
 	private static final String signinTitle = "Iniciar sesión";
-	private static final String signupTitle = "Registro de usuario";
+	private static final String signupTitle = "Registro de grupo";
 
 	private JButton btnInscribir;
 	private JTable tablaCursos;
@@ -59,23 +59,6 @@ public class InscribirMultiplesUsuariosView extends View {
 
 	public InscribirMultiplesUsuariosView(g41.si2022.ui.SwingMain main) {
 		super(main, InscribirMultiplesUsuariosModel.class, InscribirMultiplesUsuariosView.class, InscribirMultiplesUsuariosController.class);
-	}
-
-	public Entity getGroup () {
-		return new Entity(this.getName(), this.getTxtEmail().getText(), this.getTxtTelefono().getText());
-	}
-
-	public List<Entity> getInscritos () {
-		List<Entity> out = new java.util.LinkedList<Entity> ();
-		for (int i = 0 ; i < this.tablaInscritos.getRowCount() ; i++) {
-			out.add(new Entity(
-					this.tablaInscritos.getValueAt(i, 0).toString(), // Nombre
-					this.tablaInscritos.getValueAt(i, 1).toString(), // Apellidos
-					this.tablaInscritos.getValueAt(i, 2).toString(), // Email
-					this.tablaInscritos.getValueAt(i, 3).toString()  // Tel
-					));
-		}
-		return out;
 	}
 
 	private void toggle() {
@@ -214,37 +197,4 @@ public class InscribirMultiplesUsuariosView extends View {
 		return bottomPane;
 	}
 
-	@Getter
-	private final class Entity {
-
-		/**
-		 * 
-		 * @param nombre
-		 * @param apellidos
-		 * @param email
-		 * @param telefono
-		 */
-		public Entity (String nombre, String apellidos, String email, String telefono) {
-			this.nombre = nombre;
-			this.apellidos = apellidos;
-			this.email = email;
-			this.telefono = telefono;
-		}
-
-		/**
-		 * 
-		 * @param nombre
-		 * @param email
-		 * @param telefono
-		 */
-		public Entity (String nombre, String email, String telefono) {
-			this(nombre, null, email, telefono);
-		}
-
-		private String
-		nombre,
-		apellidos,
-		email,
-		telefono;
-	}
 }
