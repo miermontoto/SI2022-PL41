@@ -16,11 +16,6 @@ import javax.swing.ListSelectionModel;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTextArea;
 import org.jdesktop.swingx.JXTitledPanel;
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
 
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
@@ -116,7 +111,7 @@ public class ListaActividadesView extends View {
         JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
         bottomPanel.add(infoTitledPanel);
         bottomPanel.add(eventosTitledPanel);
-        bottomPanel.setPreferredSize(new java.awt.Dimension(SwingMain.WINDOW_WIDTH, 200));
+        bottomPanel.setPreferredSize(new java.awt.Dimension(getMain().getFrame().getWidth(), getMain().getFrame().getHeight() / 4));
         this.add(bottomPanel, BorderLayout.SOUTH);
     }
 

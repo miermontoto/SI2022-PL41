@@ -45,9 +45,8 @@ public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<R
 	}
 
 	private void handleInsertar() {
-		String date = this.getView().getDatePicker().getDate().toString();
 		String id = table.getModel().getValueAt(row, 0).toString();
-		this.getModel().updateFactura(id, date);
+		//this.getModel().updateFactura(id, date);
 		getListaFacturas();
 		Dialog.show("Pago registrado correctamente");
 	}
@@ -75,8 +74,7 @@ public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<R
 
 	private void getListaFacturas() {
 		List<FacturaDTO> listaFacturas;
-		String today = this.getView().getMain().getToday().toString();
-		listaFacturas = this.getView().getChkAll().isSelected() ? this.getModel().getListaFacturas(today) : this.getModel().getListaFacturasSinPagar(today);
+		listaFacturas = this.getView().getChkAll().isSelected() ? this.getModel().getListaFacturas() : this.getModel().getListaFacturasSinPagar();
 		table.setModel(SwingUtil.getTableModelFromPojos(listaFacturas,
 			new String[] {"id", "doc_nombre", "doc_apellidos", "curso_nombre", "remuneracion", "fecha_introd", "fecha_pago"},
 			new String[] {"", "Nombre", "Apellidos", "Curso", "€", "Fecha int.", "Fecha pago"},
