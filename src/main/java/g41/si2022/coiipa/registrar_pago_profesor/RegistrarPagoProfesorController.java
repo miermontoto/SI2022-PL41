@@ -45,7 +45,6 @@ public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<R
 	}
 
 	private void handleInsertar() {
-		String date = this.getView().getDatePicker().getDate().toString();
 		String id = table.getModel().getValueAt(row, 0).toString();
 		//this.getModel().updateFactura(id, date);
 		getListaFacturas();
