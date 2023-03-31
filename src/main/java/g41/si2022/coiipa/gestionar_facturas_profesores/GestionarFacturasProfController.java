@@ -13,7 +13,6 @@ import java.awt.event.MouseAdapter;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.DocenciaDTO;
 import g41.si2022.dto.FacturaDTO;
-import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.StatusCellRenderer;

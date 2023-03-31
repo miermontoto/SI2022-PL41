@@ -5,7 +5,6 @@ import java.util.List;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.DocenciaDTO;
 import g41.si2022.dto.FacturaDTO;
-import g41.si2022.dto.ProfesorDTO;
 
 public class GestionarFacturasProfModel extends g41.si2022.mvc.Model {
 
