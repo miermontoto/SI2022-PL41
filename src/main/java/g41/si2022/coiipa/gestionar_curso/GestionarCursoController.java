@@ -28,7 +28,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	LocalDate localDateCurso;
 	LocalDate localDateInscripciones;
 	CursoDTO selectedCurso;
-	
+	List<CursoDTO> listaCursos;
 
 	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
 		super(myTab, myModel);
@@ -40,19 +40,20 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String estadoDB;
-				selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, localDateCurso));
+				selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
 				System.out.printf("Estado actual del curso: %s\n", String.valueOf(selectedCurso.getEstado()));
 				estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
 				System.out.printf("Estado actual del curso (DB): %s\n", estadoDB);
 
 				// Si el curso no está cancelado, se cancela. En la database sólo se guarda el estado CANCELADO
-				// de un curso. Por defecto el atributo es null
+				// de un curso. Por defecto el atributo estado es null
 				if (estadoDB.equals("null")) {
 					// Modificar estado del curso a CANCELADO. Se modifica el atributo en la database
 					getModel().updateCursoStateToCancelled(String.valueOf(CursoState.CANCELADO), selectedCurso.getId());
-					selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, localDateCurso));
+					selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
 					System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
 				}
+				updateTables();
 				estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
 				System.out.printf("Estado actual del curso: %s\n", String.valueOf(selectedCurso.getEstado()));
 				System.out.printf("Estado actual del curso (DB): %s\n", estadoDB);
@@ -64,16 +65,6 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	public void initVolatileData() {
 		this.initThings();
 		this.updateTables();
-
-		// this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
-		// 	public void actionPerformed(ActionEvent e) {
-		// 		// Obtener el curso seleccionado
-		// 		CursoDTO selectedCurso = getModel().getCurso(String.valueOf(idCurso));
-		// 		// Modificar estado del curso a CANCELADO
-		// 		selectedCurso.setEstado(CursoState.CANCELADO);
-		// 		System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
-		// 	}
-		// });
 	}
 
 	public void initThings() {
@@ -100,13 +91,13 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 		//Obtengo los datos de la tabla y los almaceno en variables globales (por si a otros métodos les hacen falta)
 
-		idCurso = table.convertRowIndexToModel(table.getSelectedRow());
+		idCurso = table.getSelectedRow() + 1;
 		nombreCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 1).toString();
 		fechaInscripciones = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 2).toString();
 		fechaCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 4).toString();
 		selectedCurso = getModel().getCurso(String.valueOf(idCurso));
 		//DEBUG
-		System.out.printf("ID: %s, nombre: %s, fecha del curso: %s, fecha de inscripciones: %s \n", idCurso, nombreCurso, fechaCurso, fechaInscripciones);
+		// System.out.printf("ID: %s, nombre: %s, fecha del curso: %s, fecha de inscripciones: %s \n", idCurso, nombreCurso, fechaCurso, fechaInscripciones);
 
 		if (idCurso == -1) { //Lo que se ha seleccionado está mal.
 			eraseControls(true);
@@ -171,18 +162,21 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 	public void updateTables() {
 
-		List <CursoDTO> listacursos = this.getModel().getCursos();
+		listaCursos = this.getModel().getCursos();
 
+		for (CursoDTO curso: listaCursos) 
+			curso.setEstado(StateUtilities.getCursoState(curso, this.getTab().getMain().getToday()));
+		
 		this.getView().getTableInscripciones().setModel(
 				SwingUtil.getTableModelFromPojos(
-						listacursos,
-						new String[] { "id", "nombre", "start_inscr", "end_inscr", "start", "end"},
-						new String[] { "Id", "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso"},
+						listaCursos,
+						new String[] { "id", "nombre", "start_inscr", "end_inscr", "start", "end", "estado"},
+						new String[] { "Id", "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Estado"},
 						null
 						)
 				);
 		//Ocultamos la columna 0 de la vista.
-		this.getView().getTableInscripciones().removeColumn(this.getView().getTableInscripciones().getColumnModel().getColumn(0));
+		// this.getView().getTableInscripciones().removeColumn(this.getView().getTableInscripciones().getColumnModel().getColumn(0));
 
 	}
 

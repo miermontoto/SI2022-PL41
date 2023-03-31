@@ -76,12 +76,12 @@ public class StateUtilities {
 	}
 
 	/**
-	 * Obtiene el valor del atributo estado de la tabla curso. Por defecto este atributo es 'null'.
-	 * En la clase GestionarCursoController.java se modifica este atributo a 'CANCELADO' para 
-	 * realizar cancelaciones de curos.
+	 * Gets the value of the status attribute of the course table. By default this attribute is 'null'.
+	 * In the class GestionarCursoController.java this attribute is modified to 'CANCELADO' in order to 
+	 * perform course cancellations.
 	 * 
-	 * @param idCurso Id del curso a obtener su estado almacenado en la database.
-	 * @return El valor del atributo estado del curso especificado.
+	 * @param idCurso Id of the course to get its status stored in the database.
+	 * @return The value of the specified course status attribute.
 	 */
 	public static String getCursoStateDB(String idCurso) {
 		String sql = "SELECT estado FROM curso WHERE id = ?";
