@@ -19,7 +19,7 @@ import java.awt.event.MouseAdapter;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
-import g41.si2022.util.InscripcionStatusCellRenderer;
+import g41.si2022.util.StatusCellRenderer;
 import g41.si2022.util.Util;
 import g41.si2022.util.state.CursoState;
 import g41.si2022.util.state.InscripcionState;
@@ -190,7 +190,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		sortKeys.add(new RowSorter.SortKey(5, SortOrder.ASCENDING));
 		sortKeys.add(new RowSorter.SortKey(6, SortOrder.ASCENDING));
 		sorter.setSortKeys(sortKeys);
-		table.getColumnModel().getColumn(6).setCellRenderer(new InscripcionStatusCellRenderer(9));
+		table.getColumnModel().getColumn(6).setCellRenderer(new StatusCellRenderer(9));
 
 		SwingUtil.autoAdjustColumns(table); // Ajustamos las columnas
 	}

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.FacturaDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
 import g41.si2022.util.db.Database;
@@ -169,6 +170,18 @@ public class StateUtilities {
 	public static boolean isDelayed(InscripcionDTO inscr, LocalDate today) {
 		LocalDate inscrDate = LocalDate.parse(inscr.getFecha());
 		return inscrDate.plusDays(INSCRIPCION_DELAY_TIME).compareTo(today) < 0;
+	}
+
+	/* ----- FACTURA STATES ----- */
+
+	public static FacturaState getFacturaState(FacturaDTO factura) {
+		return getFacturaState(Double.parseDouble(factura.getPagado()), Double.parseDouble(factura.getRemuneracion()));
+	}
+
+	public static FacturaState getFacturaState(double paid, double cost) {
+		if (paid > cost) return FacturaState.EXCESO;
+		if (paid < cost) return FacturaState.PENDIENTE;
+		return FacturaState.PAGADA;
 	}
 
 }
