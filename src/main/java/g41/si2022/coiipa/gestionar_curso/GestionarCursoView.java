@@ -7,47 +7,44 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.text.NumberFormat;
 
-import javax.swing.JPanel;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
-import javax.swing.JTable;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
 import org.jdesktop.swingx.JXTitledPanel;
 
-import com.github.lgooddatepicker.components.DatePicker;
-import lombok.Getter;
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
+import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
-
-import javax.swing.JCheckBox;
+import lombok.Getter;
 
 @Getter
 public class GestionarCursoView extends View {
 
 	private static final long serialVersionUID = 1L;
-	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
-	private JScrollPane scrollPane; // Panel de scroll de la tabla
+	private JTable tableInscripciones;
+	private JScrollPane scrollPane;
 	private JLabel lblInfoNombre;
-	//private JLabel lblInfoDias;
 	private JLabel lblFechaCurso;
+	private JLabel lblFechaInscripcion;
 	private JLabel lblDevolverCalculo;
 	private JButton btnCambiarFechas;
 	private JButton btnCambiarDetalles;
 
-	//Datepicker para cambiar la fecha del curso y de las inscripciones
-	private DatePicker datePickerNewDateCurso;
-	private DatePicker datePickerNewDateInscripciones;
-	private DatePicker datePickerNewDateFinCurso;
-	private DatePicker datePickerNewDateFinInscripciones;
+	private BetterDatePicker dateNewIniCurso;
+	private BetterDatePicker dateNewIniInscr;
+	private BetterDatePicker dateNewFinCurso;
+	private BetterDatePicker dateNewFinInscr;
 
-	
 	private JFormattedTextField txtFieldPlazas;
 	private JPanel panel;
 	private JCheckBox chkAll;
@@ -81,7 +78,7 @@ public class GestionarCursoView extends View {
 
 		chkAll = new JCheckBox("Ver todas las inscripciones");
 		chkAll.setHorizontalAlignment(SwingConstants.LEFT);
-		panel.add(chkAll);
+		//panel.add(chkAll);
 
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 	    formatter.setValueClass(Integer.class);
@@ -102,7 +99,8 @@ public class GestionarCursoView extends View {
 		infoPanelContent.setLayout(new GridBagLayout());
 		gbc.insets = spacer;
 		gbc.gridy = 0;
-		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Curso seleccionado:"), gbc);
+		gbc.anchor = GridBagConstraints.CENTER;
+		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Curso seleccionado"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 1;
@@ -118,66 +116,55 @@ public class GestionarCursoView extends View {
 
 		gbc.insets = spacer;
 		gbc.gridy = 3;
-		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Fecha de inicio del curso"), gbc);
+		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Fechas del curso"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 4;
+		infoPanelContent.add(lblFechaInscripcion = JLabelFactory.getLabel("N/A"), gbc);
+
+		gbc.gridy = 5;
 		infoPanelContent.add(lblFechaCurso = JLabelFactory.getLabel("N/A"), gbc);
 
-		
-		//Parte del panel de cambio de fechas
-		
+		// Parte del panel de cambio de fechas
 		retrasarPanelContent.setLayout(new GridBagLayout());
 
 		gbc.insets = spacer;
-		gbc.gridy = 3;
-		retrasarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nueva fecha de inicio para el curso"), gbc);
+		gbc.gridy = 0;
+		retrasarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nuevas fechas de inscripción"), gbc);
 
 		gbc.insets = next;
-		gbc.gridy = 4;
+		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		retrasarPanelContent.add(datePickerNewDateCurso = new DatePicker(), gbc);
-		
-		gbc.insets = spacer;
-		gbc.gridy = 3;
-		retrasarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nueva fecha de fin del curso"), gbc);
+		retrasarPanelContent.add(dateNewIniInscr = new BetterDatePicker(), gbc);
 
 		gbc.insets = next;
-		gbc.gridy = 4;
+		gbc.gridx = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		retrasarPanelContent.add(datePickerNewDateFinCurso = new DatePicker(), gbc);
+		retrasarPanelContent.add(dateNewFinInscr = new BetterDatePicker(), gbc);
 
 		gbc.insets = spacer;
-		gbc.gridy = 5;
-		gbc.fill = GridBagConstraints.NONE;
+		gbc.gridy = 2;
+		gbc.gridx = 0;
 		gbc.weightx = 0.0;
-		retrasarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nueva fecha para el inicio de inscripciones"), gbc);
+		retrasarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nuevas fechas de curso"), gbc);
 
 		gbc.insets = next;
-		gbc.gridy = 6;
+		gbc.gridy = 3;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		gbc.anchor = GridBagConstraints.CENTER;
-		retrasarPanelContent.add(datePickerNewDateInscripciones = new DatePicker(), gbc);
-		
-		gbc.insets = spacer;
-		gbc.gridy = 5;
-		gbc.fill = GridBagConstraints.NONE;
+		retrasarPanelContent.add(dateNewIniCurso = new BetterDatePicker(), gbc);
+
+		gbc.gridx = 1;
 		gbc.weightx = 0.0;
-		retrasarPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nueva fecha para el fin de inscripciones"), gbc);
-
-		gbc.insets = next;
-		gbc.gridy = 6;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1.0;
-		gbc.anchor = GridBagConstraints.CENTER;
-		retrasarPanelContent.add(datePickerNewDateFinInscripciones = new DatePicker(), gbc);
+		retrasarPanelContent.add(dateNewFinCurso = new BetterDatePicker(), gbc);
 
 		gbc.insets = spacer;
-		gbc.gridy = 25;
+		gbc.gridy = 4;
+		gbc.gridx = 0;
 		gbc.weightx = 1.0;
+		gbc.gridwidth = 2;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.CENTER;
 		retrasarPanelContent.add(btnCambiarFechas = new JButton("Cambiar fechas"), gbc);
@@ -185,21 +172,20 @@ public class GestionarCursoView extends View {
 		devolverPanelContent.setLayout(new GridBagLayout());
 
 		gbc.insets = spacer;
-		gbc.gridy = 4;
+		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.fill = GridBagConstraints.CENTER;
 		gbc.weightx = 1.0;
 		devolverPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Cambiar número de plazas"), gbc);
-		
+
 		gbc.insets = spacer;
-		gbc.gridy = 5;
+		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.fill = GridBagConstraints.CENTER;
 		gbc.weightx = 1.0;
 		devolverPanelContent.add(txtFieldPlazas = new JFormattedTextField(formatter), gbc);
-	   
 
-		gbc.gridy = 8;
+		gbc.gridy = 2;
 		devolverPanelContent.add(btnCambiarDetalles = new JButton("Cambiar detalles"), gbc);
 
 		tableInscripciones = new JTable();
