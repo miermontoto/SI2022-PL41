@@ -55,21 +55,21 @@ public class StateUtilities {
 	 * @param canBeCerrado true if the curso can be cerrado, false if not.
 	 * @return {@link CursoState} of the course for the given date.
 	 */
-	public static CursoState getCursoState (CursoDTO curso, LocalDate today, boolean canBeCerrado) {
+	public static CursoState getCursoState(CursoDTO curso, LocalDate today, boolean canBeCerrado) {
+		LocalDate startInscr = LocalDate.parse(curso.getStart_inscr());
+		LocalDate endInscr = LocalDate.parse(curso.getEnd_inscr());
+		LocalDate start = LocalDate.parse(curso.getStart());
+		LocalDate end = LocalDate.parse(curso.getEnd());
+
 		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getEstado() != null) {
 			return CursoState.CERRADO;
 		}
-		if (curso.getStart_inscr().compareTo(today.toString()) > 0) { // if inscription start is before today
-			return CursoState.PLANEADO;
-		} else if (curso.getEnd_inscr().compareTo(today.toString()) > 0) { // if inscription end is before today
-			return CursoState.EN_INSCRIPCION;
-		} else if (curso.getStart().compareTo(today.toString()) > 0) { // if course start is before today
-			return CursoState.INSCRIPCION_CERRADA;
-		} else if (curso.getEnd().compareTo(today.toString()) > 0) { // if course end is before today
-			return CursoState.EN_CURSO;
-		} else { // if course end is after today
-			return CursoState.FINALIZADO;
-		}
+
+		if(startInscr.isAfter(today)) return CursoState.PLANEADO;
+		if(endInscr.isAfter(today) || endInscr.equals(today)) return CursoState.EN_INSCRIPCION;
+		if(start.isAfter(today)) return CursoState.INSCRIPCION_CERRADA;
+		if(end.isAfter(today) || end.isEqual(today)) return CursoState.EN_CURSO;
+		return CursoState.FINALIZADO;
 	}
 
 	/**
