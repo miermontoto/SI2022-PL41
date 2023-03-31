@@ -69,13 +69,7 @@ public class Debug {
 				Process process = Runtime.getRuntime().exec("ruby src/main/resources/generator/main.rb");
 				process.waitFor();
 				BufferedReader processIn = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-				String line;
-				String output = "";
-				while ((line = processIn.readLine()) != null) {
-					output += line + "\n";
-				}
-				status.setText(output);
+				status.setText(processIn.readLine());
 			} catch(java.io.IOException | InterruptedException io) {}
 		});
 		all.add(ruby, gbc);
@@ -83,64 +77,33 @@ public class Debug {
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.gridheight = 2;
-		JButton refreshDb = new JButton("⟳ Regenerate");
-		refreshDb.addActionListener(e -> {
+		JButton refresh = new JButton("⟳ Refresh");
+		refresh.addActionListener(e -> {
+			schema.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+			data.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+			status.setText("Database refreshed");
+		});
+		all.add(refresh, gbc);
+
+
+		gbc.gridy = 3;
+		gbc.gridheight = 1;
+		JButton regenerate = new JButton("⟳ Regenerate");
+		regenerate.addActionListener(e -> {
 			ruby.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 			schema.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 			data.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 			status.setText("Database regenerated");
 		});
-		all.add(refreshDb, gbc);
-
-		gbc.gridy = 3;
-		gbc.gridheight = 1;
-		JButton smallRefresh = new JButton("⟳ Refresh");
-		smallRefresh.addActionListener(e -> {
-			schema.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
-			data.getActionListeners()[0].actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
-			status.setText("Database refreshed");
-		});
-		all.add(smallRefresh, gbc);
-
-		gbc.gridx = 3;
-		gbc.gridy = 1;
-		JButton insertCurso = new JButton("Insert test curso");
-		insertCurso.addActionListener(e -> {
-			if (db.exists()) {
-				try {
-					new RegistrarCursoModel().insertCurso("CSGO S2", "", "5", "2023-03-01", "2023-03-31", "2023-04-01", "2023-04-30", "1");
-					status.setText("Inserted test curso using RegistrarCursoModel().insertCurso");
-				} catch (Exception ex) {
-					status.setText("Failed to insert test curso");
-					throw new ApplicationException(ex);
-				}
-			} else status.setText("Failed to insert test curso (db hasn't been created yet)");
-		});
-		all.add(insertCurso, gbc);
-
-		gbc.gridy = 2;
-		JButton dark = new JButton("Toggle dark mode");
-		dark.addActionListener(e -> {
-			main.toggleDarkMode();
-		});
-		all.add(dark, gbc);
-
-		insertCurso.setEnabled(false);
-		dark.setEnabled(false);
-
-		gbc.gridy = 3;
-		JButton close = new JButton("Close window");
-		close.addActionListener(e -> { System.exit(0); });
-		all.add(close, gbc);
+		all.add(regenerate, gbc);
 
 		gbc.gridy = 4;
 		gbc.gridx = 0;
-		gbc.gridwidth = 5;
+		gbc.gridwidth = 2;
 		all.add(status, gbc);
 
 		gbc.gridy = 0;
-		// align center
-		gbc.gridwidth = 3;
+		gbc.gridwidth = 2;
 		all.add(JLabelFactory.getLabel(FontType.title, "Database control panel"), gbc);
 	}
 

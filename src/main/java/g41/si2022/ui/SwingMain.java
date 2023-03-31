@@ -23,7 +23,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.event.MouseInputAdapter;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -79,28 +78,11 @@ public class SwingMain {
 		});
 	}
 
-	public void refresh() {
-		frame.revalidate();
-		frame.repaint();
-	}
-
-	public void toggleDarkMode() {
-		isDark = !isDark;
-		try {
-			if (isDark) UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
-			else UIManager.setLookAndFeel("com.formdev.flatlaf.FlatLightLaf");
-		} catch (Exception e) { e.printStackTrace(); }
-		refresh();
-	}
-
 	/**
 	 * Create the application.
 	 * @throws IOException
 	 */
 	public SwingMain() throws IOException {
-
-
-
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
 		frame.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
