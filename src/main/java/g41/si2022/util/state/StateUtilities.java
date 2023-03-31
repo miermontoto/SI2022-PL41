@@ -60,7 +60,7 @@ public class StateUtilities {
 			return CursoState.CERRADO;
 		}
 		
-		if (getCursoCancelled(String.valueOf(curso.getId())).equals("CANCELADO")) {
+		if (getCursoStateDB(String.valueOf(curso.getId())).equals("CANCELADO")) {
 			return CursoState.CANCELADO;
 		} else if (curso.getStart_inscr().compareTo(today.toString()) > 0) { // if inscription start is before today
 			return CursoState.PLANEADO;
@@ -75,7 +75,15 @@ public class StateUtilities {
 		}	
 	}
 
-	public static String getCursoCancelled(String idCurso) {
+	/**
+	 * Obtiene el valor del atributo estado de la tabla curso. Por defecto este atributo es 'null'.
+	 * En la clase GestionarCursoController.java se modifica este atributo a 'CANCELADO' para 
+	 * realizar cancelaciones de curos.
+	 * 
+	 * @param idCurso Id del curso a obtener su estado almacenado en la database.
+	 * @return El valor del atributo estado del curso especificado.
+	 */
+	public static String getCursoStateDB(String idCurso) {
 		String sql = "SELECT estado FROM curso WHERE id = ?";
 
 		return String.valueOf(new Database().executeQuerySingle(sql, idCurso));

@@ -39,16 +39,23 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		// Acción del botón para cancelar cursos
 		this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String estadoDB;
 				selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, localDateCurso));
 				System.out.printf("Estado actual del curso: %s\n", String.valueOf(selectedCurso.getEstado()));
-				// Si el curso no está cancelado, se cancela
-				if (!String.valueOf(selectedCurso.getEstado()).equals(String.valueOf(CursoState.CANCELADO))) {
-					// Modificar estado del curso a CANCELADO
+				estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
+				System.out.printf("Estado actual del curso (DB): %s\n", estadoDB);
+
+				// Si el curso no está cancelado, se cancela. En la database sólo se guarda el estado CANCELADO
+				// de un curso. Por defecto el atributo es null
+				if (estadoDB.equals("null")) {
+					// Modificar estado del curso a CANCELADO. Se modifica el atributo en la database
 					getModel().updateCursoStateToCancelled(String.valueOf(CursoState.CANCELADO), selectedCurso.getId());
-					
+					selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, localDateCurso));
 					System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
 				}
+				estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
 				System.out.printf("Estado actual del curso: %s\n", String.valueOf(selectedCurso.getEstado()));
+				System.out.printf("Estado actual del curso (DB): %s\n", estadoDB);
 			}
 		});
 	}

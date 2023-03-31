@@ -46,6 +46,12 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model{
 		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, idCurso).get(0);
 	}
 
+	public String getDBcursoState(String idCurso) {
+		String sql = "SELECT estado FROM curso WHERE id = ?";
+
+		return String.valueOf(this.getDatabase().executeQuerySingle(sql, idCurso));
+	}
+
 	public void updateCursoStateToCancelled(String estado, String idCurso) {
 		String sql = "UPDATE curso SET estado = ? WHERE id = ?";
 
