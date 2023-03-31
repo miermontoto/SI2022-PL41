@@ -59,7 +59,6 @@ public class SwingMain {
 	private JPanel total;
 	private JLabel lblTitle;
 	private JComponent[] passProtected;
-	private static boolean isDark = false;
 
 	/**
 	 * Launch the application.
