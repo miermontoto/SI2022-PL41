@@ -59,10 +59,23 @@ cursos.push(Curso.new('[G] Curso con inscripción abierta', 'Curso generado que 
 cursos.push(Curso.new('[G] Curso esperando a inscripción', 'Curso generado que está esperando a que se abra la inscripción',
     rng.rand(1..500), start_next_month, end_next_month, rng.rand(1..alumnos.length),
     start_two_months_ago, end_two_months_ago))
+
+
+# Generar inscripciones
+## Se necesita una inscripción cancelada por curso.
+## Como el estado de las inscripciones depende de los pagos,
+## se generarán pagos para obtener varios estados de inscripción.
+inscripciones = []
+
+cursos.each.with_index do |c, i|
+    inscripciones += generate_inscripciones(rng.rand(1..c.plazas), alumnos, c, i)
+end
+
+### Se genera un curso con una sola plaza después de generar inscripciones para que
+### siempre tenga una plaza libre.
 cursos.push(Curso.new('[G] Curso con una plaza', 'Curso generado que tiene una plaza',
     rng.rand(1..500), start_this_month, end_this_month, 1,
     start_next_month, end_next_month))
-
 
 # Generar docentes
 ## No se necesitan casos específicos.
@@ -86,16 +99,6 @@ docencias = []
 
 cursos.length.times do |i|
     docencias += generate_docencias(rng.rand(1..6), docentes, i)
-end
-
-# Generar inscripciones
-## Se necesita una inscripción cancelada por curso.
-## Como el estado de las inscripciones depende de los pagos,
-## se generarán pagos para obtener varios estados de inscripción.
-inscripciones = []
-
-cursos.each.with_index do |c, i|
-    inscripciones += generate_inscripciones(rng.rand(1..c.plazas), alumnos, c, i)
 end
 
 # Generar facturas
@@ -143,3 +146,5 @@ end
 File.open('src/main/resources/data.sql', 'w') do |f|
     f.write(sql)
 end
+
+puts "Done!"
