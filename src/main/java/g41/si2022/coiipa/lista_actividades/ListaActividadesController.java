@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.swing.JTable;
@@ -26,7 +27,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
     private List<CursoDTO> cursos;
     private List<CursoDTO> cursosActivos;
 
-    private java.util.function.Supplier<List<CursoDTO>> sup = () -> {
+    private Supplier<List<CursoDTO>> supCursos = () -> {
         // Get the selected item from the the filter
 		CursoState selectedItem = (CursoState) this.getView().getCbFiltro().getSelectedItem();
 		List<CursoDTO> output = new ArrayList<CursoDTO>(), // Will contain the entries that meet the filter
@@ -60,6 +61,15 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 		return output; // We return the filtered array
     };
 
+    private Supplier<List<EventoDTO>> supEventos = () -> {
+        List<EventoDTO> eventos = getModel().getEventosCurso(SwingUtil.getSelectedKey(this.getView().getTablaCursos()));
+        try {
+            String locSelected = getView().getInfoLocalizaciones().getSelectedItem().toString();
+            if (locSelected.equals("------")) return eventos;
+            return eventos.stream().filter(x -> x.getLoc().equals(locSelected)).collect(Collectors.toList());
+        } catch (java.lang.NullPointerException npe) {return eventos;}
+    };
+
     public ListaActividadesController(ListaActividadesModel model, ListaActividadesView view) {
     	super(view, model);
     }
@@ -87,6 +97,12 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
                 });
             }
         });
+
+        getView().getInfoLocalizaciones().addActionListener(e -> {
+            SwingUtil.exceptionWrapper(() -> {
+                ListaActividadesController.this.showListaEventos();
+            });
+        });
     }
 
     @Override
@@ -113,7 +129,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
     private void showListaCursos() {
         JTable table = this.getView().getTablaCursos();
         table.setModel(SwingUtil.getTableModelFromPojos(
-            this.sup.get(),
+            this.supCursos.get(),
             new String[] { "id", "nombre", "estado", "start_inscr", "end_inscr", "plazas", "plazas_libres", "start" },
             new String[] { "", "Nombre", "Estado", "Inicio de inscripciones", "Fin de inscripciones", "Plazas", "Plazas vacantes" , "Inicio del curso" },
             null
@@ -124,9 +140,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 
     private void showListaEventos() {
         JTable table = this.getView().getTableEventos();
-        String cursoId = SwingUtil.getSelectedKey(this.getView().getTablaCursos());
-        List<EventoDTO> eventos = this.getModel().getEventosCurso(cursoId);
-        table.setModel(SwingUtil.getTableModelFromPojos(eventos,
+        table.setModel(SwingUtil.getTableModelFromPojos(supEventos.get(),
             new String[] {"loc", "fecha", "horaIni", "horaFin"},
             new String[] {"Localización (aula)", "Fecha", "Hora de inicio", "Hora de fin"},
             null));
@@ -168,8 +182,8 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
             List<EventoDTO> eventos = getModel().getEventosCurso(curso);
             ArrayList<String> locs = new ArrayList<>();
 
-            if (eventos.isEmpty()) comboLocs.addItem("N/A");
-            else for(EventoDTO evento : eventos) {
+            comboLocs.addItem("------");
+            if (!eventos.isEmpty()) for(EventoDTO evento : eventos) {
                 if(!locs.contains(evento.getLoc())) {
                     locs.add(evento.getLoc());
                     comboLocs.addItem(evento.getLoc());
