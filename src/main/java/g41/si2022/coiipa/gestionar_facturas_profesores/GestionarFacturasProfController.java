@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.registrar_pago_profesor;
+package g41.si2022.coiipa.gestionar_facturas_profesores;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -19,13 +19,13 @@ import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.StatusCellRenderer;
 import g41.si2022.util.state.FacturaState;
 
-public class RegistrarPagoProfesorController extends g41.si2022.mvc.Controller<RegistrarPagoProfesorView, RegistrarPagoProfesorModel> {
+public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<GestionarFacturasProfView, GestionarFacturasProfModel> {
 
 	private int row;
 	private JTable table;
 	private List<FacturaDTO> facturas;
 
-	public RegistrarPagoProfesorController(RegistrarPagoProfesorModel modelo, RegistrarPagoProfesorView vista) {
+	public GestionarFacturasProfController(GestionarFacturasProfModel modelo, GestionarFacturasProfView vista) {
 		super(vista, modelo);
 		this.table = this.getView().getTableInscripciones();
 	}

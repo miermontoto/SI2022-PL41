@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.registrar_pago_profesor;
+package g41.si2022.coiipa.gestionar_facturas_profesores;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import g41.si2022.dto.DocenciaDTO;
 import g41.si2022.dto.FacturaDTO;
 import g41.si2022.dto.ProfesorDTO;
 
-public class RegistrarPagoProfesorModel extends g41.si2022.mvc.Model {
+public class GestionarFacturasProfModel extends g41.si2022.mvc.Model {
 
 	public List<FacturaDTO> getListaFacturas() {
 		String sql = "select f.*, dca.remuneracion,"

@@ -1,4 +1,4 @@
-package g41.si2022.coiipa.registrar_pago_profesor;
+package g41.si2022.coiipa.gestionar_facturas_profesores;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -29,7 +29,7 @@ import g41.si2022.ui.util.JLabelFactory;
 import javax.swing.JCheckBox;
 
 @Getter
-public class RegistrarPagoProfesorView extends View {
+public class GestionarFacturasProfView extends View {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
@@ -44,8 +44,8 @@ public class RegistrarPagoProfesorView extends View {
 	private JFormattedTextField txtImporte;
 	private JCheckBox chkAll;
 
-	public RegistrarPagoProfesorView(SwingMain main) {
-		super(main, RegistrarPagoProfesorModel.class, RegistrarPagoProfesorView.class, RegistrarPagoProfesorController.class);
+	public GestionarFacturasProfView(SwingMain main) {
+		super(main, GestionarFacturasProfModel.class, GestionarFacturasProfView.class, GestionarFacturasProfController.class);
 	}
 
 	@Override
