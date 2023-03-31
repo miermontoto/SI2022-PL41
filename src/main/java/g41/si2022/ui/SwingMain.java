@@ -86,7 +86,7 @@ public class SwingMain {
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
 		frame.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-		Image logo = new ImageIcon(ImageIO.read(new File("src/main/resources/logoBlanco.png"))).getImage();
+		java.awt.Image logo = new ImageIcon(ImageIO.read(new File("src/main/resources/logoBlanco.png"))).getImage();
 		frame.setIconImage(logo);
 
 		frame.setResizable(false);
