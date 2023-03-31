@@ -1,10 +1,13 @@
 package g41.si2022.coiipa.gestionar_curso;
 
 import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.InscripcionDTO;
+
+import java.util.List;
 
 public class GestionarCursoModel extends g41.si2022.mvc.Model{
 	
-	public java.util.List<CursoDTO> getCursos () {
+	public List<CursoDTO> getCursos () {
 		String sql =
 				"SELECT curso.id "
 				+ " ,curso.nombre "
@@ -65,5 +68,19 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model{
 		String sql = "UPDATE curso SET estado = ? WHERE id = ?";
 
 		this.getDatabase().executeUpdate(sql, estado, idCurso);
+	}
+
+	/**
+	 * Gets the e-mails of the students enrolled in a course.
+	 * 
+	 * @param idCurso Id of the course to get e-mails.
+	 * @return E-mails of the students registered in the course.
+	 */
+	public List<String> getAlumnosEmail(String idCurso) {
+		String sql = "SELECT al.email FROM inscripcion as i " + 
+					 "INNER JOIN alumno as al " +
+					 "WHERE curso_id = ?";
+
+		return this.getDatabase().executeQueryPojo(String.class, sql, idCurso);
 	}
 }

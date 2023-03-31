@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.Util;
 import g41.si2022.util.state.CursoState;
@@ -41,22 +42,23 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 			public void actionPerformed(ActionEvent e) {
 				String estadoDB;
 				selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
-				System.out.printf("Estado actual del curso: %s\n", String.valueOf(selectedCurso.getEstado()));
 				estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
-				System.out.printf("Estado actual del curso (DB): %s\n", estadoDB);
-
 				// Si el curso no está cancelado, se cancela. En la database sólo se guarda el estado CANCELADO
 				// de un curso. Por defecto el atributo estado es null
 				if (estadoDB.equals("null")) {
 					// Modificar estado del curso a CANCELADO. Se modifica el atributo en la database
 					getModel().updateCursoStateToCancelled(String.valueOf(CursoState.CANCELADO), selectedCurso.getId());
 					selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
+					// Obtener emails de los alumnos para enviar un correo.
+					List<String> emails = getModel().getAlumnosEmail(String.valueOf(idCurso));
+					// Enviar correo a alumnos para informar de la cancelación del curso
+					for (String email: emails) 
+						Util.sendEmail(email, "Cancelación de curso",
+						"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
+					
 					System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
 				}
 				updateTables();
-				estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
-				System.out.printf("Estado actual del curso: %s\n", String.valueOf(selectedCurso.getEstado()));
-				System.out.printf("Estado actual del curso (DB): %s\n", estadoDB);
 			}
 		});
 	}
@@ -91,7 +93,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 		//Obtengo los datos de la tabla y los almaceno en variables globales (por si a otros métodos les hacen falta)
 
-		idCurso = table.getSelectedRow() + 1;
+		idCurso = table.convertRowIndexToModel(table.getSelectedRow()) + 1;
 		nombreCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 1).toString();
 		fechaInscripciones = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 2).toString();
 		fechaCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 4).toString();
@@ -171,13 +173,11 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 				SwingUtil.getTableModelFromPojos(
 						listaCursos,
 						new String[] { "id", "nombre", "start_inscr", "end_inscr", "start", "end", "estado"},
-						new String[] { "Id", "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Estado"},
+						new String[] { "Id" ,"Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Estado"},
 						null
 						)
 				);
 		//Ocultamos la columna 0 de la vista.
-		// this.getView().getTableInscripciones().removeColumn(this.getView().getTableInscripciones().getColumnModel().getColumn(0));
-
+		this.getView().getTableInscripciones().removeColumn(this.getView().getTableInscripciones().getColumnModel().getColumn(0));
 	}
-
 }
