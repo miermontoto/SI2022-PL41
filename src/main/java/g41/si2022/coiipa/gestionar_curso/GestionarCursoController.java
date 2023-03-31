@@ -38,9 +38,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	public void initNonVolatileData() {
 		// Acción del botón para cancelar cursos
 		this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent e) {
-				
 				selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, localDateCurso));
 				System.out.printf("Estado actual del curso: %s\n", String.valueOf(selectedCurso.getEstado()));
 				// Si el curso no está cancelado, se cancela

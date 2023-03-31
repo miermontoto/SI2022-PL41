@@ -4,6 +4,22 @@ import g41.si2022.dto.CursoDTO;
 
 public class GestionarCursoModel extends g41.si2022.mvc.Model{
 	
+	// public java.util.List<CursoDTO> getCursos () {
+	// 	String sql =
+	// 			"SELECT curso.id "
+	// 			+ " ,curso.nombre "
+	// 			+ " ,curso.start_inscr "
+	// 			+ " ,curso.end_inscr "
+	// 			+ " ,curso.start "
+	// 			+ " ,curso.end"
+	// 			+ " FROM curso "
+	// 			+ " LEFT JOIN docencia ON curso.id = docencia.curso_id " // Change for INNER JOIN. To do this, INSERT INTO docencia when creating a new course
+	// 			+ " LEFT JOIN inscripcion ON inscripcion.curso_id = curso.id "
+	// 			+ " LEFT JOIN pago ON pago.inscripcion_id = inscripcion.id "
+	// 			+ " GROUP BY (curso.id)";
+	// 	return this.getDatabase().executeQueryPojo(CursoDTO.class, sql);
+	// }
+
 	public java.util.List<CursoDTO> getCursos () {
 		String sql =
 				"SELECT curso.id "
@@ -12,11 +28,7 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model{
 				+ " ,curso.end_inscr "
 				+ " ,curso.start "
 				+ " ,curso.end"
-				+ " FROM curso "
-				+ " LEFT JOIN docencia ON curso.id = docencia.curso_id " // Change for INNER JOIN. To do this, INSERT INTO docencia when creating a new course
-				+ " LEFT JOIN inscripcion ON inscripcion.curso_id = curso.id "
-				+ " LEFT JOIN pago ON pago.inscripcion_id = inscripcion.id "
-				+ " GROUP BY (curso.id)";
+				+ " FROM curso ";
 		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql);
 	}
 	

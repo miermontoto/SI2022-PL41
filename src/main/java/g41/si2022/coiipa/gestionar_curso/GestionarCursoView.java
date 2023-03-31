@@ -78,9 +78,9 @@ public class GestionarCursoView extends View {
 		this.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
 
-		chkAll = new JCheckBox("Ver todas las inscripciones");
-		chkAll.setHorizontalAlignment(SwingConstants.LEFT);
-		panel.add(chkAll);
+		// chkAll = new JCheckBox("Ver todas las inscripciones");
+		// chkAll.setHorizontalAlignment(SwingConstants.LEFT);
+		// panel.add(chkAll);
 
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 	    formatter.setValueClass(Integer.class);
