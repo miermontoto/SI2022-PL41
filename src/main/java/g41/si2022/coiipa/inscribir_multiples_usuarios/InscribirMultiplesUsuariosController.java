@@ -2,6 +2,11 @@ package g41.si2022.coiipa.inscribir_multiples_usuarios;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -89,8 +94,9 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 
 		grupo = this.getModel().getGrupoFromEmail(email).get(0);
 
-		List<AlumnoDTO> alumnosToRegister = this.getModel().getAlumnosFromEmails(this.gatherAllAlumnos()),
-				nonRegistered = new LinkedList<AlumnoDTO> ();
+		this.getModel().insertInscripciones(this.getView().getMain().getToday().toString(), cursoId, 
+				this.getModel().insertAlumnos(this.gatherAllAlumnos())
+				,grupo.getId());
 		getListaCursos();
 		Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.");
 
@@ -99,7 +105,7 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 	
 	public List<AlumnoDTO> gatherAllAlumnos () {
 		List<AlumnoDTO> alumnosToRegister = new LinkedList <AlumnoDTO> ();
-		for (int i = 0 ; i < this.getView().getTablaInscritos().getRowCount() ; i++) {
+		for (int i = 0 ; i < this.getView().getTablaInscritos().getRowCount()-1 ; i++) {
 			AlumnoDTO currentAlumno = new AlumnoDTO ();
 			currentAlumno.setNombre(this.getView().getTablaInscritos().getValueAt(i, 0).toString());
 			currentAlumno.setApellidos(this.getView().getTablaInscritos().getValueAt(i, 1).toString());

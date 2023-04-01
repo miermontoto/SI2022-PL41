@@ -1,6 +1,11 @@
 package g41.si2022.coiipa.inscribir_multiples_usuarios;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.CursoDTO;
@@ -35,47 +40,129 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 
 	/**
 	 * getAlumnosFromEmails.
-	 * <p>
-	 * When a new alumno is signed up, their e-mail may or not be already registered in the DB.
-	 * In the case that the e-mail is already registered, we need it returned.
-	 * In the case that the e-mail is not registered, we register it and return it.
-	 * </p>
-	 * @param alumnos Data regarding the alumnos that should be registered
-	 * @return List of all the Alumnos that are now in the DB.
+	 * This function will add all non already existing alumnos in the DB.
+	 * Then it will return all the IDs of all the alumnos in the array 
+	 * no matter whether they were already in the DB or not.
+	 * 
+	 * @param IDs of the alumnos that have been registered
 	 */
-	public List<AlumnoDTO> getAlumnosFromEmails (List<AlumnoDTO> alumnos) {
-		String sql = "WITH new_entries AS ("
-				+ "  SELECT '?' AS email, '?' AS nombre, '?' AS apellidos, '?' AS telefono ";
-		for (AlumnoDTO alumno : alumnos.subList(1, alumnos.size())) 
-			sql += "  UNION ALL SELECT '?' AS email, '?' AS nombre, '?' AS apellidos, '?' AS telefono ";
-		sql += "),"
-				+ "upserted_entries AS ( "
-				+ "  INSERT INTO alumno (email, nombre, apellidos, telefono) "
-				+ "  SELECT email, nombre, apellidos, telefono "
-				+ "  FROM new_entries "
-				+ "  ON CONFLICT (email) "
-				+ "  DO NOTHING "
-				+ "  RETURNING * "
-				+ ") "
-				+ "SELECT * FROM upserted_entries "
-				+ "UNION ALL "
-				+ "SELECT * FROM alumno "
-				+ "WHERE email IN ( "
-				+ "  SELECT email FROM new_entries "
-				+ ");";
-		String[] datos = new String[4 * alumnos.size()];
-		for (int i = 0 ; i < alumnos.size() ; i++) {
-			datos[i] = alumnos.get(i).getEmail();
-			datos[i] = alumnos.get(i).getNombre();
-			datos[i] = alumnos.get(i).getApellidos();
-			datos[i] = alumnos.get(i).getTelefono();
-		}
-		return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql, (Object[]) datos);
+	public List<String> insertAlumnos (List<AlumnoDTO> alumnos) {
+		this.insertMissingAlumnos(alumnos);
+		return getAlumnosIDsFromEmails (alumnos);
 	}
 
-	public boolean checkAlumnoInCurso(String alumno_id, String curso_id) {
-		String sql = "select count(*) from inscripcion where alumno_id = ? and curso_id = ?";
-		return this.getDatabase().executeQuerySingle(sql, alumno_id, curso_id).equals("0");
+	/**
+	 * insertMissingAlumnos.
+	 * This function will add all non already existing alumnos in the DB.
+	 * 
+	 * @param alumnos
+	 */
+	private void insertMissingAlumnos (List<AlumnoDTO> alumnos) {
+		List<AlumnoDTO> existingAlumnos = InscribirMultiplesUsuariosModel.this.getAlumnos(),
+				alumnosToRegister = alumnos.parallelStream() // Remove the alumnos that are already in the DB
+				.filter((alumnoInsertar) -> existingAlumnos.parallelStream()
+						.allMatch((alumnoDatabase) -> !alumnoDatabase.getEmail().equals(alumnoInsertar.getEmail())))
+				.collect(java.util.stream.Collectors.toList());
+
+		if (alumnosToRegister.size() != 0) {
+			String sql = "INSERT INTO alumno (email, nombre, apellidos, telefono) VALUES ";
+			String[] datos = new String[4 * alumnosToRegister.size()];
+			sql += " (?, ?, ?, ?) ";
+			datos[0] = alumnosToRegister.get(0).getEmail();
+			datos[1] = alumnosToRegister.get(0).getNombre();
+			datos[2] = alumnosToRegister.get(0).getApellidos();
+			datos[3] = alumnosToRegister.get(0).getTelefono();
+			int arrayPos;
+			for (int i = 1 ; i < alumnosToRegister.size() ; i+=4) {
+				sql += " ,(?, ?, ?, ?) ";
+				arrayPos = i/4;
+				datos[i] = alumnosToRegister.get(arrayPos).getEmail();
+				datos[i+1] = alumnosToRegister.get(arrayPos).getNombre();
+				datos[i+2] = alumnosToRegister.get(arrayPos).getApellidos();
+				datos[i+3] = alumnosToRegister.get(arrayPos).getTelefono();
+			}
+			InscribirMultiplesUsuariosModel.this.getDatabase().executeUpdate(sql+";", (Object[]) datos);
+		}	
+	}
+
+	/**
+	 * getAlumnosIDsFromEmails.
+	 * <p>
+	 * This function will return a list of the IDs of the alumnos
+	 * whose email is contained in the input array.
+	 * </p> <p>
+	 * To do this, the emails must be contained in the {@link AlumnoDTO}s
+	 * that are passed as parameter.
+	 * </p>
+	 * 
+	 * @param alumnos Array of alumnos the be checked
+	 * @return List of IDs
+	 */
+	private List<String> getAlumnosIDsFromEmails (List<AlumnoDTO> alumnos) {
+		if (alumnos.size() != 0) {
+			String outputSql = "SELECT id FROM alumno WHERE alumno.email IN (? ";
+			String[] outputDatos = new String[alumnos.size()];
+			outputDatos[0] = alumnos.get(0).getEmail();
+			for (int i = 1 ; i < alumnos.size() ; i++) {
+				outputSql += ", ?";
+				outputDatos[i] = alumnos.get(i).getEmail();
+			}
+
+			return InscribirMultiplesUsuariosModel.this.getDatabase()
+					.executeQueryArray(outputSql+");", (Object[]) outputDatos) // Query all the alumnos IDs. This will return a List<Object[]>
+					.stream() //  Form a stream
+					.collect(new java.util.stream.Collector<Object[], List<String>, List<String>> () {
+						// This Collector will go from List<Object[]> to List<String> where String is each alumno's ID
+
+						@Override
+						public Supplier<List<String>> supplier() {
+							return java.util.ArrayList<String>::new;
+						}
+
+						@Override
+						public BiConsumer<List<String>, Object[]> accumulator() {
+							return (list, item) -> list.add(item[0].toString());
+						}
+
+						@Override
+						public BinaryOperator<List<String>> combiner() {
+							return (listA, listB) -> { listA.addAll(listB); return listA; };
+						}
+
+						@Override
+						public Function<List<String>, List<String>> finisher() {
+							return java.util.Collections::unmodifiableList;
+						}
+
+						@Override
+						public Set<Characteristics> characteristics() {
+							return Set.of(Characteristics.CONCURRENT);
+						}
+
+					});
+		}
+		return new java.util.ArrayList<String>();
+	}
+
+	/**
+	 * getAlumnos. This method will return the list of alumnos.
+	 * 
+	 * @return List of alumnos.
+	 */
+	public List<AlumnoDTO> getAlumnos () {
+		String sql = "select * from alumno;";
+		return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql);
+	}
+
+	/**
+	 * getAlumnosInCurso. This method will return the list of alumnos in a given curso.
+	 * 
+	 * @param curso_id ID of the curso to be retrieved
+	 * @return List of alumnos that are in the curso with curso_id
+	 */
+	public List<AlumnoDTO> getAlumnosInCurso (String curso_id) {
+		String sql = "select * from inscripcion where curso_id = ?";
+		return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql, curso_id);
 	}
 
 	public void insertGrupo(String nombre, String email, String telefono) {
@@ -85,29 +172,39 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 		this.getDatabase().executeUpdate(sql, nombre, email, telefono);
 	}
 
-	public List<AlumnoDTO> insertInscripciones(String fecha, String curso_id, List<String> alumno_id, String grupo_id) {
-		// TODO: This query is incomplete. We need to link the curso_id and grupo_id to each VALUE.
-		// The data is not in the alumno_id array. 
-		String sql = "WITH new_values (id, nombre, apellidos, email, grupo_id, curso_id) AS ( "
-				+ "    VALUES (?, ?, ?, ?, ?, ?) ";
-		for (int i = 0 ; i < alumno_id.size()-1; i++) {
-			sql += ", VALUES (?, ?, ?, ?, ?, ?) ";
+	/**
+	 * insertInscripciones. Inserts a batch of inscripciones.
+	 * If an alumno is already inserted for this course, they will not be added again.
+	 * 
+	 * @param fecha today's date
+	 * @param curso_id curso id
+	 * @param alumno_id alumno id
+	 * @param grupo_id grupo id
+	 */
+	public void insertInscripciones(String fecha, String curso_id, List<String> alumno_id, String grupo_id) {
+		List<AlumnoDTO> alumnosInCurso = this.getAlumnosInCurso(curso_id);
+		alumno_id = alumno_id.parallelStream() // Remove alumnos that are already in this curso
+				.filter((id) -> alumnosInCurso.parallelStream()
+						.allMatch((alumnoInCurso) -> !alumnoInCurso.getId().equals(id)))
+				.collect(java.util.stream.Collectors.toList());
+
+		if (alumno_id.size() != 0) {
+			String[] parameters = new String[alumno_id.size() * 4];
+			String sql = "INSERT INTO inscripcion (fecha, alumno_id, grupo_id, curso_id) "
+					+ " VALUES (?, ?, ?, ?) ";
+			parameters[0] = fecha;
+			parameters[1] = alumno_id.get(0);
+			parameters[2] = grupo_id;
+			parameters[3] = curso_id;
+			for (int i = 4 ; i < alumno_id.size() ; i+=4) {
+				sql += " ,(?, ?, ?, ?) ";
+				parameters[i] = fecha;
+				parameters[i+1] = alumno_id.get(i/4);
+				parameters[i+2] = grupo_id;
+				parameters[i+3] = curso_id;
+			}
+			this.getDatabase().executeUpdate(sql+";", (Object[]) parameters);
 		}
-		sql += "), "
-				+ "existing_values AS ( "
-				+ "    SELECT * "
-				+ "    FROM inscripcion "
-				+ "    WHERE email IN (SELECT email FROM new_values) "
-				+ ") "
-				+ "INSERT INTO inscripcion (id, nombre, apellidos, email, telefono, grupo_id, curso_id) "
-				+ "SELECT * "
-				+ "FROM new_values "
-				+ "WHERE NOT EXISTS ( "
-				+ "    SELECT 1 FROM existing_values "
-				+ "    WHERE existing_values.email = new_values.email "
-				+ ") "
-				+ "RETURNING *;";
-		return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql, alumno_id.toArray());
 	}
 
 	public boolean verifyEmail(String email) {
