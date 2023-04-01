@@ -34,12 +34,12 @@ create table inscripcion (
     foreign key (grupo_id) references grupo(id)
 );
 
-create table grupo { 
-	id integer primary key autoincrement,
+create table grupo (
+	  id integer primary key autoincrement,
     nombre text not null,
     email text,
     telefono text
-}
+);
 
 create table inscripcioncancelada (
 	id integer primary key autoincrement,
