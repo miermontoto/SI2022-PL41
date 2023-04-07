@@ -5,14 +5,13 @@ import java.awt.Color;
 
 import lombok.Getter;
 import java.awt.GridLayout;
-import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import org.jdesktop.swingx.JXTitledPanel;
@@ -25,6 +24,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
 import g41.si2022.mvc.View;
+import g41.si2022.ui.components.hint.HintingJTextField;
+import g41.si2022.ui.components.table.RowAppendableJTable;
 import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
 
@@ -32,7 +33,6 @@ import g41.si2022.ui.util.JLabelFactory;
 public class InscribirMultiplesUsuariosView extends View {
 
 	private static final long serialVersionUID = 1L;
-	private static final int textFieldSize = 15;
 	private static final int panelBorder = 10;
 
 	private static final String signinTitle = "Iniciar sesión";
@@ -40,12 +40,12 @@ public class InscribirMultiplesUsuariosView extends View {
 
 	private JButton btnInscribir;
 	private JTable tablaCursos;
-	private JTable tablaInscritos;
+	private RowAppendableJTable tablaInscritos;
 
-	private JTextField txtNombre;
-	private JTextField txtEmail;
-	private JTextField txtTelefono;
-	private JTextField txtEmailLogin;
+	private HintingJTextField txtNombre;
+	private HintingJTextField txtEmail;
+	private HintingJTextField txtTelefono;
+	private HintingJTextField txtEmailLogin;
 
 	private ButtonGroup decideUserSelection;
 	private JRadioButton radioSignin;
@@ -81,8 +81,18 @@ public class InscribirMultiplesUsuariosView extends View {
 		JScrollPane sp = new JScrollPane ();
 		sp.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		JPanel inscrollPanel = makeLoginPanel();
-		inscrollPanel.add(this.tablaInscritos = new g41.si2022.ui.components.table.RowAppendableJTable (
-				new String[]{"Nombre", "Apellidos", "Email", "Telefono"}), BorderLayout.SOUTH);
+		JPanel tablesPanel = new JPanel(new GridLayout(0, 1));
+		inscrollPanel.add(tablesPanel, BorderLayout.SOUTH);
+		tablesPanel.add(this.tablaInscritos = new RowAppendableJTable (
+				new String[]{"Nombre", "Apellidos", "Email", "Telefono"},
+				new java.util.TreeMap<Integer, java.util.regex.Pattern> () {
+					private static final long serialVersionUID = 1L;
+					{
+						this.put(2, Pattern.compile("[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+"));
+						this.put(3, Pattern.compile("^([0-9]{3}( )?){3}$"));
+					}},
+				new boolean[] {true, true, true, false}
+				));
 
 		sp.setViewportView(inscrollPanel);
 
@@ -118,9 +128,9 @@ public class InscribirMultiplesUsuariosView extends View {
 	private JPanel signupPanel() {
 		JPanel output = new JPanel (new BorderLayout());
 		output.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK));
-		txtNombre = new JTextField("", InscribirMultiplesUsuariosView.textFieldSize);
-		txtEmail = new JTextField();
-		txtTelefono = new JTextField();
+		txtNombre = new HintingJTextField("Nombre");
+		txtEmail = new HintingJTextField("Email");
+		txtTelefono = new HintingJTextField("Telefono");
 
 		lblSignup = JLabelFactory.getLabel("");
 
@@ -149,7 +159,7 @@ public class InscribirMultiplesUsuariosView extends View {
 	}
 
 	private JPanel signinPanel() {
-		txtEmailLogin = new JTextField("", InscribirMultiplesUsuariosView.textFieldSize);
+		txtEmailLogin = new HintingJTextField("Email");
 		lblSignin = JLabelFactory.getLabel("");
 
 		JPanel output = new JPanel(new BorderLayout());

@@ -40,19 +40,39 @@ public class RowAppendableComponentableJTable extends RowAppendableJTable {
 	 * If a column has no {@code columnMatcher}, any data will be allowed.
 	 * If a column has no {@code component}, the default component will be used.
 	 * If a column has both a {@code columnMatcher} and a {@code component}, the component takes priority and the Matcher is ignored.
+	 * If a column is tagged as optional, new rows will be added even if the column has not been filled.
 	 * 
 	 * @param columnNames Names of the columns
 	 * @param columnMatchers {@link Pattern} that will be matched with each column.
+	 * @param mandatory Array that tags as {@code true} the columns that are mandatory and {@code false} those that are not.
 	 * @param components {@link TableCellEditor} that will be used on each column.
 	 */
 	public RowAppendableComponentableJTable(
 			String[] columnNames, 
 			Map<Integer, Pattern> columnMatchers,
-			Map<Integer, ? extends javax.swing.table.TableCellEditor> components) {
+			boolean[] mandatory,
+			Map<Integer, javax.swing.table.TableCellEditor> components) {
 		super(columnNames, 
 				columnMatchers.entrySet().stream()
 				.filter((entry) -> !components.containsKey(entry.getKey()))
-				.collect(Collectors.toMap((entry) -> entry.getKey(), (entry) -> entry.getValue())));
+				.collect(Collectors.toMap((entry) -> entry.getKey(), (entry) -> entry.getValue())),
+				mandatory);
+		if (components != null) 
+			components.forEach( (col, comp) -> this.getColumnModel().getColumn(col).setCellEditor(comp));
+	}
+	
+	/**
+	 * Creates a new RowAppendableComponentableJTable.
+	 * If a column has no {@code component}, the default component will be used.
+	 * If a column has both a {@code columnMatcher} and a {@code component}, the component takes priority and the Matcher is ignored.
+	 * 
+	 * @param columnNames Names of the columns
+	 * @param components {@link TableCellEditor} that will be used on each column.
+	 */
+	public RowAppendableComponentableJTable(
+			String[] columnNames, 
+			Map<Integer, javax.swing.table.TableCellEditor> components) {
+		super(columnNames);
 		if (components != null) 
 			components.forEach( (col, comp) -> this.getColumnModel().getColumn(col).setCellEditor(comp));
 	}

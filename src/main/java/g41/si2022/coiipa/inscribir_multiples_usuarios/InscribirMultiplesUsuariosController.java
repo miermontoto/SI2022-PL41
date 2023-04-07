@@ -1,7 +1,7 @@
 package g41.si2022.coiipa.inscribir_multiples_usuarios;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -12,7 +12,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.time.LocalDate;
 import java.awt.Color;
 
 import javax.swing.JLabel;
@@ -74,6 +73,9 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 		this.getView().getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageMain()));
 	}
 
+	/**
+	 * This method handles the inserting of the group, alumnos and inscripciones.
+	 */
 	public void manageMain() {
 		if (cursoId == null) return;
 
@@ -84,17 +86,19 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 			email = this.getView().getTxtEmailLogin().getText();
 			break;
 		case "sign-up":
+			email = this.getView().getTxtEmail().getText();
 			this.getModel().insertGrupo(
 					this.getView().getTxtNombre().getText(),
-					this.getView().getTxtEmail().getText(),
-					this.getView().getTxtTelefono().getText()         
+					email,
+					this.getView().getTxtTelefono().getText()
 					);
 			break;
 		}
 
 		grupo = this.getModel().getGrupoFromEmail(email).get(0);
 
-		this.getModel().insertInscripciones(this.getView().getMain().getToday().toString(), cursoId, 
+		this.getModel().insertInscripciones(
+				this.getView().getMain().getToday().toString(), cursoId, 
 				this.getModel().insertAlumnos(this.gatherAllAlumnos())
 				,grupo.getId());
 		getListaCursos();
@@ -102,18 +106,54 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 
 		Dialog.show("Inscripción realizada con éxito");
 	}
-	
+
+	/**
+	 * This method will return the list of Alumnos that are listed in the JTable.<br>
+	 * In the context of the HU InscribirMultiplesUsuarios, the Alumnos have to:<br>
+	 * <ol>
+	 * <li> Be inserted in the DB (table alumno) if they are not already there. Use email as PK.
+	 * <li> Create an entry in the table inscripcion that relates this alumno with the curso if the alumno has not joined yet. 
+	 * </ol>
+	 * 
+	 * @return List of alumnos that are listed in the table
+	 */
 	public List<AlumnoDTO> gatherAllAlumnos () {
-		List<AlumnoDTO> alumnosToRegister = new LinkedList <AlumnoDTO> ();
-		for (int i = 0 ; i < this.getView().getTablaInscritos().getRowCount()-1 ; i++) {
-			AlumnoDTO currentAlumno = new AlumnoDTO ();
-			currentAlumno.setNombre(this.getView().getTablaInscritos().getValueAt(i, 0).toString());
-			currentAlumno.setApellidos(this.getView().getTablaInscritos().getValueAt(i, 1).toString());
-			currentAlumno.setEmail(this.getView().getTablaInscritos().getValueAt(i, 2).toString());
-			currentAlumno.setTelefono(this.getView().getTablaInscritos().getValueAt(i, 3).toString());
-			alumnosToRegister.add(currentAlumno);
-		}
-		return alumnosToRegister;
+		return this.getView().getTablaInscritos().getData().stream().collect(
+				new java.util.stream.Collector<Map<String, String>, List<AlumnoDTO>, List<AlumnoDTO>>() {
+
+					@Override
+					public Supplier<List<AlumnoDTO>> supplier() {
+						return java.util.ArrayList::new;
+					}
+
+					@Override
+					public BiConsumer<List<AlumnoDTO>, Map<String, String>> accumulator() {
+						return (list, row) -> {
+							AlumnoDTO alumno = new AlumnoDTO();
+							alumno.setNombre(row.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[0]));
+							alumno.setApellidos(row.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[1]));
+							alumno.setEmail(row.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[2]));
+							alumno.setTelefono(row.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[3]));
+							list.add(alumno);
+						};
+					}
+
+					@Override
+					public BinaryOperator<List<AlumnoDTO>> combiner() {
+						return (listA, listB) -> { listA.addAll(listB); return listA; };
+					}
+
+					@Override
+					public Function<List<AlumnoDTO>, List<AlumnoDTO>> finisher() {
+						return java.util.Collections::unmodifiableList;
+					}
+
+					@Override
+					public Set<Characteristics> characteristics() {
+						return Set.of(Characteristics.CONCURRENT);
+					}
+
+				});
 	}
 
 	public void manageForm() {
