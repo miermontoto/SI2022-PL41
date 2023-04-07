@@ -2,10 +2,9 @@ package g41.si2022.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalTime;
-
-import lombok.Data;
 
 @Setter @Getter @Data
 public class EventoDTO {
@@ -29,7 +28,10 @@ public class EventoDTO {
     }
 
     private String calcularDuracionFromFin(String horaFin) {
-        return String.valueOf(LocalTime.parse(horaFin).minusMinutes(LocalTime.parse(horaIni).getMinute()).getMinute());
+        LocalTime ini = LocalTime.parse(horaIni);
+        LocalTime fin = LocalTime.parse(horaFin);
+        LocalTime diff = fin.minusHours(ini.getHour()).minusMinutes(ini.getMinute());
+        return String.valueOf(diff.getHour() * 60 + diff.getMinute());
     }
 
     private String calcularFinFromDuracion(String duracion) {

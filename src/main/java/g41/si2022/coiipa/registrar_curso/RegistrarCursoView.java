@@ -20,6 +20,7 @@ import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
+
 import lombok.Getter;
 
 @Getter
@@ -228,6 +229,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			this.dateCursoStart,
 			this.dateCursoEnd,
 			this.txtCoste,
+			this.tableEventos,
 			this.tableProfesores
 		};
 	}

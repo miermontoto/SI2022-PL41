@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.FacturaDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
 import g41.si2022.util.db.Database;
@@ -55,21 +56,21 @@ public class StateUtilities {
 	 * @param canBeCerrado true if the curso can be cerrado, false if not.
 	 * @return {@link CursoState} of the course for the given date.
 	 */
-	public static CursoState getCursoState (CursoDTO curso, LocalDate today, boolean canBeCerrado) {
+	public static CursoState getCursoState(CursoDTO curso, LocalDate today, boolean canBeCerrado) {
+		LocalDate startInscr = LocalDate.parse(curso.getStart_inscr());
+		LocalDate endInscr = LocalDate.parse(curso.getEnd_inscr());
+		LocalDate start = LocalDate.parse(curso.getStart());
+		LocalDate end = LocalDate.parse(curso.getEnd());
+
 		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getEstado() != null) {
 			return CursoState.CERRADO;
 		}
-		if (curso.getStart_inscr().compareTo(today.toString()) > 0) { // if inscription start is before today
-			return CursoState.PLANEADO;
-		} else if (curso.getEnd_inscr().compareTo(today.toString()) > 0) { // if inscription end is before today
-			return CursoState.EN_INSCRIPCION;
-		} else if (curso.getStart().compareTo(today.toString()) > 0) { // if course start is before today
-			return CursoState.INSCRIPCION_CERRADA;
-		} else if (curso.getEnd().compareTo(today.toString()) > 0) { // if course end is before today
-			return CursoState.EN_CURSO;
-		} else { // if course end is after today
-			return CursoState.FINALIZADO;
-		}
+
+		if(startInscr.isAfter(today)) return CursoState.PLANEADO;
+		if(endInscr.isAfter(today) || endInscr.equals(today)) return CursoState.EN_INSCRIPCION;
+		if(start.isAfter(today)) return CursoState.INSCRIPCION_CERRADA;
+		if(end.isAfter(today) || end.isEqual(today)) return CursoState.EN_CURSO;
+		return CursoState.FINALIZADO;
 	}
 
 	/**
@@ -125,6 +126,7 @@ public class StateUtilities {
 	 * @see InscripcionState.
 	 */
 	public static InscripcionState getInscripcionState(InscripcionDTO inscr, List<PagoDTO> pagos, LocalDate today) {
+		if(Integer.parseInt(inscr.getCancelada()) == 1) return InscripcionState.CANCELADA;
 		InscripcionState state = getInscripcionState(Double.parseDouble(inscr.getCurso_coste()), pagos);
 		if (isDelayed(inscr, today)) {
 			if (state == InscripcionState.PENDIENTE) return InscripcionState.RETRASADA;
@@ -168,6 +170,18 @@ public class StateUtilities {
 	public static boolean isDelayed(InscripcionDTO inscr, LocalDate today) {
 		LocalDate inscrDate = LocalDate.parse(inscr.getFecha());
 		return inscrDate.plusDays(INSCRIPCION_DELAY_TIME).compareTo(today) < 0;
+	}
+
+	/* ----- FACTURA STATES ----- */
+
+	public static FacturaState getFacturaState(FacturaDTO factura) {
+		return getFacturaState(Double.parseDouble(factura.getPagado()), Double.parseDouble(factura.getRemuneracion()));
+	}
+
+	public static FacturaState getFacturaState(double paid, double cost) {
+		if (paid > cost) return FacturaState.EXCESO;
+		if (paid < cost) return FacturaState.PENDIENTE;
+		return FacturaState.PAGADA;
 	}
 
 }

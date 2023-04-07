@@ -41,4 +41,9 @@ public class CursoDTO {
 		return this.estado;
 	}
 
+	@Override
+	public String toString() {
+		return this.getNombre();
+	}
+
 }

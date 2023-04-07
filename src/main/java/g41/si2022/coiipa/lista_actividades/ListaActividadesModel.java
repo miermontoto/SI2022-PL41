@@ -19,10 +19,9 @@ public class ListaActividadesModel extends g41.si2022.mvc.Model {
     }
 
     public String getNumInscripciones(String idCurso) {
-        String sql = "SELECT count(inscripcion.id) - count(inscripcioncancelada.id) from CURSO "
-                   + "INNER JOIN inscripcion on curso.id = inscripcion.curso_id "
-                   + "LEFT JOIN inscripcioncancelada ON inscripcioncancelada.inscripcion_id = inscripcion.id "
-                   + "WHERE inscripcion.curso_id = ?";
+        String sql = "SELECT count(i.id) from CURSO as c "
+                   + "INNER JOIN inscripcion as i on c.id = i.curso_id "
+                   + "WHERE i.curso_id = ? AND i.cancelada = FALSE";
 
         return String.valueOf((Integer) getDatabase().executeQuerySingle(sql, idCurso));
     }
@@ -32,7 +31,7 @@ public class ListaActividadesModel extends g41.si2022.mvc.Model {
     }
 
     public List<ProfesorDTO> getDocentesCurso(String idCurso) {
-        String sql = "select de.nombre, de.apellidos from docente as de "
+        String sql = "select de.nombre, de.apellidos, da.remuneracion from docente as de "
                    + "inner join docencia as da on de.id = da.docente_id "
                    + "inner join curso as c on da.curso_id = c.id "
                    + "where c.id = ?";
@@ -41,22 +40,17 @@ public class ListaActividadesModel extends g41.si2022.mvc.Model {
     }
 
     /**
-     * Devuelve un array con las localizaciones de la tabla "evento" del curso "curso".
+     * Devuelve un array con los eventos del curso "curso".
      * <p> Sobrecarga de {@link #getLugarCurso(String)}.
-     * @param curso DTO del curso
-     * @return Array con las localizaciones del curso
+     * @param curso {@link EventoDTO} del curso
+     * @return Array con los eventos del curso
      */
-    public List<EventoDTO> getLugarCurso(CursoDTO curso) {
-        return getLugarCurso(curso.getId());
+    public List<EventoDTO> getEventosCurso(CursoDTO curso) {
+        return getEventosCurso(curso.getId());
     }
 
-    /**
-     * Devuelve un array con las localizaciones de la tabla "evento" del curso con id "idCurso".
-     * @param idCurso Id del curso
-     * @return Array con las localizaciones del curso
-     */
-    public List<EventoDTO> getLugarCurso(String idCurso) {
-        String sql = "SELECT loc from evento WHERE curso_id = ?";
+    public List<EventoDTO> getEventosCurso(String idCurso) {
+        String sql = "SELECT *, hora_ini as horaIni, hora_fin as horaFin FROM evento WHERE curso_id = ?";
         return getDatabase().executeQueryPojo(EventoDTO.class, sql, idCurso);
     }
 }

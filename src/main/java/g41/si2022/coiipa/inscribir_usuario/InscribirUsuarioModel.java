@@ -10,8 +10,7 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
 
     public List<CursoDTO> getListaCursos(String date) {
         String sql = "select *, (c.plazas -"
-        + " (select count(*) from inscripcion as i where i.curso_id = c.id)"
-        //+ " (select count(*) from cancelada as ca where ca.curso_id = c.id)"
+        + " (select count(*) from inscripcion as i where i.curso_id = c.id and i.cancelada = 0)"
         + ") as plazas_libres from curso as c where start_inscr <= ? and end_inscr >= ?";
         return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, date, date);
     }
@@ -22,7 +21,7 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
 
     public List<AlumnoDTO> getAlumnoFromEmail(String email) {
         String sql = "select id, nombre, apellidos, email, telefono"
-            + " from alumno where email like ?;";
+            + " from alumno where email like ?";
         return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql, email);
     }
 
@@ -32,9 +31,8 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
     }
 
     public void insertAlumno(String nombre, String apellidos, String email, String telefono) {
-        String sql =
-                "insert into alumno (nombre, apellidos, email, telefono)"
-                + " values (?, ?, ?, ?);";
+        String sql = "insert into alumno (nombre, apellidos, email, telefono)"
+            + " values (?, ?, ?, ?);";
         this.getDatabase().executeUpdate(sql, nombre, apellidos, email, telefono);
     }
 
