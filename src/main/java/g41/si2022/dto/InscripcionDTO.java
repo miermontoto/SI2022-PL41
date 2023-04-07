@@ -22,7 +22,8 @@ public class InscripcionDTO {
     	alumno_nombre,
 		alumno_apellidos,
     	curso_coste,
-    	curso_nombre;
+    	curso_nombre,
+    	grupo_id;
     private InscripcionState estado;
 
 	public void updateEstado(LocalDate today) {

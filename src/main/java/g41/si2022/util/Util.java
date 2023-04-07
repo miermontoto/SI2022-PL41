@@ -34,6 +34,11 @@ public class Util {
 		return (int) db.executeQueryArray(sql, email).get(0)[0] > 0;
 	}
 
+	public static boolean verifyEmailInGrupo(Database db, String email) {
+		String sql = "select count(*) from grupo where email like ?";
+		return (int) db.executeQueryArray(sql, email).get(0)[0] > 0;
+	}
+
 	public static boolean verifyEmailStructure(String email) {
 		return email.matches(EMAIL_REGEX);
 	}
