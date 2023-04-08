@@ -9,18 +9,19 @@ import g41.si2022.dto.PagoDTO;
 public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 
 	public List<CursoDTO> getListaCursos() {
-		String sql = "select id, nombre, coste, plazas, start, end, start_inscr, end_inscr from curso";
+		String sql = "select id, nombre, plazas, start, end, start_inscr, end_inscr from curso";
 		return getDatabase().executeQueryPojo(CursoDTO.class, sql);
 	}
 
 	// Modificar query para que devuelva los valores necesarios de inscripción de tipo CursoDTO
 	public List<InscripcionDTO> getListaInscr(String idCurso) {
 		String sql = "SELECT i.id, i.fecha, a.nombre as alumno_nombre,"
-		+ " a.apellidos as alumno_apellidos, c.coste as curso_coste,"
+		+ " a.apellidos as alumno_apellidos, cc.coste as curso_coste,"
 		+ " i.cancelada as cancelada"
 		+ " FROM inscripcion as i"
 		+ " INNER JOIN alumno as a ON i.alumno_id = a.id"
 		+ " INNER JOIN curso as c ON i.curso_id = c.id"
+		+ " INNER JOIN costecolectivo AS cc ON i.costecolectivo_id = cc.id"
 		+ " WHERE curso_id = ?";
 
 		return getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
@@ -34,17 +35,26 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 		} catch (Exception ex) {return "-";}
 	}
 
-	public String getCosteCurso(String idCurso) {
-		String sql = "SELECT coste FROM curso where id = ?";
-		try {
-			return String.valueOf((double) getDatabase().executeQuerySingle(sql, idCurso));
-		} catch (IndexOutOfBoundsException ioob) {return "0";}
-	}
-
+	/**
+	 * getIngresosEstimados.
+	 * This method will return the total earnings for a given curso 
+	 * supposing that all alumnos that have signed up will pay.<br>
+	 * Note that this method does not take into account costs.
+	 * 
+	 * @param idCurso ID of the curso to be checked
+	 * @return Amount that should be earned by this curso.
+	 */
 	public String getIngresosEstimados(String idCurso) {
-		String sql = "select coste * count(*) from curso "
-				   + "inner join inscripcion on curso.id = inscripcion.curso_id "
-				   + "where curso.id = ?";
+		String sql = "SELECT SUM(cc.coste * ("
+				+ "	SELECT COUNT(id) "
+				+ " FROM inscripcion AS i"
+				+ " WHERE i.costecolectivo_id = cc.id"
+				+ " GROUP BY i.id"
+				+ ")"
+				+ ")"
+				+ " FROM costecolectivo AS cc"
+				+ " WHERE cc.curso_id = ?"
+				+ " GROUP BY cc.id";
 		try {
 			return String.valueOf((double) getDatabase().executeQuerySingle(sql, idCurso));
 		} catch (Exception ex) { return "0"; }
