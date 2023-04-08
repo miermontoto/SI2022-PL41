@@ -11,12 +11,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import javax.swing.ListSelectionModel;
 
 import org.jdesktop.swingx.JXTitledPanel;
 
 import javax.swing.JRadioButton;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 
 import java.awt.GridBagLayout;
@@ -54,6 +56,8 @@ public class InscribirUsuarioView extends View {
 	private JLabel lblSignin;
 	private JLabel lblSignup;
 	private JLabel lblStatus;
+	
+	private JComboBox<String> cbColectivo;
 
 	public InscribirUsuarioView(g41.si2022.ui.SwingMain main) {
 		super(main, InscribirUsuarioModel.class, InscribirUsuarioView.class, InscribirUsuarioController.class);
@@ -67,7 +71,7 @@ public class InscribirUsuarioView extends View {
 
     @Override
 	protected void initView() {
-		this.setLayout(new BorderLayout());
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		btnInscribir = new JButton("Inscribirse");
 
 		decideUserSelection = new ButtonGroup();
@@ -77,7 +81,6 @@ public class InscribirUsuarioView extends View {
 		decideUserSelection.add(radioSignup);
 
 		JPanel panel = new JPanel(new BorderLayout());
-		this.add(panel, BorderLayout.CENTER);
 		panel.add(radioPanel(), BorderLayout.NORTH);
 
 		JPanel mainPanel = new JPanel(new GridLayout(1, 0));
@@ -86,7 +89,9 @@ public class InscribirUsuarioView extends View {
 		signinPanel();
 
 		panel.add(mainPanel, BorderLayout.CENTER);
-		this.add(makeBottomPanel(), BorderLayout.SOUTH);
+		this.add(panel);
+		this.add(this.cbColectivo = new JComboBox<String>());
+		this.add(makeBottomPanel());
 
 		radioSignup.setSelected(true);
 		btnInscribir.setEnabled(false);
@@ -164,6 +169,12 @@ public class InscribirUsuarioView extends View {
 		return output;
 	}
 
+	/**
+	 * makeBottomPanel.
+	 * This method will create the panel that contains the JTable with the cursos.
+	 * 
+	 * @return Panel with a JTable with the cursos.
+	 */
 	private JPanel makeBottomPanel() {
 		JPanel bottomPane = new JPanel(new BorderLayout());
 

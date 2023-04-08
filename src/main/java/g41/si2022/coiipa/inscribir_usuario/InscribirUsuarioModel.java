@@ -1,8 +1,14 @@
 package g41.si2022.coiipa.inscribir_usuario;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import g41.si2022.dto.AlumnoDTO;
+import g41.si2022.dto.CosteColectivoDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.util.Util;
 
@@ -17,6 +23,22 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
 
     public List<CursoDTO> getListaCursos() {
         return this.getDatabase().executeQueryPojo(CursoDTO.class, "select * from curso");
+    }
+    
+    public List<String> getColectivosFromCursos (List<String> idCursos) {
+    	String sql = "SELECT cc.nombre"
+    			+ " FROM costecolectivo AS cc"
+    			+ " WHERE cc.curso_id IN (?)";
+    	return this.getDatabase()
+    			.executeQueryPojo(CosteColectivoDTO.class, sql, idCursos.toArray())
+    			.stream().collect(new g41.si2022.util.HalfwayListCollector<CosteColectivoDTO, String> () {
+
+					@Override
+					public BiConsumer<List<String>, CosteColectivoDTO> accumulator() {
+						return (list, data) -> list.add(data.getNombre());
+					}
+   				
+    			});
     }
 
     public List<AlumnoDTO> getAlumnoFromEmail(String email) {
@@ -41,7 +63,7 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
             + " values (?, ?, ?)";
         this.getDatabase().executeUpdate(sql, fecha, curso_id, alumno_id);
     }
-
+    
     public boolean verifyEmail(String email) {
         return Util.verifyEmailInAlumno(this.getDatabase(), email);
     }
