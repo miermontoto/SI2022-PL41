@@ -3,22 +3,35 @@
 
 drop table if exists curso;
 drop table if exists inscripcion;
-drop table if exists inscripcioncancelada;
 drop table if exists alumno;
 drop table if exists docente;
 drop table if exists docencia;
 drop table if exists pago;
 drop table if exists factura;
 drop table if exists evento;
-drop table if exists grupo;
-drop table if exists costecolectivo;
+drop table if exists entidad;
+drop table if exists coste;
+drop table if exists colectivo;
 
-create table costecolectivo (
+create table coste (
 	id integer primary key autoincrement,
-	nombre text not null,
 	coste float not null,
-	curso_id integer,
-	foreign key (curso_id) references curso(id)
+	curso_id integer not null,
+    colectivo_id integer not null,
+	foreign key (curso_id) references curso(id),
+    foreign key (colectivo_id) references colectivo(id)
+);
+
+create table colectivo (
+    id integer primary key autoincrement,
+    nombre text not null
+);
+
+create table entidad (
+	id integer primary key autoincrement,
+    nombre text not null,
+    email text,
+    telefono text
 );
 
 create table curso (
@@ -38,19 +51,12 @@ create table inscripcion (
     cancelada boolean not null default false,
     curso_id integer not null,
     alumno_id integer not null,
-    costecolectivo_id integer not null,
-    grupo_id integer,
-    foreign key (costecolectivo_id) references costecolectivo(id),
+    coste_id integer not null,
+    entidad_id integer,
+    foreign key (coste_id) references coste(id),
     foreign key (curso_id) references curso(id),
     foreign key (alumno_id) references alumno(id),
-    foreign key (grupo_id) references grupo(id)
-);
-
-create table grupo (
-	id integer primary key autoincrement,
-    nombre text not null,
-    email text,
-    telefono text
+    foreign key (entidad_id) references entidad(id)
 );
 
 create table alumno (
