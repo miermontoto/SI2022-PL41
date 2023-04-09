@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableModel;
 
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
@@ -31,6 +32,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	CursoDTO selectedCurso;
 	List<CursoDTO> listaCursos;
 
+
 	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
 		super(myTab, myModel);
 	}
@@ -40,9 +42,9 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		// Acción del botón para cancelar cursos
 		this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String estadoDB;
+				String estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
+				
 				selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
-				estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
 				// Si el curso no está cancelado, se cancela. En la database sólo se guarda el estado CANCELADO
 				// de un curso. Por defecto el atributo estado es null
 				if (estadoDB.equals("null")) {
@@ -56,6 +58,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 						Util.sendEmail(email, "Cancelación de curso",
 						"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
 					
+
 					System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
 				}
 				updateTables();
@@ -90,14 +93,15 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 		JTable table = getView().getTableInscripciones();
 		TableModel model = this.getView().getTableInscripciones().getModel();
-
+		
 		//Obtengo los datos de la tabla y los almaceno en variables globales (por si a otros métodos les hacen falta)
-
-		idCurso = table.convertRowIndexToModel(table.getSelectedRow()) + 1;
-		nombreCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 1).toString();
-		fechaInscripciones = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 2).toString();
-		fechaCurso = this.getView().getTableInscripciones().getModel().getValueAt(idCurso, 4).toString();
+		idCurso = table.getSelectedRow() + 1;
+		nombreCurso = model.getValueAt(idCurso, 1).toString();
+		fechaInscripciones = model.getValueAt(idCurso, 2).toString();
+		fechaCurso = model.getValueAt(idCurso, 4).toString();
 		selectedCurso = getModel().getCurso(String.valueOf(idCurso));
+	
+		
 		//DEBUG
 		// System.out.printf("ID: %s, nombre: %s, fecha del curso: %s, fecha de inscripciones: %s \n", idCurso, nombreCurso, fechaCurso, fechaInscripciones);
 
