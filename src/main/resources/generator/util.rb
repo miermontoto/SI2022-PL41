@@ -12,11 +12,17 @@ class OnlyTime
     end
 end
 
+def phonify(number)
+    number.tr('-','').tr(' ','').tr('.', '')
+end
+
 def add_data_to_sql(data, table)
     sql = "INSERT INTO #{table} ("
-    data[0].instance_variables.each do |var|
+
+    data.instance_variables.each do |var|
         sql += "#{var[1..-1]}, "
     end
+
     sql = sql[0..-3] + ") VALUES\n"
     data.each do |d|
         sql += "("
