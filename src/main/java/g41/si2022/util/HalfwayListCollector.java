@@ -9,12 +9,12 @@ import java.util.function.Supplier;
 /**
  * HalfwayListCollector.<br>
  * <p>
- * A HalfwayListCollector is a <strong>concurrent</strong> {@link java.util.stream.Collector} 
+ * A HalfwayListCollector is a <strong>concurrent</strong> {@link java.util.stream.Collector}
  * that has most methods implemented to handle {@link java.util.List}.<br>
  * This way, we can avoid implementing them every time we need a {@link java.util.stream.Collector}
  * to transform data into a {@link java.util.List}.
  * </p> <p>
- * A {@link java.util.stream.Collector} can be used to transform a 
+ * A {@link java.util.stream.Collector} can be used to transform a
  * data type {@code T} into a {@link java.util.List} of {@code A}.
  * </p> <p>
  * To do this, this class needs the method {@link #accumulator()} to be implemented.
@@ -33,11 +33,11 @@ import java.util.function.Supplier;
  *
  * @param <T> Original type
  * @param <A> Type that is to be contained by the result {@link List}
- * 
+ *
  * @see java.util.List
  * @see java.util.stream.Stream
  * @see java.util.stream.Collector
- * 
+ *
  * @author Alex // UO281827
  */
 public abstract class HalfwayListCollector<T, A> implements java.util.stream.Collector<T, List<A>, List<A>> {
@@ -59,7 +59,7 @@ public abstract class HalfwayListCollector<T, A> implements java.util.stream.Col
 
 	@Override
 	public Set<Characteristics> characteristics() {
-		return Set.of(Characteristics.CONCURRENT);
+		return new java.util.HashSet<>(java.util.Arrays.asList(Characteristics.CONCURRENT));
 	}
 
 }

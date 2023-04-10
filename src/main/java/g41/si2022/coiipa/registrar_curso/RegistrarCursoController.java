@@ -307,7 +307,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 							@Override
 							public Set<Characteristics> characteristics() {
-								return Set.of(Characteristics.CONCURRENT);
+								return new java.util.HashSet<>(java.util.Arrays.asList(Characteristics.CONCURRENT));
 							}
 
 						}
