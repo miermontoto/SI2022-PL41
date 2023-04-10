@@ -1,5 +1,7 @@
 package g41.si2022.coiipa.gestionar_curso;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
@@ -8,10 +10,18 @@ import java.util.List;
 
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableModel;
 
 import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
+
 import g41.si2022.ui.util.Dialog;
+
+import g41.si2022.util.Util;
+import g41.si2022.util.state.CursoState;
+import g41.si2022.util.state.StateUtilities;
+
 
 public class GestionarCursoController extends g41.si2022.mvc.Controller<GestionarCursoView, GestionarCursoModel> {
 
@@ -22,12 +32,17 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	String fechaIniInscr;
 	LocalDate localDateCurso;
 	LocalDate localDateInscripciones;
+
 	LocalDate localDateFinCurso;
 	LocalDate localDateFinInscripciones;
 	String fechaFinCurso;
 	String fechaFinInscr;
 	String plazas;
 	String plazasLibres;
+
+	CursoDTO selectedCurso;
+	List<CursoDTO> listaCursos;
+
 
 
 	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
@@ -36,24 +51,75 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 	@Override
 	public void initNonVolatileData() {
+
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) { handleSelect(); }
 		});
 
 		this.getView().getBtnCambiarFechas().addActionListener(e -> handleCambiarFechas());
 		this.getView().getBtnCambiarDetalles().addActionListener(e -> handleCambiarDetalles());
+
+		// Acción del botón para cancelar cursos
+		this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
+				
+				selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
+				// Si el curso no está cancelado, se cancela. En la database sólo se guarda el estado CANCELADO
+				// de un curso. Por defecto el atributo estado es null
+				if (estadoDB.equals("null")) {
+					// Modificar estado del curso a CANCELADO. Se modifica el atributo en la database
+					getModel().updateCursoStateToCancelled(String.valueOf(CursoState.CANCELADO), selectedCurso.getId());
+					selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
+					// Obtener emails de los alumnos para enviar un correo.
+					List<String> emails = getModel().getAlumnosEmail(String.valueOf(idCurso));
+					// Enviar correo a alumnos para informar de la cancelación del curso
+					for (String email: emails) 
+						Util.sendEmail(email, "Cancelación de curso",
+						"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
+					
+
+					System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
+				}
+				updateTables();
+			}
+		});
+
 	}
 
 	@Override
 	public void initVolatileData() {
+
 		eraseControls(true);
 		updateTables();
+
+		this.initThings();
+		this.updateTables();
+	}
+
+	public void initThings() {
+
+		eraseControls(true); //Deshabilitamos los controles hasta que ocurra algo en la tabla.
+
+		//Listener de la tabla, para poder detectar los distintos clicks en la tabla
+		this.getView().getTableInscripciones().addMouseListener( new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent e)
+			{
+
+				handleSelect(); //Que handleSelect() se encargue de todo lo relacionado con esta selección.
+
+			}
+		});
+
+
 	}
 
 	private void handleSelect() { //Función para manejar la fila seleccionada de la tabla
 		JTable table = getView().getTableInscripciones();
 		TableModel model = table.getModel();
 		int row = table.convertRowIndexToModel(table.getSelectedRow());
+
 
 		// Obtengo los datos de la tabla y los almaceno en variables globales (por si a otros métodos les hacen falta)
 
@@ -238,5 +304,4 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		eraseControls(false);
 		SwingUtil.autoAdjustColumns(table);
 	}
-
 }

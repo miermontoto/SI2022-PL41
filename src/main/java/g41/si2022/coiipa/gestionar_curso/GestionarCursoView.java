@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.gestionar_curso;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -45,9 +46,18 @@ public class GestionarCursoView extends View {
 	private BetterDatePicker dateNewFinCurso;
 	private BetterDatePicker dateNewFinInscr;
 
+
 	private JFormattedTextField txtFieldPlazas;
+
+	// Datepicker para cambiar la fecha del curso y de las inscripciones
+	private DatePicker datePickerNewDateCurso;
+	private DatePicker datePickerNewDateInscripciones;
+	
+	private JFormattedTextField txtImporte;
+
 	private JPanel panel;
 	private JCheckBox chkAll;
+	private JButton btnCancelarCurso;
 
 	public GestionarCursoView(SwingMain main) {
 		super(main, GestionarCursoModel.class, GestionarCursoView.class, GestionarCursoController.class);
@@ -61,24 +71,30 @@ public class GestionarCursoView extends View {
 		handlePanel.setLayout(new GridLayout(3, 1));
 
 		JXTitledPanel retrasarPanel = new JXTitledPanel("Cambiar fechas");
-		JXTitledPanel cambiarDetallesPanel = new JXTitledPanel("Cambiar otros detalles");
+
+		JXTitledPanel cancelarPanel = new JXTitledPanel("Cancelar curso");
+
 		JXTitledPanel infoPanel = new JXTitledPanel("Información del curso");
 
 		JPanel retrasarPanelContent = new JPanel();
-		JPanel devolverPanelContent = new JPanel();
+		JPanel cancelarPanelContent = new JPanel();
 		JPanel infoPanelContent = new JPanel();
 
 		retrasarPanel.setContentContainer(retrasarPanelContent);
-		cambiarDetallesPanel.setContentContainer(devolverPanelContent);
+
+		cancelarPanel.setContentContainer(cancelarPanelContent);
+
 		infoPanel.setContentContainer(infoPanelContent);
 
 		panel = new JPanel();
 		this.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
 
-		chkAll = new JCheckBox("Ver todas las inscripciones");
-		chkAll.setHorizontalAlignment(SwingConstants.LEFT);
-		//panel.add(chkAll);
+
+		// chkAll = new JCheckBox("Ver todas las inscripciones");
+		// chkAll.setHorizontalAlignment(SwingConstants.LEFT);
+		// panel.add(chkAll);
+
 
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 	    formatter.setValueClass(Integer.class);
@@ -89,7 +105,9 @@ public class GestionarCursoView extends View {
 
 		handlePanel.add(infoPanel);
 		handlePanel.add(retrasarPanel);
-		handlePanel.add(cambiarDetallesPanel);
+
+		handlePanel.add(cancelarPanel);
+
 		this.add(handlePanel, BorderLayout.EAST);
 
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -124,6 +142,7 @@ public class GestionarCursoView extends View {
 
 		gbc.gridy = 5;
 		infoPanelContent.add(lblFechaCurso = JLabelFactory.getLabel("N/A"), gbc);
+
 
 		// Parte del panel de cambio de fechas
 		retrasarPanelContent.setLayout(new GridBagLayout());
@@ -169,7 +188,8 @@ public class GestionarCursoView extends View {
 		gbc.anchor = GridBagConstraints.CENTER;
 		retrasarPanelContent.add(btnCambiarFechas = new JButton("Cambiar fechas"), gbc);
 
-		devolverPanelContent.setLayout(new GridBagLayout());
+		cancelarPanelContent.setLayout(new GridBagLayout());
+
 
 		gbc.insets = spacer;
 		gbc.gridy = 0;
@@ -188,10 +208,22 @@ public class GestionarCursoView extends View {
 		gbc.gridy = 2;
 		devolverPanelContent.add(btnCambiarDetalles = new JButton("Cambiar detalles"), gbc);
 
+		gbc.gridy = 3;
+		// devolverPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Importe a devolver (€)"), gbc);
+
+		gbc.gridy = 4;
+		// devolverPanelContent.add(lblDevolverCalculo = JLabelFactory.getLabel("N/A"), gbc);
+
+		gbc.gridy = 9;
+		gbc.gridheight = 2;
+		btnCancelarCurso = new JButton("Cancelar curso");
+		btnCancelarCurso.setPreferredSize(new Dimension(200, 100));
+		cancelarPanelContent.add(btnCancelarCurso, gbc);
+
+
 		tableInscripciones = new JTable();
 		this.add(new JScrollPane(tableInscripciones), BorderLayout.CENTER);
 		tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableInscripciones.setDefaultEditor(Object.class, null);
 	}
-
 }
