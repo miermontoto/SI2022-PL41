@@ -19,7 +19,7 @@ end
 def add_data_to_sql(data, table)
     sql = "INSERT INTO #{table} ("
 
-    data.instance_variables.each do |var|
+    data[0].instance_variables.each do |var|
         sql += "#{var[1..-1]}, "
     end
 
