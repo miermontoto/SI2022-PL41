@@ -43,12 +43,9 @@ public class CursoDTO {
 		return this.estado;
 	}
 
-	// // Annadido por gestionarCursos
-	// public void setCancelled(boolean isCancelled) {
-	// 	this.isCancelled = isCancelled;
-	// }
 
-	// public boolean getCancelled() {
-	// 	return this.isCancelled;
-	// }
+	@Override
+	public String toString() {
+		return this.getNombre();
+	}
 }

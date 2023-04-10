@@ -4,9 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -16,21 +15,34 @@ import javax.swing.table.DefaultTableModel;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
+
+import g41.si2022.ui.util.Dialog;
+
 import g41.si2022.util.Util;
 import g41.si2022.util.state.CursoState;
 import g41.si2022.util.state.StateUtilities;
 
+
 public class GestionarCursoController extends g41.si2022.mvc.Controller<GestionarCursoView, GestionarCursoModel> {
 
-
+	//Variables globales para los valores seleccionados
 	int idCurso;
 	String nombreCurso;
-	String fechaCurso;
-	String fechaInscripciones;
+	String fechaIniCurso;
+	String fechaIniInscr;
 	LocalDate localDateCurso;
 	LocalDate localDateInscripciones;
+
+	LocalDate localDateFinCurso;
+	LocalDate localDateFinInscripciones;
+	String fechaFinCurso;
+	String fechaFinInscr;
+	String plazas;
+	String plazasLibres;
+
 	CursoDTO selectedCurso;
 	List<CursoDTO> listaCursos;
+
 
 
 	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
@@ -39,6 +51,14 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 	@Override
 	public void initNonVolatileData() {
+
+		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) { handleSelect(); }
+		});
+
+		this.getView().getBtnCambiarFechas().addActionListener(e -> handleCambiarFechas());
+		this.getView().getBtnCambiarDetalles().addActionListener(e -> handleCambiarDetalles());
+
 		// Acción del botón para cancelar cursos
 		this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -64,10 +84,15 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 				updateTables();
 			}
 		});
+
 	}
 
 	@Override
 	public void initVolatileData() {
+
+		eraseControls(true);
+		updateTables();
+
 		this.initThings();
 		this.updateTables();
 	}
@@ -87,44 +112,50 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 			}
 		});
 
+
 	}
 
 	private void handleSelect() { //Función para manejar la fila seleccionada de la tabla
-
 		JTable table = getView().getTableInscripciones();
-		TableModel model = this.getView().getTableInscripciones().getModel();
-		
-		//Obtengo los datos de la tabla y los almaceno en variables globales (por si a otros métodos les hacen falta)
-		idCurso = table.getSelectedRow() + 1;
-		nombreCurso = model.getValueAt(idCurso, 1).toString();
-		fechaInscripciones = model.getValueAt(idCurso, 2).toString();
-		fechaCurso = model.getValueAt(idCurso, 4).toString();
-		selectedCurso = getModel().getCurso(String.valueOf(idCurso));
-	
-		
-		//DEBUG
-		// System.out.printf("ID: %s, nombre: %s, fecha del curso: %s, fecha de inscripciones: %s \n", idCurso, nombreCurso, fechaCurso, fechaInscripciones);
+		TableModel model = table.getModel();
+		int row = table.convertRowIndexToModel(table.getSelectedRow());
 
-		if (idCurso == -1) { //Lo que se ha seleccionado está mal.
+
+		// Obtengo los datos de la tabla y los almaceno en variables globales (por si a otros métodos les hacen falta)
+
+		idCurso = Integer.parseInt(model.getValueAt(row, 0).toString());
+		nombreCurso = model.getValueAt(row, 1).toString();
+		fechaIniCurso = model.getValueAt(row, 2).toString();
+		fechaFinCurso = model.getValueAt(row, 3).toString();
+		fechaIniInscr = model.getValueAt(row, 4).toString();
+		fechaFinInscr = model.getValueAt(row, 5).toString();
+		plazas = model.getValueAt(row, 6).toString();
+		plazasLibres = model.getValueAt(row, 7).toString();
+
+		// DEBUG
+		//System.out.printf("ID: %s, nombre: %s, fecha del curso: %s, fecha de inscripciones: %s \n", idCurso, nombreCurso, fechaCurso, fechaInscripciones);
+
+		if(idCurso == -1) { //Lo que se ha seleccionado está mal.
 			eraseControls(true);
 			return;
 		}
 
+		getView().getLblFechaCurso().setText(fechaIniCurso + " → " + fechaFinCurso);
+		getView().getLblFechaInscripcion().setText(fechaIniInscr + " → " + fechaFinInscr);
+		getView().getLblInfoNombre().setText(nombreCurso);
 
-		//Set de etiquetas en la IU.
-		this.getView().getLblFechaCurso().setText(fechaCurso);
-		this.getView().getLblInfoNombre().setText(nombreCurso);
+		localDateCurso = LocalDate.parse(fechaIniCurso);
+		localDateInscripciones = LocalDate.parse(fechaIniInscr);
+		localDateFinCurso = LocalDate.parse(fechaFinCurso);
+		localDateFinInscripciones = LocalDate.parse(fechaFinInscr);
 
-		//Conversión a localDate
-		localDateCurso = LocalDate.parse( new SimpleDateFormat("yyyy-MM-dd").format(Util.isoStringToDate(fechaCurso)));
-		localDateInscripciones = LocalDate.parse( new SimpleDateFormat("yyyy-MM-dd").format(Util.isoStringToDate(fechaInscripciones)));
+		getView().getDateNewIniCurso().setDate(localDateCurso);
+		getView().getDateNewIniInscr().setDate(localDateInscripciones);
+		getView().getDateNewFinCurso().setDate(localDateFinCurso);
+		getView().getDateNewFinInscr().setDate(localDateFinInscripciones);
+		getView().getTxtFieldPlazas().setText(plazas);
 
-		//Set de fechas en la IU.
-		this.getView().getDatePickerNewDateCurso().setDate(localDateCurso);
-		this.getView().getDatePickerNewDateInscripciones().setDate(localDateInscripciones);
-
-		//Hemos terminado el proceso, habilitamos los controles
-		setControls(true);
+		setControls(true); // Hemos terminado el proceso, habilitamos los controles.
 
 		/*String date = model.getValueAt(row, 6).toString();
 		if (date.equals("")) {
@@ -134,54 +165,143 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 			this.getView().getDatePicker().setDate(LocalDate.parse(date));
 			setControls(false);
 		}*/
-		
+	}
+
+
+	public void handleCambiarFechas() {
+		if(!checkFechas()) {
+			Dialog.showError("No hemos modificado nada, ya que había parámetros incorrectos. Por favor, corrígelos e inténtalo de nuevo.");
+			return;
+		}
+
+		getModel().updateFechas(idCurso, fechaIniCurso, fechaFinCurso, fechaIniInscr, fechaFinInscr);
+		updateTables(); // Actualizamos la tabla de los datos tras producir la inserción
+		Dialog.show("Se han modificado las fechas del curso con éxito");
+	}
+
+
+	// Función que implementa un sistema para comprobar las fechas que se introducen
+	// En caso de que algo esté mal, devuelve falso yun mensaje de error.
+	public boolean checkFechas() {
+		String fechaCursoInicio = getView().getDateNewIniCurso().getDateStringOrEmptyString();
+		String fechaCursoFin = this.getView().getDateNewFinCurso().getDateStringOrEmptyString();
+		String fechaInscripcionInicio = this.getView().getDateNewIniInscr().getDateStringOrEmptyString();
+		String fechaInscripcionFin = this.getView().getDateNewFinInscr().getDateStringOrEmptyString();
+
+		// DEBUG
+		/*System.out.printf("Fecha del inico del curso es: %s \n", fechaCursoInicio);
+		System.out.printf("Fecha del fin del curso es: %s \n", fechaCursoFin);
+		System.out.printf("Fecha del inico de inscripciones es: %s \n", fechaInscripcionInicio);
+		System.out.printf("Fecha del fin de inscripciones es: %s \n", fechaInscripcionFin);*/
+
+		if (fechaCursoInicio == "" || fechaCursoFin == "" || fechaInscripcionInicio == "" || fechaInscripcionFin == "") {
+			Dialog.showError("Las fechas no pueden ser nulas");
+		}
+
+		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Formateador de fechas
+
+		// Acabamos el curso antes de empezar el curso
+		LocalDate start = LocalDate.parse(fechaCursoInicio);
+		LocalDate stop = LocalDate.parse(fechaCursoFin);
+
+		if(start.isAfter(stop)) {
+			Dialog.showError("No puede acabar el curso antes de la fecha de inicio del curso");
+			return false;
+		}
+
+		// Acabamos las inscripciones antes de empezar las inscripciones.
+		start = LocalDate.parse(fechaInscripcionInicio);
+		stop = LocalDate.parse(fechaInscripcionFin);
+
+		if(start.isAfter(stop)) {
+			Dialog.showError("No pueden acabar las inscripciones antes de empezar las inscripciones");
+			return false;
+		}
+
+		// El inicio de inscripciones es después del inicio del curso.
+
+		start = LocalDate.parse(fechaInscripcionInicio);
+		stop = LocalDate.parse(fechaCursoInicio);
+
+		if(start.isAfter(stop)) {
+			Dialog.showError("No pueden empezar las inscripciones más tarde que el curso");
+			return false;
+		}
+
+		// Todo ha ido bien, guardamos las fechas.
+		this.fechaIniCurso = fechaCursoInicio;
+		this.fechaFinCurso = fechaCursoFin;
+		this.fechaIniInscr = fechaInscripcionInicio;
+		this.fechaFinInscr = fechaInscripcionFin;
+
+		return true;
+	}
+
+
+	public void handleCambiarDetalles() {
+		String plazasNuevas = this.getView().getTxtFieldPlazas().getText(); //Obtengo el texto.
+		int ocupadas = Integer.parseInt(plazas) - Integer.parseInt(plazasLibres);
+		int plazasNuevasInt = Integer.parseInt(plazasNuevas);
+
+		if(plazasNuevasInt < ocupadas) {
+			Dialog.showError("El nuevo número de plazas debe ser superior al número de plazas ocupadas. Ahora mismo hay ocupadas " + ocupadas);
+			return;
+		}
+
+		if(plazasNuevasInt <= 0) {
+			Dialog.showError("Se han introducido plazas negativas.");
+			return;
+		}
+
+		this.plazas = plazasNuevas;
+		getModel().updateDetalles(idCurso, plazasNuevas);
+		updateTables();
+		Dialog.show("Se han cambiado los detalles indicados con éxito.");
 	}
 
 	private void setControls(boolean status) {
-		
-		//Habilito los datePicker
-		this.getView().getDatePickerNewDateCurso().setEnabled(status);
-		this.getView().getDatePickerNewDateInscripciones().setEnabled(status);
-		//Habilito el botón de cambiar las fechas.
-		this.getView().getBtnCambiarFechas().setEnabled(status);
+		getView().getDateNewIniCurso().setEnabled(status);
+		getView().getDateNewIniInscr().setEnabled(status);
+		getView().getDateNewFinCurso().setEnabled(status);
+		getView().getDateNewFinInscr().setEnabled(status);
+		getView().getBtnCambiarFechas().setEnabled(status);
+		getView().getTxtFieldPlazas().setEnabled(status);
+		getView().getBtnCambiarDetalles().setEnabled(status);
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
+		getView().getLblInfoNombre().setText("N/A");
+		getView().getLblFechaCurso().setText("N/A");
+		getView().getDateNewIniCurso().setText("");
+		getView().getDateNewIniInscr().setText("");
+		getView().getDateNewFinCurso().setText("");
+		getView().getDateNewFinInscr().setText("");
+		getView().getTxtFieldPlazas().setText("");
 
-		//Etiquetas de información
-		this.getView().getLblInfoNombre().setText("N/A");
-		this.getView().getLblFechaCurso().setText("N/A");
-
-		//Datepicker
-		this.getView().getDatePickerNewDateCurso().setText("");
-		this.getView().getDatePickerNewDateInscripciones().setText("");
-
-		setControls(false); //Apagamos los controles
+		setControls(false);
 
 		/*
 		this.getView().getDatePickerNewDateCurso().setEnabled(false);
 		this.getView().getDatePickerNewDateInscripciones().setEnabled(false);
-		 */
-
-		//if(eliminarAviso) this.getView().getLblError().setText("");
+		if(eliminarAviso) this.getView().getLblError().setText("");
+		*/
 	}
 
 	public void updateTables() {
+		List <CursoDTO> cursos = this.getModel().getCursos();
+		JTable table = this.getView().getTableInscripciones();
 
-		listaCursos = this.getModel().getCursos();
+		table.setModel(
+			SwingUtil.getTableModelFromPojos(
+				cursos,
+				new String[] { "id", "nombre", "start_inscr", "end_inscr", "start", "end", "plazas", "plazas_libres"},
+				new String[] { "Id", "Nombre", "Ini. inscr.", "Fin inscr.", "Ini. curso", "Fin curso",  "Plazas totales", "Plazas libres"},
+				null
+			)
+		);
 
-		for (CursoDTO curso: listaCursos) 
-			curso.setEstado(StateUtilities.getCursoState(curso, this.getTab().getMain().getToday()));
-		
-		this.getView().getTableInscripciones().setModel(
-				SwingUtil.getTableModelFromPojos(
-						listaCursos,
-						new String[] { "id", "nombre", "start_inscr", "end_inscr", "start", "end", "estado"},
-						new String[] { "Id" ,"Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Estado"},
-						null
-						)
-				);
-		//Ocultamos la columna 0 de la vista.
-		this.getView().getTableInscripciones().removeColumn(this.getView().getTableInscripciones().getColumnModel().getColumn(0));
+		table.removeColumn(table.getColumnModel().getColumn(0));
+		eraseControls(false);
+		SwingUtil.autoAdjustColumns(table);
 	}
 }

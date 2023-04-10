@@ -27,18 +27,20 @@ create table curso (
 create table inscripcion (
     id integer primary key autoincrement,
     fecha date not null,
+    cancelada boolean not null default false,
     curso_id integer not null,
     alumno_id integer not null,
+    grupo_id integer,
     foreign key (curso_id) references curso(id),
     foreign key (alumno_id) references alumno(id)
+    foreign key (grupo_id) references grupo(id)
 );
 
-create table inscripcioncancelada (
-	id integer primary key autoincrement,
-	importedevuelto integer not null,
-	fechacancelacion date not null,
-	inscripcion_id integer not null,
-	foreign key (inscripcion_id) references inscripcion(id)
+create table grupo (
+	  id integer primary key autoincrement,
+    nombre text not null,
+    email text,
+    telefono text
 );
 
 create table alumno (
@@ -72,14 +74,15 @@ create table pago (
     id integer primary key autoincrement,
     importe float not null,
     fecha date not null,
-    inscripcion_id integer not null,
-    foreign key (inscripcion_id) references inscripcion(id)
+    inscripcion_id integer,
+    factura_id integer,
+    foreign key (inscripcion_id) references inscripcion(id),
+    foreign key (factura_id) references factura(id)
 );
 
 create table factura (
     id integer primary key autoincrement,
-    fecha_introd date not null,
-    fecha_pago date,
+    fecha date not null,
     docencia_id integer not null,
     foreign key (docencia_id) references docencia(id)
 );
@@ -90,6 +93,7 @@ create table evento (
     hora_ini time not null,
     hora_fin time not null,
     loc text not null,
+    observaciones text,
     curso_id integer not null,
     foreign key (curso_id) references curso(id)
 );

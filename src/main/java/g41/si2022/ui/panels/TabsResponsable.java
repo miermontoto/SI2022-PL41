@@ -1,6 +1,5 @@
 package g41.si2022.ui.panels;
 
-
 import g41.si2022.coiipa.consultar_ingresos_gastos.ConsultarIngresosGastosView;
 import g41.si2022.coiipa.gestionar_curso.GestionarCursoView;
 import g41.si2022.coiipa.registrar_curso.RegistrarCursoView;
