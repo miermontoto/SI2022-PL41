@@ -25,14 +25,13 @@ class Inscripcion # grupo_id is optional
 end
 
 class Curso
-    attr_accessor :nombre, :descripcion, :coste
+    attr_accessor :nombre, :descripcion
     attr_accessor :start_inscr, :end_inscr, :plazas
     attr_accessor :start, :end
 
-    def initialize(nombre, descripcion, coste, startInscr, endInscr, plazas, startCourse, endCourse)
+    def initialize(nombre, descripcion, startInscr, endInscr, plazas, startCourse, endCourse)
         @nombre = nombre
         @descripcion = descripcion
-        @coste = coste
         @start_inscr = startInscr
         @end_inscr = endInscr
         @plazas = plazas

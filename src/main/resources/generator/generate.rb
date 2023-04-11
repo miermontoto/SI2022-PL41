@@ -81,7 +81,7 @@ def generate_inscripciones(num, alumnos, curso, curso_id, entidades, costes)
         i.alumno_id = alumnos.sample
         i.fecha = curso.start + rand(0..(curso.end - curso.start))
         i.cancelada = 0
-        i.entidad_id = rand(1..entidades.length - 1) if rand > 0.8
+        i.entidad_id = rand > 0.8 ? rand(1..entidades.length - 1) : nil
         i.coste_id = costes.index(costes.filter { |coste| coste.curso_id == curso_id + 1 }.sample).to_i + 1
 
         inscripciones.push(i)

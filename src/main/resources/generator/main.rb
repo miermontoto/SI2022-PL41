@@ -44,19 +44,19 @@ def obtain_data(ratio)
 
 
     cursos.push(Curso.new('[G] Curso ya finalizado', 'Curso generado que ya ha finalizado',
-        rand(1..500), start_two_months_ago, end_two_months_ago, rand(1..alumnos.length),
+        start_two_months_ago, end_two_months_ago, rand(1..alumnos.length),
         start_last_month, end_last_month))
     cursos.push(Curso.new('[G] Curso en progreso', 'Curso generado que está en progreso',
-        rand(1..500), start_last_month, end_last_month, rand(1..alumnos.length),
+        start_last_month, end_last_month, rand(1..alumnos.length),
         start_this_month, end_this_month))
     cursos.push(Curso.new('[G] Curso con inscripción cerrada', 'Curso generado que ya ha cerrado la inscripción pero no ha empezado',
-        rand(1..500), start_last_month, end_last_month, rand(1..alumnos.length),
+        start_last_month, end_last_month, rand(1..alumnos.length),
         start_next_month, end_next_month))
     cursos.push(Curso.new('[G] Curso con inscripción abierta', 'Curso generado que está abierto a inscripciones',
-        rand(1..500), start_this_month, end_this_month, rand(1..alumnos.length),
+        start_this_month, end_this_month, rand(1..alumnos.length),
         start_next_month, end_next_month))
     cursos.push(Curso.new('[G] Curso esperando a inscripción', 'Curso generado que está esperando a que se abra la inscripción',
-        rand(1..500), start_next_month, end_next_month, rand(1..alumnos.length),
+        start_next_month, end_next_month, rand(1..alumnos.length),
         start_two_months_ago, end_two_months_ago))
 
     # Generar entidades
@@ -91,7 +91,7 @@ def obtain_data(ratio)
     ### Se genera un curso con una sola plaza después de generar inscripciones para que
     ### siempre tenga una plaza libre.
     cursos.push(Curso.new('[G] Curso con una plaza', 'Curso generado que tiene una plaza',
-        rand(1..500), start_this_month, end_this_month, 1,
+        start_this_month, end_this_month, 1,
         start_next_month, end_next_month))
 
     # Generar docentes
@@ -129,7 +129,7 @@ def obtain_data(ratio)
 
     ## Generar un curso con MUCHOS eventos, docencias e inscripciones.
     cursos.push(Curso.new('[G] Curso grande', 'Curso generado con muchos eventos, inscripciones y docencias',
-        rand(1..500), start_last_month, end_last_month, alumnos.length, start_this_month, end_this_month))
+        start_last_month, end_last_month, alumnos.length, start_this_month, end_this_month))
     eventos += generate_eventos(rand((200 * ratio).to_i..(500 * ratio).to_i), aulas, cursos.last, cursos.length - 1)
     docencias += generate_docencias(rand(docentes.length/2..docentes.length), docentes, cursos.length - 1)
     inscripciones += generate_inscripciones(rand(2*cursos.last.plazas/3..cursos.last.plazas), alumnos, cursos.last, cursos.length - 1, entidades, costes)
