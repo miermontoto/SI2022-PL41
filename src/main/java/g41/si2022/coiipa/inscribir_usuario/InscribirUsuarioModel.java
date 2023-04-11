@@ -29,7 +29,7 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
     	String sql = "SELECT c.nombre"
     			+ " FROM colectivo AS c";
     	return this.getDatabase()
-    			.executeQueryPojo(CosteColectivoDTO.class, sql, idCursos.toArray())
+    			.executeQueryPojo(CosteColectivoDTO.class, sql)
     			.stream().collect(new g41.si2022.util.HalfwayListCollector<CosteColectivoDTO, String> () {
 
 					@Override
