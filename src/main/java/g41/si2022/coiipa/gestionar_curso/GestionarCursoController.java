@@ -87,7 +87,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 					cancelarInscripciones(selectedCurso); // Cancelar inscripciones relacionadas con el curso
 
-					Dialog.show("Curso cancelado. Se ha enviado un e-mail tanto a los inscritos como al profesorado. Se devolverá el 100% del impote pagado");
+					Dialog.show("Curso cancelado. Se ha enviado un e-mail tanto a los inscritos como al profesorado. Se devolverá el 100% del importe pagado");
 				}
 
 				updateTables();
