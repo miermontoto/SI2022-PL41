@@ -3,10 +3,13 @@ package g41.si2022.coiipa.registrar_curso;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.awt.KeyboardFocusManager;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +55,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	@Override
 	public void initVolatileData() {
 		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
-
 	}
 
 	@Override
@@ -63,45 +65,26 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		loadTextAreaListeners();
 		loadValidateListeners();
 		loadEventListeners();
+		loadColectivos();
 		getView().getBtnRegistrar().setEnabled(false);
-		JTextField coste = getView().getTxtCoste();
-		coste.addKeyListener(new KeyAdapter() {
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (!Character.isDigit(e.getKeyChar()) && e.getKeyChar() != '.') {
-					JTextField tf = RegistrarCursoController.this.getView().getTxtCoste();
-					if (tf.getText().length() > 1) {
-						tf.setText(tf.getText().substring(0, tf.getText().length() - 1));
-					} else tf.setText("");
-				}
-			}
-
-		});
-
-		coste.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusGained(FocusEvent e) { }
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				JTextField tf = RegistrarCursoController.this.getView().getTxtCoste();
-				if (!Character.isDigit(tf.getText().charAt(0)) && tf.getText().charAt(0) != '.') {
-					tf.setText("");
-				}
-			}
-		});
-
 	}
-
+	
+	private void loadColectivos () {
+		this.getView().getTablaCostes().setModel(
+		SwingUtil.getTableModelFromPojos(
+				this.getModel().getColectivos(), 
+				new String[]{"nombre", "coste"},
+				new String[]{"Nombre Colectivo", "Coste"}, 
+				null));
+	}
+	
 	private void loadEventListeners() {
 		javax.swing.JButton
-			btnAdd = getView().getBtnAddEvento(),
-			btnRemove = getView().getBtnRemoveEvento();
+		btnAdd = getView().getBtnAddEvento(),
+		btnRemove = getView().getBtnRemoveEvento();
 		BetterDatePicker
-			start = getView().getDateCursoStart(),
-			end = getView().getDateCursoEnd();
+		start = getView().getDateCursoStart(),
+		end = getView().getDateCursoEnd();
 
 		JTable table = getView().getTableEventos();
 
@@ -113,9 +96,9 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 			if(ed.showDialog()) {
 				eventos.addAll(ed.getEventos());
 				table.setModel(SwingUtil.getTableModelFromPojos(eventos,
-					new String[] {"loc", "fecha", "horaIni", "horaFin"},
-					new String[] {"Localizacion", "Fecha", "Hora de inicio", "Hora de fin"},
-					null));
+						new String[] {"loc", "fecha", "horaIni", "horaFin"},
+						new String[] {"Localizacion", "Fecha", "Hora de inicio", "Hora de fin"},
+						null));
 			}
 		});
 
@@ -183,6 +166,8 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				}
 			}
 		}
+		// valid &= this.getView().getTablaCostes().getValueAt(0, 0) != this.getView().getTablaCostes().getColumnNames()[0];
+		// valid &= this.getView().getTablaCostes().getValueAt(0, 1) != this.getView().getTablaCostes().getColumnNames()[1];
 		valid &= !eventos.isEmpty();
 		getView().getBtnRegistrar().setEnabled(valid);
 	}
@@ -218,21 +203,21 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 	private void loadDateListeners() {
 		BetterDatePicker
-			inscripcionIni = getView().getDateInscrStart(),
-			inscripcionFin = getView().getDateInscrEnd(),
-			cursoIni = getView().getDateCursoStart(),
-			cursoFin = getView().getDateCursoEnd();
+		inscripcionIni = getView().getDateInscrStart(),
+		inscripcionFin = getView().getDateInscrEnd(),
+		cursoIni = getView().getDateCursoStart(),
+		cursoFin = getView().getDateCursoEnd();
 
 		DateChangeListener inscripcionListener = (e) -> {
 			if(inscripcionIni.getDate() != null && inscripcionIni.compareTo(getView().getMain().getTodayPicker()) <= 0
-				&& e.getSource() == inscripcionIni) {
+					&& e.getSource() == inscripcionIni) {
 				Dialog.showWarning("La fecha de inicio de inscripción es anterior a la fecha actual.");
 			} // Comprobación fecha de inicio de inscripción
 
 			if(inscripcionFin.getDate() == null) return;
 
 			if(inscripcionFin.compareTo(getView().getMain().getTodayPicker()) <= 0
-				&& e.getSource() == inscripcionFin) {
+					&& e.getSource() == inscripcionFin) {
 				Dialog.showWarning("El periodo de inscripción es anterior a la fecha actual y ha finalizado.");
 			} // Comprobación fecha de fin de inscripción
 
@@ -245,7 +230,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 			// Comprobación de overlap de fechas (curso e inscripción)
 			if(cursoIni.getDate() != null && cursoIni.compareTo(inscripcionFin) <= 0)
 				Dialog.showWarning("Las fechas de curso y de inscripción se solapan.");
-			};
+		};
 
 		DateChangeListener cursoListener = (e) -> {
 			if (cursoIni.getDate() != null) {
@@ -277,15 +262,16 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	public void getListaProfesores() {
 		getModel().getListaProfesores().stream().forEach((x) -> profesoresMap.put(x.getDni(), x));
 		getView().getTableProfesores().setModel(
-			SwingUtil.getTableModelFromPojos(
-				this.sup.get(),
-				new String[] { "dni", "nombre", "apellidos", "email", "direccion", "remuneracion" },
-				new String[] { "DNI", "Nombre", "Apellidos", "Email", "Dirección", "Remuneración" },
-				new HashMap<Integer, Pattern> () {
-					{ put(5, Pattern.compile("\\d+(\\.\\d+)?")); }
-				}
-			)
-		);
+				SwingUtil.getTableModelFromPojos(
+						this.sup.get(),
+						new String[] { "dni", "nombre", "apellidos", "email", "direccion", "remuneracion" },
+						new String[] { "DNI", "Nombre", "Apellidos", "Email", "Dirección", "Remuneración" },
+						new HashMap<Integer, Pattern> () {
+							private static final long serialVersionUID = 1L;
+							{ put(5, Pattern.compile("\\d+(\\.\\d+)?")); }
+						}
+						)
+				);
 		SwingUtil.autoAdjustColumns(this.getView().getTableProfesores());
 		loadTableListeners();
 	}
@@ -297,12 +283,44 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		String idCurso = this.getModel().insertCurso(
 				getView().getTxtNombre().getText(),
 				getView().getTxtDescripcion().getText(),
-				getView().getTxtCoste().getText(),
 				getView().getDateInscrStart().getDate().toString(),
 				getView().getDateInscrEnd().getDate().toString(),
 				getView().getDateCursoStart().getDate().toString(),
 				getView().getDateCursoEnd().getDate().toString(),
-				getView().getTxtPlazas().getText());
+				getView().getTxtPlazas().getText(),
+				g41.si2022.util.Util.getData(getView().getTablaCostes()).stream().collect(
+						new java.util.stream.Collector<Map<String, String>, Map<String, Double>, Map<String, Double>> () {
+
+							@Override
+							public Supplier<Map<String, Double>> supplier() {
+								return java.util.TreeMap::new;
+							}
+
+							@Override
+							public BiConsumer<Map<String, Double>, Map<String, String>> accumulator() {
+								return (map, row) -> map.put(
+										row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
+										Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1)))
+										);
+							}
+
+							@Override
+							public BinaryOperator<Map<String, Double>> combiner() {
+								return (mapA, mapB) -> { mapA.putAll(mapB); return mapA; };
+							}
+
+							@Override
+							public Function<Map<String, Double>, Map<String, Double>> finisher() {
+								return java.util.Collections::unmodifiableMap;
+							}
+
+							@Override
+							public Set<Characteristics> characteristics() {
+								return new java.util.HashSet<>(java.util.Arrays.asList(Characteristics.CONCURRENT));
+							}
+
+						}
+						));
 
 		docentes.forEach((x) -> getModel().insertDocencia(x.getRemuneracion(), x.getId(), idCurso));
 		eventos.forEach((e) -> getModel().insertEvento(e.getLoc(), e.getFecha(), e.getHoraIni(), e.getHoraFin(), idCurso));

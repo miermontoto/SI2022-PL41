@@ -111,32 +111,11 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 			return InscribirMultiplesUsuariosModel.this.getDatabase()
 					.executeQueryArray(outputSql+");", (Object[]) outputDatos) // Query all the alumnos IDs. This will return a List<Object[]>
 					.stream() //  Form a stream
-					.collect(new java.util.stream.Collector<Object[], List<String>, List<String>> () {
+					.collect(new g41.si2022.util.HalfwayListCollector<Object[], String> () {
 						// This Collector will go from List<Object[]> to List<String> where String is each alumno's ID
-
-						@Override
-						public Supplier<List<String>> supplier() {
-							return java.util.ArrayList<String>::new;
-						}
-
 						@Override
 						public BiConsumer<List<String>, Object[]> accumulator() {
 							return (list, item) -> list.add(item[0].toString());
-						}
-
-						@Override
-						public BinaryOperator<List<String>> combiner() {
-							return (listA, listB) -> { listA.addAll(listB); return listA; };
-						}
-
-						@Override
-						public Function<List<String>, List<String>> finisher() {
-							return java.util.Collections::unmodifiableList;
-						}
-
-						@Override
-						public Set<Characteristics> characteristics() {
-							return Set.of(Characteristics.CONCURRENT);
 						}
 
 					});

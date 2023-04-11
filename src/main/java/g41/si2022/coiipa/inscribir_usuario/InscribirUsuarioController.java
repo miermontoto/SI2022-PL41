@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.inscribir_usuario;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -160,6 +161,26 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas_libres", "start_inscr", "end_inscr" },
         		new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
         this.getView().getTablaCursos().setModel(tableModel);
+        this.loadColectivosComboBox(cursos.stream().collect(new g41.si2022.util.HalfwayListCollector<CursoDTO, String> () {
+
+			@Override
+			public BiConsumer<List<String>, CursoDTO> accumulator() {
+				return (list, curso) -> list.add(curso.getId());
+			}
+        	
+        })); 
         SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
+    }
+    
+    /**
+     * loadColectivosComboBox.
+     * This method will update the contents of the colectivos ComboBox
+     * 
+     * @param cursos List of cursos ID to be added
+     */
+    private void loadColectivosComboBox (List<String> cursos) {
+    	javax.swing.JComboBox<String> cb = this.getView().getCbColectivo();
+    	cb.removeAllItems(); // Clear the cb
+    	this.getModel().getColectivosFromCursos(cursos).forEach(curso -> cb.addItem(curso));
     }
 }

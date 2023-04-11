@@ -119,12 +119,7 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 	 */
 	public List<AlumnoDTO> gatherAllAlumnos () {
 		return this.getView().getTablaInscritos().getData().stream().collect(
-				new java.util.stream.Collector<Map<String, String>, List<AlumnoDTO>, List<AlumnoDTO>>() {
-
-					@Override
-					public Supplier<List<AlumnoDTO>> supplier() {
-						return java.util.ArrayList::new;
-					}
+				new g41.si2022.util.HalfwayListCollector<Map<String, String>, AlumnoDTO>() {
 
 					@Override
 					public BiConsumer<List<AlumnoDTO>, Map<String, String>> accumulator() {
@@ -136,21 +131,6 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 							alumno.setTelefono(row.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[3]));
 							list.add(alumno);
 						};
-					}
-
-					@Override
-					public BinaryOperator<List<AlumnoDTO>> combiner() {
-						return (listA, listB) -> { listA.addAll(listB); return listA; };
-					}
-
-					@Override
-					public Function<List<AlumnoDTO>, List<AlumnoDTO>> finisher() {
-						return java.util.Collections::unmodifiableList;
-					}
-
-					@Override
-					public Set<Characteristics> characteristics() {
-						return Set.of(Characteristics.CONCURRENT);
 					}
 
 				});
