@@ -62,10 +62,7 @@ public class StateUtilities {
 		LocalDate start = LocalDate.parse(curso.getStart());
 		LocalDate end = LocalDate.parse(curso.getEnd());
 
-		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getEstado() != null) {
-			return CursoState.CERRADO;
-		}
-
+		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getEstado() != null) return CursoState.CERRADO;
     	if (getCursoStateDB(String.valueOf(curso.getId())).equals("CANCELADO")) return CursoState.CANCELADO;
 		if (startInscr.isAfter(today)) return CursoState.PLANEADO;
 		if (endInscr.isAfter(today) || endInscr.equals(today)) return CursoState.EN_INSCRIPCION;
