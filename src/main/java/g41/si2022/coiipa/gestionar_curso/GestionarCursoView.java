@@ -205,7 +205,6 @@ public class GestionarCursoView extends View {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.fill = GridBagConstraints.CENTER;
 		gbc.weightx = 1.0;
-		JPanel devolverPanelContent;
 		devolverPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Cambiar número de plazas"), gbc);
 
 		gbc.insets = spacer;

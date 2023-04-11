@@ -89,4 +89,30 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model {
 
 		return this.getDatabase().executeQueryPojo(String.class, sql, idCurso);
 	}
+
+	/**
+	 * 
+	 * @param idCurso
+	 * @return 
+	 */
+	public List<InscripcionDTO> getCursoInscripciones(String idCurso) {
+		String sql = "SELECT * FROM inscripcion " +
+					 "WHERE curso_id = ?";
+
+		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
+	}
+
+
+	public void cancelarInscripcion(String idInscripcion) {
+		String sql = "UPDATE inscripcion SET cancelada = TRUE WHERE id = ?";
+		this.getDatabase().executeUpdate(sql, idInscripcion);
+	}
+
+	public List<String> getProfesoresEmail(String idCurso) {
+		String sql = "SELECT dce.email FROM docencia AS dca"
+			+ " INNER JOIN docente as dce ON dca.docente_id = dce.id"
+			+ " WHERE dca.curso_id = ?";
+
+		return this.getDatabase().executeQueryPojo(String.class, sql, idCurso);
+	}
 }
