@@ -39,7 +39,7 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 
 		java.util.Iterator<Map.Entry<String, Double>> itr = costes.entrySet().iterator();
 		Map.Entry<String, Double> current = itr.next();
-		sql = "INSERT INTO preciocolectivo (nombre, coste, curso_id) VALUES (?, ?, ?)";
+		sql = "INSERT INTO coste (colectivo_id, coste, curso_id) VALUES (?, ?, ?)";
 		java.util.List<String> data = new java.util.ArrayList<String> ();
 		data.add(current.getKey());
 		data.add(current.getValue().toString());
@@ -54,14 +54,23 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		this.getDatabase().executeUpdate(sql, data.toArray());
 		return idCurso;
 	}
+	
+	/**
+	 * Returns the list of names of colectivos
+	 * 
+	 * @return List of names of colectivos
+	 */
+	public java.util.List<g41.si2022.dto.CosteColectivoDTO> getColectivos () {
+		return this.getDatabase().executeQueryPojo(g41.si2022.dto.CosteColectivoDTO.class, "SELECT nombre FROM colectivo;");
+	}
 
 	public void insertDocencia(String remuneracion, String profesor_id, String curso_id) {
 		String sql = "INSERT INTO docencia (remuneracion, docente_id, curso_id) VALUES (?, ?, ?)";
 		this.getDatabase().executeUpdate(sql, remuneracion, profesor_id, curso_id);
 	}
 
-  public void insertEvento(String loc, String fecha, String horaIni, String horaFin, String cursoId) {
+	public void insertEvento(String loc, String fecha, String horaIni, String horaFin, String cursoId) {
 		String sql = "INSERT INTO evento (loc, fecha, hora_ini, hora_fin, curso_id) VALUES (?, ?, ?, ?, ?)";
 		this.getDatabase().executeUpdate(sql, loc, fecha, horaIni, horaFin, cursoId);
-  }
+	}
 }

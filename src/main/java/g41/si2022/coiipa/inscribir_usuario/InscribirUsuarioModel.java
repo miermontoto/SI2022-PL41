@@ -26,9 +26,8 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
     }
     
     public List<String> getColectivosFromCursos (List<String> idCursos) {
-    	String sql = "SELECT cc.nombre"
-    			+ " FROM costecolectivo AS cc"
-    			+ " WHERE cc.curso_id IN (?)";
+    	String sql = "SELECT c.nombre"
+    			+ " FROM colectivo AS c";
     	return this.getDatabase()
     			.executeQueryPojo(CosteColectivoDTO.class, sql, idCursos.toArray())
     			.stream().collect(new g41.si2022.util.HalfwayListCollector<CosteColectivoDTO, String> () {

@@ -55,7 +55,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	@Override
 	public void initVolatileData() {
 		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
-
 	}
 
 	@Override
@@ -66,7 +65,12 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		loadTextAreaListeners();
 		loadValidateListeners();
 		loadEventListeners();
+		loadColectivosComboBox();
 		getView().getBtnRegistrar().setEnabled(false);
+	}
+	
+	private void loadColectivosComboBox () {
+		this.getModel().getColectivos().forEach(colectivo -> this.getView().getCbColectivos().addItem(colectivo.getNombre()));
 	}
 
 	private void loadEventListeners() {
@@ -157,8 +161,8 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				}
 			}
 		}
-		valid &= this.getView().getTablaCostes().getValueAt(0, 0) != this.getView().getTablaCostes().getColumnNames()[0];
-		valid &= this.getView().getTablaCostes().getValueAt(0, 1) != this.getView().getTablaCostes().getColumnNames()[1];
+		// valid &= this.getView().getTablaCostes().getValueAt(0, 0) != this.getView().getTablaCostes().getColumnNames()[0];
+		// valid &= this.getView().getTablaCostes().getValueAt(0, 1) != this.getView().getTablaCostes().getColumnNames()[1];
 		valid &= !eventos.isEmpty();
 		getView().getBtnRegistrar().setEnabled(valid);
 	}

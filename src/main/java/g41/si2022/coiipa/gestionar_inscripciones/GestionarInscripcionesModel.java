@@ -13,7 +13,7 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 			+ " i.alumno_id as alumno_id,"
 			+ " a.nombre as alumno_nombre,"
 			+ " a.apellidos as alumno_apellidos, "
-			+ " cc.coste as curso_coste,"
+			+ " coste.coste as curso_coste,"
 			+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as pagado," // no borrar :)
 			+ " c.nombre as curso_nombre,"
 			+ " i.id as inscripcion_id, "
@@ -21,7 +21,7 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 			+ " i.fecha as fecha,"
 			+ " i.cancelada as cancelada"
 			+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
-			+ " inner join costecolectivo AS cc ON cc.id = i.costecolectivo_id"
+			+ " inner join coste ON coste.id = i.coste_id"
 			+ " inner join curso as c on c.id = i.curso_id"
 			+ " left join pago as pa on pa.inscripcion_id = i.id"
 			+ " group by i.id order by i.fecha asc";

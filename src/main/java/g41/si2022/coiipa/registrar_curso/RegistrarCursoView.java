@@ -35,6 +35,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 	private BetterDatePicker dateInscrStart, dateInscrEnd;
 	private BetterDatePicker dateCursoStart, dateCursoEnd;
 	private RowAppendableJTable tablaCostes;
+	private javax.swing.JComboBox<String> cbColectivos;
 	private JTable tableProfesores;
 	private JTable tableEventos;
 	private JButton btnAddEvento;
@@ -115,6 +116,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			} { // Input
 				right.gridy = 3;
 				right.fill = GridBagConstraints.BOTH;
+				/*
 				centerPanel.add(this.tablaCostes = new RowAppendableJTable (
 						new String[] {"Nombre Colectivo", "Coste"},
 						new java.util.TreeMap<Integer, Pattern> () {
@@ -124,6 +126,8 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 							}},
 						new boolean[] {true, true}
 						), right);
+						*/
+				centerPanel.add(this.cbColectivos = new javax.swing.JComboBox<String>());
 			}
 		} { // Inscripcion
 			{ // Label

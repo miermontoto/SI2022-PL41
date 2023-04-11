@@ -6205,14 +6205,14 @@ INSERT INTO alumno (nombre, apellidos, email, telefono) VALUES
 ('Juan', 'Mier', 'mier@mier.info', ''),
 ('Test', 'Test', 'test@mier.info', '');
 
-INSERT INTO curso (nombre, descripcion, coste, start_inscr, end_inscr, plazas, start, end) VALUES
-('[G] Curso ya finalizado', 'Curso generado que ya ha finalizado', '261', '2023-02-01', '2023-02-28', '5140', '2023-03-01', '2023-03-31'),
-('[G] Curso en progreso', 'Curso generado que está en progreso', '201', '2023-03-01', '2023-03-31', '4974', '2023-04-01', '2023-04-30'),
-('[G] Curso con inscripción cerrada', 'Curso generado que ya ha cerrado la inscripción pero no ha empezado', '303', '2023-03-01', '2023-03-31', '362', '2023-05-01', '2023-05-31'),
-('[G] Curso con inscripción abierta', 'Curso generado que está abierto a inscripciones', '332', '2023-04-01', '2023-04-30', '568', '2023-05-01', '2023-05-31'),
-('[G] Curso esperando a inscripción', 'Curso generado que está esperando a que se abra la inscripción', '323', '2023-05-01', '2023-05-31', '4638', '2023-02-01', '2023-02-28'),
-('[G] Curso con una plaza', 'Curso generado que tiene una plaza', '272', '2023-04-01', '2023-04-30', '1', '2023-05-01', '2023-05-31'),
-('[G] Curso grande', 'Curso generado con muchos eventos, inscripciones y docencias', '312', '2023-03-01', '2023-03-31', '6200', '2023-04-01', '2023-04-30');
+INSERT INTO curso (nombre, descripcion, start_inscr, end_inscr, plazas, start, end) VALUES
+('[G] Curso ya finalizado', 'Curso generado que ya ha finalizado', '2023-02-01', '2023-02-28', '5140', '2023-03-01', '2023-03-31'),
+('[G] Curso en progreso', 'Curso generado que está en progreso', '2023-03-01', '2023-03-31', '4974', '2023-04-01', '2023-04-30'),
+('[G] Curso con inscripción cerrada', 'Curso generado que ya ha cerrado la inscripción pero no ha empezado', '2023-03-01', '2023-03-31', '362', '2023-05-01', '2023-05-31'),
+('[G] Curso con inscripción abierta', 'Curso generado que está abierto a inscripciones', '2023-04-01', '2023-04-30', '568', '2023-05-01', '2023-05-31'),
+('[G] Curso esperando a inscripción', 'Curso generado que está esperando a que se abra la inscripción', '2023-05-01', '2023-05-31', '4638', '2023-02-01', '2023-02-28'),
+('[G] Curso con una plaza', 'Curso generado que tiene una plaza', '2023-04-01', '2023-04-30', '1', '2023-05-01', '2023-05-31'),
+('[G] Curso grande', 'Curso generado con muchos eventos, inscripciones y docencias', '2023-03-01', '2023-03-31', '6200', '2023-04-01', '2023-04-30');
 
 INSERT INTO docente (nombre, apellidos, email, telefono, direccion, dni) VALUES
 ('[G] Micaela', 'Arroyo', 'mervin_rutherford@shields.com', '627859883', 'Escalinata Eduardo Vigil, 80', '33993525-P'),
