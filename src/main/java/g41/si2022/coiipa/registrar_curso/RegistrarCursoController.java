@@ -65,14 +65,19 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		loadTextAreaListeners();
 		loadValidateListeners();
 		loadEventListeners();
-		loadColectivosComboBox();
+		loadColectivos();
 		getView().getBtnRegistrar().setEnabled(false);
 	}
 	
-	private void loadColectivosComboBox () {
-		this.getModel().getColectivos().forEach(colectivo -> this.getView().getCbColectivos().addItem(colectivo.getNombre()));
+	private void loadColectivos () {
+		this.getView().getTablaCostes().setModel(
+		SwingUtil.getTableModelFromPojos(
+				this.getModel().getColectivos(), 
+				new String[]{"nombre", "coste"},
+				new String[]{"Nombre Colectivo", "Coste"}, 
+				null));
 	}
-
+	
 	private void loadEventListeners() {
 		javax.swing.JButton
 		btnAdd = getView().getBtnAddEvento(),
@@ -283,7 +288,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				getView().getDateCursoStart().getDate().toString(),
 				getView().getDateCursoEnd().getDate().toString(),
 				getView().getTxtPlazas().getText(),
-				getView().getTablaCostes().getData().stream().collect(
+				g41.si2022.util.Util.getData(getView().getTablaCostes()).stream().collect(
 						new java.util.stream.Collector<Map<String, String>, Map<String, Double>, Map<String, Double>> () {
 
 							@Override
@@ -294,8 +299,8 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 							@Override
 							public BiConsumer<Map<String, Double>, Map<String, String>> accumulator() {
 								return (map, row) -> map.put(
-										row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnNames()[0]),
-										Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnNames()[1]))
+										row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
+										Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1)))
 										);
 							}
 

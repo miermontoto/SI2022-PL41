@@ -5,7 +5,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -19,7 +18,6 @@ import javax.swing.ListSelectionModel;
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
 import g41.si2022.ui.components.BetterDatePicker;
-import g41.si2022.ui.components.table.RowAppendableJTable;
 import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
 
@@ -34,8 +32,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 	private JIntegerTextField txtPlazas;
 	private BetterDatePicker dateInscrStart, dateInscrEnd;
 	private BetterDatePicker dateCursoStart, dateCursoEnd;
-	private RowAppendableJTable tablaCostes;
-	private javax.swing.JComboBox<String> cbColectivos;
+	private JTable tablaCostes;
 	private JTable tableProfesores;
 	private JTable tableEventos;
 	private JButton btnAddEvento;
@@ -127,7 +124,9 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 						new boolean[] {true, true}
 						), right);
 						*/
-				centerPanel.add(this.cbColectivos = new javax.swing.JComboBox<String>());
+				JScrollPane sp;
+				centerPanel.add(sp = new JScrollPane(), right);
+				sp.setViewportView(this.tablaCostes = new javax.swing.JTable());
 			}
 		} { // Inscripcion
 			{ // Label
