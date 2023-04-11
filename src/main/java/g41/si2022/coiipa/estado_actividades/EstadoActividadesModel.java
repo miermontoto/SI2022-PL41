@@ -16,13 +16,13 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 	// Modificar query para que devuelva los valores necesarios de inscripción de tipo CursoDTO
 	public List<InscripcionDTO> getListaInscr(String idCurso) {
 		String sql = "SELECT i.id, i.fecha, a.nombre as alumno_nombre,"
-		+ " a.apellidos as alumno_apellidos, cc.coste as curso_coste,"
+		+ " a.apellidos as alumno_apellidos, cos.coste as curso_coste,"
 		+ " i.cancelada as cancelada"
 		+ " FROM inscripcion as i"
 		+ " INNER JOIN alumno as a ON i.alumno_id = a.id"
-		+ " INNER JOIN curso as c ON i.curso_id = c.id"
-		+ " INNER JOIN costecolectivo AS cc ON i.costecolectivo_id = cc.id"
-		+ " WHERE curso_id = ?";
+		+ " INNER JOIN curso as cur ON i.curso_id = cur.id"
+		+ " INNER JOIN coste AS cos ON cos.id = i.coste_id"
+		+ " WHERE cur.id = ?";
 
 		return getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
 	}
@@ -37,41 +37,34 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 
 	/**
 	 * getIngresosEstimados.
-	 * This method will return the total earnings for a given curso 
+	 * This method will return the total earnings for a given curso
 	 * supposing that all alumnos that have signed up will pay.<br>
 	 * Note that this method does not take into account costs.
-	 * 
+	 *
 	 * @param idCurso ID of the curso to be checked
 	 * @return Amount that should be earned by this curso.
 	 */
 	public String getIngresosEstimados(String idCurso) {
-		String sql = "SELECT SUM(cc.coste * ("
-				+ "	SELECT COUNT(id) "
-				+ " FROM inscripcion AS i"
-				+ " WHERE i.costecolectivo_id = cc.id"
-				+ " GROUP BY i.id"
-				+ ")"
-				+ ")"
-				+ " FROM costecolectivo AS cc"
-				+ " WHERE cc.curso_id = ?"
-				+ " GROUP BY cc.id";
+		String sql = "select sum(cur.coste) from inscripcion as i"
+			+ " inner join coste as cur on i.coste_id = cur.id"
+			+ " where i.curso_id = ?";
+
 		try {
 			return String.valueOf((double) getDatabase().executeQuerySingle(sql, idCurso));
-		} catch (Exception ex) { return "0"; }
+		} catch (NullPointerException ex) { return "0"; }
 	}
 
 	public List<PagoDTO> getListaPagos(String idCurso) {
-		String sql = "SELECT * FROM pago "
-					 + "INNER JOIN inscripcion ON pago.inscripcion_id = inscripcion.id "
-					 + "WHERE inscripcion.id = ?" ;
-
+		String sql = "SELECT * FROM pago"
+			+ " INNER JOIN inscripcion ON pago.inscripcion_id = inscripcion.id"
+			+ " WHERE inscripcion.id = ?";
 		return getDatabase().executeQueryPojo(PagoDTO.class, sql, idCurso);
 	}
 
 	public String getImportePagosFromInscripcion(String idInscripcion) {
 		String sql = "SELECT sum(importe) FROM pago as p "
-					 + "INNER JOIN inscripcion as i ON p.inscripcion_id = i.id "
-			 		 + "WHERE i.id = ?" ;
+			+ "INNER JOIN inscripcion as i ON p.inscripcion_id = i.id "
+			+ "WHERE i.id = ?" ;
 
 		try {
 			return String.valueOf((double) getDatabase().executeQuerySingle(sql, idInscripcion));
