@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.gestionar_curso;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,7 +22,9 @@ import javax.swing.text.NumberFormatter;
 
 import org.jdesktop.swingx.JXTitledPanel;
 
+
 import com.github.lgooddatepicker.components.DatePicker;
+
 
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
@@ -202,6 +205,7 @@ public class GestionarCursoView extends View {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.fill = GridBagConstraints.CENTER;
 		gbc.weightx = 1.0;
+		JPanel devolverPanelContent;
 		devolverPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Cambiar número de plazas"), gbc);
 
 		gbc.insets = spacer;
