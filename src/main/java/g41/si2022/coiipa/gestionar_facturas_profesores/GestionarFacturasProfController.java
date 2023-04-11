@@ -48,17 +48,24 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 		this.getView().getCmbCurso().addActionListener(e -> getListaDocentes());
 	}
 
+	@Override
+	public void initVolatileData() {
+		clear();
+		getListaFacturas(); // Precarga inicial de la lista de inscripciones
+		getListaCursos();
+	}
+
+	public void clear() {
+		getView().getTxtImporte().setText("");
+		getView().getDatePago().setText("");
+		getView().getDateFactura().setDate(getView().getMain().getToday());
+	}
+
 	private void handleInsertarFactura() {
 		getModel().insertFactura(getView().getDateFactura().toString(), ((DocenciaDTO) getView().getCmbProfesor().getSelectedItem()).getId());
 		getListaFacturas();
 		getListaDocentes();
 		Dialog.show("Factura registrada");
-	}
-
-	@Override
-	public void initVolatileData() {
-		getListaFacturas(); // Precarga inicial de la lista de inscripciones
-		getListaCursos();
 	}
 
 	private void handleInsertarPago() {

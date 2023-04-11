@@ -39,7 +39,7 @@ public class GestionarFacturasProfModel extends g41.si2022.mvc.Model {
     public List<DocenciaDTO> getListaDocentes(String idCurso) {
         String sql = "select da.*, de.nombre, de.apellidos from docencia as da"
 		+ " inner join docente as de on de.id = da.docente_id"
-		+ " where da.curso_id = ?";
+		+ " where da.curso_id = ? and not exists (select * from factura as f where f.docencia_id = da.id)";
 		return this.getDatabase().executeQueryPojo(DocenciaDTO.class, sql, idCurso);
     }
 

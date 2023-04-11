@@ -36,7 +36,6 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 	}
 
 	/**
-	 * getIngresosEstimados.
 	 * This method will return the total earnings for a given curso
 	 * supposing that all alumnos that have signed up will pay.<br>
 	 * Note that this method does not take into account costs.

@@ -16,6 +16,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import g41.si2022.util.StatusCellRenderer;
+import g41.si2022.util.Util;
 import g41.si2022.util.exception.ApplicationException;
 import g41.si2022.util.state.StateUtilities;
 
@@ -32,7 +33,8 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 	}
 
 	public void initVolatileData() {
-		this.getListaCursos();
+		clear();
+		getListaCursos();
 	}
 
 	public void initNonVolatileData() {
@@ -43,6 +45,11 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 				SwingUtil.exceptionWrapper(() -> balance());
 			}
 		});
+	}
+
+	public void clear() {
+		Util.emptyTable(getView().getTablaInscr());
+		getView().getLblEconomicInfo().setText("");
 	}
 
 	public void getListaCursos() {
@@ -61,7 +68,6 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 		cursos = this.getModel().getListaCursos();
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
-
 				listaInscr = this.getModel().getListaInscr(curso.getId());
 				for(InscripcionDTO inscripcion : listaInscr) inscripcion.updateEstado(getView().getMain().getToday());
 
@@ -95,13 +101,15 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 				String balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Integer.parseInt(gastos));
 				String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Integer.parseInt(gastos));
 
+				String colorReal = Double.parseDouble(balanceReal) > 0 ? "green" : "red";
+				String colorEstimado = Double.parseDouble(balanceEstimado) > 0 ? "green" : "red";
 				StringBuilder sb = new StringBuilder();
 				sb.append("<html><body>");
 				sb.append("<p><b>Gastos actuales:</b> " + gastos + "€");
 				sb.append("<p><p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
-				sb.append("<p><b>Balance estimado:</b> " + balanceEstimado + "€");
+				sb.append("<p><b>Balance estimado:</b> <span style=\"color:" + colorEstimado + ";\">" + balanceEstimado + "€</span>");
 				sb.append("<p><p><b>Ingresos actuales:</b> " + ingresosReales + "€");
-				sb.append("<p><b>Balance real:</b> " + balanceReal + "€");
+				sb.append("<p><b>Balance real:</b> <span style=\"color:" + colorReal + ";\">" + balanceReal + "€</span>");
 				sb.append("</body></html>");
 				this.getView().getLblEconomicInfo().setText(sb.toString());
 

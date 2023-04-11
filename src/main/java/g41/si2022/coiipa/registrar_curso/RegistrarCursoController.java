@@ -68,16 +68,16 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		loadColectivos();
 		getView().getBtnRegistrar().setEnabled(false);
 	}
-	
-	private void loadColectivos () {
+
+	private void loadColectivos() {
 		this.getView().getTablaCostes().setModel(
 		SwingUtil.getTableModelFromPojos(
-				this.getModel().getColectivos(), 
+				this.getModel().getColectivos(),
 				new String[]{"nombre", "coste"},
-				new String[]{"Nombre Colectivo", "Coste"}, 
+				new String[]{"Colectivo", "Coste"},
 				null));
 	}
-	
+
 	private void loadEventListeners() {
 		javax.swing.JButton
 		btnAdd = getView().getBtnAddEvento(),
