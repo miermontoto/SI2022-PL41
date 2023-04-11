@@ -6,7 +6,6 @@ require_relative 'classes.rb'
 require_relative 'util.rb'
 require_relative 'generate.rb'
 require 'faker'
-require 'colorize'
 Faker::Config.locale = 'es'
 
 def obtain_data(ratio)
@@ -166,7 +165,7 @@ if ratio < 0.0
     puts "el ratio debe de ser mayor o igual que 0."
     exit(1)
 elsif ratio > 25
-    puts "#{"WARNING!".yellow} ratio elevado. you may be here a while!"
+    puts "WARNING! ratio elevado. you may be here a while!"
 end
 
 # variables globales
@@ -181,5 +180,5 @@ data.each do |t|; sql += add_data_to_sql(t[1], t[0]); end # Añadir los datos de
 File.open(filename, 'w') do |f|; f.write(sql); end # Guardar la cadena SQL en el archivo especificado
 
 # salida de resultados
-puts "\rGenerando datos... [#{"OK".green}] (#{(Time.now - time).round(3)}s)"
-puts "#{File.open(filename, 'r').readlines.length.to_s.blue} líneas generadas en #{filename}"
+puts "\rGenerando datos... [OK] (#{(Time.now - time).round(3)}s)"
+puts "#{File.open(filename, 'r').readlines.length} líneas generadas en #{filename}"

@@ -78,7 +78,7 @@ def generate_inscripciones(num, alumnos, curso, curso_id, entidades, costes)
         i = Inscripcion.new
 
         i.curso_id = curso_id + 1
-        i.alumno_id = alumnos.sample
+        i.alumno_id = alumnos.index(alumnos.sample)
         i.fecha = curso.start + rand(0..(curso.end - curso.start))
         i.cancelada = 0
         i.entidad_id = rand > 0.8 ? rand(1..entidades.length - 1) : nil
