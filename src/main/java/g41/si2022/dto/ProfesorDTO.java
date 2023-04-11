@@ -14,4 +14,8 @@ public class ProfesorDTO {
 		remuneracion, // Necesario para almacenar remuneración al registrar cursos.
 		direccion;
 
+	@Override
+	public String toString() {
+		return this.nombre + " " + this.apellidos;
+	}
 }

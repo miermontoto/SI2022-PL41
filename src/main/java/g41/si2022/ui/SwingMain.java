@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.awt.GridBagConstraints;
 import java.awt.Desktop;
@@ -22,7 +23,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.event.MouseInputAdapter;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -49,8 +49,8 @@ import g41.si2022.util.db.Database;
 @Getter
 public class SwingMain {
 
-	public static final int WINDOW_WIDTH = 1280;
-	public static final int WINDOW_HEIGHT = 720;
+	public static final int DEFAULT_WINDOW_WIDTH = 1280;
+	public static final int DEFAULT_WINDOW_HEIGHT = 720;
 
 	private JFrame frame;
 	private BetterDatePicker today;
@@ -59,7 +59,6 @@ public class SwingMain {
 	private JPanel total;
 	private JLabel lblTitle;
 	private JComponent[] passProtected;
-	private static boolean isDark = false;
 
 	/**
 	 * Launch the application.
@@ -78,27 +77,17 @@ public class SwingMain {
 		});
 	}
 
-	public void refresh() {
-		frame.revalidate();
-		frame.repaint();
-	}
-
-	public void toggleDarkMode() {
-		isDark = !isDark;
-		try {
-			if (isDark) UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
-			else UIManager.setLookAndFeel("com.formdev.flatlaf.FlatLightLaf");
-		} catch (Exception e) { e.printStackTrace(); }
-		refresh();
-	}
-
 	/**
 	 * Create the application.
+	 * @throws IOException
 	 */
-	public SwingMain() {
+	public SwingMain() throws IOException {
 		frame = new JFrame();
 		frame.setTitle("Programa de gestión del COIIPA");
-		frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		frame.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+		java.awt.Image logo = new ImageIcon(ImageIO.read(new File("src/main/resources/logoBlanco.png"))).getImage();
+		frame.setIconImage(logo);
+
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 

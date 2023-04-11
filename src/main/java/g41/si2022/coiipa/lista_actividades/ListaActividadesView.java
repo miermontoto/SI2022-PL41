@@ -16,15 +16,11 @@ import javax.swing.ListSelectionModel;
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTextArea;
 import org.jdesktop.swingx.JXTitledPanel;
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
 
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.components.BetterDatePicker;
+import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
 import g41.si2022.util.state.CursoState;
 import lombok.Getter;
@@ -82,16 +78,17 @@ public class ListaActividadesView extends View {
         gbc.insets = new Insets(5, 1, 5, 1);
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.weightx = 1;
         gbc.anchor = GridBagConstraints.LINE_START;
-        infoPanel.add(JLabelFactory.getLabel("Descripción:"), gbc);
+        infoPanel.add(JLabelFactory.getLabel(FontType.bold, "Descripción:"), gbc);
         gbc.gridy = 1;
-        infoPanel.add(JLabelFactory.getLabel("Localizaciones:"), gbc);
+        infoPanel.add(JLabelFactory.getLabel(FontType.bold, "Localizaciones:"), gbc);
         gbc.gridy = 2;
-        infoPanel.add(JLabelFactory.getLabel("Docentes:"), gbc);
+        infoPanel.add(JLabelFactory.getLabel(FontType.bold, "Docentes:"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
-        //gbc.anchor = GridBagConstraints.LINE_END;
+        gbc.anchor = GridBagConstraints.LINE_END;
         infoPanel.add(infoDescripcion, gbc);
         infoDescripcion.setEditable(false);
         gbc.gridy = 1;
@@ -116,7 +113,7 @@ public class ListaActividadesView extends View {
         JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
         bottomPanel.add(infoTitledPanel);
         bottomPanel.add(eventosTitledPanel);
-        bottomPanel.setPreferredSize(new java.awt.Dimension(SwingMain.WINDOW_WIDTH, 200));
+        bottomPanel.setPreferredSize(new java.awt.Dimension(getMain().getFrame().getWidth(), getMain().getFrame().getHeight() / 4));
         this.add(bottomPanel, BorderLayout.SOUTH);
     }
 
