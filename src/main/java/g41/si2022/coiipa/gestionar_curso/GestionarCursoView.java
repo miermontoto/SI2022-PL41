@@ -23,6 +23,9 @@ import javax.swing.text.NumberFormatter;
 import org.jdesktop.swingx.JXTitledPanel;
 
 
+import com.github.lgooddatepicker.components.DatePicker;
+
+
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.components.BetterDatePicker;
@@ -47,7 +50,6 @@ public class GestionarCursoView extends View {
 	private BetterDatePicker dateNewIniInscr;
 	private BetterDatePicker dateNewFinCurso;
 	private BetterDatePicker dateNewFinInscr;
-
 
 	private JFormattedTextField txtFieldPlazas;
 
@@ -75,16 +77,21 @@ public class GestionarCursoView extends View {
 		JXTitledPanel retrasarPanel = new JXTitledPanel("Cambiar fechas");
 
 		JXTitledPanel cancelarPanel = new JXTitledPanel("Cancelar curso");
+		
+		JXTitledPanel devolverPanel = new JXTitledPanel("Gestionar curso");
 
 		JXTitledPanel infoPanel = new JXTitledPanel("Información del curso");
 
 		JPanel retrasarPanelContent = new JPanel();
 		JPanel cancelarPanelContent = new JPanel();
+		JPanel devolverPanelContent = new JPanel();
 		JPanel infoPanelContent = new JPanel();
 
 		retrasarPanel.setContentContainer(retrasarPanelContent);
 
 		cancelarPanel.setContentContainer(cancelarPanelContent);
+		
+		devolverPanel.setContentContainer(devolverPanelContent);
 
 		infoPanel.setContentContainer(infoPanelContent);
 
