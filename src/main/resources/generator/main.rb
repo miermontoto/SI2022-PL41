@@ -134,7 +134,7 @@ def obtain_data(ratio)
     inscripciones += generate_inscripciones(rand(2*cursos.last.plazas/3..cursos.last.plazas), alumnos, cursos.last, cursos.length - 1, entidades, costes)
 
     alumnos.push(Alumno.new('Juan', 'Mier', 'mier@mier.info', ''))
-    alumnos.push(Alumno.new('Test', 'Test', 'test@mier.info', ''))
+    alumnos.push(Alumno.new('Test', 'Test', 'test@test.com', ''))
 
     # Generar pagos
     ## Se generan una porción de pagos para todas las inscripciones, de forma

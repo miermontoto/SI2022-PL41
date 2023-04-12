@@ -1,13 +1,10 @@
 package g41.si2022.coiipa.inscribir_multiples_usuarios;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import g41.si2022.dto.AlumnoDTO;
+import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.GrupoDTO;
 import g41.si2022.util.Util;
@@ -27,8 +24,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	}
 
 	public List<GrupoDTO> getGrupoFromEmail(String email) {
-		String sql = "select id, nombre, email, telefono"
-				+ " from grupo where email like ?;";
+		String sql = "select * from entidad where email like ?;";
 		return this.getDatabase().executeQueryPojo(GrupoDTO.class, sql, email);
 	}
 
@@ -41,9 +37,9 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	/**
 	 * getAlumnosFromEmails.
 	 * This function will add all non already existing alumnos in the DB.
-	 * Then it will return all the IDs of all the alumnos in the array 
+	 * Then it will return all the IDs of all the alumnos in the array
 	 * no matter whether they were already in the DB or not.
-	 * 
+	 *
 	 * @param IDs of the alumnos that have been registered
 	 */
 	public List<String> insertAlumnos (List<AlumnoDTO> alumnos) {
@@ -54,10 +50,10 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	/**
 	 * insertMissingAlumnos.
 	 * This function will add all non already existing alumnos in the DB.
-	 * 
+	 *
 	 * @param alumnos
 	 */
-	private void insertMissingAlumnos (List<AlumnoDTO> alumnos) {
+	private void insertMissingAlumnos(List<AlumnoDTO> alumnos) {
 		List<AlumnoDTO> existingAlumnos = InscribirMultiplesUsuariosModel.this.getAlumnos(),
 				alumnosToRegister = alumnos.parallelStream() // Remove the alumnos that are already in the DB
 				.filter((alumnoInsertar) -> existingAlumnos.parallelStream()
@@ -65,24 +61,12 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 				.collect(java.util.stream.Collectors.toList());
 
 		if (alumnosToRegister.size() != 0) {
-			String sql = "INSERT INTO alumno (email, nombre, apellidos, telefono) VALUES ";
-			String[] datos = new String[4 * alumnosToRegister.size()];
-			sql += " (?, ?, ?, ?) ";
-			datos[0] = alumnosToRegister.get(0).getEmail();
-			datos[1] = alumnosToRegister.get(0).getNombre();
-			datos[2] = alumnosToRegister.get(0).getApellidos();
-			datos[3] = alumnosToRegister.get(0).getTelefono();
-			int arrayPos;
-			for (int i = 1 ; i < alumnosToRegister.size() ; i+=4) {
-				sql += " ,(?, ?, ?, ?) ";
-				arrayPos = i/4;
-				datos[i] = alumnosToRegister.get(arrayPos).getEmail();
-				datos[i+1] = alumnosToRegister.get(arrayPos).getNombre();
-				datos[i+2] = alumnosToRegister.get(arrayPos).getApellidos();
-				datos[i+3] = alumnosToRegister.get(arrayPos).getTelefono();
+			for(AlumnoDTO alumno : alumnosToRegister) {
+				String sql = "insert into alumno (nombre, apellidos, email, telefono) values (?, ?, ?, ?);";
+				InscribirMultiplesUsuariosModel.this.getDatabase().executeUpdate(sql, alumno.getNombre(),
+					alumno.getApellidos(),alumno.getEmail(), alumno.getTelefono());
 			}
-			InscribirMultiplesUsuariosModel.this.getDatabase().executeUpdate(sql+";", (Object[]) datos);
-		}	
+		}
 	}
 
 	/**
@@ -94,7 +78,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * To do this, the emails must be contained in the {@link AlumnoDTO}s
 	 * that are passed as parameter.
 	 * </p>
-	 * 
+	 *
 	 * @param alumnos Array of alumnos the be checked
 	 * @return List of IDs
 	 */
@@ -125,17 +109,22 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 
 	/**
 	 * getAlumnos. This method will return the list of alumnos.
-	 * 
+	 *
 	 * @return List of alumnos.
 	 */
-	public List<AlumnoDTO> getAlumnos () {
+	public List<AlumnoDTO> getAlumnos() {
 		String sql = "select * from alumno;";
 		return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql);
 	}
 
+	public List<ColectivoDTO> getCostes(String idCurso) {
+		String sql = "select * from coste where curso_id = ?;";
+		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, sql, idCurso);
+	}
+
 	/**
 	 * getAlumnosInCurso. This method will return the list of alumnos in a given curso.
-	 * 
+	 *
 	 * @param curso_id ID of the curso to be retrieved
 	 * @return List of alumnos that are in the curso with curso_id
 	 */
@@ -146,7 +135,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 
 	public void insertGrupo(String nombre, String email, String telefono) {
 		String sql =
-				"insert into grupo (nombre, email, telefono)"
+				"insert into entidad (nombre, email, telefono)"
 						+ " values (?, ?, ?);";
 		this.getDatabase().executeUpdate(sql, nombre, email, telefono);
 	}
@@ -154,7 +143,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	/**
 	 * insertInscripciones. Inserts a batch of inscripciones.
 	 * If an alumno is already inserted for this course, they will not be added again.
-	 * 
+	 *
 	 * @param fecha today's date
 	 * @param curso_id curso id
 	 * @param alumno_id alumno id
@@ -168,21 +157,11 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 				.collect(java.util.stream.Collectors.toList());
 
 		if (alumno_id.size() != 0) {
-			String[] parameters = new String[alumno_id.size() * 4];
-			String sql = "INSERT INTO inscripcion (fecha, alumno_id, grupo_id, curso_id) "
-					+ " VALUES (?, ?, ?, ?) ";
-			parameters[0] = fecha;
-			parameters[1] = alumno_id.get(0);
-			parameters[2] = grupo_id;
-			parameters[3] = curso_id;
-			for (int i = 4 ; i < alumno_id.size() ; i+=4) {
-				sql += " ,(?, ?, ?, ?) ";
-				parameters[i] = fecha;
-				parameters[i+1] = alumno_id.get(i/4);
-				parameters[i+2] = grupo_id;
-				parameters[i+3] = curso_id;
+			String sql = "INSERT INTO inscripcion (fecha, alumno_id, entidad_id, curso_id, coste_id)"
+					+ " VALUES (?, ?, ?, ?, ?);";
+			for (String id : alumno_id) {
+				this.getDatabase().executeUpdate(sql, fecha, id, grupo_id, curso_id, "1");
 			}
-			this.getDatabase().executeUpdate(sql+";", (Object[]) parameters);
 		}
 	}
 

@@ -54,14 +54,14 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		this.getDatabase().executeUpdate(sql, data.toArray());
 		return idCurso;
 	}
-	
+
 	/**
 	 * Returns the list of names of colectivos
-	 * 
+	 *
 	 * @return List of names of colectivos
 	 */
-	public java.util.List<g41.si2022.dto.CosteColectivoDTO> getColectivos () {
-		return this.getDatabase().executeQueryPojo(g41.si2022.dto.CosteColectivoDTO.class, "SELECT nombre FROM colectivo;");
+	public java.util.List<g41.si2022.dto.ColectivoDTO> getColectivos () {
+		return this.getDatabase().executeQueryPojo(g41.si2022.dto.ColectivoDTO.class, "SELECT nombre FROM colectivo;");
 	}
 
 	public void insertDocencia(String remuneracion, String profesor_id, String curso_id) {

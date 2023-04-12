@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.table.TableModel;
 
 import g41.si2022.dto.AlumnoDTO;
+import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
@@ -66,10 +67,17 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
     		this.getView().getRadioSignup()
     	).forEach(x -> x.addActionListener(e -> SwingUtil.exceptionWrapper( () -> manageForm())));
 
-        this.getView().getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageMain()));
+        this.getView().getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> handleInscripcion()));
     }
 
-    public void manageMain() {
+    /**
+     * Método que introduce las inscripciones en la base de datos.
+     * Dependiendo de si se trata de un usuario nuevo o uno ya existente,
+     * se utilizan los datos existentes en la BBDD o no. Se comprueba que
+     * el alumno que se trata de introducir no esté ya inscrito en el curso.
+     * <p> Se envía un email de confirmación de inscripción.
+     */
+    public void handleInscripcion() {
         if (cursoId == null) return;
 
         String email = "";
@@ -80,23 +88,24 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
                 break;
             case "sign-up":
                 email = this.getView().getTxtEmail().getText();
-                this.getModel().insertAlumno(
-                    this.getView().getTxtNombre().getText(),
-                    this.getView().getTxtApellidos().getText(),
-                    this.getView().getTxtEmail().getText(),
-                    this.getView().getTxtTelefono().getText()
+                getModel().insertAlumno(
+                    getView().getTxtNombre().getText(),
+                    getView().getTxtApellidos().getText(),
+                    getView().getTxtEmail().getText(),
+                    getView().getTxtTelefono().getText()
                 );
                 break;
         }
 
-        alumno = this.getModel().getAlumnoFromEmail(email).get(0);
+        alumno = getModel().getAlumnoFromEmail(email);
 
-        if(this.getModel().checkAlumnoInCurso(alumno.getId(), cursoId)) {
+        if(getModel().checkAlumnoInCurso(alumno.getId(), cursoId)) {
             Dialog.showError("Ya está inscrito en este curso");
             return;
         }
 
-        this.getModel().insertInscripcion(LocalDate.now().toString(), cursoId, alumno.getId());
+        this.getModel().insertInscripcion(getView().getMain().getToday().toString(),
+            cursoId, alumno.getId(), ((ColectivoDTO) getView().getCbColectivo().getSelectedItem()).getId());
         getListaCursos();
         Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.");
 
@@ -161,26 +170,18 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
         TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas_libres", "start_inscr", "end_inscr" },
         		new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
         this.getView().getTablaCursos().setModel(tableModel);
-        this.loadColectivosComboBox(cursos.stream().collect(new g41.si2022.util.HalfwayListCollector<CursoDTO, String> () {
-
-			@Override
-			public BiConsumer<List<String>, CursoDTO> accumulator() {
-				return (list, curso) -> list.add(curso.getId());
-			}
-        	
-        })); 
+        this.loadColectivosComboBox();
         SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
     }
-    
+
     /**
-     * loadColectivosComboBox.
-     * This method will update the contents of the colectivos ComboBox
-     * 
+     * This method will update the contents of the colectivos ComboBox.
      * @param cursos List of cursos ID to be added
      */
-    private void loadColectivosComboBox (List<String> cursos) {
-    	javax.swing.JComboBox<String> cb = this.getView().getCbColectivo();
+    @SuppressWarnings("unchecked")
+    private void loadColectivosComboBox() {
+    	javax.swing.JComboBox cb = this.getView().getCbColectivo();
     	cb.removeAllItems(); // Clear the cb
-    	this.getModel().getColectivosFromCursos(cursos).forEach(curso -> cb.addItem(curso));
+    	this.getModel().getColectivos().forEach(c -> cb.addItem(c));
     }
 }

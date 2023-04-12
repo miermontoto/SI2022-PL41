@@ -5,8 +5,12 @@ import lombok.Getter;
 import lombok.Data;
 
 @Setter @Getter @Data
-public class CosteColectivoDTO {
+public class ColectivoDTO {
 	private String
 		nombre,
-		coste;
+		coste,
+		id;
+
+	@Override
+	public String toString() { return this.nombre; }
 }

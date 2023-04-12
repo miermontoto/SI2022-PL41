@@ -70,7 +70,7 @@ public class Util {
 	}
 
 	public static boolean verifyEmailInGrupo(Database db, String email) {
-		String sql = "select count(*) from grupo where email like ?";
+		String sql = "select count(*) from entidad where email like ?";
 		return (int) db.executeQueryArray(sql, email).get(0)[0] > 0;
 	}
 
