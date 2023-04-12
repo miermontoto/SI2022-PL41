@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -144,7 +143,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		getView().getDateNewFinInscr().setDate(localDateFinInscripciones);
 		getView().getTxtFieldPlazas().setText(plazas);
 
-		setControls(true); // Hemos terminado el proceso, habilitamos los controles.
+		setControls(selectedCurso.getEstado() != CursoState.CANCELADO); // Hemos terminado el proceso, habilitamos los controles.
 	}
 
 
@@ -239,6 +238,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		getView().getBtnCambiarFechas().setEnabled(status);
 		getView().getTxtFieldPlazas().setEnabled(status);
 		getView().getBtnCambiarDetalles().setEnabled(status);
+		getView().getBtnCancelarCurso().setEnabled(status);
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
@@ -282,15 +282,15 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 	/**
 	 * Change the status of all inscriptions in the course inscription list to 'CANCELADA'
-	 * 
+	 *
 	 * @param curso To cancel it inscriptions
 	 */
 	public void cancelarInscripciones(CursoDTO curso) {
 		listaInscr = getModel().getCursoInscripciones(curso.getId());
 
-		for (InscripcionDTO inscr: listaInscr) 
+		for (InscripcionDTO inscr: listaInscr)
 			getModel().cancelarInscripcion(inscr.getId());
-		
+
 
 	}
 }

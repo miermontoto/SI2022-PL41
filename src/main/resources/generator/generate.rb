@@ -159,7 +159,7 @@ def generate_costes(cursos, colectivos)
         colectivos.length.times do |co|
             c = Coste.new
 
-            c.curso_id = cu
+            c.curso_id = cu + 1
             c.colectivo_id = co
             c.coste = rand(10..250)
 
