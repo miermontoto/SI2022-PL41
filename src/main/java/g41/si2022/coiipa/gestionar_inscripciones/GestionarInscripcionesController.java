@@ -154,7 +154,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
 			Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: inscripción completada",
 				"El pago de su inscripción ha sido registrado correctamente y su inscripción ha sido completada.");
-		} else Dialog.showWarning("El importe total es incorrecto y la inscripción no está comlpeta.");
+		} //else Dialog.showWarning("El importe total es incorrecto y la inscripción no está comlpeta.");
 
 		eraseControls(false);
 	}
