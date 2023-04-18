@@ -68,6 +68,16 @@ create table alumno (
     telefono integer
 );
 
+create table lista_espera (
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	alumno_id INTEGER NOT NULL,
+	curso_id INTEGER NOT NULL,
+	fecha_entrada date not null,
+	en_cola BOOL NOT NULL DEFAULT TRUE, 
+	foreign key (alumno_id) references alumno(id),
+	foreign key (curso_id) references curso(id)
+);
+
 create table docente (
     id integer primary key autoincrement,
     nombre text not null,
