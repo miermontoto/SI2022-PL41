@@ -23,6 +23,7 @@ import g41.si2022.util.Util;
 public class InscribirUsuarioController extends g41.si2022.mvc.Controller<InscribirUsuarioView, InscribirUsuarioModel> {
 
     private List<CursoDTO> cursos;
+    boolean lleno = false;
     private String cursoId;
 
     public InscribirUsuarioController(InscribirUsuarioModel m, InscribirUsuarioView v) {
@@ -103,13 +104,17 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
             Dialog.showError("Ya está inscrito en este curso");
             return;
         }
-
+        if(lleno) {
+        	//gestionarListaEspera();
+        }
+        else {
         this.getModel().insertInscripcion(getView().getMain().getToday().toString(),
             cursoId, alumno.getId(), ((ColectivoDTO) getView().getCbColectivo().getSelectedItem()).getId());
         getListaCursos();
         Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.");
 
         Dialog.show("Inscripción realizada con éxito");
+        }
     }
 
     public void manageForm() {
@@ -156,10 +161,13 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
         for (CursoDTO curso : cursos) {
             if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
                 if (curso.getPlazas_libres().equals("0")) {
-                    Dialog.showError("No quedan plazas libres para este curso");
-                    gestionarListaEspera(curso);
+                	Dialog.showError("No quedan plazas libres para este curso");
+                	lleno = true;
+                    this.getView().getBtnInscribir().setText("Añadirme a la lista de espera");
                     return;
                 }
+                this.getView().getBtnInscribir().setText("Inscribirme ahora");
+                lleno = false;
                 cursoId = curso.getId();
                 return;
             }
@@ -174,7 +182,6 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
         this.loadColectivosComboBox();
         SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
     }
-
     /**
      * This method will update the contents of the colectivos ComboBox.
      * @param cursos List of cursos ID to be added
@@ -187,7 +194,9 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
     }
     
     private void gestionarListaEspera(CursoDTO curso) {
+    	
     	String idCurso = curso.getId();
+    	
     	String email = "";
     	switch (this.getView().getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
         case "sign-in":
@@ -197,6 +206,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
             email = this.getView().getTxtEmail().getText();
             break;
     	}
+    	
     	String idAlumno = getModel().getAlumnoFromEmail(email).getId();
     	
     }
