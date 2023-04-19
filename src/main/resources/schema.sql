@@ -12,6 +12,7 @@ drop table if exists evento;
 drop table if exists entidad;
 drop table if exists coste;
 drop table if exists colectivo;
+drop table if exists lista_espera;
 
 create table coste (
 	id integer primary key autoincrement,
@@ -69,13 +70,11 @@ create table alumno (
 );
 
 create table lista_espera (
-	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	alumno_id INTEGER NOT NULL,
-	curso_id INTEGER NOT NULL,
+	id integer not null primary key autoincrement,
+	inscripcion_id integer not null,
 	fecha_entrada date not null,
-	en_cola BOOL NOT NULL DEFAULT TRUE, 
-	foreign key (alumno_id) references alumno(id),
-	foreign key (curso_id) references curso(id)
+	en_cola boolean not null default true,
+	foreign key (inscripcion_id) references inscripcion(id)
 );
 
 create table docente (
