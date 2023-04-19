@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.util.Util;
 
 public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
@@ -74,4 +75,17 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
     public boolean verifyEmail(String email) {
         return Util.verifyEmailInAlumno(this.getDatabase(), email);
     }
+    
+    public void insertListaEspera(String inscripcion_id, String fecha_entrada) {
+        String sql = "insert into lista_espera (inscripcion_id, fecha_entrada)"
+            + " values (?, ?)";
+        this.getDatabase().executeUpdate(sql, inscripcion_id, fecha_entrada);
+    }
+    
+    public InscripcionDTO getIdInscripcionFromCursoAlumno(String alumno_id, String curso_id) {
+        String sql = "select id"
+            + " from inscripcion where alumno_id = ? and curso_id = ?";
+        return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, alumno_id, curso_id).get(0);
+    }
+   
 }
