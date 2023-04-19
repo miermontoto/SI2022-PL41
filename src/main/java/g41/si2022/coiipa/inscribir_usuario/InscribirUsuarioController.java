@@ -157,6 +157,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
             if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
                 if (curso.getPlazas_libres().equals("0")) {
                     Dialog.showError("No quedan plazas libres para este curso");
+                    gestionarListaEspera(curso);
                     return;
                 }
                 cursoId = curso.getId();
@@ -183,5 +184,20 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
     	javax.swing.JComboBox cb = this.getView().getCbColectivo();
     	cb.removeAllItems(); // Clear the cb
     	this.getModel().getColectivos().forEach(c -> cb.addItem(c));
+    }
+    
+    private void gestionarListaEspera(CursoDTO curso) {
+    	String idCurso = curso.getId();
+    	String email = "";
+    	switch (this.getView().getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
+        case "sign-in":
+            email = this.getView().getTxtEmailLogin().getText();
+            break;
+        case "sign-up":
+            email = this.getView().getTxtEmail().getText();
+            break;
+    	}
+    	String idAlumno = getModel().getAlumnoFromEmail(email).getId();
+    	
     }
 }
