@@ -9,6 +9,8 @@ public class ListaEsperaDTO {
 
 	private String
 		id,
+		nombre,
+		apellidos,
 		alumno_id,
 		curso_id,
 		en_cola,
