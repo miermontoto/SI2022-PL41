@@ -54,7 +54,6 @@ public class GestionarListaEsperaModel extends g41.si2022.mvc.Model {
 	public void eliminarListaEspera(String idLista) {
 		String sql = "DELETE FROM lista_espera WHERE id = ?";
 		this.getDatabase().executeUpdate(sql, idLista);
-		this.eliminarInscripcion(idLista);
 		
 	} 
 	
