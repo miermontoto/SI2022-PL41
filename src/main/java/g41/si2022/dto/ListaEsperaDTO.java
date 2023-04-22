@@ -13,6 +13,7 @@ public class ListaEsperaDTO {
 		apellidos,
 		alumno_id,
 		curso_id,
+		inscripcion_id,
 		en_cola,
 		fecha_entrada;
 }
