@@ -89,7 +89,7 @@ create table docente (
 
 create table docencia (
     id integer primary key autoincrement,
-    remuneracion integer not null,
+    remuneracion float not null,
     curso_id integer not null,
     docente_id integer not null,
     foreign key (curso_id) references curso(id),
