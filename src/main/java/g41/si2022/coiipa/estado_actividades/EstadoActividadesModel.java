@@ -17,12 +17,15 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 	public List<InscripcionDTO> getListaInscr(String idCurso) {
 		String sql = "SELECT i.id, i.fecha, a.nombre as alumno_nombre,"
 		+ " a.apellidos as alumno_apellidos, cos.coste as curso_coste,"
-		+ " i.cancelada as cancelada"
+		+ " i.cancelada as cancelada, e.nombre as entidad_nombre,"
+		+ " CASE WHEN sum(p.importe) is null THEN 0 ELSE sum(p.importe) END as pagado"
 		+ " FROM inscripcion as i"
 		+ " INNER JOIN alumno as a ON i.alumno_id = a.id"
 		+ " INNER JOIN curso as cur ON i.curso_id = cur.id"
 		+ " INNER JOIN coste AS cos ON cos.id = i.coste_id"
-		+ " WHERE cur.id = ?";
+		+ " LEFT JOIN entidad AS e ON e.id = i.entidad_id"
+		+ " LEFT JOIN pago AS p ON p.inscripcion_id = i.id"
+		+ " WHERE cur.id = ? group by i.id";
 
 		return getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
 	}

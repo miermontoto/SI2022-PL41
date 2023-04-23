@@ -73,12 +73,12 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 
 				JTable table = this.getView().getTablaInscr();
 				TableModel tableModel = SwingUtil.getTableModelFromPojos(listaInscr,
-					new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "estado" },
-						new String[] { "Fecha de inscripción", "Nombre", "Apellidos", "Estado" }, null);
+					new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "curso_coste" , "pagado", "estado", "entidad_nombre" },
+						new String[] { "Fecha de inscripción", "Nombre", "Apellidos", "Coste", "Pagado", "Estado", "Entidad" }, null);
 				table.setModel(tableModel);
 				//SwingUtil.autoAdjustColumns(table);
 				table.setDefaultEditor(Object.class, null);
-				table.getColumnModel().getColumn(3).setCellRenderer(new StatusCellRenderer(3));
+				table.getColumnModel().getColumn(5).setCellRenderer(new StatusCellRenderer(5));
 				TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
 				table.setRowSorter(sorter);
 				List<RowSorter.SortKey> sortKeys = new ArrayList<>();
