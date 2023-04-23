@@ -9,3 +9,4 @@ bin
 /.apt_generated/
 /.apt_generated_tests/
 Gemfile.lock
+sqlite3.exe
