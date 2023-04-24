@@ -122,6 +122,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		fechaFinCurso = model.getValueAt(row, 3).toString();
 		fechaIniInscr = model.getValueAt(row, 4).toString();
 		fechaFinInscr = model.getValueAt(row, 5).toString();
+		
 		plazas = model.getValueAt(row, 6).toString();
 		plazasLibres = model.getValueAt(row, 7).toString();
 		selectedCurso = this.getModel().getCurso(String.valueOf(idCurso));
