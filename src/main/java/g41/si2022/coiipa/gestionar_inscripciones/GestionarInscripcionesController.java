@@ -48,7 +48,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent evt) { handleSelect(); }
-		}); // FIXME: esto resulta en múltiples queries por selección. Urgente optimizar.
+		});
 	}
 
 	@Override
@@ -74,8 +74,9 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	private void handleSelect() {
 		eraseControls(true); // Borramos también el aviso de pago insertado con éxito/error
 		JTable table = getView().getTableInscripciones();
-		int fila = table.convertRowIndexToModel(table.getSelectedRow());
+		int fila = table.getSelectedRow();
 		if (fila == -1) return;
+		fila = table.convertRowIndexToModel(fila);
 
 		TableModel model = this.getView().getTableInscripciones().getModel();
 		idInscripcion = (String) model.getValueAt(fila, 0);
@@ -106,9 +107,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		String diasHastaCurso = String.valueOf(dias);
 		getView().getLblInfoDias().setText(diasDesdeInscr + " | " + diasHastaCurso);
 
-
-		// Calculamos le importe que le será devuelto al usuario.
-		aDevolver = 0;
+		aDevolver = 0; // Calculamos le importe que le será devuelto al usuario.
 
 		if(dias > 7) aDevolver = calculoDevolver;
 		else if(dias >= 3 && dias <= 7) aDevolver = calculoDevolver / 2;
@@ -154,26 +153,36 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		getListaInscripciones(); // Refrescar tabla al insertar el pago
 		Dialog.show("Pago por importe de " + importe + " € de parte del alumno " + nombreCompleto + " insertado con éxito");
 
-		InscripcionState estado = StateUtilities.getInscripcionState(idInscripcion, getView().getMain().getToday()); // Estado de la inscr. post inserción
+		/*
+		 * Si se obtiene el estado de la inscripción recién actualizada mediante la función
+		 * {@code StateUtilities.getInscripcionState}, se obtiene el estado sin actualizar,
+		 * previo al registro del pago, por lo que hay que utilizar otro método. Utilizando
+		 * un filter, se itera por toda la lista de inscripciones, por lo que puede que el
+		 * rendimiento no sea óptimo.
+		 */
+		// FIXME: posible mejora de rendimiento posible.
+		InscripcionState estado = inscripciones.stream().filter(x -> x.getId().equals(idInscripcion)).findFirst().get().getEstado();
+
 		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
 			Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: inscripción completada",
-					"El pago de su inscripción ha sido registrado correctamente y su inscripción ha sido completada.");
-		} //else Dialog.showWarning("El importe total es incorrecto y la inscripción no está comlpeta.");
+				"El pago de su inscripción ha sido registrado correctamente y su inscripción ha sido completada.");
+		} else Dialog.showWarning("El importe total es incorrecto y la inscripción no está comlpeta.");
 
 		eraseControls(false);
 	}
 
 	public void getListaInscripciones() {
 		JTable table = this.getView().getTableInscripciones();
-
 		inscripciones = this.getModel().getInscripciones();
 
+		boolean getAll = getView().getChkAll().isSelected();
 		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
 			x.updateEstado(getView().getMain().getToday());
-			if (!this.getView().getChkAll().isSelected()
-					&& x.getEstado() != InscripcionState.PENDIENTE
-					&& x.getEstado() != InscripcionState.EXCESO
-					&& x.getEstado() != InscripcionState.RETRASADA) {
+			InscripcionState estado = x.getEstado();
+			if (!getAll
+				&& estado != InscripcionState.PENDIENTE
+				&& estado != InscripcionState.EXCESO
+				&& estado != InscripcionState.RETRASADA) {
 				inscripciones.remove(x);
 			}
 		});
