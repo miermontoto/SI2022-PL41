@@ -33,44 +33,55 @@ public class GestionarListaEsperaModel extends g41.si2022.mvc.Model {
 		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, today);
 	}
 
-    public List<DocenciaDTO> getListaDocentes(String idCurso) {
-        String sql = "select da.*, de.nombre, de.apellidos from docencia as da"
-		+ " inner join docente as de on de.id = da.docente_id"
-		+ " where da.curso_id = ? and not exists (select * from factura as f where f.docencia_id = da.id)";
+	public List<CursoDTO> getListaCursosConEspera(String today) {
+		//REVISAR SQL
+		//INNER JOIN lista_espera li  ON li.inscripcion_id
+		String sql = "select DISTINCT(c.nombre) from curso c "
+				+ "INNER JOIN inscripcion insc on insc.curso_id = c.id "
+				+ "INNER JOIN lista_espera li  ON li.inscripcion_id = insc.id "
+				+ "where c.end > ? order by c.end desc";
+
+		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, today);
+	}
+
+	public List<DocenciaDTO> getListaDocentes(String idCurso) {
+		String sql = "select da.*, de.nombre, de.apellidos from docencia as da"
+				+ " inner join docente as de on de.id = da.docente_id"
+				+ " where da.curso_id = ? and not exists (select * from factura as f where f.docencia_id = da.id)";
 		return this.getDatabase().executeQueryPojo(DocenciaDTO.class, sql, idCurso);
-    }
+	}
 
 	public String getDocenciaId(String idCurso, String idDocente) {
 		String sql = "select dca.id from docencia as dca"
-		+ " where dca.curso_id = ? and dca.docente_id = ?";
+				+ " where dca.curso_id = ? and dca.docente_id = ?";
 		return this.getDatabase().executeQuerySingle(sql, idCurso, idDocente).toString();
 	}
-	
+
 	public String getCursoId(String nombreCurso) {
 		String sql = "SELECT id FROM curso WHERE nombre = ?";
 		return this.getDatabase().executeQuerySingle(sql, nombreCurso).toString();
 	}
-	
+
 	public void eliminarListaEspera(String idLista) {
 		String sql = "DELETE FROM lista_espera WHERE id = ?";
 		this.getDatabase().executeUpdate(sql, idLista);
-		
+
 	} 
-	
+
 	public void eliminarInscripcion(String idLista) {
-		
+
 		String sql = "";
 		String inscripcion_id = "";
 		sql = "SELECT inscripcion_id FROM lista_espera"
-					+ " WHERE id = ?";
-		
+				+ " WHERE id = ?";
+
 		if(this.getDatabase().executeQuerySingle(sql, idLista) != null)
 			inscripcion_id = this.getDatabase().executeQuerySingle(sql, idLista).toString();
-		
+
 		sql = "DELETE FROM inscripcion WHERE id = ?";
 		this.getDatabase().executeUpdate(sql, inscripcion_id);
-		
+
 		eliminarListaEspera(idLista);
-		
+
 	}
 }

@@ -102,7 +102,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 		long dias = ChronoUnit.DAYS.between(fechaActual.toInstant(), fechaCurso.toInstant());
 
-;		String diasDesdeInscr = String.valueOf(ChronoUnit.DAYS.between(fechaInscr.toInstant(), fechaActual.toInstant()));
+		;		String diasDesdeInscr = String.valueOf(ChronoUnit.DAYS.between(fechaInscr.toInstant(), fechaActual.toInstant()));
 		String diasHastaCurso = String.valueOf(dias);
 		getView().getLblInfoDias().setText(diasDesdeInscr + " | " + diasHastaCurso);
 
@@ -123,7 +123,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 	private void handleDevolver() {
 		CursoState estadoCurso = StateUtilities.getCursoState(idCurso, today);
-		
+
 		Date fechaActual = Date.from(this.getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		Date fechaCurso = Util.isoStringToDate(getModel().getFechaCurso(idCurso));
 		long dias = ChronoUnit.DAYS.between(fechaActual.toInstant(), fechaCurso.toInstant());
@@ -132,8 +132,8 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		System.out.println(returnValue);
 		//Si no nos devuelve error, podemos enviar un email al alumno comunicándole las novedades
 		if(returnValue != -1) {
-		Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: Cancelación de inscripción", "Se ha cancelado su inscripción"
-				+ " al curso \"" + nombreCurso + "\" con éxito. Se le devolverán " + returnValue + "€.");
+			Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: Cancelación de inscripción", "Se ha cancelado su inscripción"
+					+ " al curso \"" + nombreCurso + "\" con éxito. Se le devolverán " + returnValue + "€.");
 			Dialog.show("La cancelación de la inscripción del alumno " + nombreCompleto + " ha sido realizada con éxito. Se le han devuelto " + aDevolver + "€");
 		}
 		getListaInscripciones();
@@ -157,7 +157,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		InscripcionState estado = StateUtilities.getInscripcionState(idInscripcion, getView().getMain().getToday()); // Estado de la inscr. post inserción
 		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
 			Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: inscripción completada",
-				"El pago de su inscripción ha sido registrado correctamente y su inscripción ha sido completada.");
+					"El pago de su inscripción ha sido registrado correctamente y su inscripción ha sido completada.");
 		} //else Dialog.showWarning("El importe total es incorrecto y la inscripción no está comlpeta.");
 
 		eraseControls(false);
@@ -171,19 +171,19 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
 			x.updateEstado(getView().getMain().getToday());
 			if (!this.getView().getChkAll().isSelected()
-				&& x.getEstado() != InscripcionState.PENDIENTE
-				&& x.getEstado() != InscripcionState.EXCESO
-				&& x.getEstado() != InscripcionState.RETRASADA) {
+					&& x.getEstado() != InscripcionState.PENDIENTE
+					&& x.getEstado() != InscripcionState.EXCESO
+					&& x.getEstado() != InscripcionState.RETRASADA) {
 				inscripciones.remove(x);
 			}
 		});
 
 		table.setModel(SwingUtil.getTableModelFromPojos(
-			inscripciones,
-			new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "alumno_apellidos", "curso_nombre", "fecha", "curso_coste","pagado", "estado" },	//La primera columna estará oculta
-			new String[] { "", "", "", "Nombre", "Apellidos", "Curso", "Fecha", "Coste", "Importe pagado", "Estado" },
-			null
-		));
+				inscripciones,
+				new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "alumno_apellidos", "curso_nombre", "fecha", "curso_coste","pagado", "estado" },	//La primera columna estará oculta
+				new String[] { "", "", "", "Nombre", "Apellidos", "Curso", "Fecha", "Coste", "Importe pagado", "Estado" },
+				null
+				));
 
 		// Ocultar foreign keys de la tabla
 		for(int i = 0; i < 3; i++) table.removeColumn(table.getColumnModel().getColumn(0));
