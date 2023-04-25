@@ -128,18 +128,20 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	private void handleDevolver() {
 		CursoState estadoCurso = StateUtilities.getCursoState(idCurso, today);
 
+		if (estadoCurso == CursoState.CERRADO || estadoCurso == CursoState.FINALIZADO || estadoCurso == CursoState.EN_CURSO) {
+			Dialog.showError("No se puede cancelar la inscripción de un curso fuera del plazo de inscripción.");
+			return;
+		}
+
 		Date fechaActual = Date.from(this.getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		Date fechaCurso = Util.isoStringToDate(getModel().getFechaCurso(idCurso));
 		long dias = ChronoUnit.DAYS.between(fechaActual.toInstant(), fechaCurso.toInstant());
 
-		int returnValue = this.getModel().cancelarInscripcion(idInscripcion, estadoCurso, dias);
-		System.out.println(returnValue);
-		//Si no nos devuelve error, podemos enviar un email al alumno comunicándole las novedades
-		if(returnValue != -1) {
-			Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: Cancelación de inscripción", "Se ha cancelado su inscripción"
-					+ " al curso \"" + nombreCurso + "\" con éxito. Se le devolverán " + returnValue + "€.");
-			Dialog.show("La cancelación de la inscripción del alumno " + nombreCompleto + " ha sido realizada con éxito. Se le han devuelto " + aDevolver + "€");
-		}
+		getModel().cancelarInscripcion(idInscripcion, dias);
+		Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: Cancelación de inscripción", "Se ha cancelado su inscripción"
+			+ " al curso \"" + nombreCurso + "\" con éxito. Se le devolverán " + aDevolver + "€ en los próximos días.");
+		Dialog.show("La cancelación de la inscripción del alumno " + nombreCompleto + " ha sido realizada con éxito. Se le han de devolver " + aDevolver + "€");
+
 		getListaInscripciones(false);
 		setControls(false);
 	}

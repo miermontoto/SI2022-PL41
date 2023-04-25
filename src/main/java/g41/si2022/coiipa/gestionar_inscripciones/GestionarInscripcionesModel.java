@@ -66,28 +66,9 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 		return (String) this.getDatabase().executeQuerySingle(sql, idAlumno);
 	}
 
-	public int cancelarInscripcion(String idInscripcion, CursoState estadoCurso, long days) {
-
-		if (estadoCurso == CursoState.CERRADO || estadoCurso == CursoState.FINALIZADO || estadoCurso == CursoState.EN_CURSO) {
-			Dialog.showError("No se puede cancelar la inscripción de un curso fuera del plazo de inscripción.");
-			return -1;
-		}
-
-
-
+	public void cancelarInscripcion(String idInscripcion, long days) {
 		String sql = "UPDATE inscripcion SET cancelada = TRUE WHERE id = ?";
 		this.getDatabase().executeUpdate(sql, idInscripcion);
-
-		//Calculamos el dinero que nos han devuelto
-
-		if(days > 7)
-			return 100;
-		else if(days >= 3 && days <= 7)
-			return 50;
-		else
-			return 0;
-
-
 	}
 
 	public String getFechaCurso(String idCurso) {
