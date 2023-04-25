@@ -32,7 +32,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 	private JIntegerTextField txtPlazas;
 	private BetterDatePicker dateInscrStart, dateInscrEnd;
 	private BetterDatePicker dateCursoStart, dateCursoEnd;
-	private JTextField txtCoste;
+	private JTable tablaCostes;
 	private JTable tableProfesores;
 	private JTable tableEventos;
 	private JButton btnAddEvento;
@@ -113,7 +113,20 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			} { // Input
 				right.gridy = 3;
 				right.fill = GridBagConstraints.BOTH;
-				centerPanel.add(this.txtCoste = new JTextField(), right);
+				/*
+				centerPanel.add(this.tablaCostes = new RowAppendableJTable (
+						new String[] {"Nombre Colectivo", "Coste"},
+						new java.util.TreeMap<Integer, Pattern> () {
+							private static final long serialVersionUID = 1L;
+							{
+								put(1, Pattern.compile("[0-9]*"));
+							}},
+						new boolean[] {true, true}
+						), right);
+						*/
+				JScrollPane sp;
+				centerPanel.add(sp = new JScrollPane(), right);
+				sp.setViewportView(this.tablaCostes = new javax.swing.JTable());
 			}
 		} { // Inscripcion
 			{ // Label
@@ -184,8 +197,8 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				JScrollPane sp = new JScrollPane();
 				sp.getVerticalScrollBar().setUnitIncrement(20);
 				sp.setPreferredSize(new java.awt.Dimension(
-					this.getWidth(), 150
-				));
+						this.getWidth(), 150
+						));
 				sp.setViewportView(this.tableEventos);
 				eventosPanel.add(sp, BorderLayout.CENTER);
 			} { // Botones
@@ -204,8 +217,8 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 		JScrollPane sp = new JScrollPane();
 		sp.getVerticalScrollBar().setUnitIncrement(20);
 		sp.setPreferredSize(new java.awt.Dimension(
-			this.getWidth(), 150
-		));
+				this.getWidth(), 150
+				));
 
 		this.tableProfesores = new JTable();
 		this.tableProfesores.setName("Profesor:");
@@ -222,15 +235,15 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 		this.add(bottomPane, BorderLayout.SOUTH);
 
 		focusableComponents = new JComponent[] {
-			this.txtNombre,
-			this.txtPlazas,
-			this.dateInscrStart,
-			this.dateInscrEnd,
-			this.dateCursoStart,
-			this.dateCursoEnd,
-			this.txtCoste,
-			this.tableEventos,
-			this.tableProfesores
+				this.txtNombre,
+				this.txtPlazas,
+				this.dateInscrStart,
+				this.dateInscrEnd,
+				this.dateCursoStart,
+				this.dateCursoEnd,
+				this.tablaCostes,
+				this.tableEventos,
+				this.tableProfesores
 		};
 	}
 

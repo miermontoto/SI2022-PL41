@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  */
 public final class Dialog {
 
-    public static final String TITLE = "SumaTres";
+    public static final String TITLE = "COIIPA";
 
     /**
      * Constrctor generado para cumplir con SonarLint:S1118.

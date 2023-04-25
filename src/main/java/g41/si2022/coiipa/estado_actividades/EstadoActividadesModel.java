@@ -9,19 +9,23 @@ import g41.si2022.dto.PagoDTO;
 public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 
 	public List<CursoDTO> getListaCursos() {
-		String sql = "select id, nombre, coste, plazas, start, end, start_inscr, end_inscr from curso";
+		String sql = "select id, nombre, plazas, start, end, start_inscr, end_inscr from curso";
 		return getDatabase().executeQueryPojo(CursoDTO.class, sql);
 	}
 
 	// Modificar query para que devuelva los valores necesarios de inscripción de tipo CursoDTO
 	public List<InscripcionDTO> getListaInscr(String idCurso) {
 		String sql = "SELECT i.id, i.fecha, a.nombre as alumno_nombre,"
-		+ " a.apellidos as alumno_apellidos, c.coste as curso_coste,"
-		+ " i.cancelada as cancelada"
+		+ " a.apellidos as alumno_apellidos, cos.coste as curso_coste,"
+		+ " i.cancelada as cancelada, e.nombre as entidad_nombre,"
+		+ " CASE WHEN sum(p.importe) is null THEN 0 ELSE sum(p.importe) END as pagado"
 		+ " FROM inscripcion as i"
 		+ " INNER JOIN alumno as a ON i.alumno_id = a.id"
-		+ " INNER JOIN curso as c ON i.curso_id = c.id"
-		+ " WHERE curso_id = ?";
+		+ " INNER JOIN curso as cur ON i.curso_id = cur.id"
+		+ " INNER JOIN coste AS cos ON cos.id = i.coste_id"
+		+ " LEFT JOIN entidad AS e ON e.id = i.entidad_id"
+		+ " LEFT JOIN pago AS p ON p.inscripcion_id = i.id"
+		+ " WHERE cur.id = ? group by i.id";
 
 		return getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
 	}
@@ -34,34 +38,35 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 		} catch (Exception ex) {return "-";}
 	}
 
-	public String getCosteCurso(String idCurso) {
-		String sql = "SELECT coste FROM curso where id = ?";
-		try {
-			return String.valueOf((double) getDatabase().executeQuerySingle(sql, idCurso));
-		} catch (IndexOutOfBoundsException ioob) {return "0";}
-	}
-
+	/**
+	 * This method will return the total earnings for a given curso
+	 * supposing that all alumnos that have signed up will pay.<br>
+	 * Note that this method does not take into account costs.
+	 *
+	 * @param idCurso ID of the curso to be checked
+	 * @return Amount that should be earned by this curso.
+	 */
 	public String getIngresosEstimados(String idCurso) {
-		String sql = "select coste * count(*) from curso "
-				   + "inner join inscripcion on curso.id = inscripcion.curso_id "
-				   + "where curso.id = ?";
+		String sql = "select sum(cur.coste) from inscripcion as i"
+			+ " inner join coste as cur on i.coste_id = cur.id"
+			+ " where i.curso_id = ?";
+
 		try {
 			return String.valueOf((double) getDatabase().executeQuerySingle(sql, idCurso));
-		} catch (Exception ex) { return "0"; }
+		} catch (NullPointerException ex) { return "0"; }
 	}
 
 	public List<PagoDTO> getListaPagos(String idCurso) {
-		String sql = "SELECT * FROM pago "
-					 + "INNER JOIN inscripcion ON pago.inscripcion_id = inscripcion.id "
-					 + "WHERE inscripcion.id = ?" ;
-
+		String sql = "SELECT * FROM pago"
+			+ " INNER JOIN inscripcion ON pago.inscripcion_id = inscripcion.id"
+			+ " WHERE inscripcion.id = ?";
 		return getDatabase().executeQueryPojo(PagoDTO.class, sql, idCurso);
 	}
 
 	public String getImportePagosFromInscripcion(String idInscripcion) {
 		String sql = "SELECT sum(importe) FROM pago as p "
-					 + "INNER JOIN inscripcion as i ON p.inscripcion_id = i.id "
-			 		 + "WHERE i.id = ?" ;
+			+ "INNER JOIN inscripcion as i ON p.inscripcion_id = i.id "
+			+ "WHERE i.id = ?" ;
 
 		try {
 			return String.valueOf((double) getDatabase().executeQuerySingle(sql, idInscripcion));

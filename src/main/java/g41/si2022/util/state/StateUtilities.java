@@ -62,23 +62,20 @@ public class StateUtilities {
 		LocalDate start = LocalDate.parse(curso.getStart());
 		LocalDate end = LocalDate.parse(curso.getEnd());
 
-		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getEstado() != null) {
-			return CursoState.CERRADO;
-		}
-
-    if (getCursoStateDB(String.valueOf(curso.getId())).equals("CANCELADO")) return CursoState.CANCELADO;
-		if(startInscr.isAfter(today)) return CursoState.PLANEADO;
-		if(endInscr.isAfter(today) || endInscr.equals(today)) return CursoState.EN_INSCRIPCION;
-		if(start.isAfter(today)) return CursoState.INSCRIPCION_CERRADA;
-		if(end.isAfter(today) || end.isEqual(today)) return CursoState.EN_CURSO;
+		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getEstado() != null) return CursoState.CERRADO;
+    	if (getCursoStateDB(String.valueOf(curso.getId())).equals("CANCELADO")) return CursoState.CANCELADO;
+		if (startInscr.isAfter(today)) return CursoState.PLANEADO;
+		if (endInscr.isAfter(today) || endInscr.equals(today)) return CursoState.EN_INSCRIPCION;
+		if (start.isAfter(today)) return CursoState.INSCRIPCION_CERRADA;
+		if (end.isAfter(today) || end.isEqual(today)) return CursoState.EN_CURSO;
 		return CursoState.FINALIZADO;
 	}
 
 	/**
 	 * Gets the value of the status attribute of the course table. By default this attribute is 'null'.
-	 * In the class GestionarCursoController.java this attribute is modified to 'CANCELADO' in order to 
+	 * In the class GestionarCursoController.java this attribute is modified to 'CANCELADO' in order to
 	 * perform course cancellations.
-	 * 
+	 *
 	 * @param idCurso Id of the course to get its status stored in the database.
 	 * @return The value of the specified course status attribute.
 	 */
@@ -116,9 +113,10 @@ public class StateUtilities {
 	 * @see InscripcionState
 	 */
 	public static InscripcionState getInscripcionState(String idInscripcion, LocalDate today) {
-		String sql = "SELECT *, c.coste as curso_coste FROM inscripcion"
-			+ " LEFT JOIN curso c ON c.id = inscripcion.curso_id"
-			+ " WHERE inscripcion.id = ?";
+		String sql = "SELECT *, cos.coste as curso_coste FROM inscripcion as i"
+			+ " LEFT JOIN curso c ON c.id = i.curso_id"
+			+ " INNER JOIN coste as cos on cos.id = i.coste_id"
+			+ " WHERE i.id = ?";
 		InscripcionDTO inscr = new Database().executeQueryPojo(InscripcionDTO.class, sql, idInscripcion).get(0);
 		return getInscripcionState(inscr, today);
 	}

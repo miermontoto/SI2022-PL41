@@ -2,7 +2,9 @@ package g41.si2022.coiipa.gestionar_curso;
 
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
+import g41.si2022.ui.util.Dialog;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -27,9 +29,49 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model {
 		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql);
 	}
 
-	public void updateFechas(int idCurso, String fechaCurso, String fechaFinCurso, String fechaInscripciones, String fechaFinInscripciones) {
+	public boolean updateFechas(int idCurso, String fechaCursoInicio, String fechaCursoFin, String fechaInscripcionInicio, String fechaInscripcionFin) {
+		
+
+
+		if (fechaCursoInicio == "" || fechaCursoFin == "" || fechaInscripcionInicio == "" || fechaInscripcionFin == "") {
+			Dialog.showError("Las fechas no pueden ser nulas");
+		}
+
+		// Acabamos el curso antes de empezar el curso
+		LocalDate start = LocalDate.parse(fechaCursoInicio);
+		LocalDate stop = LocalDate.parse(fechaCursoFin);
+
+		if (start.isAfter(stop)) {
+			Dialog.showError("No puede acabar el curso antes de la fecha de inicio del curso");
+			return false;
+		}
+
+		// Acabamos las inscripciones antes de empezar las inscripciones.
+		start = LocalDate.parse(fechaInscripcionInicio);
+		stop = LocalDate.parse(fechaInscripcionFin);
+
+		if(start.isAfter(stop)) {
+			Dialog.showError("No pueden acabar las inscripciones antes de empezar las inscripciones");
+			return false;
+		}
+
+		// El inicio de inscripciones es después del inicio del curso.
+
+		start = LocalDate.parse(fechaInscripcionInicio);
+		System.out.println(fechaInscripcionInicio);
+		stop = LocalDate.parse(fechaCursoInicio);
+
+		if(start.isAfter(stop)) {
+			Dialog.showError("No pueden empezar las inscripciones más tarde que el curso");
+			return false;
+		}
+		
+		//Todo ha ido bien
+		
 		String sql = "UPDATE curso SET start = ?, end = ?, start_inscr = ?, end_inscr = ? WHERE id = ?";
-		this.getDatabase().executeUpdate(sql, fechaCurso, fechaFinCurso, fechaInscripciones, fechaFinInscripciones, idCurso);
+		this.getDatabase().executeUpdate(sql, fechaCursoInicio, fechaCursoFin, fechaInscripcionInicio, fechaInscripcionFin, idCurso);
+		
+		return true;
 	}
 
 	public void updateDetalles(int idCurso, String plazas) {
@@ -86,6 +128,32 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model {
 		String sql = "SELECT al.email FROM inscripcion as i " + 
 					 "INNER JOIN alumno as al " +
 					 "WHERE curso_id = ?";
+
+		return this.getDatabase().executeQueryPojo(String.class, sql, idCurso);
+	}
+
+	/**
+	 * 
+	 * @param idCurso
+	 * @return 
+	 */
+	public List<InscripcionDTO> getCursoInscripciones(String idCurso) {
+		String sql = "SELECT * FROM inscripcion " +
+					 "WHERE curso_id = ?";
+
+		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
+	}
+
+
+	public void cancelarInscripcion(String idInscripcion) {
+		String sql = "UPDATE inscripcion SET cancelada = TRUE WHERE id = ?";
+		this.getDatabase().executeUpdate(sql, idInscripcion);
+	}
+
+	public List<String> getProfesoresEmail(String idCurso) {
+		String sql = "SELECT dce.email FROM docencia AS dca"
+			+ " INNER JOIN docente as dce ON dca.docente_id = dce.id"
+			+ " WHERE dca.curso_id = ?";
 
 		return this.getDatabase().executeQueryPojo(String.class, sql, idCurso);
 	}

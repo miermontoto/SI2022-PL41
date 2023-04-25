@@ -25,6 +25,41 @@ public class Util {
 
 	public static final String EMAIL_REGEX = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
+	public static void emptyTable(javax.swing.JTable table) {
+		while (table.getRowCount() > 0)
+			((javax.swing.table.DefaultTableModel) table.getModel()).removeRow(0);
+	}
+
+	/**
+	 * Returns the data contained in this table.
+	 * <p>
+	 * This data is represented by a List of Maps. Each entry in the list is one row,
+	 * the map is a relation between the column names and the value they hold.<br>
+	 * If a column's data has not been filled, {@code null} will be set in that position of the returned data structure.
+	 * </p> <p>
+	 * Note that this method is O(n^2) and that it will not return the last empty row (nor any empty rows if that was possible at all).
+	 * </p>
+	 *
+	 * @return Data structure containing the data from this table.
+	 */
+	public static List<Map<String, String>> getData (javax.swing.JTable theTable) {
+		List<Map<String, String>> out = new java.util.ArrayList<Map<String, String>> ();
+		for (int i = 0 ; i < theTable.getRowCount() ; i++) {
+			out.add(new java.util.HashMap<String, String> ());
+			for (int j = 0 ; j < theTable.getColumnCount() ; j++)
+				out.get(i).put(theTable.getColumnName(j),
+						theTable.getValueAt(i, j).toString().trim().equals(theTable.getColumnName(j).trim()) ||
+						theTable.getValueAt(i, j).toString().trim().isEmpty()
+								? null
+								: theTable.getValueAt(i, j).toString()
+				);
+		}
+		return out.stream()
+				.filter(row -> row.values().stream()
+						.anyMatch(value -> value != null))
+				.collect(java.util.stream.Collectors.toList());
+	}
+
 	private Util() {
 	    throw new IllegalStateException("Utility class");
 	}
@@ -35,7 +70,7 @@ public class Util {
 	}
 
 	public static boolean verifyEmailInGrupo(Database db, String email) {
-		String sql = "select count(*) from grupo where email like ?";
+		String sql = "select count(*) from entidad where email like ?";
 		return (int) db.executeQueryArray(sql, email).get(0)[0] > 0;
 	}
 

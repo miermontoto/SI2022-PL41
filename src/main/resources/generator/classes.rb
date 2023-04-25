@@ -15,23 +15,23 @@ class Alumno < Persona # telefono is optional
     end
 end
 
-class Docente < Persona # telefono is not optional
+class Docente < Persona
     attr_accessor :dni, :direccion
 end
 
-class Inscripcion
-    attr_accessor :fecha, :curso_id, :alumno_id, :cancelada
+class Inscripcion # grupo_id is optional
+    attr_accessor :fecha, :cancelada
+    attr_accessor :curso_id, :alumno_id, :coste_id, :entidad_id
 end
 
 class Curso
-    attr_accessor :nombre, :descripcion, :coste
+    attr_accessor :nombre, :descripcion
     attr_accessor :start_inscr, :end_inscr, :plazas
     attr_accessor :start, :end
 
-    def initialize(nombre, descripcion, coste, startInscr, endInscr, plazas, startCourse, endCourse)
+    def initialize(nombre, descripcion, startInscr, endInscr, plazas, startCourse, endCourse)
         @nombre = nombre
         @descripcion = descripcion
-        @coste = coste
         @start_inscr = startInscr
         @end_inscr = endInscr
         @plazas = plazas
@@ -52,8 +52,24 @@ class Evento
     attr_accessor :fecha, :hora_ini, :hora_fin, :loc, :curso_id, :observaciones
 end
 
+class Entidad
+    attr_accessor :nombre, :email, :telefono
+end
+
+class Colectivo
+    attr_accessor :nombre
+
+    def initialize(nombre)
+        @nombre = nombre
+    end
+end
+
 ## Tablas de unión
 
 class Docencia
     attr_accessor :remuneracion, :curso_id, :docente_id
+end
+
+class Coste
+    attr_accessor :coste, :colectivo_id, :curso_id
 end

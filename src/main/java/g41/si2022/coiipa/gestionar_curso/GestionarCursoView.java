@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.gestionar_curso;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,6 +21,10 @@ import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
 import org.jdesktop.swingx.JXTitledPanel;
+
+
+import com.github.lgooddatepicker.components.DatePicker;
+
 
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
@@ -46,13 +51,12 @@ public class GestionarCursoView extends View {
 	private BetterDatePicker dateNewFinCurso;
 	private BetterDatePicker dateNewFinInscr;
 
-
 	private JFormattedTextField txtFieldPlazas;
 
 	// Datepicker para cambiar la fecha del curso y de las inscripciones
 	private DatePicker datePickerNewDateCurso;
 	private DatePicker datePickerNewDateInscripciones;
-	
+
 	private JFormattedTextField txtImporte;
 
 	private JPanel panel;
@@ -71,30 +75,27 @@ public class GestionarCursoView extends View {
 		handlePanel.setLayout(new GridLayout(3, 1));
 
 		JXTitledPanel retrasarPanel = new JXTitledPanel("Cambiar fechas");
-
 		JXTitledPanel cancelarPanel = new JXTitledPanel("Cancelar curso");
-
+		JXTitledPanel devolverPanel = new JXTitledPanel("Gestionar curso");
 		JXTitledPanel infoPanel = new JXTitledPanel("Información del curso");
 
 		JPanel retrasarPanelContent = new JPanel();
 		JPanel cancelarPanelContent = new JPanel();
+		JPanel devolverPanelContent = new JPanel();
 		JPanel infoPanelContent = new JPanel();
 
 		retrasarPanel.setContentContainer(retrasarPanelContent);
-
 		cancelarPanel.setContentContainer(cancelarPanelContent);
-
+		devolverPanel.setContentContainer(devolverPanelContent);
 		infoPanel.setContentContainer(infoPanelContent);
 
 		panel = new JPanel();
 		this.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
 
-
 		// chkAll = new JCheckBox("Ver todas las inscripciones");
 		// chkAll.setHorizontalAlignment(SwingConstants.LEFT);
 		// panel.add(chkAll);
-
 
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 	    formatter.setValueClass(Integer.class);
@@ -105,7 +106,6 @@ public class GestionarCursoView extends View {
 
 		handlePanel.add(infoPanel);
 		handlePanel.add(retrasarPanel);
-
 		handlePanel.add(cancelarPanel);
 
 		this.add(handlePanel, BorderLayout.EAST);
@@ -190,7 +190,6 @@ public class GestionarCursoView extends View {
 
 		cancelarPanelContent.setLayout(new GridBagLayout());
 
-
 		gbc.insets = spacer;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -219,7 +218,6 @@ public class GestionarCursoView extends View {
 		btnCancelarCurso = new JButton("Cancelar curso");
 		btnCancelarCurso.setPreferredSize(new Dimension(200, 100));
 		cancelarPanelContent.add(btnCancelarCurso, gbc);
-
 
 		tableInscripciones = new JTable();
 		this.add(new JScrollPane(tableInscripciones), BorderLayout.CENTER);

@@ -1,19 +1,23 @@
 package g41.si2022.coiipa.gestionar_inscripciones;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
+import g41.si2022.ui.util.Dialog;
+import g41.si2022.util.state.CursoState;
+import g41.si2022.util.state.InscripcionState;
 
 public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 
-	public List<InscripcionDTO> getInscripciones() {
+	public List<InscripcionDTO> getInscripciones(boolean all, LocalDate today) {
 		String sql = "select i.id,"
 			+ " i.alumno_id as alumno_id,"
 			+ " a.nombre as alumno_nombre,"
 			+ " a.apellidos as alumno_apellidos, "
-			+ " c.coste as curso_coste,"
+			+ " coste.coste as curso_coste,"
 			+ " CASE WHEN sum(pa.importe) IS NOT NULL THEN sum(pa.importe) ELSE 0 END as pagado," // no borrar :)
 			+ " c.nombre as curso_nombre,"
 			+ " i.id as inscripcion_id, "
@@ -21,10 +25,17 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 			+ " i.fecha as fecha,"
 			+ " i.cancelada as cancelada"
 			+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
+			+ " inner join coste ON coste.id = i.coste_id"
 			+ " inner join curso as c on c.id = i.curso_id"
 			+ " left join pago as pa on pa.inscripcion_id = i.id"
 			+ " group by i.id order by i.fecha asc";
-		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql);
+		List<InscripcionDTO> lista = this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql);
+		lista.forEach(i -> i.updateEstado(today)); // Actualizar todos los estados de las inscripciones.
+		if (!all) lista.removeIf(i -> (!( // Filtrar las inscripciones oportunas.
+			i.getEstado() == InscripcionState.PENDIENTE ||
+			i.getEstado().toString().contains("EXCESO")
+		)));
+		return lista;
 	}
 
 	public CursoDTO getCurso(String id) {
@@ -55,9 +66,28 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 		return (String) this.getDatabase().executeQuerySingle(sql, idAlumno);
 	}
 
-	public void cancelarInscripcion(String idInscripcion) {
+	public int cancelarInscripcion(String idInscripcion, CursoState estadoCurso, long days) {
+
+		if (estadoCurso == CursoState.CERRADO || estadoCurso == CursoState.FINALIZADO || estadoCurso == CursoState.EN_CURSO) {
+			Dialog.showError("No se puede cancelar la inscripción de un curso fuera del plazo de inscripción.");
+			return -1;
+		}
+
+
+
 		String sql = "UPDATE inscripcion SET cancelada = TRUE WHERE id = ?";
 		this.getDatabase().executeUpdate(sql, idInscripcion);
+
+		//Calculamos el dinero que nos han devuelto
+
+		if(days > 7)
+			return 100;
+		else if(days >= 3 && days <= 7)
+			return 50;
+		else
+			return 0;
+
+
 	}
 
 	public String getFechaCurso(String idCurso) {

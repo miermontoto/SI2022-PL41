@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
-import javax.swing.table.DefaultTableModel;
 
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
@@ -25,7 +24,7 @@ import g41.si2022.util.state.StateUtilities;
 
 public class GestionarCursoController extends g41.si2022.mvc.Controller<GestionarCursoView, GestionarCursoModel> {
 
-	//Variables globales para los valores seleccionados
+	// Variables globales para los valores seleccionados
 	int idCurso;
 	String nombreCurso;
 	String fechaIniCurso;
@@ -42,8 +41,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 	CursoDTO selectedCurso;
 	List<CursoDTO> listaCursos;
-
-
+	List<InscripcionDTO> listaInscr;
 
 	public GestionarCursoController(GestionarCursoView myTab, GestionarCursoModel myModel) {
 		super(myTab, myModel);
@@ -63,28 +61,38 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
-				
-				selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
+
+				// selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
 				// Si el curso no está cancelado, se cancela. En la database sólo se guarda el estado CANCELADO
 				// de un curso. Por defecto el atributo estado es null
 				if (estadoDB.equals("null")) {
 					// Modificar estado del curso a CANCELADO. Se modifica el atributo en la database
 					getModel().updateCursoStateToCancelled(String.valueOf(CursoState.CANCELADO), selectedCurso.getId());
 					selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
+
 					// Obtener emails de los alumnos para enviar un correo.
-					List<String> emails = getModel().getAlumnosEmail(String.valueOf(idCurso));
+					List<String> emailsAlumnos = getModel().getAlumnosEmail(String.valueOf(idCurso));
+					List<String> emailsProfs = getModel().getProfesoresEmail(String.valueOf(idCurso));
+
 					// Enviar correo a alumnos para informar de la cancelación del curso
-					for (String email: emails) 
+					for (String email : emailsAlumnos) {
 						Util.sendEmail(email, "Cancelación de curso",
 						"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
-					
+					}
 
-					System.out.printf("El curso %s ha sido cancelado\n", nombreCurso);
+					for (String email : emailsProfs) {
+						Util.sendEmail(email, "Cancelación de curso",
+						"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
+					}
+
+					cancelarInscripciones(selectedCurso); // Cancelar inscripciones relacionadas con el curso
+
+					Dialog.show("Curso cancelado. Se ha enviado un e-mail tanto a los inscritos como al profesorado. Se devolverá el 100% del importe pagado");
 				}
+
 				updateTables();
 			}
 		});
-
 	}
 
 	@Override
@@ -93,49 +101,33 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		eraseControls(true);
 		updateTables();
 
-		this.initThings();
-		this.updateTables();
-	}
-
-	public void initThings() {
-
-		eraseControls(true); //Deshabilitamos los controles hasta que ocurra algo en la tabla.
-
 		//Listener de la tabla, para poder detectar los distintos clicks en la tabla
-		this.getView().getTableInscripciones().addMouseListener( new MouseAdapter()
-		{
-			public void mousePressed(MouseEvent e)
-			{
-
-				handleSelect(); //Que handleSelect() se encargue de todo lo relacionado con esta selección.
-
-			}
+		getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) { handleSelect(); }
 		});
 
-
+		updateTables();
 	}
 
-	private void handleSelect() { //Función para manejar la fila seleccionada de la tabla
+	private void handleSelect() { // Función para manejar la fila seleccionada de la tabla
 		JTable table = getView().getTableInscripciones();
 		TableModel model = table.getModel();
 		int row = table.convertRowIndexToModel(table.getSelectedRow());
 
-
-		// Obtengo los datos de la tabla y los almaceno en variables globales (por si a otros métodos les hacen falta)
-
 		idCurso = Integer.parseInt(model.getValueAt(row, 0).toString());
 		nombreCurso = model.getValueAt(row, 1).toString();
+		
+		//Obtengo los valores para las distintas fechas que voy a probar.
 		fechaIniCurso = model.getValueAt(row, 2).toString();
 		fechaFinCurso = model.getValueAt(row, 3).toString();
 		fechaIniInscr = model.getValueAt(row, 4).toString();
 		fechaFinInscr = model.getValueAt(row, 5).toString();
+		
 		plazas = model.getValueAt(row, 6).toString();
 		plazasLibres = model.getValueAt(row, 7).toString();
+		selectedCurso = this.getModel().getCurso(String.valueOf(idCurso));
 
-		// DEBUG
-		//System.out.printf("ID: %s, nombre: %s, fecha del curso: %s, fecha de inscripciones: %s \n", idCurso, nombreCurso, fechaCurso, fechaInscripciones);
-
-		if(idCurso == -1) { //Lo que se ha seleccionado está mal.
+		if (idCurso == -1) { //Lo que se ha seleccionado está mal.
 			eraseControls(true);
 			return;
 		}
@@ -156,55 +148,46 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		getView().getTxtFieldPlazas().setText(plazas);
 
 		setControls(true); // Hemos terminado el proceso, habilitamos los controles.
-
-		/*String date = model.getValueAt(row, 6).toString();
-		if (date.equals("")) {
-			this.getView().getDatePicker().setDateToToday();
-			setControls(true);
-		} else {
-			this.getView().getDatePicker().setDate(LocalDate.parse(date));
-			setControls(false);
-		}*/
 	}
 
 
 	public void handleCambiarFechas() {
-		if(!checkFechas()) {
+
+		String fechaIniCursoEdit = getView().getDateNewIniCurso().toString();
+		String fechaFinCursoEdit = getView().getDateNewFinCurso().toString();
+		String fechaIniInscrEdit = getView().getDateNewIniInscr().toString();
+		String fechaFinInscrEdit = getView().getDateNewFinInscr().toString();
+		
+		boolean returnValue = getModel().updateFechas(idCurso, fechaIniCursoEdit, fechaFinCursoEdit, fechaIniInscrEdit, fechaFinInscrEdit);
+		
+		if(returnValue) {
+			updateTables(); // Actualizamos la tabla de los datos tras producir la inserción
+			Dialog.show("Se han modificado las fechas del curso con éxito");
+		}
+		else {
 			Dialog.showError("No hemos modificado nada, ya que había parámetros incorrectos. Por favor, corrígelos e inténtalo de nuevo.");
-			return;
 		}
 
-		getModel().updateFechas(idCurso, fechaIniCurso, fechaFinCurso, fechaIniInscr, fechaFinInscr);
-		updateTables(); // Actualizamos la tabla de los datos tras producir la inserción
-		Dialog.show("Se han modificado las fechas del curso con éxito");
 	}
 
 
 	// Función que implementa un sistema para comprobar las fechas que se introducen
-	// En caso de que algo esté mal, devuelve falso yun mensaje de error.
-	public boolean checkFechas() {
+	// En caso de que algo esté mal, devuelve falso y un mensaje de error.
+	/*public boolean checkFechas() {
 		String fechaCursoInicio = getView().getDateNewIniCurso().getDateStringOrEmptyString();
-		String fechaCursoFin = this.getView().getDateNewFinCurso().getDateStringOrEmptyString();
-		String fechaInscripcionInicio = this.getView().getDateNewIniInscr().getDateStringOrEmptyString();
-		String fechaInscripcionFin = this.getView().getDateNewFinInscr().getDateStringOrEmptyString();
-
-		// DEBUG
-		/*System.out.printf("Fecha del inico del curso es: %s \n", fechaCursoInicio);
-		System.out.printf("Fecha del fin del curso es: %s \n", fechaCursoFin);
-		System.out.printf("Fecha del inico de inscripciones es: %s \n", fechaInscripcionInicio);
-		System.out.printf("Fecha del fin de inscripciones es: %s \n", fechaInscripcionFin);*/
+		String fechaCursoFin = getView().getDateNewFinCurso().getDateStringOrEmptyString();
+		String fechaInscripcionInicio = getView().getDateNewIniInscr().getDateStringOrEmptyString();
+		String fechaInscripcionFin = getView().getDateNewFinInscr().getDateStringOrEmptyString();
 
 		if (fechaCursoInicio == "" || fechaCursoFin == "" || fechaInscripcionInicio == "" || fechaInscripcionFin == "") {
 			Dialog.showError("Las fechas no pueden ser nulas");
 		}
 
-		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Formateador de fechas
-
 		// Acabamos el curso antes de empezar el curso
 		LocalDate start = LocalDate.parse(fechaCursoInicio);
 		LocalDate stop = LocalDate.parse(fechaCursoFin);
 
-		if(start.isAfter(stop)) {
+		if (start.isAfter(stop)) {
 			Dialog.showError("No puede acabar el curso antes de la fecha de inicio del curso");
 			return false;
 		}
@@ -235,7 +218,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		this.fechaFinInscr = fechaInscripcionFin;
 
 		return true;
-	}
+	}*/
 
 
 	public void handleCambiarDetalles() {
@@ -291,17 +274,34 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		List <CursoDTO> cursos = this.getModel().getCursos();
 		JTable table = this.getView().getTableInscripciones();
 
+		for (CursoDTO curso: cursos)
+			curso.setEstado(StateUtilities.getCursoState(curso, getTab().getMain().getToday()));
+
 		table.setModel(
 			SwingUtil.getTableModelFromPojos(
 				cursos,
-				new String[] { "id", "nombre", "start_inscr", "end_inscr", "start", "end", "plazas", "plazas_libres"},
-				new String[] { "Id", "Nombre", "Ini. inscr.", "Fin inscr.", "Ini. curso", "Fin curso",  "Plazas totales", "Plazas libres"},
+				new String[] { "id", "nombre", "start_inscr", "end_inscr", "start", "end", "plazas", "plazas_libres", "estado"},
+				new String[] { "Id", "Nombre", "Ini. inscr.", "Fin inscr.", "Ini. curso", "Fin curso",  "Plazas totales", "Plazas libres", "Estado"},
 				null
 			)
 		);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		eraseControls(false);
-		SwingUtil.autoAdjustColumns(table);
+		// SwingUtil.autoAdjustColumns(table);
+	}
+
+	/**
+	 * Change the status of all inscriptions in the course inscription list to 'CANCELADA'
+	 * 
+	 * @param curso To cancel it inscriptions
+	 */
+	public void cancelarInscripciones(CursoDTO curso) {
+		listaInscr = getModel().getCursoInscripciones(curso.getId());
+
+		for (InscripcionDTO inscr: listaInscr) 
+			getModel().cancelarInscripcion(inscr.getId());
+		
+
 	}
 }
