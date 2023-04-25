@@ -90,6 +90,8 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		nombreCurso = (String) model.getValueAt(fila, 5);
 		this.getView().getLblInfoNombre().setText(nombreCompleto);
 
+		getView().getDatePicker().setDate(today);
+
 		InscripcionState estado = inscripciones.get(fila).getEstado();
 		setControls(estado != InscripcionState.PAGADA && estado != InscripcionState.CANCELADA);
 		getView().getBtnCancelarInscripcion().setEnabled(estado != InscripcionState.CANCELADA);
@@ -152,7 +154,6 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		}
 
 		this.getModel().registrarPago(importe, fecha.toString(), idInscripcion);
-		getListaInscripciones(false); // Refrescar tabla al insertar el pago
 		Dialog.show("Pago por importe de " + importe + " € de parte del alumno " + nombreCompleto + " insertado con éxito");
 
 		/*
@@ -162,13 +163,14 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		 * un filter, se itera por toda la lista de inscripciones, por lo que puede que el
 		 * rendimiento no sea óptimo.
 		 */
-		InscripcionState estado = inscripciones.stream().filter(x -> x.getId().equals(idInscripcion)).findFirst().get().getEstado();
+		InscripcionState estado = inscripciones.stream().filter(x -> x.getId().equals(idInscripcion)).findFirst().get().updateEstado(today);
 
 		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
 			Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: inscripción completada",
 				"El pago de su inscripción ha sido registrado correctamente y su inscripción ha sido completada.");
 		} else Dialog.showWarning("El importe total es incorrecto y la inscripción no está comlpeta.");
 
+		getListaInscripciones(false); // Refrescar tabla al insertar el pago
 		eraseControls(false);
 	}
 
@@ -206,6 +208,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		table.setRowSorter(sorter);
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new RowSorter.SortKey(5, SortOrder.ASCENDING));
+		sortKeys.add(new RowSorter.SortKey(9, SortOrder.ASCENDING));
 		sortKeys.add(new RowSorter.SortKey(6, SortOrder.ASCENDING));
 		sorter.setSortKeys(sortKeys);
 		table.getColumnModel().getColumn(6).setCellRenderer(new StatusCellRenderer(9));
