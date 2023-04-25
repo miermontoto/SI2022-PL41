@@ -15,7 +15,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.github.lgooddatepicker.components.TimePicker;
 import com.github.lgooddatepicker.components.TimePickerSettings;
 
-import g41.si2022.dto.EventoDTO;
+import g41.si2022.dto.SesionDTO;
 import g41.si2022.ui.components.BetterDatePicker;
 
 public class EventDialog extends javax.swing.JDialog {
@@ -32,10 +32,10 @@ public class EventDialog extends javax.swing.JDialog {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    private List<EventoDTO> eventos;
+    private List<SesionDTO> sesiones;
 
     private EventDialog(java.awt.Frame parent, boolean model) {
-        super(parent, "Añadir nuevo evento", model);
+        super(parent, "Añadir nuevo sesion", model);
         FlatLightLaf.setup();
         initComponents();
         this.setVisible(false);
@@ -55,7 +55,7 @@ public class EventDialog extends javax.swing.JDialog {
         this.endDate = endDate;
     }
 
-    public EventDialog(LocalDate start, LocalDate end, EventoDTO last) {
+    public EventDialog(LocalDate start, LocalDate end, SesionDTO last) {
         this(start, end);
         inputLocation.setText(last.getLoc());
         inputDate.setDate(LocalDate.parse(last.getFecha()).plusDays(1));
@@ -69,8 +69,8 @@ public class EventDialog extends javax.swing.JDialog {
         return pressedOk;
     }
 
-    public List<EventoDTO> getEventos() {
-        return this.eventos;
+    public List<SesionDTO> getSesiones() {
+        return this.sesiones;
     }
 
     private void initComponents() {
@@ -142,7 +142,7 @@ public class EventDialog extends javax.swing.JDialog {
         okButton = new JButton("Aceptar");
         okButton.addActionListener((e) -> {
             pressedOk = true;
-            generateEventos();
+            generateSesiones();
             this.setVisible(false);
         });
         gbc.gridx = 0;
@@ -185,14 +185,14 @@ public class EventDialog extends javax.swing.JDialog {
         okButton.setEnabled(false);
     }
 
-    private void generateEventos() {
-        eventos = new java.util.LinkedList<>();
-        eventos.add(new EventoDTO(inputLocation.getText(), inputDate.getDate().toString(), inputStartHour.getTime().toString(), inputEndHour.getTime().toString()));
+    private void generateSesiones() {
+        sesiones = new java.util.LinkedList<>();
+        sesiones.add(new SesionDTO(inputLocation.getText(), inputDate.getDate().toString(), inputStartHour.getTime().toString(), inputEndHour.getTime().toString()));
         if(inputRepeat.isSelected()) {
             LocalDate date = inputDate.getDate();
             date = date.plusDays(7);
             while(date.isBefore(inputRepeatUntil.getDate()) || date.equals(inputRepeatUntil.getDate())) {
-                eventos.add(new EventoDTO(inputLocation.getText(), date.toString(), inputStartHour.getTime().toString(), inputEndHour.getTime().toString()));
+                sesiones.add(new SesionDTO(inputLocation.getText(), date.toString(), inputStartHour.getTime().toString(), inputEndHour.getTime().toString()));
                 date = date.plusDays(7);
             }
         }

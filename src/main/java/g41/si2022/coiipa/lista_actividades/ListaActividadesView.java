@@ -34,7 +34,7 @@ public class ListaActividadesView extends View {
     private JXTextArea infoDescripcion;
     private JXComboBox infoProfesores;
     private JXComboBox infoLocalizaciones;
-    private JTable tableEventos;
+    private JTable tableSesiones;
     private BetterDatePicker startDate, endDate;
 
     public ListaActividadesView(SwingMain main) {
@@ -96,23 +96,23 @@ public class ListaActividadesView extends View {
         gbc.gridy = 2;
         infoPanel.add(infoProfesores, gbc);
 
-        JPanel eventosPanel = new JPanel(new BorderLayout());
-        tableEventos = new JTable();
-        tableEventos.setDefaultEditor(Object.class, null);
-        tableEventos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        JScrollPane scrEventos = new JScrollPane(tableEventos);
-        eventosPanel.add(scrEventos, BorderLayout.CENTER);
-        eventosPanel.add(JLabelFactory.getLabel("Eventos:"), BorderLayout.NORTH);
+        JPanel sesionesPanel = new JPanel(new BorderLayout());
+        tableSesiones = new JTable();
+        tableSesiones.setDefaultEditor(Object.class, null);
+        tableSesiones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrSesiones = new JScrollPane(tableSesiones);
+        sesionesPanel.add(scrSesiones, BorderLayout.CENTER);
+        sesionesPanel.add(JLabelFactory.getLabel("Sesiones:"), BorderLayout.NORTH);
 
-        JXTitledPanel eventosTitledPanel = new JXTitledPanel("Eventos", eventosPanel);
-        eventosTitledPanel.setContentContainer(scrEventos);
+        JXTitledPanel sesionesTitledPanel = new JXTitledPanel("Sesiones", sesionesPanel);
+        sesionesTitledPanel.setContentContainer(scrSesiones);
 
         JXTitledPanel infoTitledPanel = new JXTitledPanel("Información del curso", infoPanel);
         infoTitledPanel.setContentContainer(infoPanel);
 
         JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
         bottomPanel.add(infoTitledPanel);
-        bottomPanel.add(eventosTitledPanel);
+        bottomPanel.add(sesionesTitledPanel);
         bottomPanel.setPreferredSize(new java.awt.Dimension(getMain().getFrame().getWidth(), getMain().getFrame().getHeight() / 4));
         this.add(bottomPanel, BorderLayout.SOUTH);
     }

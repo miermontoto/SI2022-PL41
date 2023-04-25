@@ -38,11 +38,11 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 
 		JComboBox<String> comboCursos = this.getView().getCmbCurso();
 		comboCursos.removeAllItems();
-		List<CursoDTO> eventos = this.getModel().getListaCursosConEspera(this.getView().getMain().getToday().toString());
+		List<CursoDTO> sesiones = this.getModel().getListaCursosConEspera(this.getView().getMain().getToday().toString());
 		DefaultComboBoxModel<String> cmbCursoModel = this.getView().getCmbCursoModel();
 
 
-		if (!eventos.isEmpty()) for(CursoDTO evento : eventos) {
+		if (!sesiones.isEmpty()) for(CursoDTO evento : sesiones) {
 			String curso = evento.toString();
 			cmbCursoModel.addElement(curso);
 			comboCursos.setModel(cmbCursoModel); // Actualizar el modelo de datos del JComboBox
@@ -55,8 +55,8 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 		this.getView().getBtnEliminarListaEspera().addActionListener(e -> handleEliminar());
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseReleased(MouseEvent evt) { 
-				handleSelect(); 
+			public void mouseReleased(MouseEvent evt) {
+				handleSelect();
 			}
 		});
 

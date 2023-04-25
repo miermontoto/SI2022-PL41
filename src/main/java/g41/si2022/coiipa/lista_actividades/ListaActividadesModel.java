@@ -3,7 +3,7 @@ package g41.si2022.coiipa.lista_actividades;
 import java.util.List;
 
 import g41.si2022.dto.CursoDTO;
-import g41.si2022.dto.EventoDTO;
+import g41.si2022.dto.SesionDTO;
 import g41.si2022.dto.ProfesorDTO;
 
 public class ListaActividadesModel extends g41.si2022.mvc.Model {
@@ -40,17 +40,17 @@ public class ListaActividadesModel extends g41.si2022.mvc.Model {
     }
 
     /**
-     * Devuelve un array con los eventos del curso "curso".
+     * Devuelve un array con los sesiones del curso "curso".
      * <p> Sobrecarga de {@link #getLugarCurso(String)}.
-     * @param curso {@link EventoDTO} del curso
-     * @return Array con los eventos del curso
+     * @param curso {@link SesionDTO} del curso
+     * @return Array con los sesiones del curso
      */
-    public List<EventoDTO> getEventosCurso(CursoDTO curso) {
-        return getEventosCurso(curso.getId());
+    public List<SesionDTO> getSesionesCurso(CursoDTO curso) {
+        return getSesionesCurso(curso.getId());
     }
 
-    public List<EventoDTO> getEventosCurso(String idCurso) {
-        String sql = "SELECT *, hora_ini as horaIni, hora_fin as horaFin FROM evento WHERE curso_id = ?";
-        return getDatabase().executeQueryPojo(EventoDTO.class, sql, idCurso);
+    public List<SesionDTO> getSesionesCurso(String idCurso) {
+        String sql = "SELECT *, hora_ini as horaIni, hora_fin as horaFin FROM sesion WHERE curso_id = ?";
+        return getDatabase().executeQueryPojo(SesionDTO.class, sql, idCurso);
     }
 }

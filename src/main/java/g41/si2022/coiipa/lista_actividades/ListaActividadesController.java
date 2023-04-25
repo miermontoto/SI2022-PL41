@@ -17,7 +17,7 @@ import javax.swing.table.TableRowSorter;
 import org.jdesktop.swingx.JXComboBox;
 
 import g41.si2022.dto.CursoDTO;
-import g41.si2022.dto.EventoDTO;
+import g41.si2022.dto.SesionDTO;
 import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.util.state.CursoState;
@@ -61,13 +61,13 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 		return output; // We return the filtered array
     };
 
-    private Supplier<List<EventoDTO>> supEventos = () -> {
-        List<EventoDTO> eventos = getModel().getEventosCurso(SwingUtil.getSelectedKey(this.getView().getTablaCursos()));
+    private Supplier<List<SesionDTO>> supSesiones = () -> {
+        List<SesionDTO> sesiones = getModel().getSesionesCurso(SwingUtil.getSelectedKey(this.getView().getTablaCursos()));
         try {
             String locSelected = getView().getInfoLocalizaciones().getSelectedItem().toString();
-            if (locSelected.equals("------")) return eventos;
-            return eventos.stream().filter(x -> x.getLoc().equals(locSelected)).collect(Collectors.toList());
-        } catch (java.lang.NullPointerException npe) {return eventos;}
+            if (locSelected.equals("------")) return sesiones;
+            return sesiones.stream().filter(x -> x.getLoc().equals(locSelected)).collect(Collectors.toList());
+        } catch (java.lang.NullPointerException npe) {return sesiones;}
     };
 
     public ListaActividadesController(ListaActividadesModel model, ListaActividadesView view) {
@@ -83,7 +83,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
             @Override
             public void mouseReleased(MouseEvent evt) {
                 SwingUtil.exceptionWrapper(() -> showDetallesCurso());
-                SwingUtil.exceptionWrapper(() -> showListaEventos());
+                SwingUtil.exceptionWrapper(() -> showListaSesiones());
             }
         });
         // Filtrar los cursos en función de su fecha ó estado
@@ -100,7 +100,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 
         getView().getInfoLocalizaciones().addActionListener(e -> {
             SwingUtil.exceptionWrapper(() -> {
-                ListaActividadesController.this.showListaEventos();
+                ListaActividadesController.this.showListaSesiones();
             });
         });
     }
@@ -138,9 +138,9 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
         SwingUtil.autoAdjustColumns(table);
     }
 
-    private void showListaEventos() {
-        JTable table = this.getView().getTableEventos();
-        table.setModel(SwingUtil.getTableModelFromPojos(supEventos.get(),
+    private void showListaSesiones() {
+        JTable table = this.getView().getTableSesiones();
+        table.setModel(SwingUtil.getTableModelFromPojos(supSesiones.get(),
             new String[] {"loc", "fecha", "horaIni", "horaFin"},
             new String[] {"Localización (aula)", "Fecha", "Hora de inicio", "Hora de fin"},
             null));
@@ -179,14 +179,14 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
             // Mostrar las localizaciones del curso
             JXComboBox comboLocs = this.getView().getInfoLocalizaciones();
             comboLocs.removeAllItems();
-            List<EventoDTO> eventos = getModel().getEventosCurso(curso);
+            List<SesionDTO> sesiones = getModel().getSesionesCurso(curso);
             ArrayList<String> locs = new ArrayList<>();
 
             comboLocs.addItem("------");
-            if (!eventos.isEmpty()) for(EventoDTO evento : eventos) {
-                if(!locs.contains(evento.getLoc())) {
-                    locs.add(evento.getLoc());
-                    comboLocs.addItem(evento.getLoc());
+            if (!sesiones.isEmpty()) for(SesionDTO sesion : sesiones) {
+                if(!locs.contains(sesion.getLoc())) {
+                    locs.add(sesion.getLoc());
+                    comboLocs.addItem(sesion.getLoc());
                 }
 
             }

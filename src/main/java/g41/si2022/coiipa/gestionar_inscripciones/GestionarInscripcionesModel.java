@@ -6,8 +6,6 @@ import java.util.List;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
-import g41.si2022.ui.util.Dialog;
-import g41.si2022.util.state.CursoState;
 import g41.si2022.util.state.InscripcionState;
 
 public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {

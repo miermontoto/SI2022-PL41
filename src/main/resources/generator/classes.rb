@@ -48,7 +48,7 @@ class Pago
     attr_accessor :importe, :fecha, :inscripcion_id, :factura_id
 end
 
-class Evento
+class Sesion
     attr_accessor :fecha, :hora_ini, :hora_fin, :loc, :curso_id, :observaciones
 end
 

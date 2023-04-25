@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 
-import g41.si2022.dto.EventoDTO;
+import g41.si2022.dto.SesionDTO;
 import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.components.BetterDatePicker;
@@ -37,7 +37,7 @@ import g41.si2022.util.exception.UnexpectedException;
 public class RegistrarCursoController extends g41.si2022.mvc.Controller<RegistrarCursoView, RegistrarCursoModel> {
 
 	private Map<String, ProfesorDTO> profesoresMap;
-	private LinkedList<EventoDTO> eventos;
+	private LinkedList<SesionDTO> sesiones;
 
 
 	private final java.util.function.Supplier <List<ProfesorDTO>> sup = () -> {
@@ -49,7 +49,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	public RegistrarCursoController(RegistrarCursoView v, RegistrarCursoModel m) {
 		super(v, m);
 		profesoresMap = new HashMap<>();
-		eventos = new LinkedList<>();
+		sesiones = new LinkedList<>();
 	}
 
 	@Override
@@ -80,22 +80,22 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 	private void loadEventListeners() {
 		javax.swing.JButton
-		btnAdd = getView().getBtnAddEvento(),
-		btnRemove = getView().getBtnRemoveEvento();
+		btnAdd = getView().getBtnAddSesion(),
+		btnRemove = getView().getBtnRemoveSesion();
 		BetterDatePicker
 		start = getView().getDateCursoStart(),
 		end = getView().getDateCursoEnd();
 
-		JTable table = getView().getTableEventos();
+		JTable table = getView().getTableSesiones();
 
 		btnAdd.addActionListener( (e) -> { // Add new event listener
 			EventDialog ed;
-			if(eventos.isEmpty()) ed = new EventDialog(start.getDate(), end.getDate());
-			else ed = new EventDialog(start.getDate(), end.getDate(), eventos.getLast());
+			if(sesiones.isEmpty()) ed = new EventDialog(start.getDate(), end.getDate());
+			else ed = new EventDialog(start.getDate(), end.getDate(), sesiones.getLast());
 
 			if(ed.showDialog()) {
-				eventos.addAll(ed.getEventos());
-				table.setModel(SwingUtil.getTableModelFromPojos(eventos,
+				sesiones.addAll(ed.getSesiones());
+				table.setModel(SwingUtil.getTableModelFromPojos(sesiones,
 						new String[] {"loc", "fecha", "horaIni", "horaFin"},
 						new String[] {"Localizacion", "Fecha", "Hora de inicio", "Hora de fin"},
 						null));
@@ -105,7 +105,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		btnRemove.addActionListener( (e) -> {
 			int[] rows = table.getSelectedRows();
 			for(int i = 0; i < rows.length; i++) {
-				eventos.remove(rows[i]);
+				sesiones.remove(rows[i]);
 				((DefaultTableModel) table.getModel()).removeRow(rows[i]);
 				for(int j = i; j < rows.length; j++) if(rows[j] > rows[i]) rows[j]--;
 			}
@@ -168,7 +168,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		}
 		// valid &= this.getView().getTablaCostes().getValueAt(0, 0) != this.getView().getTablaCostes().getColumnNames()[0];
 		// valid &= this.getView().getTablaCostes().getValueAt(0, 1) != this.getView().getTablaCostes().getColumnNames()[1];
-		valid &= !eventos.isEmpty();
+		valid &= !sesiones.isEmpty();
 		getView().getBtnRegistrar().setEnabled(valid);
 	}
 
@@ -323,7 +323,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 						));
 
 		docentes.forEach((x) -> getModel().insertDocencia(x.getRemuneracion(), x.getId(), idCurso));
-		eventos.forEach((e) -> getModel().insertEvento(e.getLoc(), e.getFecha(), e.getHoraIni(), e.getHoraFin(), idCurso));
+		sesiones.forEach((e) -> getModel().insertSesion(e.getLoc(), e.getFecha(), e.getHoraIni(), e.getHoraFin(), idCurso));
 
 		Dialog.show("Curso registrado con éxito.");
 	}

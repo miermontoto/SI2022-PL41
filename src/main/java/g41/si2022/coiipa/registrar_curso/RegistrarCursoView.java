@@ -34,9 +34,9 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 	private BetterDatePicker dateCursoStart, dateCursoEnd;
 	private JTable tablaCostes;
 	private JTable tableProfesores;
-	private JTable tableEventos;
-	private JButton btnAddEvento;
-	private JButton btnRemoveEvento;
+	private JTable tableSesiones;
+	private JButton btnAddSesion;
+	private JButton btnRemoveSesion;
 	private JButton btnRegistrar;
 	private JComponent[] focusableComponents;
 
@@ -178,35 +178,35 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 					panelInscripciones.add(panelInscHasta, BorderLayout.EAST);
 				}
 			}
-		} { // Eventos
+		} { // Sesiones
 			{ // Label
 				left.gridy = 6;
 				left.fill = GridBagConstraints.BOTH;
 				left.weighty = 1;
-				centerPanel.add(JLabelFactory.getLabel("Eventos:"), left);
+				centerPanel.add(JLabelFactory.getLabel("Sesiones:"), left);
 			}
 			right.gridy = 6;
 			right.fill = GridBagConstraints.BOTH;
 			right.weighty = 1;
-			JPanel eventosPanel = new JPanel(new BorderLayout());
-			centerPanel.add(eventosPanel, right);
-			{ // Tabla de eventos
-				this.tableEventos = new JTable();
-				this.tableEventos.setName("Eventos:");
+			JPanel sesionesPanel = new JPanel(new BorderLayout());
+			centerPanel.add(sesionesPanel, right);
+			{ // Tabla de sesiones
+				this.tableSesiones = new JTable();
+				this.tableSesiones.setName("Sesiones:");
 
 				JScrollPane sp = new JScrollPane();
 				sp.getVerticalScrollBar().setUnitIncrement(20);
 				sp.setPreferredSize(new java.awt.Dimension(
 						this.getWidth(), 150
 						));
-				sp.setViewportView(this.tableEventos);
-				eventosPanel.add(sp, BorderLayout.CENTER);
+				sp.setViewportView(this.tableSesiones);
+				sesionesPanel.add(sp, BorderLayout.CENTER);
 			} { // Botones
 				JPanel btnPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-				btnPanel.add(this.btnAddEvento = new JButton("Añadir evento"));
-				btnPanel.add(this.btnRemoveEvento = new JButton("Eliminar evento"));
-				eventosPanel.add(btnPanel, BorderLayout.SOUTH);
-				btnAddEvento.setToolTipText("Necesario rango de fechas de curso");
+				btnPanel.add(this.btnAddSesion = new JButton("Añadir sesion"));
+				btnPanel.add(this.btnRemoveSesion = new JButton("Eliminar sesion"));
+				sesionesPanel.add(btnPanel, BorderLayout.SOUTH);
+				btnAddSesion.setToolTipText("Necesario rango de fechas de curso");
 			}
 		}
 
@@ -242,7 +242,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				this.dateCursoStart,
 				this.dateCursoEnd,
 				this.tablaCostes,
-				this.tableEventos,
+				this.tableSesiones,
 				this.tableProfesores
 		};
 	}

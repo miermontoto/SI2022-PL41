@@ -97,14 +97,14 @@ def obtain_data(ratio)
     ## No se necesitan casos específicos.
     docentes = generate_docentes((50 * ratio).to_i)
 
-    # Generar eventos para los cursos
+    # Generar sesiones para los cursos
     ## Sin mayor relevancia para casos específicos.
-    ## Se genera como mínimo un evento por curso.
+    ## Se genera como mínimo un sesion por curso.
     aulas = ['AN-B3', 'AN-B6', 'AN-B1', 'AN-E', 'AN-B', 'AS-1', 'AN-P3', 'DO-1.S.31', 'DO-9', 'AN-S6', 'AN-C']
-    eventos = []
+    sesiones = []
 
     cursos.each.with_index do |c, i|
-        eventos += generate_eventos(rand(1..(5 * ratio).to_i), aulas, c, i)
+        sesiones += generate_sesiones(rand(1..(5 * ratio).to_i), aulas, c, i)
     end
 
     # Generar docencias
@@ -126,10 +126,10 @@ def obtain_data(ratio)
         facturas += generate_facturas_docencias(rand(num_docencias/2..num_docencias), docencias, c, i)
     end
 
-    ## Generar un curso con MUCHOS eventos, docencias e inscripciones.
-    cursos.push(Curso.new('[G] Curso grande', 'Curso generado con muchos eventos, inscripciones y docencias',
+    ## Generar un curso con MUCHOS sesiones, docencias e inscripciones.
+    cursos.push(Curso.new('[G] Curso grande', 'Curso generado con muchos sesiones, inscripciones y docencias',
         start_last_month, end_last_month, alumnos.length, start_this_month, end_this_month))
-    eventos += generate_eventos(rand((200 * ratio).to_i..(500 * ratio).to_i), aulas, cursos.last, cursos.length - 1)
+    sesiones += generate_sesiones(rand((200 * ratio).to_i..(500 * ratio).to_i), aulas, cursos.last, cursos.length - 1)
     docencias += generate_docencias(rand(docentes.length/2..docentes.length), docentes, cursos.length - 1)
     inscripciones += generate_inscripciones(rand(2*cursos.last.plazas/3..cursos.last.plazas), alumnos, cursos.last, cursos.length - 1, entidades, costes)
 
@@ -148,7 +148,7 @@ def obtain_data(ratio)
         'curso' => cursos,
         'docente' => docentes,
         'docencia' => docencias,
-        'evento' => eventos,
+        'sesion' => sesiones,
         'inscripcion' => inscripciones,
         'factura' => facturas,
         'pago' => pagos,
