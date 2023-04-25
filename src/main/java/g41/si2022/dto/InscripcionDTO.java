@@ -27,8 +27,9 @@ public class InscripcionDTO {
 		entidad_nombre;
     private InscripcionState estado;
 
-	public void updateEstado(LocalDate today) {
+	public InscripcionState updateEstado(LocalDate today) {
 		this.estado = StateUtilities.getInscripcionState(this, today);
+		return this.estado;
 	}
 
 }

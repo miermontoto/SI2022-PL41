@@ -36,6 +36,9 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	private double aDevolver;
 	private LocalDate today;
 
+	// optimization
+	private static TableModel[] modelStorage = new TableModel[2];
+
 	public GestionarInscripcionesController(GestionarInscripcionesModel modelo, GestionarInscripcionesView vista) {
 		super(vista, modelo);
 	}
@@ -43,7 +46,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	@Override
 	public void initNonVolatileData() {
 		this.getView().getBtnInsertarPago().addActionListener(e -> handlePagar());
-		this.getView().getChkAll().addActionListener(e -> getListaInscripciones());
+		this.getView().getChkAll().addActionListener(e -> getListaInscripciones(true));
 		this.getView().getBtnCancelarInscripcion().addActionListener(e -> handleDevolver());
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
@@ -53,9 +56,10 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 	@Override
 	public void initVolatileData() {
-		this.getListaInscripciones();
-		setControls(false); // Inicio la vista con todo deshabilitado
 		today = getView().getMain().getToday();
+		modelStorage = new TableModel[2];
+		this.getListaInscripciones(false);
+		setControls(false); // Inicio la vista con todo deshabilitado
 	}
 
 	private void setControls(boolean status) {
@@ -103,7 +107,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 		long dias = ChronoUnit.DAYS.between(fechaActual.toInstant(), fechaCurso.toInstant());
 
-		;		String diasDesdeInscr = String.valueOf(ChronoUnit.DAYS.between(fechaInscr.toInstant(), fechaActual.toInstant()));
+		String diasDesdeInscr = String.valueOf(ChronoUnit.DAYS.between(fechaInscr.toInstant(), fechaActual.toInstant()));
 		String diasHastaCurso = String.valueOf(dias);
 		getView().getLblInfoDias().setText(diasDesdeInscr + " | " + diasHastaCurso);
 
@@ -135,7 +139,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 					+ " al curso \"" + nombreCurso + "\" con éxito. Se le devolverán " + returnValue + "€.");
 			Dialog.show("La cancelación de la inscripción del alumno " + nombreCompleto + " ha sido realizada con éxito. Se le han devuelto " + aDevolver + "€");
 		}
-		getListaInscripciones();
+		getListaInscripciones(false);
 		setControls(false);
 	}
 
@@ -150,7 +154,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		Date fechaPago = java.sql.Date.valueOf(this.getView().getDatePicker().getDate());
 
 		this.getModel().registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion);
-		getListaInscripciones(); // Refrescar tabla al insertar el pago
+		getListaInscripciones(false); // Refrescar tabla al insertar el pago
 		Dialog.show("Pago por importe de " + importe + " € de parte del alumno " + nombreCompleto + " insertado con éxito");
 
 		/*
@@ -160,7 +164,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		 * un filter, se itera por toda la lista de inscripciones, por lo que puede que el
 		 * rendimiento no sea óptimo.
 		 */
-		// FIXME: posible mejora de rendimiento posible.
+		// FIXME: posible mejora de rendimiento
 		InscripcionState estado = inscripciones.stream().filter(x -> x.getId().equals(idInscripcion)).findFirst().get().getEstado();
 
 		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
@@ -171,28 +175,33 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		eraseControls(false);
 	}
 
-	public void getListaInscripciones() {
+	public void getListaInscripciones(boolean fromCheckBox) {
 		JTable table = this.getView().getTableInscripciones();
 		inscripciones = this.getModel().getInscripciones();
+		boolean isChecked = getView().getChkAll().isSelected();
 
-		boolean getAll = getView().getChkAll().isSelected();
-		new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
-			x.updateEstado(getView().getMain().getToday());
-			InscripcionState estado = x.getEstado();
-			if (!getAll
-				&& estado != InscripcionState.PENDIENTE
-				&& estado != InscripcionState.EXCESO
-				&& estado != InscripcionState.RETRASADA) {
-				inscripciones.remove(x);
-			}
-		});
+		if (fromCheckBox && modelStorage[0] != null && modelStorage[1] != null) {
+			table.setModel(modelStorage[isChecked ? 1 : 0]);
+		} else {
+			new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
+				InscripcionState estado = x.updateEstado(today);
+				if (!isChecked
+					&& estado != InscripcionState.PENDIENTE
+					&& estado != InscripcionState.EXCESO
+					&& estado != InscripcionState.RETRASADA) {
+					inscripciones.remove(x);
+				}
+			});
 
-		table.setModel(SwingUtil.getTableModelFromPojos(
+			table.setModel(SwingUtil.getTableModelFromPojos(
 				inscripciones,
-				new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "alumno_apellidos", "curso_nombre", "fecha", "curso_coste","pagado", "estado" },	//La primera columna estará oculta
+				new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "alumno_apellidos", "curso_nombre", "fecha", "curso_coste", "pagado", "estado" }, // La primera columna estará oculta
 				new String[] { "", "", "", "Nombre", "Apellidos", "Curso", "Fecha", "Coste", "Importe pagado", "Estado" },
 				null
-				));
+			));
+
+			modelStorage[isChecked ? 1 : 0] = table.getModel();
+		}
 
 		// Ocultar foreign keys de la tabla
 		for(int i = 0; i < 3; i++) table.removeColumn(table.getColumnModel().getColumn(0));
