@@ -45,10 +45,10 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 	@Override
 	public void initNonVolatileData() {
-		this.getView().getBtnInsertarPago().addActionListener(e -> handlePagar());
-		this.getView().getChkAll().addActionListener(e -> getListaInscripciones(true));
-		this.getView().getBtnCancelarInscripcion().addActionListener(e -> handleDevolver());
-		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+		getView().getBtnInsertarPago().addActionListener(e -> handlePagar());
+		getView().getChkAll().addActionListener(e -> getListaInscripciones(true));
+		getView().getBtnCancelarInscripcion().addActionListener(e -> handleDevolver());
+		getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
@@ -58,20 +58,20 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	public void initVolatileData() {
 		today = getView().getMain().getToday();
 		modelStorage = new TableModel[2];
-		this.getListaInscripciones(false);
+		getListaInscripciones(false);
 		setControls(false); // Inicio la vista con todo deshabilitado
 	}
 
 	private void setControls(boolean status) {
-		this.getView().getBtnInsertarPago().setEnabled(status);
-		this.getView().getTxtImporte().setEnabled(status);
-		this.getView().getDatePicker().setEnabled(status);
+		getView().getBtnInsertarPago().setEnabled(status);
+		getView().getTxtImporte().setEnabled(status);
+		getView().getDatePicker().setEnabled(status);
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
-		this.getView().getLblInfoNombre().setText("");
-		this.getView().getTxtImporte().setText("");
-		this.getView().getDatePicker().setText("");
+		getView().getLblInfoNombre().setText("");
+		getView().getTxtImporte().setText("");
+		getView().getDatePicker().setText("");
 		setControls(false);
 	}
 
@@ -83,11 +83,10 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		fila = table.convertRowIndexToModel(fila);
 
 		TableModel model = this.getView().getTableInscripciones().getModel();
-		idInscripcion = (String) model.getValueAt(fila, 0);
-		idAlumno = (String) model.getValueAt(fila, 1);
-		idCurso = (String) model.getValueAt(fila, 2);
-		getView().getDatePicker().setDateToToday();
-		nombreCompleto = (String) model.getValueAt(fila, 3) + " " + (String) model.getValueAt(fila, 4);
+		idInscripcion = model.getValueAt(fila, 0).toString();
+		idAlumno = model.getValueAt(fila, 1).toString();
+		idCurso = model.getValueAt(fila, 2).toString();
+		nombreCompleto = model.getValueAt(fila, 3).toString() + " " + model.getValueAt(fila, 4).toString();
 		nombreCurso = (String) model.getValueAt(fila, 5);
 		this.getView().getLblInfoNombre().setText(nombreCompleto);
 
@@ -95,14 +94,14 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		setControls(estado != InscripcionState.PAGADA && estado != InscripcionState.CANCELADA);
 		getView().getBtnCancelarInscripcion().setEnabled(estado != InscripcionState.CANCELADA);
 
-		Double costeCurso = Double.valueOf((String) model.getValueAt(fila,  7));
-		Double importePagado = Double.valueOf((String) model.getValueAt(fila, 8));
+		Double costeCurso = Double.valueOf(model.getValueAt(fila,  7).toString());
+		Double importePagado = Double.valueOf(model.getValueAt(fila, 8).toString());
 		Double calculoDevolver = Math.min(costeCurso, importePagado);
 		getView().getLblInfoDiferencia().setText(String.valueOf(importePagado - costeCurso) + "€");
 
 		// Calculamos el número de días que quedan
-		Date fechaActual = Date.from(this.getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
-		Date fechaInscr = Util.isoStringToDate((String) model.getValueAt(fila, 6));
+		Date fechaActual = Date.from(getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		Date fechaInscr = Util.isoStringToDate(model.getValueAt(fila, 6).toString());
 		Date fechaCurso = Util.isoStringToDate(getModel().getFechaCurso(idCurso));
 
 		long dias = ChronoUnit.DAYS.between(fechaActual.toInstant(), fechaCurso.toInstant());
@@ -145,15 +144,14 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 	private void handlePagar() {
 		String importe = this.getView().getTxtImporte().getText();
+		LocalDate fecha = this.getView().getDatePicker().getDate();
 
-		if(importe.length() == 0 || importe == null || this.getView().getDatePicker().getDate() == null) {
-			Dialog.showError("Por favor, rellena todos los campos para continuar"); // Se muestra un error
+		if(importe.length() == 0 || importe == null || fecha == null) {
+			Dialog.showError("Por favor, rellena todos los campos para continuar");
 			return;
 		}
 
-		Date fechaPago = java.sql.Date.valueOf(this.getView().getDatePicker().getDate());
-
-		this.getModel().registrarPago(importe, Util.dateToIsoString(fechaPago), idInscripcion);
+		this.getModel().registrarPago(importe, fecha.toString(), idInscripcion);
 		getListaInscripciones(false); // Refrescar tabla al insertar el pago
 		Dialog.show("Pago por importe de " + importe + " € de parte del alumno " + nombreCompleto + " insertado con éxito");
 
@@ -164,7 +162,6 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		 * un filter, se itera por toda la lista de inscripciones, por lo que puede que el
 		 * rendimiento no sea óptimo.
 		 */
-		// FIXME: posible mejora de rendimiento
 		InscripcionState estado = inscripciones.stream().filter(x -> x.getId().equals(idInscripcion)).findFirst().get().getEstado();
 
 		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
@@ -177,21 +174,20 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 	public void getListaInscripciones(boolean fromCheckBox) {
 		JTable table = this.getView().getTableInscripciones();
-		inscripciones = this.getModel().getInscripciones();
 		boolean isChecked = getView().getChkAll().isSelected();
 
+		/*
+		 * Comprobación que optimiza la función. Si no se ha
+		 * salido de la pantalla o modificado datos, se guarda
+		 * la información de ambas versiones de la tabla
+		 * (todas las inscripciones y solo pendientes) en un
+		 * array de modelos de tabla. Esto mejora el rendimiento
+		 * del programa al cambiar entre ambas tablas seguido.
+		 */
 		if (fromCheckBox && modelStorage[0] != null && modelStorage[1] != null) {
 			table.setModel(modelStorage[isChecked ? 1 : 0]);
 		} else {
-			new java.util.ArrayList<InscripcionDTO>(inscripciones).forEach(x -> {
-				InscripcionState estado = x.updateEstado(today);
-				if (!isChecked
-					&& estado != InscripcionState.PENDIENTE
-					&& estado != InscripcionState.EXCESO
-					&& estado != InscripcionState.RETRASADA) {
-					inscripciones.remove(x);
-				}
-			});
+			inscripciones = this.getModel().getInscripciones(isChecked, today);
 
 			table.setModel(SwingUtil.getTableModelFromPojos(
 				inscripciones,
