@@ -113,20 +113,15 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			} { // Input
 				right.gridy = 3;
 				right.fill = GridBagConstraints.BOTH;
-				/*
-				centerPanel.add(this.tablaCostes = new RowAppendableJTable (
+				centerPanel.add(this.tablaCostes = new g41.si2022.ui.components.table.RowAppendableJTable (
 						new String[] {"Nombre Colectivo", "Coste"},
-						new java.util.TreeMap<Integer, Pattern> () {
+						new java.util.TreeMap<Integer, java.util.regex.Pattern> () {
 							private static final long serialVersionUID = 1L;
 							{
-								put(1, Pattern.compile("[0-9]*"));
+								put(1, java.util.regex.Pattern.compile("[0-9]*"));
 							}},
 						new boolean[] {true, true}
 						), right);
-						*/
-				JScrollPane sp;
-				centerPanel.add(sp = new JScrollPane(), right);
-				sp.setViewportView(this.tablaCostes = new javax.swing.JTable());
 			}
 		} { // Inscripcion
 			{ // Label

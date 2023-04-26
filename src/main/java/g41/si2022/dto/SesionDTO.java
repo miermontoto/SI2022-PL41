@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.LocalTime;
 
 @Setter @Getter @Data
-public class SesionDTO {
+public class SesionDTO implements DTO {
 
     private String
         id,
