@@ -1,4 +1,6 @@
 require_relative 'util.rb'
+require 'faker'
+Faker::Config.locale = 'es'
 
 def generate_alumnos(num)
     alumnos = []
@@ -17,7 +19,7 @@ def generate_alumnos(num)
     alumnos
 end
 
-def generate_docentes(num)
+def generate_docentes(num, entidades)
     docentes = []
 
     num.times do
@@ -29,6 +31,7 @@ def generate_docentes(num)
         d.telefono = phonify(Faker::PhoneNumber.cell_phone)
         d.direccion = Faker::Address.street_address
         d.dni = Faker::IDNumber.spanish_citizen_number
+        d.entidad_id = rand > 0.8 ? rand(1..entidades.length - 1) : nil
 
         docentes.push(d)
     end
@@ -168,4 +171,25 @@ def generate_costes(cursos, colectivos)
     end
 
     costes
+end
+
+def generate_cursos(num, entidades)
+    cursos = []
+
+    num.times do
+        c = Curso.new
+
+        c.nombre = "[G] " + Faker::Educator.course_name
+        c.descripcion = Faker::Lorem.paragraph
+        c.start_inscr = Date.today + rand(-365..365)
+        c.end_inscr = c.start_inscr + rand(1..30)
+        c.start = c.end_inscr + rand(1..30)
+        c.end = c.start + rand(1..30)
+        c.plazas = rand(10..200)
+        c.entidad_id = rand > 0.8 ? rand(1..entidades.length - 1) : nil
+
+        cursos.push(c)
+    end
+
+    cursos
 end

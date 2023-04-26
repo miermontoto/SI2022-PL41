@@ -41,6 +41,9 @@ def obtain_data(ratio)
     start_two_months_ago = Date.new(year, month - 2, 1)
     end_two_months_ago = Date.new(year, month - 2, -1)
 
+    # Generar entidades
+    ## Sin mayor relevancia para casos específicos.
+    entidades = generate_entidades((30 * ratio).to_i)
 
     cursos.push(Curso.new('[G] Curso ya finalizado', 'Curso generado que ya ha finalizado',
         start_two_months_ago, end_two_months_ago, rand(1..alumnos.length),
@@ -58,9 +61,7 @@ def obtain_data(ratio)
         start_next_month, end_next_month, rand(1..alumnos.length),
         start_two_months_ago, end_two_months_ago))
 
-    # Generar entidades
-    ## Sin mayor relevancia para casos específicos.
-    entidades = generate_entidades((10 * ratio).to_i)
+    cursos += generate_cursos((10 * ratio).to_i, entidades)
 
     # Generar colectivos
     ## Se necesitan colectivos preestablecidos.
@@ -95,7 +96,7 @@ def obtain_data(ratio)
 
     # Generar docentes
     ## No se necesitan casos específicos.
-    docentes = generate_docentes((50 * ratio).to_i)
+    docentes = generate_docentes((75 * ratio).to_i, entidades)
 
     # Generar eventos para los cursos
     ## Sin mayor relevancia para casos específicos.

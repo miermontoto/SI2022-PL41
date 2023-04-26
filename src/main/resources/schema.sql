@@ -13,7 +13,6 @@ drop table if exists entidad;
 drop table if exists coste;
 drop table if exists colectivo;
 drop table if exists lista_espera;
--- drop table if exists empresa;
 
 create table coste (
 	id integer primary key autoincrement,
@@ -45,7 +44,9 @@ create table curso (
     plazas integer not null,
     start date not null,
     end date not null,
-    estado text
+    estado text,
+    entidad_id integer,
+    foreign key (entidad_id) references entidad(id)
 );
 
 create table inscripcion (
@@ -85,7 +86,9 @@ create table docente (
     dni text not null,
     email text not null,
     telefono text not null,
-    direccion text not null
+    direccion text not null,
+    entidad_id integer,
+    foreign key (entidad_id) references entidad(id)
 );
 
 create table docencia (
@@ -97,15 +100,6 @@ create table docencia (
     foreign key (docente_id) references docente(id)
 );
 
-/*
-create table empresa (
-    id integer primary key autoincrement,
-    nombre text not null, 
-    email text not null,
-    cose_pago float not null,
-    foreign key (docente_id) references docente(id)
-);
-*/
 
 create table pago (
     id integer primary key autoincrement,
