@@ -70,12 +70,12 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	}
 
 	private void loadColectivos() {
-		this.getView().getTablaCostes().setModel(
-		SwingUtil.getTableModelFromPojos(
-				this.getModel().getColectivos(),
-				new String[]{"nombre", "coste"},
-				new String[]{"Colectivo", "Coste"},
-				null));
+		((g41.si2022.ui.components.table.RowAppendableJTable) this.getView().getTablaCostes()).setData(
+				SwingUtil.getTableModelFromPojos(
+						this.getModel().getColectivos(),
+						new String[]{"nombre", "coste"},
+						new String[]{"Colectivo", "Coste"},
+						null));
 	}
 
 	private void loadEventListeners() {
@@ -275,7 +275,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		SwingUtil.autoAdjustColumns(this.getView().getTableProfesores());
 		loadTableListeners();
 	}
-
+	
 	public void insertCurso() {
 		List<ProfesorDTO> docentes = this.getDocentes();
 		if (docentes.size() == 0) throw new UnexpectedException("No se ha seleccionado remuneración para ningún docente.");
@@ -288,7 +288,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				getView().getDateCursoStart().getDate().toString(),
 				getView().getDateCursoEnd().getDate().toString(),
 				getView().getTxtPlazas().getText(),
-				g41.si2022.util.Util.getData(getView().getTablaCostes()).stream().collect(
+				g41.si2022.util.Util.getData(getView().getTablaCostes()).parallelStream().collect(
 						new java.util.stream.Collector<Map<String, String>, Map<String, Double>, Map<String, Double>> () {
 
 							@Override
@@ -301,7 +301,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 								return (map, row) -> map.put(
 										row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
 										Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1)))
-										);
+								);
 							}
 
 							@Override
@@ -320,7 +320,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 							}
 
 						}
-						));
+					));
 
 		docentes.forEach((x) -> getModel().insertDocencia(x.getRemuneracion(), x.getId(), idCurso));
 		eventos.forEach((e) -> getModel().insertEvento(e.getLoc(), e.getFecha(), e.getHoraIni(), e.getHoraFin(), idCurso));
