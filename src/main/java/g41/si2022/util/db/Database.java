@@ -1,12 +1,14 @@
 package g41.si2022.util.db;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.io.File;
 
 import java.util.Properties;
 
 import org.apache.commons.dbutils.DbUtils;
 
+import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.exception.ApplicationException;
 
 /**
@@ -45,7 +47,10 @@ public class Database extends DbUtil {
 	 */
 	public boolean createDatabase(boolean onlyOnce) {
 		boolean create = !onlyOnce || !this.exists();
-		if (create) executeScript(SQL_SCHEMA);
+		if (create) try {executeScript(SQL_SCHEMA);} catch (NoSuchFileException e) {
+			Dialog.showError("Missing " + SQL_SCHEMA);
+			System.exit(1);
+		}
 		return create;
 	}
 
@@ -53,7 +58,17 @@ public class Database extends DbUtil {
 	 * Carga de datos iniciales a partir del script data.sql en src/main/resources
 	 */
 	public void loadDatabase() {
-		try { executeScript(SQL_LOAD); } catch (Exception e) { throw new ApplicationException(e); }
+		try { executeScript(SQL_LOAD); }
+		catch (NoSuchFileException nsfe) {
+			try {
+				Process process = Runtime.getRuntime().exec("ruby src/main/resources/generator/main.rb");
+				if (process.waitFor() != 0) throw new InterruptedException();
+				executeScript(SQL_LOAD);
+			} catch (java.io.IOException | InterruptedException ie) {
+				Dialog.showWarning("No se han podido generar los datos de prueba"
+					+ "\n(missing ruby or gems?)");
+			}
+		}
 	}
 
 	public boolean deleteDatabase() {
