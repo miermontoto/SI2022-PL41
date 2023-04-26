@@ -65,7 +65,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		loadTextAreaListeners();
 		loadValidateListeners();
 		loadEventListeners();
-		loadColectivos();
+		// loadColectivos();
 		getView().getBtnRegistrar().setEnabled(false);
 	}
 
@@ -289,45 +289,23 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				getView().getDateCursoEnd().getDate().toString(),
 				getView().getTxtPlazas().getText(),
 				g41.si2022.util.Util.getData(getView().getTablaCostes()).parallelStream().collect(
-						new java.util.stream.Collector<Map<String, String>, Map<String, Double>, Map<String, Double>> () {
-
-							@Override
-							public Supplier<Map<String, Double>> supplier() {
-								return java.util.TreeMap::new;
-							}
-
-							@Override
-							public BiConsumer<Map<String, Double>, Map<String, String>> accumulator() {
-								return (map, row) -> map.put(
-										row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
-										Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1)))
-								);
-							}
-
-							@Override
-							public BinaryOperator<Map<String, Double>> combiner() {
-								return (mapA, mapB) -> { mapA.putAll(mapB); return mapA; };
-							}
-
-							@Override
-							public Function<Map<String, Double>, Map<String, Double>> finisher() {
-								return java.util.Collections::unmodifiableMap;
-							}
-
-							@Override
-							public Set<Characteristics> characteristics() {
-								return new java.util.HashSet<>(java.util.Arrays.asList(Characteristics.CONCURRENT));
-							}
-
-						}
+					java.util.stream.Collectors.toMap(
+						row -> row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
+						row -> Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1))))
 					));
 
-		docentes.forEach((x) -> getModel().insertDocencia(x.getRemuneracion(), x.getId(), idCurso));
-		eventos.forEach((e) -> getModel().insertEvento(e.getLoc(), e.getFecha(), e.getHoraIni(), e.getHoraFin(), idCurso));
+		this.getModel().insertDocencia(docentes, idCurso);
+		this.getModel().insertEvento(eventos, idCurso);
 
 		Dialog.show("Curso registrado con éxito.");
 	}
 
+	/**
+	 * getDocentes. Returns the list of docentes that are taking part in this curso.
+	 * This method will automatically filter out the docentes that do not take part.
+	 * 
+	 * @return Docentes that do take part in the curso.
+	 */
 	private List<ProfesorDTO> getDocentes() {
 		List<ProfesorDTO> docentes = new ArrayList<>();
 		TableModel model = this.getView().getTableProfesores().getModel();

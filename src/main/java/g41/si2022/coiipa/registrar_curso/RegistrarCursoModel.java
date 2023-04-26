@@ -1,16 +1,13 @@
 package g41.si2022.coiipa.registrar_curso;
 
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.function.Function;
 
 import g41.si2022.dto.ColectivoDTO;
+import g41.si2022.dto.DTO;
+import g41.si2022.dto.EventoDTO;
 import g41.si2022.dto.ProfesorDTO;
 
 public class RegistrarCursoModel extends g41.si2022.mvc.Model {
@@ -26,9 +23,9 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 * It will return a Map of the colectivos that were inserted.
 	 * 
 	 * @param colectivosInTable List of colectivos to be added. This is a list of colectivo Names
-	 * @return List of colectivos that were actually added. This is a map of Colectivo Name and Colectivo ID
+	 * @return List of colectivos that were actually added.
 	 */
-	public Map<String, String> insertColectivos (List<String> colectivosInTable) {
+	public Map<String, ColectivoDTO> insertColectivos (List<String> colectivosInTable) {
 		Map<String, ColectivoDTO> existingColectivos = this.getColectivos().stream()
 				.collect(Collectors.toMap(e -> e.getNombre(), e -> e));
 
@@ -45,17 +42,31 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 			this.getDatabase().executeUpdate(sql+";", missingColectivosInDatabase.toArray());
 		}
 		
-		sql = "SELECT * FROM colectivo WHERE colectivo.nombre IN (?) ";
-		for (int i = 0 ; i < missingColectivosInDatabase.size() - 1 ; i++) {
-			sql += ", (?)";
+		sql = "SELECT * FROM colectivo WHERE colectivo.nombre IN (?";
+		for (int i = 0 ; i < colectivosInTable.size() - 1 ; i++) {
+			sql += ", ?";
 		}
+		sql += ")";
 		
-		return this.getDatabase().executeQueryMap(sql, colectivosInTable.toArray())
-				.stream().collect(Collectors.toMap(row -> row.get("nombre").toString(), row -> row.get("id").toString()));
+		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, sql, colectivosInTable.toArray())
+				.stream().collect(Collectors.toMap(e -> e.getNombre(), e -> e));
 	}
 	
+	/**
+	 * insertCostes. This method will insert the colectivo/costes according to the View's table.<br>
+	 * If a given colectivo is not featured in the database, it will be added automatically. 
+	 * 
+	 * @param costes Map of Colectivo Name, Colectivo cost for the curso.
+	 * @param idCurso Id of the curso.
+	 */
 	public void insertCostes (Map<String, Double> costes, String idCurso) {
-		java.util.Iterator<Map.Entry<String, Double>> itr = costes.entrySet().iterator();
+		Map<String, ColectivoDTO> colectivos = this.insertColectivos(costes.keySet().stream().collect(Collectors.toList()));
+		java.util.Iterator<Map.Entry<String, Double>> itr = costes.entrySet().stream()
+			.collect(Collectors.toMap(
+				row -> colectivos.get(row.getKey()).getId(),
+				row -> row.getValue()
+			))
+			.entrySet().iterator();
 		Map.Entry<String, Double> current = itr.next();
 		String sql = "INSERT INTO coste (colectivo_id, coste, curso_id) VALUES (?, ?, ?)";
 		java.util.List<String> data = new java.util.ArrayList<String> ();
@@ -94,6 +105,7 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		this.getDatabase().executeUpdate(sql,
 				nombre, descripcion,
 				inscrStart, inscrEnd, plazas, start, end);
+
 		String idCurso = String.valueOf(this.getDatabase().executeQuerySingle("select id from curso"
 		 + " where nombre = ? and start_inscr = ? and start = ? and plazas = ?",
 		  nombre, inscrStart, start, plazas));
@@ -111,13 +123,47 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		return this.getDatabase().executeQueryPojo(g41.si2022.dto.ColectivoDTO.class, "SELECT * FROM colectivo;");
 	}
 
-	public void insertDocencia(String remuneracion, String profesor_id, String curso_id) {
-		String sql = "INSERT INTO docencia (remuneracion, docente_id, curso_id) VALUES (?, ?, ?)";
-		this.getDatabase().executeUpdate(sql, remuneracion, profesor_id, curso_id);
+	/**
+	 * insertDocencia. Inserts the docencia data for a curso.
+	 * 
+	 * @param docentes List of docentes that take part in the curso.
+	 * @param curso_id ID of the curso that they are taking part in.
+	 */
+	public void insertDocencia(List<ProfesorDTO> docentes, String curso_id) {
+		this.getDatabase().insertBulk(
+				"docencia", 
+				new String[] { "remuneracion", "docente_id", "curso_id" }, 
+				docentes, 
+				new java.util.ArrayList<Function<DTO, Object>> () {
+					private static final long serialVersionUID = 1L;
+					{
+						add(e -> ((ProfesorDTO) e).getRemuneracion());
+						add(e -> ((ProfesorDTO) e).getId());
+						add(e -> curso_id);
+					}
+				});
 	}
-
-	public void insertEvento(String loc, String fecha, String horaIni, String horaFin, String cursoId) {
-		String sql = "INSERT INTO evento (loc, fecha, hora_ini, hora_fin, curso_id) VALUES (?, ?, ?, ?, ?)";
-		this.getDatabase().executeUpdate(sql, loc, fecha, horaIni, horaFin, cursoId);
+	
+	/**
+	 * insertEvento. Inserts the eventos data for a curso.
+	 * 
+	 * @param eventos List of eventos that compose the curso.
+	 * @param cursoId ID of the curso that the eventos are part of.
+	 */
+	public void insertEvento(List<EventoDTO> eventos, String cursoId) {
+		this.getDatabase().insertBulk(
+				"evento",
+				new String[] {"loc", "fecha", "hora_ini", "hora_fin", "curso_id"},
+				eventos,
+				new java.util.ArrayList<Function<DTO, Object>> () {
+					private static final long serialVersionUID = 1L;
+					{
+						add(e -> ((EventoDTO) e).getLoc());
+						add(e -> ((EventoDTO) e).getFecha());
+						add(e -> ((EventoDTO) e).getHoraIni());
+						add(e -> ((EventoDTO) e).getHoraFin());
+						add(e -> cursoId);
+					}}
+				);
 	}
 }
