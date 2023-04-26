@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
+import org.jdesktop.swingx.JXComboBox;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
@@ -62,10 +64,15 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 	}
 
 	private void handleInsertarFactura() {
-		getModel().insertFactura(getView().getDateFactura().toString(), ((DocenciaDTO) getView().getCmbProfesor().getSelectedItem()).getId());
-		getListaFacturas();
-		getListaDocentes();
-		Dialog.show("Factura registrada");
+		String fecha = getView().getDateFactura().toString();
+		String idDocencia = ((DocenciaDTO) getView().getCmbProfesor().getSelectedItem()).getId();
+		String importe = getView().getTxtImporteFactura().getText().toString();
+		if(getModel().insertFactura(fecha, idDocencia, importe)) {
+			getListaFacturas();
+			getListaDocentes();
+			getView().getTxtImporteFactura().setText("");
+		}
+
 	}
 
 	private void handleInsertarPago() {
@@ -103,8 +110,11 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 
 	@SuppressWarnings("unchecked")
 	private void getListaCursos() {
+		JXComboBox cmb = getView().getCmbCurso();
+		cmb.removeAllItems();
 		List<CursoDTO> cursos = getModel().getListaCursos(getView().getMain().getToday().toString());
-		cursos.forEach(x -> getView().getCmbCurso().addItem(x));
+		cmb.addItem("Seleccione un curso");
+		cursos.forEach(x -> cmb.addItem(x));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -116,7 +126,7 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 			docentes.forEach(x -> getView().getCmbProfesor().addItem(x));
 			getView().getCmbProfesor().setEnabled(true);
 			getView().getBtnInsertarFactura().setEnabled(true);
-		} catch (ClassCastException cce) {
+		} catch (ClassCastException | NullPointerException e) {
 			getView().getCmbProfesor().setEnabled(false);
 			getView().getBtnInsertarFactura().setEnabled(false);
 		} // No se ha seleccionado un curso.

@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -115,10 +116,13 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 		idCurso = Integer.parseInt(model.getValueAt(row, 0).toString());
 		nombreCurso = model.getValueAt(row, 1).toString();
+		
+		//Obtengo los valores para las distintas fechas que voy a probar.
 		fechaIniCurso = model.getValueAt(row, 2).toString();
 		fechaFinCurso = model.getValueAt(row, 3).toString();
 		fechaIniInscr = model.getValueAt(row, 4).toString();
 		fechaFinInscr = model.getValueAt(row, 5).toString();
+		
 		plazas = model.getValueAt(row, 6).toString();
 		plazasLibres = model.getValueAt(row, 7).toString();
 		selectedCurso = this.getModel().getCurso(String.valueOf(idCurso));
@@ -143,25 +147,33 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		getView().getDateNewFinInscr().setDate(localDateFinInscripciones);
 		getView().getTxtFieldPlazas().setText(plazas);
 
-		setControls(selectedCurso.getEstado() != CursoState.CANCELADO); // Hemos terminado el proceso, habilitamos los controles.
+		setControls(true); // Hemos terminado el proceso, habilitamos los controles.
 	}
 
 
 	public void handleCambiarFechas() {
-		if (!checkFechas()) {
+
+		String fechaIniCursoEdit = getView().getDateNewIniCurso().toString();
+		String fechaFinCursoEdit = getView().getDateNewFinCurso().toString();
+		String fechaIniInscrEdit = getView().getDateNewIniInscr().toString();
+		String fechaFinInscrEdit = getView().getDateNewFinInscr().toString();
+		
+		boolean returnValue = getModel().updateFechas(idCurso, fechaIniCursoEdit, fechaFinCursoEdit, fechaIniInscrEdit, fechaFinInscrEdit);
+		
+		if(returnValue) {
+			updateTables(); // Actualizamos la tabla de los datos tras producir la inserción
+			Dialog.show("Se han modificado las fechas del curso con éxito");
+		}
+		else {
 			Dialog.showError("No hemos modificado nada, ya que había parámetros incorrectos. Por favor, corrígelos e inténtalo de nuevo.");
-			return;
 		}
 
-		getModel().updateFechas(idCurso, fechaIniCurso, fechaFinCurso, fechaIniInscr, fechaFinInscr);
-		updateTables(); // Actualizamos la tabla de los datos tras producir la inserción
-		Dialog.show("Se han modificado las fechas del curso con éxito");
 	}
 
 
 	// Función que implementa un sistema para comprobar las fechas que se introducen
 	// En caso de que algo esté mal, devuelve falso y un mensaje de error.
-	public boolean checkFechas() {
+	/*public boolean checkFechas() {
 		String fechaCursoInicio = getView().getDateNewIniCurso().getDateStringOrEmptyString();
 		String fechaCursoFin = getView().getDateNewFinCurso().getDateStringOrEmptyString();
 		String fechaInscripcionInicio = getView().getDateNewIniInscr().getDateStringOrEmptyString();
@@ -206,7 +218,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		this.fechaFinInscr = fechaInscripcionFin;
 
 		return true;
-	}
+	}*/
 
 
 	public void handleCambiarDetalles() {
@@ -238,7 +250,6 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		getView().getBtnCambiarFechas().setEnabled(status);
 		getView().getTxtFieldPlazas().setEnabled(status);
 		getView().getBtnCambiarDetalles().setEnabled(status);
-		getView().getBtnCancelarCurso().setEnabled(status);
 	}
 
 	private void eraseControls(boolean eliminarAviso) {
@@ -282,15 +293,15 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 	/**
 	 * Change the status of all inscriptions in the course inscription list to 'CANCELADA'
-	 *
+	 * 
 	 * @param curso To cancel it inscriptions
 	 */
 	public void cancelarInscripciones(CursoDTO curso) {
 		listaInscr = getModel().getCursoInscripciones(curso.getId());
 
-		for (InscripcionDTO inscr: listaInscr)
+		for (InscripcionDTO inscr: listaInscr) 
 			getModel().cancelarInscripcion(inscr.getId());
-
+		
 
 	}
 }

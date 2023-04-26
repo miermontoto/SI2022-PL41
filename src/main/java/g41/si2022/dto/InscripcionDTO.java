@@ -23,11 +23,13 @@ public class InscripcionDTO implements DTO {
 		alumno_apellidos,
     	curso_coste,
     	curso_nombre,
-    	grupo_id;
+    	grupo_id,
+		entidad_nombre;
     private InscripcionState estado;
 
-	public void updateEstado(LocalDate today) {
+	public InscripcionState updateEstado(LocalDate today) {
 		this.estado = StateUtilities.getInscripcionState(this, today);
+		return this.estado;
 	}
 
 }

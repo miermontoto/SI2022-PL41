@@ -112,7 +112,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 			btnRemove.setEnabled(false);
 		});
 
-		for(BetterDatePicker dp : new BetterDatePicker[] {start, end}) { // Check for date validity beofre allowing to add events
+		for(BetterDatePicker dp : new BetterDatePicker[] {start, end}) { // Check for date validity before allowing to add events
 			dp.addDateChangeListener((e) -> {
 				btnAdd.setEnabled(start.getDate() != null && end.getDate() != null);
 			});

@@ -77,14 +77,14 @@
 		<dependency>
 			<groupId>com.formdev</groupId>
 			<artifactId>flatlaf-swingx</artifactId>
-			<version>3.1</version>
+			<version>3.1.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.formdev/flatlaf -->
 		<dependency>
     		<groupId>com.formdev</groupId>
     		<artifactId>flatlaf</artifactId>
-    		<version>3.1</version>
+    		<version>3.1.1</version>
 		</dependency>
 		<!-- utilidades varias para manejo de objetos y json -->
 		<dependency>
@@ -100,7 +100,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.14.2</version>
+			<version>2.15.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.lgooddatepicker</groupId>
