@@ -42,6 +42,7 @@ public class GestionarFacturasProfView extends View {
 	private JXComboBox cmbCurso;
 	private JXComboBox cmbProfesor;
 	private JFormattedTextField txtImporte;
+	private JFormattedTextField txtImporteFactura;
 	private JCheckBox chkAll;
 
 	public GestionarFacturasProfView(SwingMain main) {
@@ -63,11 +64,12 @@ public class GestionarFacturasProfView extends View {
 		this.add(formPanel, BorderLayout.EAST);
 
 		NumberFormatter formatter = new NumberFormatter(java.text.NumberFormat.getInstance());
-	    formatter.setValueClass(Integer.class);
-	    formatter.setMinimum(Integer.MIN_VALUE);
-	    formatter.setMaximum(Integer.MAX_VALUE);
+	    formatter.setValueClass(Double.class);
+	    formatter.setMinimum(Double.MIN_VALUE);
+	    formatter.setMaximum(Double.MAX_VALUE);
 	    formatter.setAllowsInvalid(true);
 	    formatter.setCommitsOnValidEdit(true);
+		formatter.setFormat(null); // disable automatic formatting
 
 		JXTitledPanel pagarTitledPanel = new JXTitledPanel("Pagar factura seleccionada");
 		JXTitledPanel registrarTitledPanel = new JXTitledPanel("Registrar nueva factura");
@@ -75,7 +77,7 @@ public class GestionarFacturasProfView extends View {
 		formPanel.add(registrarTitledPanel);
 
 		GridBagConstraints gbc = new GridBagConstraints();
-		Insets spacer = new Insets(10, 10, 10, 10);
+		Insets spacer = new Insets(5, 10, 5, 10);
 		Insets next = new Insets(0, 10, 0, 10);
 
 		JPanel pagarPanel = new JPanel();
@@ -141,7 +143,7 @@ public class GestionarFacturasProfView extends View {
 		gbc.gridy = 4;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weightx = 0.0;
-		registrarPanel.add(JLabelFactory.getLabel(FontType.bold, "Fecha de la factura"), gbc);
+		registrarPanel.add(JLabelFactory.getLabel(FontType.bold, "Fecha"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 5;
@@ -152,6 +154,18 @@ public class GestionarFacturasProfView extends View {
 
 		gbc.insets = spacer;
 		gbc.gridy = 6;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.weightx = 0.0;
+		registrarPanel.add(JLabelFactory.getLabel(FontType.bold, "Importe (€)"), gbc);
+
+		gbc.insets = next;
+		gbc.gridy = 7;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		registrarPanel.add(txtImporteFactura = new JFormattedTextField(formatter), gbc);
+
+		gbc.insets = spacer;
+		gbc.gridy = 8;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weightx = 0.0;
 		registrarPanel.add(btnInsertarFactura = new JButton("Insertar factura"), gbc);

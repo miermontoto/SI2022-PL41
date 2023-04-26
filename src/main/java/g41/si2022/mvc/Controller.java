@@ -120,5 +120,4 @@ public abstract class Controller <V extends View, M extends Model> {
 	 * This function should be called EVERY TIME the tab is loaded shown.
 	 */
 	public abstract void initVolatileData();
-
 }

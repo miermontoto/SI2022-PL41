@@ -17,6 +17,6 @@ public class DocenciaDTO {
 
     @Override
     public String toString() {
-        return this.nombre + " " + this.apellidos;
+        return this.nombre + " " + this.apellidos + " (" + this.remuneracion + "€)";
     }
 }

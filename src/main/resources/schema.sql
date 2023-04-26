@@ -3,19 +3,42 @@
 
 drop table if exists curso;
 drop table if exists inscripcion;
-drop table if exists inscripcioncancelada;
 drop table if exists alumno;
 drop table if exists docente;
 drop table if exists docencia;
 drop table if exists pago;
 drop table if exists factura;
 drop table if exists evento;
+drop table if exists entidad;
+drop table if exists coste;
+drop table if exists colectivo;
+drop table if exists lista_espera;
+
+create table coste (
+	id integer primary key autoincrement,
+	coste float not null,
+	curso_id integer not null,
+    colectivo_id integer not null,
+	foreign key (curso_id) references curso(id),
+    foreign key (colectivo_id) references colectivo(id)
+);
+
+create table colectivo (
+    id integer primary key autoincrement,
+    nombre text not null
+);
+
+create table entidad (
+	id integer primary key autoincrement,
+    nombre text not null,
+    email text,
+    telefono text
+);
 
 create table curso (
     id integer primary key autoincrement,
     nombre text not null,
     descripcion text,
-    coste float not null,
     start_inscr date not null,
     end_inscr date not null,
     plazas integer not null,
@@ -30,17 +53,12 @@ create table inscripcion (
     cancelada boolean not null default false,
     curso_id integer not null,
     alumno_id integer not null,
-    grupo_id integer,
+    coste_id integer not null,
+    entidad_id integer,
+    foreign key (coste_id) references coste(id),
     foreign key (curso_id) references curso(id),
-    foreign key (alumno_id) references alumno(id)
-    foreign key (grupo_id) references grupo(id)
-);
-
-create table grupo (
-	  id integer primary key autoincrement,
-    nombre text not null,
-    email text,
-    telefono text
+    foreign key (alumno_id) references alumno(id),
+    foreign key (entidad_id) references entidad(id)
 );
 
 create table alumno (
@@ -49,6 +67,14 @@ create table alumno (
     apellidos text not null,
     email text not null,
     telefono integer
+);
+
+create table lista_espera (
+	id integer not null primary key autoincrement,
+	inscripcion_id integer not null,
+	fecha_entrada date not null,
+	en_cola boolean not null default true,
+	foreign key (inscripcion_id) references inscripcion(id)
 );
 
 create table docente (
@@ -63,7 +89,7 @@ create table docente (
 
 create table docencia (
     id integer primary key autoincrement,
-    remuneracion integer not null,
+    remuneracion float not null,
     curso_id integer not null,
     docente_id integer not null,
     foreign key (curso_id) references curso(id),

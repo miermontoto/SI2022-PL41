@@ -6,7 +6,7 @@
 
 
 ## Instalación
-1. `Maven > Update Project...` *(solo eclipse)*
+1. `Maven > Update Project...` en Eclipse o `Java Projects > Rebuild all` en VSCode [\[ver imagen\]](docs/vscode_button.png)
 2. Instalar Ruby:
 	- `sudo apt install ruby-full` en Ubuntu
 	- `brew install ruby` en macOS
