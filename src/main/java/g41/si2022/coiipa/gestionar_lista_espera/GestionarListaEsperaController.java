@@ -51,7 +51,7 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 			setJComboIfStudents(false);
 		}
 	}
-	
+
 	public void setJComboIfStudents(boolean status) {
 
 		if(status) {
@@ -95,7 +95,7 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 		clear();
 		updateCombos();
 	}
-	
+
 
 
 	public void clear() { //Función dedicada a poner a valores nulos los controles, o habilitarlos
@@ -103,7 +103,7 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 		this.getView().getNombreApellidosLabel().setText("Seleccionar alumno"); //Quitamos los nombres y apellidos
 		this.getView().getFechaListaLabel().setText("Seleccionar alumno"); //Quitamos la fecha de inscripción
 	}
-	
+
 	public void enable() {
 		getView().getBtnEliminarListaEspera().setEnabled(true); //Encendemos el botón de la lista de espera.
 	}
