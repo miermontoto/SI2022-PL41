@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.Data;
 
 @Setter @Getter @Data
-public class PagoDTO {
+public class PagoDTO implements DTO {
 
 	private String
 		id,

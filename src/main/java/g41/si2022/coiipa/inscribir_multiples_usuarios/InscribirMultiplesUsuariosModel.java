@@ -95,7 +95,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 			return InscribirMultiplesUsuariosModel.this.getDatabase()
 					.executeQueryArray(outputSql+");", (Object[]) outputDatos) // Query all the alumnos IDs. This will return a List<Object[]>
 					.stream() //  Form a stream
-					.collect(new g41.si2022.util.HalfwayListCollector<Object[], String> () {
+					.collect(new g41.si2022.util.collector.HalfwayListCollector<Object[], String> () {
 						// This Collector will go from List<Object[]> to List<String> where String is each alumno's ID
 						@Override
 						public BiConsumer<List<String>, Object[]> accumulator() {
