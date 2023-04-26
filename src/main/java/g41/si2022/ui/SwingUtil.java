@@ -30,7 +30,7 @@ public class SwingUtil {
 	}
 
 	/**
-	 * Ejecuta un metodo en respuesta a un sesion envolviendolo en un manejador de excepciones estandar
+	 * Ejecuta un metodo en respuesta a un sesión envolviendolo en un manejador de excepciones estandar
 	 * que muestra un mensaje informativo o mensaje de error en funcion de la excepcion producida
 	 * (utilizado en el Controlador al instalar los handlers en respuesta a los sesiones de swing)
 	 * NOTA: Si devolviese parametros utilizar Consumer en vez de Runnable: http://www.baeldung.com/java-lambda-exceptions
