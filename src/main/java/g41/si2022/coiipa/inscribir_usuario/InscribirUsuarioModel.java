@@ -26,7 +26,7 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
     	String sql = "SELECT c.nombre FROM colectivo AS c";
     	return this.getDatabase()
             .executeQueryPojo(ColectivoDTO.class, sql)
-            .stream().collect(new g41.si2022.util.HalfwayListCollector<ColectivoDTO, String> () {
+            .stream().collect(new g41.si2022.util.collector.HalfwayListCollector<ColectivoDTO, String> () {
 
                 @Override
                 public BiConsumer<List<String>, ColectivoDTO> accumulator() {

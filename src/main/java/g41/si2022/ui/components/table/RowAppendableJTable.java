@@ -48,18 +48,18 @@ public class RowAppendableJTable extends javax.swing.JTable {
 	 * This Table will allow only the text that matches the Regex {@link Pattern} for that given column.
 	 * 
 	 * @param columnNames Names of the columns
-	 * @param columnMatchers Regex to be applied to each column. If there is no entry, no regex will be checked and any data will be allowed.
+	 * @param treeMap Regex to be applied to each column. If there is no entry, no regex will be checked and any data will be allowed.
 	 * @param mandatoryColumn Array to determine wheter a given column is mandatory or not. Non-mandatory columns will be skipped when adding new rows.
 	 * 
 	 * @see Pattern
 	 */
 	public RowAppendableJTable (
 			String[] columnNames,
-			Map<Integer, Pattern> columnMatchers,
+			Map<Integer, Pattern> treeMap,
 			boolean[] mandatoryColumns) {
 		super();
 		this.columnNames = columnNames;
-		this.columnMatchers = columnMatchers;
+		this.columnMatchers = treeMap;
 		this.mandatoryColumns = mandatoryColumns == null ? this.getFullMandatoryArray(columnNames.length) : mandatoryColumns;
 		// FIXME: Column Names are not displayed
 		//		  (Check g41.si2022.coiipa.inscribir_multiples_usuarios.InscribirMultiplesUsuariosView.java)
@@ -112,13 +112,23 @@ public class RowAppendableJTable extends javax.swing.JTable {
 		this(columnNames, null, null);
 	}
 
+	/*
 	@Override
 	public Object getValueAt(int row, int col) {
 		return super.getValueAt(row, col).equals(this.columnNames[col]) ? this.columnNames[col] : super.getValueAt(row, col);
 	}
+	*/
+	
+	public void setData (javax.swing.table.TableModel theTableModel) {
+		for (int row = 0 ; row < theTableModel.getRowCount() ; row++) {
+			for (int col = 0 ; col < theTableModel.getColumnCount() ; col++) {
+				this.setValueAt(theTableModel.getValueAt(row, col), row, col);
+			}
+		}
+	}
 
 	/**
-	 * Retuns the column names of this table.
+	 * Returns the column names of this table.
 	 * 
 	 * @return Column names of this table
 	 */

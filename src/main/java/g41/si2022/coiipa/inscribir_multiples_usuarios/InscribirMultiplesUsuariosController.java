@@ -119,7 +119,7 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 	 */
 	public List<AlumnoDTO> gatherAllAlumnos () {
 		return this.getView().getTablaInscritos().getData().stream().collect(
-				new g41.si2022.util.HalfwayListCollector<Map<String, String>, AlumnoDTO>() {
+				new g41.si2022.util.collector.HalfwayListCollector<Map<String, String>, AlumnoDTO>() {
 
 					@Override
 					public BiConsumer<List<AlumnoDTO>, Map<String, String>> accumulator() {

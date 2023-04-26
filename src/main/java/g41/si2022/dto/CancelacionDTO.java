@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.Data;
 
 @Setter @Getter @Data
-public class CancelacionDTO {
+public class CancelacionDTO implements DTO {
 
 	private String
 		id,

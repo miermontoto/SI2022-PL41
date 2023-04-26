@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Data;
 
 @Setter @Getter @Data
-public class ColectivoDTO {
+public class ColectivoDTO implements DTO {
 	private String
 		nombre,
 		coste,
