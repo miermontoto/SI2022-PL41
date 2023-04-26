@@ -83,7 +83,7 @@ public class SwingMain {
 	 */
 	public SwingMain() throws IOException {
 		frame = new JFrame();
-		frame.setTitle("Programa de gestión del COIIPA");
+		frame.setTitle("Programa de gestión del COIIPA - Versión 2023");
 		frame.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 		java.awt.Image logo = new ImageIcon(ImageIO.read(new File("src/main/resources/logoBlanco.png"))).getImage();
 		frame.setIconImage(logo);
