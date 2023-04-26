@@ -203,8 +203,8 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				sesionesPanel.add(sp, BorderLayout.CENTER);
 			} { // Botones
 				JPanel btnPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-				btnPanel.add(this.btnAddSesion = new JButton("Añadir sesion"));
-				btnPanel.add(this.btnRemoveSesion = new JButton("Eliminar sesion"));
+				btnPanel.add(this.btnAddSesion = new JButton("Añadir sesión"));
+				btnPanel.add(this.btnRemoveSesion = new JButton("Eliminar sesión"));
 				sesionesPanel.add(btnPanel, BorderLayout.SOUTH);
 				btnAddSesion.setToolTipText("Necesario rango de fechas de curso");
 			}

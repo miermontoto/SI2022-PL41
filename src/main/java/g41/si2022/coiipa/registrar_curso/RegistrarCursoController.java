@@ -72,10 +72,11 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	private void loadColectivos() {
 		this.getView().getTablaCostes().setModel(
 		SwingUtil.getTableModelFromPojos(
-				this.getModel().getColectivos(),
-				new String[]{"nombre", "coste"},
-				new String[]{"Colectivo", "Coste"},
-				null));
+			this.getModel().getColectivos(),
+			new String[]{"nombre", "coste"},
+			new String[]{"Colectivo", "Coste"},
+			null
+		));
 	}
 
 	private void loadEventListeners() {
@@ -96,9 +97,10 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 			if(ed.showDialog()) {
 				sesiones.addAll(ed.getSesiones());
 				table.setModel(SwingUtil.getTableModelFromPojos(sesiones,
-						new String[] {"loc", "fecha", "horaIni", "horaFin"},
-						new String[] {"Localizacion", "Fecha", "Hora de inicio", "Hora de fin"},
-						null));
+					new String[] {"loc", "fecha", "horaIni", "horaFin"},
+					new String[] {"Localizacion", "Fecha", "Hora de inicio", "Hora de fin"},
+					null
+				));
 			}
 		});
 

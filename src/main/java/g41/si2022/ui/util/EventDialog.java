@@ -35,7 +35,7 @@ public class EventDialog extends javax.swing.JDialog {
     private List<SesionDTO> sesiones;
 
     private EventDialog(java.awt.Frame parent, boolean model) {
-        super(parent, "Añadir nuevo sesion", model);
+        super(parent, "Añadir nueva sesión", model);
         FlatLightLaf.setup();
         initComponents();
         this.setVisible(false);

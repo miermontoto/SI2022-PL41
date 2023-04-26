@@ -99,7 +99,7 @@ def obtain_data(ratio)
 
     # Generar sesiones para los cursos
     ## Sin mayor relevancia para casos específicos.
-    ## Se genera como mínimo un sesion por curso.
+    ## Se genera como mínimo un sesión por curso.
     aulas = ['AN-B3', 'AN-B6', 'AN-B1', 'AN-E', 'AN-B', 'AS-1', 'AN-P3', 'DO-1.S.31', 'DO-9', 'AN-S6', 'AN-C']
     sesiones = []
 
