@@ -1,6 +1,7 @@
 package g41.si2022.util.db;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.io.File;
 
 import java.util.Properties;
@@ -18,6 +19,7 @@ public class Database extends DbUtil {
 	private static final String APP_PROPERTIES = "src/main/resources/application.properties";
 	private static final String SQL_SCHEMA = "src/main/resources/schema.sql";
 	private static final String SQL_LOAD = "src/main/resources/data.sql";
+	
 	
 	// Parámetros de la base de datos leidos de application.properties (base de datos local sin usuario/password)
 	private String driver;
