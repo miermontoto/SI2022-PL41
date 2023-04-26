@@ -1,14 +1,12 @@
 package g41.si2022.coiipa.inscribir_usuario;
 
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.stream.Stream;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.time.LocalDate;
-import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import java.util.stream.Stream;
 
 import javax.swing.JLabel;
 import javax.swing.table.TableModel;
@@ -19,8 +17,12 @@ import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.Util;
+import g41.si2022.util.exception.ApplicationException;
 
 public class InscribirUsuarioController extends g41.si2022.mvc.Controller<InscribirUsuarioView, InscribirUsuarioModel> {
+
+	private static final String SIGN_IN = "sign-in";
+	private static final String SIGN_UP = "sign-up";
 
 	private List<CursoDTO> cursos;
 	boolean lleno = false;
@@ -54,21 +56,21 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 		};
 
 		Stream.of(
-				this.getView().getTxtEmailLogin(),
-				this.getView().getTxtEmail(),
-				this.getView().getTxtNombre(),
-				this.getView().getTxtApellidos(),
-				this.getView().getTxtTelefono(),
-				this.getView().getRadioSignin(),
-				this.getView().getRadioSignup()
-				).forEach(x -> x.addKeyListener(ka));
+			getView().getTxtEmailLogin(),
+			getView().getTxtEmail(),
+			getView().getTxtNombre(),
+			getView().getTxtApellidos(),
+			getView().getTxtTelefono(),
+			getView().getRadioSignin(),
+			getView().getRadioSignup()
+		).forEach(x -> x.addKeyListener(ka));
 
 		Stream.of(
-				this.getView().getRadioSignin(),
-				this.getView().getRadioSignup()
-				).forEach(x -> x.addActionListener(e -> SwingUtil.exceptionWrapper( () -> manageForm())));
+			getView().getRadioSignin(),
+			getView().getRadioSignup()
+		).forEach(x -> x.addActionListener(e -> SwingUtil.exceptionWrapper(this::manageForm)));
 
-		this.getView().getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> handleInscripcion()));
+		getView().getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(this::handleInscripcion));
 	}
 
 	/**
@@ -83,19 +85,23 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 
 		String email = "";
 		AlumnoDTO alumno;
-		switch (this.getView().getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
-		case "sign-in":
-			email = this.getView().getTxtEmailLogin().getText();
-			break;
-		case "sign-up":
-			email = this.getView().getTxtEmail().getText();
-			getModel().insertAlumno(
+		switch (getView().getRadioSignin().isSelected() ? SIGN_IN : SIGN_UP) {
+			case SIGN_IN:
+				email = this.getView().getTxtEmailLogin().getText();
+				break;
+
+			case SIGN_UP:
+				email = this.getView().getTxtEmail().getText();
+				getModel().insertAlumno(
 					getView().getTxtNombre().getText(),
 					getView().getTxtApellidos().getText(),
 					getView().getTxtEmail().getText(),
 					getView().getTxtTelefono().getText()
-					);
-			break;
+				);
+				break;
+
+			default:
+				throw new ApplicationException("Invalid radio button state");
 		}
 
 		alumno = getModel().getAlumnoFromEmail(email);
@@ -104,63 +110,63 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 			Dialog.showError("Ya está inscrito en este curso");
 			return;
 		}
-		
-		this.getModel().insertInscripcion(getView().getMain().getToday().toString(),
-				cursoId, alumno.getId(), ((ColectivoDTO) getView().getCbColectivo().getSelectedItem()).getId());
-		
-		if(lleno) {
 
+		getModel().insertInscripcion(getView().getMain().getToday().toString(),
+			cursoId, alumno.getId(), ((ColectivoDTO) getView().getCbColectivo().getSelectedItem()).getId());
+
+		if(lleno) {
 			String idInscripcion = this.getModel().getIdInscripcionFromCursoAlumno(alumno.getId(), cursoId).getId();
-			this.getModel().insertListaEspera(idInscripcion, getView().getMain().getToday().toString());
+			getModel().insertListaEspera(idInscripcion, getView().getMain().getToday().toString());
 			getListaCursos();
 			Dialog.show("Inscripción en la lista de espera realizada con éxito");
-		}
-		else {
-			
+		} else {
 			getListaCursos();
 			Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.");
-
 			Dialog.show("Inscripción realizada con éxito");
 		}
 	}
 
 	public void manageForm() {
-		this.getView().getBtnInscribir().setEnabled(false);
+		getView().getBtnInscribir().setEnabled(false);
 		if (cursoId == null) return;
 		String signinEmail = this.getView().getTxtEmailLogin().getText();
 		String signupEmail = this.getView().getTxtEmail().getText();
 
 		if(signinEmail.isEmpty() && signupEmail.isEmpty()) return;
 
-		this.getView().getLblSignin().setForeground(Color.RED);
-		this.getView().getLblSignup().setForeground(Color.RED);
+		getView().getLblSignin().setForeground(Color.RED);
+		getView().getLblSignup().setForeground(Color.RED);
 
 		boolean validEmail = false;
 		JLabel target = null;
 		String errorMsg = "";
-		switch(this.getView().getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
-		case "sign-in":
-			target = this.getView().getLblSignin();
-			if (!Util.verifyEmailStructure(signinEmail)) { // Check basic structure
-				target.setText("");
+		switch(getView().getRadioSignin().isSelected() ? SIGN_IN : SIGN_UP) {
+			case SIGN_IN:
+				target = this.getView().getLblSignin();
+				if (!Util.verifyEmailStructure(signinEmail)) { // Check basic structure
+					target.setText("");
+					break;
+				}
+				validEmail = getModel().verifyEmail(signinEmail); // Check if email exists in database
+				errorMsg = "Email desconocido";
 				break;
-			}
-			validEmail = this.getModel().verifyEmail(signinEmail); // Check if email exists in database
-			errorMsg = "Email desconocido";
-			break;
 
-		case "sign-up":
-			target = this.getView().getLblSignup();
-			if (!Util.verifyEmailStructure(signupEmail)) {
-				this.getView().getLblSignup().setText("");
+			case SIGN_UP:
+				target = getView().getLblSignup();
+				if (!Util.verifyEmailStructure(signupEmail)) {
+					getView().getLblSignup().setText("");
+					break;
+				}
+				validEmail = !getModel().verifyEmail(signupEmail); // Check if email doesn't already exist in db
+				errorMsg = "El email ya está registrado";
 				break;
-			}
-			validEmail = !this.getModel().verifyEmail(signupEmail); // Check if email doesn't already exist in db
-			errorMsg = "El email ya está registrado";
-			break;
+
+			default:
+				throw new ApplicationException("Invalid radio button state");
 		}
+
 		target.setText(validEmail ? "" : errorMsg);
-		this.getView().getBtnInscribir().setEnabled(validEmail);
+		getView().getBtnInscribir().setEnabled(validEmail);
 	}
 
 	public void updateCursoValue() {
@@ -174,7 +180,8 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 					this.getView().getBtnInscribir().setText("Añadirme a la lista de espera");
 					return;
 				}
-				this.getView().getBtnInscribir().setText("Inscribirme ahora");
+
+				getView().getBtnInscribir().setText("Inscribirme ahora");
 				lleno = false;
 				cursoId = curso.getId();
 				return;
@@ -185,7 +192,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 	public void getListaCursos() {
 		cursos = this.getModel().getListaCursos(this.getView().getMain().getToday().toString());
 		TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas_libres", "start_inscr", "end_inscr" },
-				new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
+			new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
 		this.getView().getTablaCursos().setModel(tableModel);
 		this.loadColectivosComboBox();
 		SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
@@ -194,11 +201,10 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 	 * This method will update the contents of the colectivos ComboBox.
 	 * @param cursos List of cursos ID to be added
 	 */
-	@SuppressWarnings("unchecked")
 	private void loadColectivosComboBox() {
-		javax.swing.JComboBox cb = this.getView().getCbColectivo();
+		javax.swing.JComboBox<ColectivoDTO> cb = this.getView().getCbColectivo();
 		cb.removeAllItems(); // Clear the cb
-		this.getModel().getColectivos().forEach(c -> cb.addItem(c));
+		this.getModel().getColectivos().forEach(cb::addItem);
 	}
 
 }

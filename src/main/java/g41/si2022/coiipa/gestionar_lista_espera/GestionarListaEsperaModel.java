@@ -4,17 +4,16 @@ import java.util.List;
 
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.DocenciaDTO;
-import g41.si2022.dto.FacturaDTO;
 import g41.si2022.dto.ListaEsperaDTO;
 
 public class GestionarListaEsperaModel extends g41.si2022.mvc.Model {
 
 	public List<ListaEsperaDTO> getListaEspera(String cursoID) {
-		String sql = "SELECT le.id, le.fecha_entrada, alu.nombre, alu.apellidos, le.inscripcion_id FROM lista_espera le"
-				+ " INNER JOIN inscripcion insc ON le.inscripcion_id = insc.id "
-				+ " INNER JOIN alumno alu ON insc.alumno_id = alu.id "
-				+ " INNER JOIN curso cu ON insc.curso_id = cu.id "
-				+ " WHERE cu.id = ?";
+		String sql = "SELECT le.id, le.fecha_entrada, alu.nombre, alu.apellidos, le.inscripcion_id FROM lista_espera as le"
+			+ " INNER JOIN inscripcion insc ON le.inscripcion_id = insc.id"
+			+ " INNER JOIN alumno alu ON insc.alumno_id = alu.id"
+			+ " INNER JOIN curso cu ON insc.curso_id = cu.id"
+			+ " WHERE cu.id = ?";
 		return this.getDatabase().executeQueryPojo(ListaEsperaDTO.class, sql, cursoID);
 	}
 
@@ -66,20 +65,20 @@ public class GestionarListaEsperaModel extends g41.si2022.mvc.Model {
 		String sql = "DELETE FROM lista_espera WHERE id = ?";
 		this.getDatabase().executeUpdate(sql, idLista);
 
-	} 
+	}
 
 	public void eliminarInscripcion(String idLista) {
 
 		String sql = "";
-		String inscripcion_id = "";
+		String idInscripcion = "";
 		sql = "SELECT inscripcion_id FROM lista_espera"
 				+ " WHERE id = ?";
 
 		if(this.getDatabase().executeQuerySingle(sql, idLista) != null)
-			inscripcion_id = this.getDatabase().executeQuerySingle(sql, idLista).toString();
+			idInscripcion = this.getDatabase().executeQuerySingle(sql, idLista).toString();
 
 		sql = "DELETE FROM inscripcion WHERE id = ?";
-		this.getDatabase().executeUpdate(sql, inscripcion_id);
+		this.getDatabase().executeUpdate(sql, idInscripcion);
 
 		eliminarListaEspera(idLista);
 

@@ -22,17 +22,15 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
         return this.getDatabase().executeQueryPojo(CursoDTO.class, "select * from curso");
     }
 
-    public List<String> getColectivosFromCursos (List<String> idCursos) {
+    public List<String> getColectivosFromCursos(List<String> idCursos) {
     	String sql = "SELECT c.nombre FROM colectivo AS c";
     	return this.getDatabase()
             .executeQueryPojo(ColectivoDTO.class, sql)
-            .stream().collect(new g41.si2022.util.HalfwayListCollector<ColectivoDTO, String> () {
-
+            .stream().collect(new g41.si2022.util.HalfwayListCollector<ColectivoDTO, String>() {
                 @Override
                 public BiConsumer<List<String>, ColectivoDTO> accumulator() {
                     return (list, data) -> list.add(data.getNombre());
                 }
-
         });
     }
 
@@ -75,17 +73,17 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
     public boolean verifyEmail(String email) {
         return Util.verifyEmailInAlumno(this.getDatabase(), email);
     }
-    
+
     public void insertListaEspera(String inscripcion_id, String fecha_entrada) {
         String sql = "insert into lista_espera (inscripcion_id, fecha_entrada)"
             + " values (?, ?)";
         this.getDatabase().executeUpdate(sql, inscripcion_id, fecha_entrada);
     }
-    
+
     public InscripcionDTO getIdInscripcionFromCursoAlumno(String alumno_id, String curso_id) {
         String sql = "select id"
             + " from inscripcion where alumno_id = ? and curso_id = ?";
         return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, alumno_id, curso_id).get(0);
     }
-   
+
 }
