@@ -7,7 +7,7 @@ import g41.si2022.util.state.StateUtilities;
 import lombok.Data;
 
 @Getter @Setter @Data
-public class FacturaDTO {
+public class FacturaDTO implements DTO {
 
     private String
         id,

@@ -12,7 +12,7 @@ import g41.si2022.util.state.InscripcionState;
 import g41.si2022.util.state.StateUtilities;
 
 @Setter @Getter @Data
-public class CursoDTO {
+public class CursoDTO implements DTO {
 
 	private String
 		nombre,

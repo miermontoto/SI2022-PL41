@@ -10,7 +10,7 @@ import g41.si2022.util.state.StateUtilities;
 import lombok.Data;
 
 @Getter @Setter @Data
-public class InscripcionDTO {
+public class InscripcionDTO implements DTO {
 
     private String
     	id,
