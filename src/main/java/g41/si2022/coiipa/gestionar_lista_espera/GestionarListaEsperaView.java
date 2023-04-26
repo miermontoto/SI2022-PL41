@@ -46,10 +46,11 @@ public class GestionarListaEsperaView extends View {
 	DefaultComboBoxModel<String> cmbCursoModel;
 	private JFormattedTextField txtImporte;
 	private JCheckBox chkAll;
-	
+
 	JLabel nombreApellidosLabel;
 	JLabel fechaListaLabel;
-	
+	JLabel error;
+
 
 	public GestionarListaEsperaView(SwingMain main) {
 		super(main, GestionarListaEsperaModel.class, GestionarListaEsperaView.class, GestionarListaEsperaController.class);
@@ -88,38 +89,39 @@ public class GestionarListaEsperaView extends View {
 		gbc.fill = GridBagConstraints.CENTER;
 		pagarPanel.add(JLabelFactory.getLabel(FontType.bold, "Seleccionar curso: "), gbc);
 
+		gbc.gridy = 2;
+		pagarPanel.add(error = JLabelFactory.getLabel(FontType.bold, "Sin alumnos en lista de espera"), gbc);
+
 		gbc.insets = spacer;
 		gbc.gridy = 2;
 		gbc.fill = GridBagConstraints.CENTER;
 		cmbCursoModel = new DefaultComboBoxModel<>();
 		pagarPanel.add(this.cmbCurso = new JComboBox<String>(cmbCursoModel), gbc);
 
-		gbc.insets = spacer;
-		gbc.gridy = 3;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.anchor = GridBagConstraints.CENTER;
-		pagarPanel.add(btnEliminarListaEspera = new JButton("Eliminar de la lista de espera"), gbc);
-
 		seleccionarCursoPanel.setContentContainer(pagarPanel);
 
 		JPanel datosPanel = new JPanel();
 		datosPanel.setLayout(new GridBagLayout());
-		
+
 		gbc.gridy = 0;
 		datosPanel.add(JLabelFactory.getLabel(FontType.bold, "Nombre del alumno: "), gbc);
 		gbc.gridy = 1;
 		datosPanel.add(nombreApellidosLabel = new JLabel("Seleccionar alumno"), gbc);
-		
-		gbc.insets = spacer;
-		
-		
+
+		gbc.insets = spacer;	
 		gbc.gridy = 2;
 		datosPanel.add(JLabelFactory.getLabel(FontType.bold, "Fecha de entrada en la lista de espera: "), gbc);
+
 		gbc.gridy = 3;
 		datosPanel.add(fechaListaLabel = new JLabel("Seleccionar alumno"), gbc);
 
-		datosInscripcionPanel.setContentContainer(datosPanel);
+		gbc.insets = spacer;
+		gbc.gridy = 4;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.anchor = GridBagConstraints.CENTER;
+		datosPanel.add(btnEliminarListaEspera = new JButton("Eliminar de la lista de espera"), gbc);
 
+		datosInscripcionPanel.setContentContainer(datosPanel);
 
 		tableInscripciones = new JTable();
 		this.add(new JScrollPane(tableInscripciones), BorderLayout.CENTER);

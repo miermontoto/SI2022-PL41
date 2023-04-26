@@ -44,6 +44,23 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 			String curso = evento.toString();
 			cmbCursoModel.addElement(curso);
 			comboCursos.setModel(cmbCursoModel); // Actualizar el modelo de datos del JComboBox
+			setJComboIfStudents(true);
+		}
+		else
+		{
+			setJComboIfStudents(false);
+		}
+	}
+	
+	public void setJComboIfStudents(boolean status) {
+
+		if(status) {
+			this.getView().getError().setVisible(false);
+			this.getView().getCmbCurso().setVisible(true);
+		}
+		else {
+			this.getView().getError().setVisible(true);
+			this.getView().getCmbCurso().setVisible(false);
 		}
 	}
 
@@ -78,6 +95,8 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 		clear();
 		updateCombos();
 	}
+	
+
 
 	public void clear() { //Función dedicada a poner a valores nulos los controles, o habilitarlos
 		getView().getBtnEliminarListaEspera().setEnabled(false); //Apagamos el botón de la lista de espera.
