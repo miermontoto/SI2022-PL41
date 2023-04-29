@@ -1,30 +1,18 @@
 package g41.si2022.coiipa.inscribir_multiples_usuarios;
 
-import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.stream.Stream;
 
-import javax.swing.JLabel;
 import javax.swing.table.TableModel;
 
 import g41.si2022.dto.AlumnoDTO;
+import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CursoDTO;
-import g41.si2022.dto.GrupoDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
-import g41.si2022.util.Util;
-import g41.si2022.util.exception.ApplicationException;
 
 public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Controller<InscribirMultiplesUsuariosView, InscribirMultiplesUsuariosModel> {
-
-	private static final String SIGN_IN = "sign-in";
-	private static final String SIGN_UP = "sign-up";
 
 	private List<CursoDTO> cursos;
 	private String cursoId;
@@ -37,77 +25,40 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 	@Override
 	public void initVolatileData() {
 		this.getListaCursos();
+		this.loadColectivosListeners();
 	}
 
 	@Override
 	public void initNonVolatileData() {
-		this.getView().getTablaCursos().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent ent) {
-				SwingUtil.exceptionWrapper(() -> updateCursoValue());
-				SwingUtil.exceptionWrapper(() -> manageForm());
-			}
-		});
-
-		KeyAdapter ka = new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent evt) {
-				SwingUtil.exceptionWrapper(() -> manageForm());
-			}
-		};
-
-		Stream.of(
-				this.getView().getTxtEmailLogin(),
-				this.getView().getTxtEmail(),
-				this.getView().getTxtNombre(),
-				this.getView().getTxtTelefono(),
-				this.getView().getRadioSignin(),
-				this.getView().getRadioSignup()
-				).forEach(x -> x.addKeyListener(ka));
-
-		Stream.of(
-				this.getView().getRadioSignin(),
-				this.getView().getRadioSignup()
-				).forEach(x -> x.addActionListener(e -> SwingUtil.exceptionWrapper( () -> manageForm())));
-
-		this.getView().getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageMain()));
+		this.getView().getBtnInscribir().addActionListener(e -> this.insertInscripciones());
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public void loadColectivosListeners () {
+		g41.si2022.ui.components.table.editors.JComboBoxEditor<String> cellEditor = 
+			((g41.si2022.ui.components.table.editors.JComboBoxEditor<String>) InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnModel().getColumn(4).getCellEditor());
+		this.getView().getTablaInscritos().addRowAppendedListener(e -> { 
+			InscribirMultiplesUsuariosController.this.getView().getComboBoxEditors().add(cellEditor);
+			cellEditor.setData(InscribirMultiplesUsuariosController.this.getModel().getListaColectivos()
+				.stream().collect(new g41.si2022.util.collector.HalfwayListCollector<ColectivoDTO, String> () {
+					@Override
+					public BiConsumer<List<String>, ColectivoDTO> accumulator() {
+						return (lista, item) -> lista.add(item.getNombre());
+					}
+				}));
+		});
+	}
+	
 	/**
-	 * This method handles the inserting of the group, alumnos and inscripciones.
+	 * insertInscripciones. Inserts all the inscripciones that are listed in the table.<br>
+	 * This will also add as many alumnos as needed in the database 
 	 */
-	public void manageMain() {
-		if (cursoId == null) return;
-
-		String email = "";
-		GrupoDTO grupo;
-		switch (this.getView().getRadioSignin().isSelected() ? SIGN_IN : SIGN_UP) {
-			case SIGN_IN:
-				email = getView().getTxtEmailLogin().getText();
-				break;
-			case SIGN_UP:
-				email = getView().getTxtEmail().getText();
-				getModel().insertGrupo(
-					getView().getTxtNombre().getText(),
-					email,
-					getView().getTxtTelefono().getText()
-				);
-				break;
-			default:
-				throw new ApplicationException("Invalid radio button value");
-		}
-
-		grupo = getModel().getGrupoFromEmail(email).get(0);
-
-		getModel().insertInscripciones(
-			getView().getMain().getToday().toString(), cursoId,
-			getModel().insertAlumnos(gatherAllAlumnos()),
-			grupo.getId()
+	private void insertInscripciones () {
+		this.getModel().insertInscripciones(
+			this.gatherAllAlumnos(),
+			this.getView().getMain().getToday().toString(),
+			cursoId
 		);
-
-		getListaCursos();
-		Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.");
-		Dialog.show("Inscripción realizada con éxito");
 	}
 
 	/**
@@ -136,46 +87,6 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 					}
 
 				});
-	}
-
-	public void manageForm() {
-		this.getView().getBtnInscribir().setEnabled(false);
-		if (cursoId == null) return;
-		String signinEmail = getView().getTxtEmailLogin().getText();
-		String signupEmail = getView().getTxtEmail().getText();
-
-		if(signinEmail.isEmpty() && signupEmail.isEmpty()) return;
-
-		getView().getLblSignin().setForeground(Color.RED);
-		getView().getLblSignup().setForeground(Color.RED);
-
-		boolean validEmail = false;
-		JLabel target = null;
-		String errorMsg = "";
-		switch(this.getView().getRadioSignin().isSelected() ? SIGN_IN : SIGN_UP) {
-			case SIGN_IN:
-				target = this.getView().getLblSignin();
-				if (!Util.verifyEmailStructure(signinEmail)) { // Check basic structure
-					target.setText("");
-					break;
-				}
-				validEmail = this.getModel().verifyEmail(signinEmail); // Check if email exists in database
-				errorMsg = "Email desconocido";
-				break;
-			case SIGN_UP:
-				target = this.getView().getLblSignup();
-				if (!Util.verifyEmailStructure(signupEmail)) {
-					this.getView().getLblSignup().setText("");
-					break;
-				}
-				validEmail = !this.getModel().verifyEmail(signupEmail); // Check if email doesn't already exist in db
-				errorMsg = "El email ya está registrado";
-				break;
-			default:
-				throw new ApplicationException("Invalid radio button value");
-		}
-		target.setText(validEmail ? "" : errorMsg);
-		this.getView().getBtnInscribir().setEnabled(validEmail);
 	}
 
 	public void updateCursoValue() {
