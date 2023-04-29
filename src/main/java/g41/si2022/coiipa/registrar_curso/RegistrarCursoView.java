@@ -6,9 +6,11 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -41,6 +43,8 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 	private JButton btnRemoveEvento;
 	private JButton btnRegistrar;
 	private JComponent[] focusableComponents;
+	private JRadioButton rbtn1;
+	private JRadioButton rbtn2;
 
 	public void setNombreCurso(String nombreCurso) { this.txtNombre.setText(nombreCurso); }
 	public void setObjetivosDescripcion(String objetivosDescripcion) { this.txtDescripcion.setText(objetivosDescripcion); }
@@ -204,6 +208,17 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				btnPanel.add(this.btnRemoveEvento = new JButton("Eliminar evento"));
 				eventosPanel.add(btnPanel, BorderLayout.SOUTH);
 				btnAddEvento.setToolTipText("Necesario rango de fechas de curso");
+			} { // Radio buttons
+				left.gridy = 7;
+				right.gridy = 7;
+				right.gridx = 2;
+				rbtn1 = new JRadioButton("Profesor/es");
+				rbtn2 = new JRadioButton("Empresa");
+				ButtonGroup btGroup = new ButtonGroup();
+				btGroup.add(rbtn1);
+				btGroup.add(rbtn2);
+				centerPanel.add(rbtn1, left);
+				centerPanel.add(rbtn2, right);
 			}
 		}
 
@@ -223,7 +238,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 		rightBottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar empresa"), BorderLayout.NORTH);
 		JScrollPane sp2 = new JScrollPane();
 		sp2.getVerticalScrollBar().setUnitIncrement(20);
-		sp2.setPreferredSize(new java.awt.Dimension(485, 150));
+		sp2.setPreferredSize(new java.awt.Dimension(500, 150));
 
 		this.tableProfesores = new JTable();
 		this.tableProfesores.setName("Profesor:");

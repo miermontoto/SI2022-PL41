@@ -9,6 +9,7 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.awt.event.KeyAdapter;
 
 import javax.swing.JComponent;
+import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
@@ -128,8 +130,28 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 			}
 		});
 
+		Stream.of(
+				this.getView().getRbtn1(),
+				this.getView().getRbtn2()
+				).forEach(x -> x.addActionListener(e -> SwingUtil.exceptionWrapper( () -> manageForm())));
+
 		btnAdd.setEnabled(false);
 		btnRemove.setEnabled(false);
+	}
+
+	public void manageForm() {
+		if (this.getView().getRbtn1().isSelected()) {
+			this.getView().getTableProfesores().setEnabled(true);
+			this.getView().getTableEntidades().setEnabled(false);
+			this.getView().getTableEntidades().clearSelection();
+			return;
+		} 
+
+		if (this.getView().getRbtn2().isSelected()) {
+			this.getView().getTableProfesores().setEnabled(false);
+			this.getView().getTableEntidades().setEnabled(true);
+			this.getView().getTableProfesores().clearSelection();
+		}
 	}
 
 	private void loadValidateListeners() {
@@ -173,7 +195,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		// valid &= this.getView().getTablaCostes().getValueAt(0, 1) != this.getView().getTablaCostes().getColumnNames()[1];
 		valid &= !eventos.isEmpty();
 		getView().getBtnRegistrar().setEnabled(valid);
-	}
+	}	
 
 	private void loadTextAreaListeners() {
 		KeyAdapter ka = new KeyAdapter () {
@@ -284,8 +306,8 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 		TableModel tableModel = SwingUtil.getTableModelFromPojos(
 			entidadesList, 
-			new String[] {"nombre", "telefono", "remuneracion"}, 
-			new String[] {"Nombre", "Teléfono", "Remuneración"},
+			new String[] {"nombre", "telefono", "importe"}, 
+			new String[] {"Nombre", "Teléfono", "Importe a pagar"},
 			new HashMap<Integer, Pattern> () {
 				private static final long serialVersionUID = 1L;
 				{ put(5, Pattern.compile("\\d+(\\.\\d+)?")); }

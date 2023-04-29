@@ -9,7 +9,7 @@ public class EntidadDTO implements DTO {
     private String nombre;
     private String email;
     private String telefono;
-    private String remuneracion;
+    private String importe;
 
     @Override
 	public String toString() { 
