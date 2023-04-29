@@ -33,8 +33,6 @@ public class GestionarListaEsperaModel extends g41.si2022.mvc.Model {
 	}
 
 	public List<CursoDTO> getListaCursosConEspera(String today) {
-		//REVISAR SQL
-		//INNER JOIN lista_espera li  ON li.inscripcion_id
 		String sql = "select DISTINCT(c.nombre) from curso c "
 				+ "INNER JOIN inscripcion insc on insc.curso_id = c.id "
 				+ "INNER JOIN lista_espera li  ON li.inscripcion_id = insc.id "

@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
@@ -55,8 +56,8 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 		JPanel centerPanel = new JPanel();
 		centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(10);
 		scrollPane.setViewportView(centerPanel);
 		this.add(scrollPane, BorderLayout.CENTER);
@@ -94,7 +95,6 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				txtDescripcion = new JTextArea();
 				txtDescripcion.setLineWrap(true);
 				txtDescripcion.setRows(5);
-				//txtDescripcion.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 				centerPanel.add(this.txtDescripcion, right);
 			}
 		} { // Plazas
@@ -113,15 +113,17 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 			} { // Input
 				right.gridy = 3;
 				right.fill = GridBagConstraints.BOTH;
-				centerPanel.add(this.tablaCostes = new g41.si2022.ui.components.table.RowAppendableJTable (
+				centerPanel.add(this.tablaCostes = new g41.si2022.ui.components.table.RowAppendableJTable(
 						new String[] {"Nombre Colectivo", "Coste"},
-						new java.util.TreeMap<Integer, java.util.regex.Pattern> () {
+						new java.util.TreeMap<Integer, java.util.regex.Pattern>() {
 							private static final long serialVersionUID = 1L;
 							{
-								put(1, java.util.regex.Pattern.compile("[0-9]*"));
-							}},
+								put(1, java.util.regex.Pattern.compile("\\d*"));
+							}
+						},
 						new boolean[] {true, true}
-						), right);
+					), right
+				);
 			}
 		} { // Inscripcion
 			{ // Label

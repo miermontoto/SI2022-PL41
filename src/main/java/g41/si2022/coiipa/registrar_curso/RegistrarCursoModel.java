@@ -16,12 +16,12 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		String sql = "SELECT * FROM docente ORDER BY nombre";
 		return this.getDatabase().executeQueryPojo(ProfesorDTO.class, sql);
 	}
-	
+
 	/**
 	 * insertColectivos. This method inserts the missing colectivos that are not already in the database.
-	 * 
+	 *
 	 * It will return a Map of the colectivos that were inserted.
-	 * 
+	 *
 	 * @param colectivosInTable List of colectivos to be added. This is a list of colectivo Names
 	 * @return List of colectivos that were actually added.
 	 */
@@ -30,37 +30,37 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 				.collect(Collectors.toMap(e -> e.getNombre(), e -> e));
 
 		List<String> missingColectivosInDatabase = colectivosInTable.stream()
-			.filter((nombreColectivo) -> !existingColectivos.keySet().contains(nombreColectivo))
+			.filter(nombreColectivo -> !existingColectivos.keySet().contains(nombreColectivo))
 			.collect(Collectors.toList());
 
 		String sql;
-		if (missingColectivosInDatabase.size() > 0) {
+		if (!missingColectivosInDatabase.isEmpty()) {
 			sql = "INSERT INTO colectivo (nombre) VALUES (?)";
 			for (int i = 0 ; i < missingColectivosInDatabase.size() - 1 ; i++) {
 				sql += ", (?)";
 			}
 			this.getDatabase().executeUpdate(sql+";", missingColectivosInDatabase.toArray());
 		}
-		
+
 		sql = "SELECT * FROM colectivo WHERE colectivo.nombre IN (?";
 		for (int i = 0 ; i < colectivosInTable.size() - 1 ; i++) {
 			sql += ", ?";
 		}
 		sql += ")";
-		
+
 		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, sql, colectivosInTable.toArray())
 				.stream().collect(Collectors.toMap(e -> e.getNombre(), e -> e));
 	}
-	
+
 	/**
 	 * insertCostes. This method will insert the colectivo/costes according to the View's table.<br>
-	 * If a given colectivo is not featured in the database, it will be added automatically. 
-	 * 
+	 * If a given colectivo is not featured in the database, it will be added automatically.
+	 *
 	 * @param costes Map of Colectivo Name, Colectivo cost for the curso.
 	 * @param idCurso Id of the curso.
 	 */
 	public void insertCostes (Map<String, Double> costes, String idCurso) {
-		Map<String, ColectivoDTO> colectivos = this.insertColectivos(costes.keySet().stream().collect(Collectors.toList()));
+		Map<String, ColectivoDTO> colectivos = insertColectivos(costes.keySet().stream().collect(Collectors.toList()));
 		java.util.Iterator<Map.Entry<String, Double>> itr = costes.entrySet().stream()
 			.collect(Collectors.toMap(
 				row -> colectivos.get(row.getKey()).getId(),
@@ -69,7 +69,7 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 			.entrySet().iterator();
 		Map.Entry<String, Double> current = itr.next();
 		String sql = "INSERT INTO coste (colectivo_id, coste, curso_id) VALUES (?, ?, ?)";
-		java.util.List<String> data = new java.util.ArrayList<String> ();
+		java.util.List<String> data = new java.util.ArrayList<> ();
 		data.add(current.getKey());
 		data.add(current.getValue().toString());
 		data.add(idCurso);
@@ -125,28 +125,28 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 
 	/**
 	 * insertDocencia. Inserts the docencia data for a curso.
-	 * 
+	 *
 	 * @param docentes List of docentes that take part in the curso.
-	 * @param curso_id ID of the curso that they are taking part in.
+	 * @param idCurso ID of the curso that they are taking part in.
 	 */
-	public void insertDocencia(List<ProfesorDTO> docentes, String curso_id) {
+	public void insertDocencia(List<ProfesorDTO> docentes, String idCurso) {
 		this.getDatabase().insertBulk(
-				"docencia", 
-				new String[] { "remuneracion", "docente_id", "curso_id" }, 
-				docentes, 
+				"docencia",
+				new String[] { "remuneracion", "docente_id", "curso_id" },
+				docentes,
 				new java.util.ArrayList<Function<DTO, Object>> () {
 					private static final long serialVersionUID = 1L;
 					{
 						add(e -> ((ProfesorDTO) e).getRemuneracion());
 						add(e -> ((ProfesorDTO) e).getId());
-						add(e -> curso_id);
+						add(e -> idCurso);
 					}
 				});
 	}
-	
+
 	/**
 	 * insertEvento. Inserts the eventos data for a curso.
-	 * 
+	 *
 	 * @param eventos List of eventos that compose the curso.
 	 * @param cursoId ID of the curso that the eventos are part of.
 	 */

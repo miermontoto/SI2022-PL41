@@ -64,7 +64,7 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 		return (String) this.getDatabase().executeQuerySingle(sql, idAlumno);
 	}
 
-	public void cancelarInscripcion(String idInscripcion, long days) {
+	public void cancelarInscripcion(String idInscripcion) {
 		String sql = "UPDATE inscripcion SET cancelada = TRUE WHERE id = ?";
 		this.getDatabase().executeUpdate(sql, idInscripcion);
 	}

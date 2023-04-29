@@ -1,33 +1,25 @@
 package g41.si2022.coiipa.registrar_curso;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.regex.Pattern;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import java.awt.event.KeyAdapter;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 
-import g41.si2022.dto.SesionDTO;
 import g41.si2022.dto.ProfesorDTO;
+import g41.si2022.dto.SesionDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.util.Dialog;
@@ -40,8 +32,8 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	private LinkedList<SesionDTO> sesiones;
 
 
-	private final java.util.function.Supplier <List<ProfesorDTO>> sup = () -> {
-		java.util.ArrayList<ProfesorDTO> out = new java.util.ArrayList<ProfesorDTO> ();
+	private final java.util.function.Supplier<List<ProfesorDTO>> sup = () -> {
+		ArrayList<ProfesorDTO> out = new ArrayList<> ();
 		out.addAll(RegistrarCursoController.this.profesoresMap.values());
 		return out;
 	};
@@ -54,41 +46,42 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 	@Override
 	public void initVolatileData() {
-		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
+		SwingUtil.exceptionWrapper(this::getListaProfesores);
 	}
 
 	@Override
 	public void initNonVolatileData() {
 		// Load the insert curso listener
-		getView().getBtnRegistrar().addActionListener((e) -> SwingUtil.exceptionWrapper(() -> insertCurso()));
+		getView().getBtnRegistrar().addActionListener(e -> SwingUtil.exceptionWrapper(this::insertCurso));
 		loadDateListeners();
 		loadTextAreaListeners();
 		loadValidateListeners();
 		loadEventListeners();
-		// loadColectivos();
 		getView().getBtnRegistrar().setEnabled(false);
 	}
 
 	private void loadColectivos() {
-		((g41.si2022.ui.components.table.RowAppendableJTable) this.getView().getTablaCostes()).setData(
+		((g41.si2022.ui.components.table.RowAppendableJTable) getView().getTablaCostes()).setData(
 			SwingUtil.getTableModelFromPojos(
 				this.getModel().getColectivos(),
 				new String[]{"nombre", "coste"},
 				new String[]{"Colectivo", "Coste"},
-				null));
+				null
+			)
+		);
 	}
 
 	private void loadEventListeners() {
 		javax.swing.JButton
-		btnAdd = getView().getBtnAddSesion(),
-		btnRemove = getView().getBtnRemoveSesion();
+			btnAdd = getView().getBtnAddSesion(),
+			btnRemove = getView().getBtnRemoveSesion();
 		BetterDatePicker
-		start = getView().getDateCursoStart(),
-		end = getView().getDateCursoEnd();
+			start = getView().getDateCursoStart(),
+			end = getView().getDateCursoEnd();
 
 		JTable table = getView().getTableSesiones();
 
-		btnAdd.addActionListener( (e) -> { // Add new event listener
+		btnAdd.addActionListener(e -> { // Add new event listener
 			EventDialog ed;
 			if(sesiones.isEmpty()) ed = new EventDialog(start.getDate(), end.getDate());
 			else ed = new EventDialog(start.getDate(), end.getDate(), sesiones.getLast());
@@ -103,7 +96,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 			}
 		});
 
-		btnRemove.addActionListener( (e) -> {
+		btnRemove.addActionListener(e -> {
 			int[] rows = table.getSelectedRows();
 			for(int i = 0; i < rows.length; i++) {
 				sesiones.remove(rows[i]);
@@ -114,9 +107,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		});
 
 		for(BetterDatePicker dp : new BetterDatePicker[] {start, end}) { // Check for date validity before allowing to add events
-			dp.addDateChangeListener((e) -> {
-				btnAdd.setEnabled(start.getDate() != null && end.getDate() != null);
-			});
+			dp.addDateChangeListener(e -> btnAdd.setEnabled(start.getDate() != null && end.getDate() != null));
 		}
 
 		table.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -133,7 +124,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	private void loadValidateListeners() {
 		for(JComponent c : getView().getFocusableComponents()) {
 			if(c instanceof BetterDatePicker) {
-				((BetterDatePicker) c).addDateChangeListener((e) -> checkValidity());
+				((BetterDatePicker) c).addDateChangeListener(e -> checkValidity());
 			} else if (c instanceof JTextField) {
 				((JTextField) c).addKeyListener(new KeyAdapter() {
 					@Override
@@ -167,8 +158,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				}
 			}
 		}
-		// valid &= this.getView().getTablaCostes().getValueAt(0, 0) != this.getView().getTablaCostes().getColumnNames()[0];
-		// valid &= this.getView().getTablaCostes().getValueAt(0, 1) != this.getView().getTablaCostes().getColumnNames()[1];
+
 		valid &= !sesiones.isEmpty();
 		getView().getBtnRegistrar().setEnabled(valid);
 	}
@@ -189,16 +179,11 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	}
 
 	private void loadTableListeners() {
-		this.getView().getTableProfesores().getModel().addTableModelListener(new TableModelListener() {
-
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				JTable tabla = RegistrarCursoController.this.getView().getTableProfesores();
-				RegistrarCursoController.this.profesoresMap
-				.get(tabla.getValueAt(e.getFirstRow(), 0).toString())
-				.setRemuneracion(tabla.getValueAt(e.getFirstRow(), e.getColumn()).toString());
-			}
-
+		this.getView().getTableProfesores().getModel().addTableModelListener(e -> {
+			JTable tabla = RegistrarCursoController.this.getView().getTableProfesores();
+			RegistrarCursoController.this.profesoresMap
+			.get(tabla.getValueAt(e.getFirstRow(), 0).toString())
+			.setRemuneracion(tabla.getValueAt(e.getFirstRow(), e.getColumn()).toString());
 		});
 	}
 
@@ -209,7 +194,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		cursoIni = getView().getDateCursoStart(),
 		cursoFin = getView().getDateCursoEnd();
 
-		DateChangeListener inscripcionListener = (e) -> {
+		DateChangeListener inscripcionListener = e -> {
 			if(inscripcionIni.getDate() != null && inscripcionIni.compareTo(getView().getMain().getTodayPicker()) <= 0
 					&& e.getSource() == inscripcionIni) {
 				Dialog.showWarning("La fecha de inicio de inscripción es anterior a la fecha actual.");
@@ -233,7 +218,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				Dialog.showWarning("Las fechas de curso y de inscripción se solapan.");
 		};
 
-		DateChangeListener cursoListener = (e) -> {
+		DateChangeListener cursoListener = e -> {
 			if (cursoIni.getDate() != null) {
 				if (cursoIni.compareTo(getView().getMain().getTodayPicker()) <= 0) {
 					Dialog.showError("La fecha de inicio de curso es anterior a la fecha actual.");
@@ -261,25 +246,25 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	}
 
 	public void getListaProfesores() {
-		getModel().getListaProfesores().stream().forEach((x) -> profesoresMap.put(x.getDni(), x));
+		getModel().getListaProfesores().stream().forEach(x -> profesoresMap.put(x.getDni(), x));
 		getView().getTableProfesores().setModel(
-				SwingUtil.getTableModelFromPojos(
-						this.sup.get(),
-						new String[] { "dni", "nombre", "apellidos", "email", "direccion", "remuneracion" },
-						new String[] { "DNI", "Nombre", "Apellidos", "Email", "Dirección", "Remuneración" },
-						new HashMap<Integer, Pattern> () {
-							private static final long serialVersionUID = 1L;
-							{ put(5, Pattern.compile("\\d+(\\.\\d+)?")); }
-						}
-						)
-				);
+			SwingUtil.getTableModelFromPojos(
+				this.sup.get(),
+				new String[] { "dni", "nombre", "apellidos", "email", "direccion", "remuneracion" },
+				new String[] { "DNI", "Nombre", "Apellidos", "Email", "Dirección", "Remuneración" },
+				new HashMap<Integer, Pattern> () {
+					private static final long serialVersionUID = 1L;
+					{ put(5, Pattern.compile("\\d+(\\.\\d+)?")); }
+				}
+			)
+		);
 		SwingUtil.autoAdjustColumns(this.getView().getTableProfesores());
 		loadTableListeners();
 	}
-	
+
 	public void insertCurso() {
 		List<ProfesorDTO> docentes = this.getDocentes();
-		if (docentes.size() == 0) throw new UnexpectedException("No se ha seleccionado remuneración para ningún docente.");
+		if (docentes.isEmpty()) throw new UnexpectedException("No se ha seleccionado remuneración para ningún docente.");
 
 		String idCurso = this.getModel().insertCurso(
 				getView().getTxtNombre().getText(),
@@ -292,10 +277,11 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				g41.si2022.util.Util.getData(getView().getTablaCostes()).parallelStream().collect(
 					java.util.stream.Collectors.toMap(
 						row -> row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
-						row -> Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1))))
-					));
-		this.getModel().insertDocencia(docentes, idCurso);
-		this.getModel().insertEvento(sesiones, idCurso);
+						row -> Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1)))
+					)
+				));
+		getModel().insertDocencia(docentes, idCurso);
+		getModel().insertEvento(sesiones, idCurso);
 
 		Dialog.show("Curso registrado con éxito.");
 	}
@@ -303,7 +289,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	/**
 	 * getDocentes. Returns the list of docentes that are taking part in this curso.
 	 * This method will automatically filter out the docentes that do not take part.
-	 * 
+	 *
 	 * @return Docentes that do take part in the curso.
 	 */
 	private List<ProfesorDTO> getDocentes() {
