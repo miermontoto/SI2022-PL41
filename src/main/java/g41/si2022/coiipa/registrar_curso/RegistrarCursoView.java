@@ -216,14 +216,14 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 		leftBottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar profesor"), BorderLayout.NORTH);
 		JScrollPane sp1 = new JScrollPane();
 		sp1.getVerticalScrollBar().setUnitIncrement(20);
-		sp1.setPreferredSize(new java.awt.Dimension(675, 150));
+		sp1.setPreferredSize(new java.awt.Dimension(725, 150));
 
 		JPanel rightBottomPane = new JPanel();
 		rightBottomPane.setLayout(new BorderLayout());
-		rightBottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar entidad"), BorderLayout.NORTH);
+		rightBottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar empresa"), BorderLayout.NORTH);
 		JScrollPane sp2 = new JScrollPane();
 		sp2.getVerticalScrollBar().setUnitIncrement(20);
-		sp2.setPreferredSize(new java.awt.Dimension(600, 150));
+		sp2.setPreferredSize(new java.awt.Dimension(485, 150));
 
 		this.tableProfesores = new JTable();
 		this.tableProfesores.setName("Profesor:");

@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 
+import g41.si2022.dto.EntidadDTO;
 import g41.si2022.dto.EventoDTO;
 import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
@@ -38,6 +39,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 	private Map<String, ProfesorDTO> profesoresMap;
 	private LinkedList<EventoDTO> eventos;
+	private List<EntidadDTO> entidadesList;
 
 
 	private final java.util.function.Supplier <List<ProfesorDTO>> sup = () -> {
@@ -55,6 +57,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	@Override
 	public void initVolatileData() {
 		SwingUtil.exceptionWrapper(() -> getListaProfesores()); // Load the profesores list
+		SwingUtil.exceptionWrapper(this::getListaEntidades);  // Load entidades List
 	}
 
 	@Override
@@ -151,7 +154,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 	private void checkValidity() {
 		boolean valid = true;
-		for(JComponent jc : getView().getFocusableComponents()) {
+		for (JComponent jc : getView().getFocusableComponents()) {
 			if (jc instanceof JTextField) {
 				JTextField tf = (JTextField) jc;
 				if (tf.getText().isEmpty()) {
@@ -264,8 +267,8 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		getView().getTableProfesores().setModel(
 				SwingUtil.getTableModelFromPojos(
 						this.sup.get(),
-						new String[] { "dni", "nombre", "apellidos", "email", "direccion", "remuneracion" },
-						new String[] { "DNI", "Nombre", "Apellidos", "Email", "Dirección", "Remuneración" },
+						new String[] { "dni", "nombre", "apellidos", "email", "remuneracion" },
+						new String[] { "DNI", "Nombre", "Apellidos", "Email", "Remuneración" },
 						new HashMap<Integer, Pattern> () {
 							private static final long serialVersionUID = 1L;
 							{ put(5, Pattern.compile("\\d+(\\.\\d+)?")); }
@@ -277,7 +280,21 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	}
 
 	public void getListaEntidades() {
-		
+		entidadesList = getModel().getListaEntidades();
+
+		TableModel tableModel = SwingUtil.getTableModelFromPojos(
+			entidadesList, 
+			new String[] {"nombre", "telefono", "remuneracion"}, 
+			new String[] {"Nombre", "Teléfono", "Remuneración"},
+			new HashMap<Integer, Pattern> () {
+				private static final long serialVersionUID = 1L;
+				{ put(5, Pattern.compile("\\d+(\\.\\d+)?")); }
+			}
+			);
+
+		getView().getTableEntidades().setModel(tableModel);
+		SwingUtil.autoAdjustColumns(getView().getTableEntidades());
+		loadTableListeners();
 	}
 	
 	public void insertCurso() {

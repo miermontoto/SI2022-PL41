@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.DTO;
+import g41.si2022.dto.EntidadDTO;
 import g41.si2022.dto.EventoDTO;
 import g41.si2022.dto.ProfesorDTO;
 
@@ -15,6 +16,17 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	public java.util.List<ProfesorDTO> getListaProfesores() {
 		String sql = "SELECT * FROM docente ORDER BY nombre";
 		return this.getDatabase().executeQueryPojo(ProfesorDTO.class, sql);
+	}
+
+	/**
+	 * Obtain a list of all entities
+	 * 
+	 * @return List of stored entities
+	 */
+	public java.util.List<EntidadDTO> getListaEntidades() {
+		String sql = "SELECT * FROM entidad ORDER BY nombre";
+
+		return this.getDatabase().executeQueryPojo(EntidadDTO.class, sql);
 	}
 	
 	/**

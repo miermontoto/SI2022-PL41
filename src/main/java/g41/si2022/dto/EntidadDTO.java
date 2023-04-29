@@ -8,7 +8,8 @@ import lombok.Data;
 public class EntidadDTO implements DTO {
     private String nombre;
     private String email;
-    private String tlf;
+    private String telefono;
+    private String remuneracion;
 
     @Override
 	public String toString() { 

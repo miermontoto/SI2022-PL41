@@ -49,6 +49,12 @@ create table curso (
     foreign key (entidad_id) references entidad(id)
 );
 
+create table curso_externo (
+    
+    entidad_id integer,
+    foreign key (entidad_id) references entidad(id),
+);
+
 create table inscripcion (
     id integer primary key autoincrement,
     fecha date not null,
@@ -99,7 +105,6 @@ create table docencia (
     foreign key (curso_id) references curso(id),
     foreign key (docente_id) references docente(id)
 );
-
 
 create table pago (
     id integer primary key autoincrement,
