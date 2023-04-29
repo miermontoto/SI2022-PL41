@@ -42,6 +42,12 @@ public class RowAppendableJTable extends javax.swing.JTable {
 	 * A new row will be aded only when all mandatory columns are filled.
 	 */
 	private boolean[] mandatoryColumns;
+	
+	/**
+	 * These are the listeners that will be executed when a new row is added.<br>
+	 * They have access to the table model.
+	 */
+	private List<RowAppendedListener> rowAppendedListeners;
 
 	/**
 	 * Creates a new {@code RowAppendableJTable}. 
@@ -58,6 +64,7 @@ public class RowAppendableJTable extends javax.swing.JTable {
 			Map<Integer, Pattern> treeMap,
 			boolean[] mandatoryColumns) {
 		super();
+		this.rowAppendedListeners = new java.util.LinkedList<RowAppendedListener> ();
 		this.columnNames = columnNames;
 		this.columnMatchers = treeMap;
 		this.mandatoryColumns = mandatoryColumns == null ? this.getFullMandatoryArray(columnNames.length) : mandatoryColumns;
@@ -89,11 +96,16 @@ public class RowAppendableJTable extends javax.swing.JTable {
 						String[] emptyRow = new String[this.columnNames.length];
 						for (int i = 0 ; i < this.columnNames.length ; i++) emptyRow[i] = columnNames[i];
 						((DefaultTableModel) this.getModel()).addRow(emptyRow);
+						RowAppendableJTable.this.getRowAppendedListeners().forEach(ral -> ral.rowAppended(this.getModel()));
 					}
 			}
 		});	
 		((DefaultTableModel)tm).addRow(columnNames);
 		this.setModel(tm);
+	}
+	
+	private List<RowAppendedListener> getRowAppendedListeners () {
+		return this.rowAppendedListeners;
 	}
 
 	private boolean[] getFullMandatoryArray (int size) {
@@ -164,6 +176,14 @@ public class RowAppendableJTable extends javax.swing.JTable {
 				.filter(row -> row.values().stream()
 						.anyMatch(value -> value != null))
 				.collect(java.util.stream.Collectors.toList());
+	}
+	
+	public void addRowAppendedListener (RowAppendedListener e) {
+		this.rowAppendedListeners.add(e);
+	}
+	
+	public interface RowAppendedListener {
+		public void rowAppended (javax.swing.table.TableModel e);
 	}
 
 }

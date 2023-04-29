@@ -1,6 +1,7 @@
 package g41.si2022.ui.components.table;
 
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -45,20 +46,20 @@ public class RowAppendableComponentableJTable extends RowAppendableJTable {
 	 * @param columnNames Names of the columns
 	 * @param columnMatchers {@link Pattern} that will be matched with each column.
 	 * @param mandatory Array that tags as {@code true} the columns that are mandatory and {@code false} those that are not.
-	 * @param components {@link TableCellEditor} that will be used on each column.
+	 * @param treeMap {@link TableCellEditor} that will be used on each column.
 	 */
 	public RowAppendableComponentableJTable(
 			String[] columnNames, 
 			Map<Integer, Pattern> columnMatchers,
 			boolean[] mandatory,
-			Map<Integer, javax.swing.table.TableCellEditor> components) {
+			TreeMap<Integer, javax.swing.table.TableCellEditor> treeMap) {
 		super(columnNames, 
 				columnMatchers.entrySet().stream()
-				.filter((entry) -> !components.containsKey(entry.getKey()))
+				.filter((entry) -> !treeMap.containsKey(entry.getKey()))
 				.collect(Collectors.toMap((entry) -> entry.getKey(), (entry) -> entry.getValue())),
 				mandatory);
-		if (components != null) 
-			components.forEach( (col, comp) -> this.getColumnModel().getColumn(col).setCellEditor(comp));
+		if (treeMap != null) 
+			treeMap.forEach( (col, comp) -> this.getColumnModel().getColumn(col).setCellEditor(comp));
 	}
 	
 	/**
