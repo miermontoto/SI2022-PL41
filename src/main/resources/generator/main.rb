@@ -61,7 +61,7 @@ def obtain_data(ratio)
         start_next_month, end_next_month, rand(1..alumnos.length),
         start_two_months_ago, end_two_months_ago))
 
-    cursos += generate_cursos((10 * ratio).to_i, entidades)
+    # cursos += generate_cursos((10 * ratio).to_i, entidades)
 
     # Generar colectivos
     ## Se necesitan colectivos preestablecidos.

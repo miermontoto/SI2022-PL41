@@ -275,6 +275,10 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		SwingUtil.autoAdjustColumns(this.getView().getTableProfesores());
 		loadTableListeners();
 	}
+
+	public void getListaEntidades() {
+		
+	}
 	
 	public void insertCurso() {
 		List<ProfesorDTO> docentes = this.getDocentes();

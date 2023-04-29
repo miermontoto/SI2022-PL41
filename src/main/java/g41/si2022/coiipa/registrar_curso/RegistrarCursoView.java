@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.Border;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 
@@ -34,6 +35,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 	private BetterDatePicker dateCursoStart, dateCursoEnd;
 	private JTable tablaCostes;
 	private JTable tableProfesores;
+	private JTable tableEntidades;
 	private JTable tableEventos;
 	private JButton btnAddEvento;
 	private JButton btnRemoveEvento;
@@ -207,21 +209,41 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 
 		JPanel bottomPane = new JPanel();
 		bottomPane.setLayout(new BorderLayout());
-		bottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar profesor"), BorderLayout.NORTH);
+		
 
-		JScrollPane sp = new JScrollPane();
-		sp.getVerticalScrollBar().setUnitIncrement(20);
-		sp.setPreferredSize(new java.awt.Dimension(
-				this.getWidth(), 150
-				));
+		JPanel leftBottomPane = new JPanel();
+		leftBottomPane.setLayout(new BorderLayout());
+		leftBottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar profesor"), BorderLayout.NORTH);
+		JScrollPane sp1 = new JScrollPane();
+		sp1.getVerticalScrollBar().setUnitIncrement(20);
+		sp1.setPreferredSize(new java.awt.Dimension(675, 150));
+
+		JPanel rightBottomPane = new JPanel();
+		rightBottomPane.setLayout(new BorderLayout());
+		rightBottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar entidad"), BorderLayout.NORTH);
+		JScrollPane sp2 = new JScrollPane();
+		sp2.getVerticalScrollBar().setUnitIncrement(20);
+		sp2.setPreferredSize(new java.awt.Dimension(600, 150));
 
 		this.tableProfesores = new JTable();
 		this.tableProfesores.setName("Profesor:");
 		this.tableProfesores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		// this.profTable.setDefaultEditor(Object.class, null); // No editable
 
-		sp.setViewportView(this.tableProfesores);
-		bottomPane.add(sp, BorderLayout.CENTER);
+		this.tableEntidades = new JTable();
+		this.tableEntidades.setName("Entidad:");
+		this.tableEntidades.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		//  Add tableProfesores
+		sp1.setViewportView(this.tableProfesores);
+		leftBottomPane.add(sp1, BorderLayout.CENTER);
+
+		// Add tableEntidades
+		sp2.setViewportView(this.tableEntidades);
+		rightBottomPane.add(sp2, BorderLayout.CENTER);
+
+		bottomPane.add(leftBottomPane, BorderLayout.WEST);
+		bottomPane.add(rightBottomPane, BorderLayout.EAST);
 
 		this.btnRegistrar = new JButton();
 		this.btnRegistrar.setText("Registrar curso");

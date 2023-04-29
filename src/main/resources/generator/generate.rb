@@ -180,7 +180,7 @@ def generate_cursos(num, entidades)
         c = Curso.new
 
         c.nombre = "[G] " + Faker::Educator.course_name
-        c.descripcion = Faker::Lorem.paragraph
+        c.descripcion = "Inserte descripcion"
         c.start_inscr = Date.today + rand(-365..365)
         c.end_inscr = c.start_inscr + rand(1..30)
         c.start = c.end_inscr + rand(1..30)
