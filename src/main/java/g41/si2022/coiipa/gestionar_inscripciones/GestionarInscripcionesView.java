@@ -104,7 +104,7 @@ public class GestionarInscripcionesView extends View {
 
 		gbc.insets = spacer;
 		gbc.gridy = 2;
-		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Días desde inscripción | hasta curso"), gbc);
+		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Días respecto: inscripción | curso"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 3;

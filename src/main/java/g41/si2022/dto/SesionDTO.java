@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.LocalTime;
 
 @Setter @Getter @Data
-public class EventoDTO implements DTO {
+public class SesionDTO implements DTO {
 
     private String
         id,
@@ -18,9 +18,9 @@ public class EventoDTO implements DTO {
         duracion,
         horaFin;
 
-    public EventoDTO() {}
+    public SesionDTO() {}
 
-    public EventoDTO(String loc, String fecha, String horaIni, String horaFin) {
+    public SesionDTO(String loc, String fecha, String horaIni, String horaFin) {
         setLoc(loc);
         setFecha(fecha);
         setHoraIni(horaIni);

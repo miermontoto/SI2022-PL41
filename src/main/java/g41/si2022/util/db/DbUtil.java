@@ -2,6 +2,7 @@ package g41.si2022.util.db;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -123,9 +124,10 @@ public abstract class DbUtil {
 	 * <br/>- Todas las sentencias drop se ejecutan al principio,
 	 * y se ignoran los fallos en caso de que no exista la tabla (solo para drop)
 	 */
-	public void executeScript(String fileName) {
+	public void executeScript(String fileName) throws java.nio.file.NoSuchFileException {
 		List<String> lines;
 		try { lines = Files.readAllLines(Paths.get(fileName)); }
+		catch (NoSuchFileException nsfe) { throw nsfe; }
 		catch (IOException e) { throw new ApplicationException(e); }
 
 		// Separa las sentencias sql en dos listas, una para drop y otra para el resto pues se ejecutaran de forma diferente
@@ -136,7 +138,7 @@ public abstract class DbUtil {
 			line = line.trim();
 			if (line.length() == 0 || line.startsWith("--")) continue; // Ignora lineas vacias comentarios de linea
 			if (line.endsWith(";")) {
-				String sql=previousLines.toString()+line;
+				String sql = previousLines.toString() + line;
 				if (line.toLowerCase().startsWith("drop")) batchDrop.add(sql); // Separa drop del resto
 				else batchUpdate.add(sql);
 				previousLines = new StringBuilder(); // Nueva linea

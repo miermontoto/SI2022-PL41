@@ -6,30 +6,26 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 
-import javax.swing.JPanel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import javax.swing.text.NumberFormatter;
-
-import org.jdesktop.swingx.JXComboBox;
-import org.jdesktop.swingx.JXTitledPanel;
-
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import javax.swing.JTable;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.text.NumberFormatter;
 
-import lombok.Getter;
+import org.jdesktop.swingx.JXTitledPanel;
+
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
+import lombok.Getter;
 
 @Getter
 public class GestionarListaEsperaView extends View {
@@ -46,10 +42,10 @@ public class GestionarListaEsperaView extends View {
 	DefaultComboBoxModel<String> cmbCursoModel;
 	private JFormattedTextField txtImporte;
 	private JCheckBox chkAll;
-	
+
 	JLabel nombreApellidosLabel;
 	JLabel fechaListaLabel;
-	
+
 
 	public GestionarListaEsperaView(SwingMain main) {
 		super(main, GestionarListaEsperaModel.class, GestionarListaEsperaView.class, GestionarListaEsperaController.class);
@@ -79,7 +75,6 @@ public class GestionarListaEsperaView extends View {
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		Insets spacer = new Insets(10, 10, 10, 10);
-		Insets next = new Insets(0, 10, 0, 10);
 
 		JPanel pagarPanel = new JPanel();
 		pagarPanel.setLayout(new GridBagLayout());
@@ -92,7 +87,7 @@ public class GestionarListaEsperaView extends View {
 		gbc.gridy = 2;
 		gbc.fill = GridBagConstraints.CENTER;
 		cmbCursoModel = new DefaultComboBoxModel<>();
-		pagarPanel.add(this.cmbCurso = new JComboBox<String>(cmbCursoModel), gbc);
+		pagarPanel.add(cmbCurso = new JComboBox<String>(cmbCursoModel), gbc);
 
 		gbc.insets = spacer;
 		gbc.gridy = 3;
@@ -104,22 +99,20 @@ public class GestionarListaEsperaView extends View {
 
 		JPanel datosPanel = new JPanel();
 		datosPanel.setLayout(new GridBagLayout());
-		
+
 		gbc.gridy = 0;
 		datosPanel.add(JLabelFactory.getLabel(FontType.bold, "Nombre del alumno: "), gbc);
 		gbc.gridy = 1;
 		datosPanel.add(nombreApellidosLabel = new JLabel("Seleccionar alumno"), gbc);
-		
+
 		gbc.insets = spacer;
-		
-		
+
 		gbc.gridy = 2;
 		datosPanel.add(JLabelFactory.getLabel(FontType.bold, "Fecha de entrada en la lista de espera: "), gbc);
 		gbc.gridy = 3;
 		datosPanel.add(fechaListaLabel = new JLabel("Seleccionar alumno"), gbc);
 
 		datosInscripcionPanel.setContentContainer(datosPanel);
-
 
 		tableInscripciones = new JTable();
 		this.add(new JScrollPane(tableInscripciones), BorderLayout.CENTER);
