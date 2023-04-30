@@ -130,6 +130,40 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	}
 
 	/**
+	 * Inserta un curso externo (contratado a una entidad) en la base de datos
+	 * @param nombre Nombre del curso
+	 * @param descripcion Descripcion del curso
+	 * @param inscrStart Fecha de inicio de inscripción
+	 * @param inscrEnd Fecha de fin de inscripción
+	 * @param start Fecha de inicio del curso
+	 * @param end Fecha de fin del curso
+	 * @param plazas Cantidad de plazas disponibles
+	 * @param localizacion Localización del curso
+	 * @param costes Diccionario de costes Colectivo, Coste
+	 * @param idEntidad Entidad asociada al curso
+	 * @return El ID del curso insertado
+	 */
+	public String insertCursoExterno(
+			String nombre, String descripcion,
+			String inscrStart, String inscrEnd, String start, String end,
+			String plazas, java.util.Map<String, Double> costes, String idEntidad) {
+
+		String sql = "INSERT INTO curso(nombre, descripcion, start_inscr, end_inscr, plazas, start, end, entidad_id)"
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+
+		this.getDatabase().executeUpdate(sql, nombre, descripcion, inscrStart, inscrEnd, plazas, start, end, idEntidad);
+
+		String idCurso = String.valueOf(this.getDatabase().executeQuerySingle(
+			"SELECT id FROM curso WHERE nombre = ? and start_inscr = ?" + 
+			" and start = ? and plazas = ? and entidad_id = ?",
+			nombre, inscrStart, start, plazas, idEntidad));
+
+		this.insertCostes(costes, idCurso);
+
+		return idCurso;
+	}
+
+	/**
 	 * Returns the list of colectivos
 	 *
 	 * @return List of colectivos
@@ -180,22 +214,6 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 						add(e -> cursoId);
 					}}
 				);
-	}
-
-	/**
-	 * Obtain the teachers associated to an entity (company)
-	 * 
-	 * @param idEntidad entity id
-	 * @return A list of teachers to the entity
-	 */
-
-	public List<ProfesorDTO> getDocentesByEntidadId (String idEntidad) {
-		String sql = "SELECT * FROM docente as d"
-		  		   + " INNER JOIN entidad as e"
-				   + " ON d.entidad_id = e.id"
-				   + " WHERE e.id = ?";
-
-		return this.getDatabase().executeQueryPojo(ProfesorDTO.class, sql, idEntidad);
 	}
 
 	/**

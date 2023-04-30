@@ -32,6 +32,7 @@ import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import g41.si2022.dto.EntidadDTO;
 import g41.si2022.dto.EventoDTO;
 import g41.si2022.dto.ProfesorDTO;
+import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.util.Dialog;
@@ -246,7 +247,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 					}
 				}
 			}
-		});
+		});		
 	}
 
 	private void loadDateListeners() {
@@ -345,27 +346,56 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	}
 	
 	public void insertCurso() {
-		List<ProfesorDTO> docentes = this.getDocentes();
-		if (docentes.size() == 0) throw new UnexpectedException("No se ha seleccionado remuneración para ningún docente.");
+		if (this.getView().getRbtn1().isSelected()) {
+			List<ProfesorDTO> docentes = this.getDocentes();
+			if (docentes.isEmpty()) 
+				throw new UnexpectedException("No se ha seleccionado remuneración para ningún docente.");
 
-		String idCurso = this.getModel().insertCurso(
-				getView().getTxtNombre().getText(),
-				getView().getTxtDescripcion().getText(),
-				getView().getDateInscrStart().getDate().toString(),
-				getView().getDateInscrEnd().getDate().toString(),
-				getView().getDateCursoStart().getDate().toString(),
-				getView().getDateCursoEnd().getDate().toString(),
-				getView().getTxtPlazas().getText(),
-				g41.si2022.util.Util.getData(getView().getTablaCostes()).parallelStream().collect(
-					java.util.stream.Collectors.toMap(
-						row -> row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
-						row -> Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1))))
-					));
+			String idCurso = this.getModel().insertCurso(
+					getView().getTxtNombre().getText(),
+					getView().getTxtDescripcion().getText(),
+					getView().getDateInscrStart().getDate().toString(),
+					getView().getDateInscrEnd().getDate().toString(),
+					getView().getDateCursoStart().getDate().toString(),
+					getView().getDateCursoEnd().getDate().toString(),
+					getView().getTxtPlazas().getText(),
+					g41.si2022.util.Util.getData(getView().getTablaCostes()).parallelStream().collect(
+						java.util.stream.Collectors.toMap(
+							row -> row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
+							row -> Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1))))
+						));
 
-		this.getModel().insertDocencia(docentes, idCurso);
-		this.getModel().insertEvento(eventos, idCurso);
+			this.getModel().insertDocencia(docentes, idCurso);
+			this.getModel().insertEvento(eventos, idCurso);
 
-		Dialog.show("Curso registrado con éxito.");
+			Dialog.show("Curso registrado con éxito.");
+
+		} else if (this.getView().getRbtn2().isSelected()) {
+			JTable tableEnt = getView().getTableEntidades();
+			String idEntidad = tableEnt.getModel().getValueAt(tableEnt.convertRowIndexToModel(tableEnt.getSelectedRow()), 0).toString();
+			if (idEntidad == null)
+				throw new UnexpectedException("No se ha seleccionado ninguna entidad");
+
+			String idCurso = this.getModel().insertCursoExterno(
+					getView().getTxtNombre().getText(),
+					getView().getTxtDescripcion().getText(),
+					getView().getDateInscrStart().getDate().toString(),
+					getView().getDateInscrEnd().getDate().toString(),
+					getView().getDateCursoStart().getDate().toString(),
+					getView().getDateCursoEnd().getDate().toString(),
+					getView().getTxtPlazas().getText(),
+					g41.si2022.util.Util.getData(getView().getTablaCostes()).parallelStream().collect(
+						java.util.stream.Collectors.toMap(
+							row -> row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
+							row -> Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1))))
+						), idEntidad);
+
+			this.getModel().insertEvento(eventos, idCurso);
+			Dialog.show("Curso registrado con éxito.");
+			
+		} else {
+			Dialog.show("Debes seleccionar uno/varios profesores o, en su defecto, una entidad");
+		}
 	}
 
 	/**
@@ -377,23 +407,11 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	private List<ProfesorDTO> getDocentes() {
 		List<ProfesorDTO> docentes = new ArrayList<>();
 
-		if (this.getView().getRbtn1().isSelected()) {
-			TableModel model = this.getView().getTableProfesores().getModel();
+		TableModel model = this.getView().getTableProfesores().getModel();
 
-			for (int i = 0 ; i < model.getRowCount() ; i++) {
-				if (model.getValueAt(i, model.getColumnCount() - 1) != null) 
-					docentes.add(this.profesoresMap.get(model.getValueAt(i, 0)));
-			}
-
-			return docentes;
-
-		} else if (this.getView().getRbtn2().isSelected()) {
-			JTable entidadesTable = this.getView().getTableEntidades();
-			TableModel model = this.getView().getTableEntidades().getModel();
-			int row = entidadesTable.convertRowIndexToModel(entidadesTable.getSelectedRow());
-			String idEntidad = model.getValueAt(row, 0).toString();
-
-			docentes = getModel().getDocentesByEntidadId(idEntidad);	
+		for (int i = 0 ; i < model.getRowCount() ; i++) {
+			if (model.getValueAt(i, model.getColumnCount() - 1) != null) 
+				docentes.add(this.profesoresMap.get(model.getValueAt(i, 0)));
 		}
 
 		return docentes;

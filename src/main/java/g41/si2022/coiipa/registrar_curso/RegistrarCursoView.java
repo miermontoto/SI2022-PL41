@@ -275,7 +275,8 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				this.dateCursoEnd,
 				this.tablaCostes,
 				this.tableEventos,
-				this.tableProfesores
+				this.tableProfesores,
+				this.tableEntidades
 		};
 	}
 
