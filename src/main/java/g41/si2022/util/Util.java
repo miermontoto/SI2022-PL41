@@ -10,6 +10,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JTable;
+import javax.swing.SortOrder;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
 import org.apache.commons.beanutils.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,6 +34,16 @@ public class Util {
 	public static void emptyTable(javax.swing.JTable table) {
 		while (table.getRowCount() > 0)
 			((javax.swing.table.DefaultTableModel) table.getModel()).removeRow(0);
+	}
+
+	public static void sortTable(JTable table, Pair<Integer, SortOrder>... columnPair) {
+		TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+		table.setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
+		List<SortKey> sortKeys = new java.util.ArrayList<>();
+		for (Pair<Integer, SortOrder> pair : columnPair)
+			sortKeys.add(new SortKey(pair.getFirst(), pair.getSecond()));
+		sorter.setSortKeys(sortKeys);
 	}
 
 	/**
