@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 import java.awt.event.KeyAdapter;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
@@ -42,6 +43,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	private Map<String, ProfesorDTO> profesoresMap;
 	private LinkedList<EventoDTO> eventos;
 	private List<EntidadDTO> entidadesList;
+	private Map<String, EntidadDTO> entidadesMap;
 
 
 	private final java.util.function.Supplier <List<ProfesorDTO>> sup = () -> {
@@ -53,6 +55,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	public RegistrarCursoController(RegistrarCursoView v, RegistrarCursoModel m) {
 		super(v, m);
 		profesoresMap = new HashMap<>();
+		entidadesMap = new HashMap<>();
 		eventos = new LinkedList<>();
 	}
 
@@ -72,6 +75,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		loadEventListeners();
 		// loadColectivos();
 		getView().getBtnRegistrar().setEnabled(false);
+		getView().getRbtn1().setSelected(true);
 	}
 
 	private void loadColectivos() {
@@ -84,12 +88,10 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	}
 
 	private void loadEventListeners() {
-		javax.swing.JButton
-		btnAdd = getView().getBtnAddEvento(),
-		btnRemove = getView().getBtnRemoveEvento();
-		BetterDatePicker
-		start = getView().getDateCursoStart(),
-		end = getView().getDateCursoEnd();
+		JButton btnAdd = getView().getBtnAddEvento();
+		JButton btnRemove = getView().getBtnRemoveEvento();
+		BetterDatePicker start = getView().getDateCursoStart();
+		BetterDatePicker end = getView().getDateCursoEnd();
 
 		JTable table = getView().getTableEventos();
 
@@ -169,7 +171,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 					public void mouseClicked(java.awt.event.MouseEvent e) { checkValidity(); }
 				});
 
-				( (JTable) c).getModel().addTableModelListener((e) -> checkValidity());
+				((JTable) c).getModel().addTableModelListener((e) -> checkValidity());
 			}
 		}
 	}
@@ -191,8 +193,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				}
 			}
 		}
-		// valid &= this.getView().getTablaCostes().getValueAt(0, 0) != this.getView().getTablaCostes().getColumnNames()[0];
-		// valid &= this.getView().getTablaCostes().getValueAt(0, 1) != this.getView().getTablaCostes().getColumnNames()[1];
+
 		valid &= !eventos.isEmpty();
 		getView().getBtnRegistrar().setEnabled(valid);
 	}	
@@ -223,6 +224,28 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				.setRemuneracion(tabla.getValueAt(e.getFirstRow(), e.getColumn()).toString());
 			}
 
+		});
+
+		this.getView().getTableEntidades().getModel().addTableModelListener(new TableModelListener() {
+			private boolean modified = false;
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				JTable tablaEnt = getView().getTableEntidades();
+				TableModel entModel = tablaEnt.getModel();
+				for (int i = 0; i < tablaEnt.getRowCount(); i++) {
+					if (tablaEnt.getValueAt(i, 2) != null) {
+						String idEntidad = entModel.getValueAt(i, 0).toString(); 
+						String importe = entModel.getValueAt(i, 3).toString();
+						EntidadDTO entidad = getModel().getEntidadById(idEntidad);
+						entidad.setImporte(importe);
+					}	
+					if (!modified && e.getFirstRow() != i) {
+						modified = true;
+						entModel.setValueAt(null, i, 3);
+						modified = false;
+					}
+				}
+			}
 		});
 	}
 
@@ -293,7 +316,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 						new String[] { "DNI", "Nombre", "Apellidos", "Email", "Remuneración" },
 						new HashMap<Integer, Pattern> () {
 							private static final long serialVersionUID = 1L;
-							{ put(5, Pattern.compile("\\d+(\\.\\d+)?")); }
+							{ put(4, Pattern.compile("\\d+(\\.\\d+)?")); }
 						}
 						)
 				);
@@ -306,16 +329,18 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 		TableModel tableModel = SwingUtil.getTableModelFromPojos(
 			entidadesList, 
-			new String[] {"nombre", "telefono", "importe"}, 
-			new String[] {"Nombre", "Teléfono", "Importe a pagar"},
+			new String[] {"id", "nombre", "telefono", "importe"}, 
+			new String[] {"", "Nombre", "Teléfono", "Importe a pagar"},
 			new HashMap<Integer, Pattern> () {
 				private static final long serialVersionUID = 1L;
-				{ put(5, Pattern.compile("\\d+(\\.\\d+)?")); }
+				{ put(3, Pattern.compile("\\d+(\\.\\d+)?")); }
 			}
 			);
-
+		
+		JTable tableEntidades = getView().getTableEntidades();	
 		getView().getTableEntidades().setModel(tableModel);
-		SwingUtil.autoAdjustColumns(getView().getTableEntidades());
+		tableEntidades.removeColumn(tableEntidades.getColumnModel().getColumn(0));
+		SwingUtil.autoAdjustColumns(tableEntidades);
 		loadTableListeners();
 	}
 	
@@ -351,12 +376,26 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	 */
 	private List<ProfesorDTO> getDocentes() {
 		List<ProfesorDTO> docentes = new ArrayList<>();
-		TableModel model = this.getView().getTableProfesores().getModel();
-		for (int i = 0 ; i < model.getRowCount() ; i++) {
-			if (model.getValueAt(i, model.getColumnCount()-1) != null) {
-				docentes.add(this.profesoresMap.get(model.getValueAt(i, 0)));
+
+		if (this.getView().getRbtn1().isSelected()) {
+			TableModel model = this.getView().getTableProfesores().getModel();
+
+			for (int i = 0 ; i < model.getRowCount() ; i++) {
+				if (model.getValueAt(i, model.getColumnCount() - 1) != null) 
+					docentes.add(this.profesoresMap.get(model.getValueAt(i, 0)));
 			}
+
+			return docentes;
+
+		} else if (this.getView().getRbtn2().isSelected()) {
+			JTable entidadesTable = this.getView().getTableEntidades();
+			TableModel model = this.getView().getTableEntidades().getModel();
+			int row = entidadesTable.convertRowIndexToModel(entidadesTable.getSelectedRow());
+			String idEntidad = model.getValueAt(row, 0).toString();
+
+			docentes = getModel().getDocentesByEntidadId(idEntidad);	
 		}
+
 		return docentes;
 	}
 }

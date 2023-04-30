@@ -6,10 +6,11 @@ import lombok.Data;
 
 @Setter @Getter @Data
 public class EntidadDTO implements DTO {
+    private String id;
     private String nombre;
     private String email;
     private String telefono;
-    private String importe;
+    private String importe; // Necesario para almacenar importe al RegistrarCursos
 
     @Override
 	public String toString() { 

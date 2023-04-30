@@ -3,6 +3,9 @@ package g41.si2022.coiipa.registrar_curso;
 import java.util.Map;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.omg.CORBA.IdentifierHelper;
+
 import java.util.function.Function;
 
 import g41.si2022.dto.ColectivoDTO;
@@ -177,5 +180,34 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 						add(e -> cursoId);
 					}}
 				);
+	}
+
+	/**
+	 * Obtain the teachers associated to an entity (company)
+	 * 
+	 * @param idEntidad entity id
+	 * @return A list of teachers to the entity
+	 */
+
+	public List<ProfesorDTO> getDocentesByEntidadId (String idEntidad) {
+		String sql = "SELECT * FROM docente as d"
+		  		   + " INNER JOIN entidad as e"
+				   + " ON d.entidad_id = e.id"
+				   + " WHERE e.id = ?";
+
+		return this.getDatabase().executeQueryPojo(ProfesorDTO.class, sql, idEntidad);
+	}
+
+	/**
+	 * Obtain an entity given it's id
+	 * 
+	 * @param idEntidad id of the entity to get
+	 * @return the specified entity
+	 */
+	public EntidadDTO getEntidadById (String idEntidad) {
+		String sql = "SELECT * FROM entidad"
+				   + " WHERE id = ?";
+		
+		return this.getDatabase().executeQueryPojo(EntidadDTO.class, sql, idEntidad).get(0);
 	}
 }
