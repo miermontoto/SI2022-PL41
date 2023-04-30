@@ -28,7 +28,7 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 
 	public GestionarFacturasProfController(GestionarFacturasProfModel modelo, GestionarFacturasProfView vista) {
 		super(vista, modelo);
-		this.table = this.getView().getTableInscripciones();
+		this.table = this.getView().getTableFacturasProf();
 	}
 
 	private Supplier<List<FacturaDTO>> supFacturas = () -> {
@@ -42,7 +42,7 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 	public void initNonVolatileData() {
 		this.getView().getBtnInsertarPago().addActionListener(e -> handleInsertarPago());
 		this.getView().getBtnInsertarFactura().addActionListener(e -> handleInsertarFactura());
-		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+		this.getView().getTableFacturasProf().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});

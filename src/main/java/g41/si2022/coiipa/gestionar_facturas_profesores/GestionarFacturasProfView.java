@@ -9,6 +9,7 @@ import java.awt.Insets;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.text.NumberFormatter;
 
 import org.jdesktop.swingx.JXComboBox;
@@ -32,8 +33,8 @@ import javax.swing.JCheckBox;
 public class GestionarFacturasProfView extends View {
 
 	private static final long serialVersionUID = 1L;
-	private JTable tableInscripciones; // Contenedor de la tabla de inscripciones
-	private JScrollPane scrollPane; // Panel de scroll de la tabla
+	private JTable tableFacturasProf; // Contenedor de la tabla de faacturas a profesores
+	private JScrollPane scrollPane1;  // Panel de scroll de la tabla tableFacturasProf
 	private JButton btnInsertarPago;
 	private JButton btnInsertarFactura;
 
@@ -173,12 +174,18 @@ public class GestionarFacturasProfView extends View {
 		pagarTitledPanel.setContentContainer(pagarPanel);
 		registrarTitledPanel.setContentContainer(registrarPanel);
 
-		tableInscripciones = new JTable();
-		this.add(new JScrollPane(tableInscripciones), BorderLayout.CENTER);
+		// View Facturas (left big panel)
+		JPanel panelFacturas = new JPanel(new GridLayout(1, 1));
+		tableFacturasProf = new JTable();
+		JPanel facturasEmpr = new JPanel(new BorderLayout());
+		facturasEmpr.add(JLabelFactory.getLabel(FontType.subtitle, "Facturas a empresas:"), BorderLayout.NORTH);
+		facturasEmpr.add(new JScrollPane(tableFacturasProf), BorderLayout.CENTER);
+		panelFacturas.add(facturasEmpr);
+		this.add(panelFacturas, BorderLayout.CENTER);
 		this.add(formPanel, BorderLayout.EAST);
 
-		tableInscripciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableInscripciones.setDefaultEditor(Object.class, null);
+		tableFacturasProf.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableFacturasProf.setDefaultEditor(Object.class, null);
 	}
 
 }
