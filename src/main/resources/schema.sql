@@ -113,9 +113,9 @@ create table factura (
     id integer primary key autoincrement,
     fecha date not null,
     docencia_id integer,
-    entidad_id integer,
+    curso_id integer,
     foreign key (docencia_id) references docencia(id),
-    foreign key (entidad_id) references entidad(id)
+    foreign key (curso_id) references curso(id)
 );
 
 create table evento (

@@ -45,7 +45,7 @@ class Curso
 end
 
 class Factura
-    attr_accessor :fecha, :docencia_id
+    attr_accessor :fecha, :docencia_id, :curso_id
 end
 
 class Pago

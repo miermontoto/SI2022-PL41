@@ -78,16 +78,6 @@ def obtain_data(ratio)
     ## curso y colectivo.
     costes = generate_costes(cursos, colectivos)
 
-    # Generar inscripciones
-    ## Se necesita una inscripción cancelada por curso.
-    ## Como el estado de las inscripciones depende de los pagos,
-    ## se generarán pagos para obtener varios estados de inscripción.
-    inscripciones = []
-
-    cursos.each.with_index do |c, i|
-        inscripciones += generate_inscripciones(rand(1..c.plazas), alumnos, c, i, entidades, costes)
-    end
-
     ### Se genera un curso con una sola plaza después de generar inscripciones para que
     ### siempre tenga una plaza libre.
     cursos.push(Curso.new('[G] Curso con una plaza', 'Curso generado que tiene una plaza',
@@ -118,13 +108,32 @@ def obtain_data(ratio)
         docencias += generate_docencias(rand(1..(6 * ratio).to_i), docentes, i)
     end
 
+    # Generar cursos aleatorios
+    ## Estos cursos pueden (o no) ser cursos externos
+    ## contratados a empresas.
+    cursos += generate_cursos((10 * ratio).to_i, entidades)
+
+    # Generar inscripciones
+    ## Se necesita una inscripción cancelada por curso.
+    ## Como el estado de las inscripciones depende de los pagos,
+    ## se generarán pagos para obtener varios estados de inscripción.
+    inscripciones = []
+
+    cursos.each.with_index do |c, i|
+        inscripciones += generate_inscripciones(rand(1..c.plazas), alumnos, c, i, entidades, costes)
+    end
+
+
     # Generar facturas
-    ## SOLO DEL CURSO COMPLETADO se generan facturas
-    ## DE TODOS los docentes.
+    ## Solo se generan facturas de cursos completados.
     facturas = []
     cursos.filter { |c| c.end < Time.now.to_date }.each.with_index do |c, i|
-        num_docencias = docencias.filter { |d| d.curso_id == i }.length
-        facturas += generate_facturas_docencias(rand(num_docencias/2..num_docencias), docencias, c, i)
+        if c.entidad_id != nil && rand < 0.75
+            facturas.push(generate_factura_empresa(c, i))
+        else
+            num_docencias = docencias.filter { |d| d.curso_id == i }.length
+            facturas += generate_facturas_docencias(rand(num_docencias/2..num_docencias), docencias, c, i)
+        end
     end
 
     ## Generar un curso con MUCHOS eventos, docencias e inscripciones.

@@ -104,11 +104,23 @@ def generate_facturas_docencias(num, docencias, curso, curso_id)
             f.docencia_id = (1..docencias.length).to_a.sample
         end
         f.fecha = curso.end + rand(0..(Date.today - curso.end))
+        f.curso_id = nil
 
         facturas.push(f)
     end
 
     facturas
+end
+
+def generate_factura_empresa(curso, curso_id)
+    f = Factura.new
+
+    f.docencia_id = nil
+    f.curso_id = curso_id + 1
+    f.fecha = curso.end + rand(0..(Date.today - curso.end))
+    f.docencia_id = nil
+
+    f
 end
 
 def generate_pagos(num, inscripciones, cursos, tipo, costes)
@@ -182,10 +194,11 @@ def generate_cursos(num, entidades)
         c.descripcion = "Inserte descripcion"
         c.start_inscr = Date.today + rand(-365..365)
         c.end_inscr = c.start_inscr + rand(1..30)
+        c.plazas = rand(10..200)
         c.start = c.end_inscr + rand(1..30)
         c.end = c.start + rand(1..30)
-        c.plazas = rand(10..200)
-        c.entidad_id = rand > 0.8 ? rand(1..entidades.length - 1) : nil
+        c.entidad_id = rand > 0.5 ? rand(1..entidades.length - 1) : nil
+        c.importe = c.entidad_id != nil ? rand(10..250) : nil
 
         cursos.push(c)
     end

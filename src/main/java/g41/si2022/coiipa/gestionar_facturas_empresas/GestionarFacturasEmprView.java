@@ -40,7 +40,7 @@ public class GestionarFacturasEmprView extends View {
 	private BetterDatePicker datePago;
 	private BetterDatePicker dateFactura;
 	private JXComboBox cmbCurso;
-	private JXComboBox cmbEmpresa;
+	// private JXComboBox cmbEmpresa;
 	private JFormattedTextField txtImporte;
 	private JFormattedTextField txtImporteFactura;
 	private JCheckBox chkAll;
@@ -85,7 +85,7 @@ public class GestionarFacturasEmprView extends View {
 		gbc.insets = spacer;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		pagarPanel.add(JLabelFactory.getLabel(FontType.bold, "Importe recibido (€)"), gbc);
+		pagarPanel.add(JLabelFactory.getLabel(FontType.bold, "Importe a pagar (€)"), gbc);
 
 		gbc.insets = next;
 		gbc.gridy = 1;
@@ -135,9 +135,9 @@ public class GestionarFacturasEmprView extends View {
 		gbc.gridy = 3;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		registrarPanel.add(cmbEmpresa = new JXComboBox(), gbc);
-		cmbEmpresa.addItem("Seleccione una empresa");
-		cmbEmpresa.setEnabled(false);
+		// registrarPanel.add(cmbEmpresa = new JXComboBox(), gbc);
+		// cmbEmpresa.addItem("Seleccione una empresa");
+		// cmbEmpresa.setEnabled(false);
 
 		gbc.insets = spacer;
 		gbc.gridy = 4;
