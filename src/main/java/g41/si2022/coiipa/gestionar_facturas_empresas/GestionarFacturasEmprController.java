@@ -32,12 +32,12 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 	}
 
     private Supplier<List<FacturaDTO>> supFacturasEmpr = () -> {
-		List<FacturaDTO> facturasEmpr = getModel().getListaFacturasEmpr();
-		facturasEmpr.forEach(f -> f.updateEstado());
+		List<FacturaDTO> facturasEmpr2 = getModel().getListaFacturasEmpr();
+		facturasEmpr2.forEach(f -> f.updateEstado());
 		if(this.getView().getChkAll().isSelected()) 
-			return facturasEmpr;
+			return facturasEmpr2;
 
-		return facturasEmpr.stream().filter(f -> f.getEstado() != FacturaState.PAGADA).collect(Collectors.toList());
+		return facturasEmpr2.stream().filter(f -> f.getEstado() != FacturaState.PAGADA).collect(Collectors.toList());
 	};
 
     @Override
@@ -102,7 +102,7 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 	private void getListaFacturasEmrp() {
 		facturasEmpr = supFacturasEmpr.get();
 		tableCursoEmpr.setModel(SwingUtil.getTableModelFromPojos(facturasEmpr,
-			new String[] {"id", "nombre_entidad", "curso_nombre", "curso_importe", "pagado", "fecha", "estado"},
+			new String[] {"id", "nombre_entidad", "curso_nombre", "remuneracion", "pagado", "fecha", "estado"},
 			new String[] {"", "Nombre Empresa", "Curso", "Importe total", "Importe pagado", "Fecha introducción", "Estado"},
 			null));
 			tableCursoEmpr.removeColumn(tableCursoEmpr.getColumnModel().getColumn(0));

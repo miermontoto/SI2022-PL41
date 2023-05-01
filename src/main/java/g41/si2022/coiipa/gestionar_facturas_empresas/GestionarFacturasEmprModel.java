@@ -30,12 +30,12 @@ public class GestionarFacturasEmprModel extends g41.si2022.mvc.Model {
 	// }
 
 	/*
-	 * Ontener una lista de las facturas de cursos externos pendientes a empresas
+	 * Obtener una lista de las facturas de cursos externos pendientes a empresas
 	 * 
 	 * @return list of bills
 	 */
 	public List<FacturaDTO> getListaFacturasEmpr() {
-		String sql = "SELECT f.*, c.nombre AS curso_nombre, c.importe AS curso_importe, e.nombre AS nombre_entidad," 
+		String sql = "SELECT f.*, c.nombre AS curso_nombre, c.importe AS remuneracion, e.nombre AS nombre_entidad," 
 				   + " CASE WHEN sum(p.importe) IS NOT NULL THEN sum(p.importe) ELSE 0 END AS pagado"
 				   + " FROM factura AS f"
 				   + " INNER JOIN curso AS c ON f.curso_id = c.id"

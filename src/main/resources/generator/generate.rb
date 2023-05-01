@@ -103,7 +103,7 @@ def generate_facturas_docencias(num, docencias, curso, curso_id)
         while facturas.any? { |fact| fact.docencia_id == f.docencia_id }
             f.docencia_id = (1..docencias.length).to_a.sample
         end
-        f.fecha = curso.end + rand(0..(Date.today - curso.end))
+        f.fecha = curso.end + rand(0..(Date.today - curso.end)).to_i
         f.curso_id = nil
 
         facturas.push(f)
@@ -117,8 +117,8 @@ def generate_factura_empresa(curso, curso_id)
 
     f.docencia_id = nil
     f.curso_id = curso_id + 1
-    f.fecha = curso.end + rand(0..(Date.today - curso.end))
     f.docencia_id = nil
+    f.fecha = curso.end + rand(0..(Date.today - curso.end)).to_i
 
     f
 end

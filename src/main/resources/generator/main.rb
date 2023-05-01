@@ -123,11 +123,13 @@ def obtain_data(ratio)
         inscripciones += generate_inscripciones(rand(1..c.plazas), alumnos, c, i, entidades, costes)
     end
 
-
     # Generar facturas
     ## Solo se generan facturas de cursos completados.
     facturas = []
-    cursos.filter { |c| c.end < Time.now.to_date }.each.with_index do |c, i|
+    cursos.each.with_index do |c, i|
+        if c.end < Date.today
+            next
+        end
         if c.entidad_id != nil && rand < 0.75
             facturas.push(generate_factura_empresa(c, i))
         else
