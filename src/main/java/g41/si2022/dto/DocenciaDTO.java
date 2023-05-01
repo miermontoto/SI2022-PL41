@@ -15,6 +15,14 @@ public class DocenciaDTO implements DTO {
         curso_id,
         docente_id;
 
+    public DocenciaDTO(String idCurso, String idDocente, String remuneracion) {
+        this.curso_id = idCurso;
+        this.docente_id = idDocente;
+        this.remuneracion = remuneracion;
+    }
+
+    public DocenciaDTO() {}
+
     @Override
     public String toString() {
         return this.nombre + " " + this.apellidos + " (" + this.remuneracion + "€)";

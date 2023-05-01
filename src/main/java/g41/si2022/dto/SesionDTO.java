@@ -53,4 +53,12 @@ public class SesionDTO implements DTO {
         if(duracion != null) this.horaFin = calcularFinFromDuracion(duracion);
         else if(horaFin != null) this.duracion = calcularDuracionFromFin(horaFin);
     }
+
+    public void setHora_ini(String horaIni) {
+        setHoraIni(horaIni);
+    }
+
+    public void setHora_fin(String horaFin) {
+        setHoraFin(horaFin);
+    }
 }

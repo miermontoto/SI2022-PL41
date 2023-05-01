@@ -62,12 +62,10 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 	private void loadColectivos() {
 		((g41.si2022.ui.components.table.RowAppendableJTable) getView().getTablaCostes()).setData(
-			SwingUtil.getTableModelFromPojos(
 				this.getModel().getColectivos(),
 				new String[]{"nombre", "coste"},
 				new String[]{"Colectivo", "Coste"},
 				null
-			)
 		);
 	}
 

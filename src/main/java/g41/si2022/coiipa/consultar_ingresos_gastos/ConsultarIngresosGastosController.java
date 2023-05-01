@@ -69,11 +69,13 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 		// THIRD: We add the balance to each row (just in case it hasn't been added yet).
 		// TODO: Can this be avoided?
 		output.forEach(
-				x -> x.setBalance(
-						String.format("%.2f",
-								Double.parseDouble(x.getIngresos() == null ? "0.0" : x.getIngresos()) -
-								Double.parseDouble(x.getGastos() == null ? "0.0" : x.getGastos()))
-						));
+			x -> x.setBalance(
+				String.format("%.2f",
+					Double.parseDouble(x.getIngresos() == null ? "0.0" : x.getIngresos()) -
+					Double.parseDouble(x.getGastos() == null ? "0.0" : x.getGastos())
+				)
+			)
+		);
 		return output; // We return the filtered array
 	}
 
