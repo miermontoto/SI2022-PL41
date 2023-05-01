@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * When all mandatory columns of a row have been filled with data different from their respective column header,
  * a new row will appear below to continue filling in data.
  * </p>
- * 
+ *
  * @author Alex // UO281827
  *
  * @see javax.swing.JTable
@@ -33,7 +33,7 @@ public class RowAppendableJTable extends javax.swing.JTable {
 	 * Contains the names of the columns.<br>
 	 */
 	private String[] columnNames;
-	
+
 	/**
 	 * Contains the names of the columns that are displayed.<br>
 	 * This are the strings that will appear on the new row's cells.
@@ -55,13 +55,13 @@ public class RowAppendableJTable extends javax.swing.JTable {
 	private boolean[] mandatoryColumns;
 
 	/**
-	 * Creates a new {@code RowAppendableJTable}. 
+	 * Creates a new {@code RowAppendableJTable}.
 	 * This Table will allow only the text that matches the Regex {@link Pattern} for that given column.
-	 * 
+	 *
 	 * @param columnNames Names of the columns
 	 * @param treeMap Regex to be applied to each column. If there is no entry, no regex will be checked and any data will be allowed.
 	 * @param mandatoryColumn Array to determine wheter a given column is mandatory or not. Non-mandatory columns will be skipped when adding new rows.
-	 * 
+	 *
 	 * @see Pattern
 	 */
 	public RowAppendableJTable (
@@ -72,15 +72,15 @@ public class RowAppendableJTable extends javax.swing.JTable {
 	}
 
 	/**
-	 * Creates a new {@code RowAppendableJTable}. 
+	 * Creates a new {@code RowAppendableJTable}.
 	 * This Table will allow only the text that matches the Regex {@link Pattern} for that given column.<br>
 	 * This Table will also allow to hide some of the columns.
-	 * 
+	 *
 	 * @param columnNames Names of the columns
 	 * @param visibleColumnNames Names of the columns that are actually visible (omit the ones that are not visible)
 	 * @param treeMap Regex to be applied to each column. If there is no entry, no regex will be checked and any data will be allowed.
 	 * @param mandatoryColumn Array to determine wether a given column is mandatory or not. Non-mandatory columns will be skipped when adding new rows.
-	 * 
+	 *
 	 * @see Pattern
 	 */
 	public RowAppendableJTable (
@@ -103,24 +103,24 @@ public class RowAppendableJTable extends javax.swing.JTable {
 		for (int i = 0 ; i < size ; i++) out[i] = true;
 		return out;
 	}
-	
+
 	/**
 	 * Creates a new {@code RowAppendableJTable}.
 	 * This Table will allow any kind of text to be inserted in the cells and all columns are mandatory.
-	 * 
+	 *
 	 * @param columnNames Names of the columns
 	 */
 	public RowAppendableJTable (String[] columnNames) {
 		this(columnNames, columnNames, null, null);
 	}
-	
+
 	/*
 	@Override
 	public Object getValueAt(int row, int col) {
 		return super.getValueAt(row, col).equals(this.columnNames[col]) ? this.columnNames[col] : super.getValueAt(row, col);
 	}
 	*/
-	
+
 	public <E> void setData (
 			List<E> pojos,
 			String[] columnIdentifiers,
@@ -136,23 +136,23 @@ public class RowAppendableJTable extends javax.swing.JTable {
 
 	/**
 	 * Returns the column names of this table.
-	 * 
+	 *
 	 * @return Column names of this table
 	 */
 	public String[] getColumnNames () {
 		return this.columnNames;
 	}
-	
+
 	/**
 	 * Returns the data contained in this table.
 	 * <p>
-	 * This data is represented by a List of Maps. Each entry in the list is one row, 
+	 * This data is represented by a List of Maps. Each entry in the list is one row,
 	 * the map is a relation between the column names and the value they hold.<br>
 	 * If a column's data has not been filled, {@code null} will be set in that position of the returned data structure.
 	 * </p> <p>
 	 * Note that this method is O(n^2) and that it will not return the last empty row (nor any empty rows if that was possible at all).
 	 * </p>
-	 * 
+	 *
 	 * @return Data structure containing the data from this table.
 	 */
 	public List<Map<String, String>> getData () {
@@ -160,7 +160,7 @@ public class RowAppendableJTable extends javax.swing.JTable {
 		for (int i = 0 ; i < this.getRowCount() ; i++) {
 			out.add(new java.util.HashMap<String, String> ());
 			for (int j = 0 ; j < RowAppendableJTable.this.getColumnNames().length ; j++)
-				out.get(i).put(this.getColumnNames()[j], 
+				out.get(i).put(this.getColumnNames()[j],
 						this.getValueAt(i, j).toString().trim().equals(this.getColumnNames()[j].trim()) ||
 						this.getValueAt(i, j).toString().trim().isEmpty()
 								? null
@@ -172,7 +172,7 @@ public class RowAppendableJTable extends javax.swing.JTable {
 						.anyMatch(value -> value != null))
 				.collect(java.util.stream.Collectors.toList());
 	}
-	
+
 	private <E> TableModel getTableModelFromPojos(List<E> pojos, String[] colProperties,
 			String[] colNames, java.util.Map<Integer, java.util.regex.Pattern> writeableColumns) {
 		// Creación inicial del tablemodel y dimensionamiento
@@ -209,15 +209,15 @@ public class RowAppendableJTable extends javax.swing.JTable {
 				}
 			}
 		}
-			
+
 		tm.addTableModelListener(e -> {
 			int row = e.getLastRow();
 			if (row == this.getRowCount() - 1) {
 				boolean emptyCell = false;
 				for (int i = 0 ; i < this.getColumnCount() && !emptyCell ; i++)
-					emptyCell = (this.mandatoryColumns[i] && 
-							(this.getValueAt(row, i) == null || 
-							this.getValueAt(row, i).equals("") || 
+					emptyCell = (this.mandatoryColumns[i] &&
+							(this.getValueAt(row, i) == null ||
+							this.getValueAt(row, i).equals("") ||
 							this.getValueAt(row, i).equals(visibleColumnNames[i])));
 					if (!emptyCell) {
 						// Add a new empty row to the table when the last row is edited
@@ -228,7 +228,7 @@ public class RowAppendableJTable extends javax.swing.JTable {
 			}
 		});
 		((DefaultTableModel)tm).addRow(columnNames);
-		
+
 		return tm;
 	}
 

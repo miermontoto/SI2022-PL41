@@ -288,6 +288,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
                 tablaCostes.setEnabled(false);
                 break;
             case EN_CURSO:
+                tablaCostes.setEnabled(false);
                 tablaProfesores.setEnabled(false);
                 txtPlazas.setEnabled(false);
                 txtNombre.setEnabled(false);
@@ -295,6 +296,10 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
             case CERRADO:
             case CANCELADO:
             case FINALIZADO:
+                tablaCostes.setEnabled(false);
+                tablaProfesores.setEnabled(false);
+                txtPlazas.setEnabled(false);
+                txtNombre.setEnabled(false);
                 btnGuardar.setEnabled(false);
                 btnAddSesion.setEnabled(false);
                 btnRemoveSesion.setEnabled(false);
