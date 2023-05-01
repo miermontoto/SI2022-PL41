@@ -46,6 +46,7 @@ create table curso (
     end date not null,
     estado text,
     entidad_id integer,
+    importe integer,
     foreign key (entidad_id) references entidad(id)
 );
 
@@ -111,8 +112,10 @@ create table pago (
 create table factura (
     id integer primary key autoincrement,
     fecha date not null,
-    docencia_id integer not null,
-    foreign key (docencia_id) references docencia(id)
+    docencia_id integer,
+    entidad_id integer,
+    foreign key (docencia_id) references docencia(id),
+    foreign key (entidad_id) references entidad(id)
 );
 
 create table evento (

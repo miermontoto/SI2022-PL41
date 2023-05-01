@@ -33,6 +33,7 @@ public class CursoDTO implements DTO {
 		pago_importe_devuelto, // Annadido por consultarCursos 
 		entidad; // Annadido por RegistrarCursos
 
+	private String importe; // Necesario para almacenar importe (a pagar a empresa) al RegistrarCursos
 	private InscripcionState inscripcion_estado; // Annadido por consultarCursos
 	private CursoState estado; // Annadido por ?
 

@@ -23,16 +23,16 @@ import g41.si2022.util.state.FacturaState;
 public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<GestionarFacturasEmprView, GestionarFacturasEmprModel> {
     
     private int row;
-	private JTable table;
+	private JTable tableFacturasEmpr;
 	private List<FacturaDTO> facturas;
     
     public GestionarFacturasEmprController(GestionarFacturasEmprModel modelo, GestionarFacturasEmprView vista) {
 		super(vista, modelo);
-		this.table = this.getView().getTableFacturasEmpr();
+		this.tableFacturasEmpr = this.getView().getTableFacturasEmpr();
 	}
 
     private Supplier<List<FacturaDTO>> supFacturas = () -> {
-		List<FacturaDTO> facturas = getModel().getListaFacturas();
+		List<FacturaDTO> facturas = getModel().getListaFacturasEmpr();
 		facturas.forEach(f -> f.updateEstado());
 		if(this.getView().getChkAll().isSelected()) return facturas;
 		return facturas.stream().filter(f -> f.getEstado() != FacturaState.PAGADA).collect(Collectors.toList());
@@ -76,7 +76,7 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 	}
 
 	private void handleInsertarPago() {
-		String id = table.getModel().getValueAt(row, 0).toString();
+		String id = tableFacturasEmpr.getModel().getValueAt(row, 0).toString();
 		int facturasPorPagar = facturas.size();
 		getModel().insertPago(
 			getView().getDatePago().getDate().toString(),
@@ -90,8 +90,8 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 	}
 
 	private void handleSelect() {
-		TableModel model = table.getModel();
-		row = table.convertRowIndexToModel(table.getSelectedRow());
+		TableModel model = tableFacturasEmpr.getModel();
+		row = tableFacturasEmpr.convertRowIndexToModel(tableFacturasEmpr.getSelectedRow());
 
 		getView().getDatePago().setDate(getView().getMain().getToday());
 		getView().getTxtImporte().setText(model.getValueAt(row, 4).toString());
@@ -99,13 +99,13 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 
 	private void getListaFacturas() {
 		facturas = supFacturas.get();
-		table.setModel(SwingUtil.getTableModelFromPojos(facturas,
+		tableFacturasEmpr.setModel(SwingUtil.getTableModelFromPojos(facturas,
 			new String[] {"id", "doc_nombre", "doc_apellidos", "curso_nombre", "remuneracion", "pagado", "fecha", "estado"},
 			new String[] {"", "Nombre", "Apellidos", "Curso", "Importe total", "Importe pagado", "Fecha introducción", "Estado"},
 			null));
-		table.removeColumn(table.getColumnModel().getColumn(0));
-		table.getColumnModel().getColumn(6).setCellRenderer(new StatusCellRenderer(7));
-		SwingUtil.autoAdjustColumns(table);
+			tableFacturasEmpr.removeColumn(tableFacturasEmpr.getColumnModel().getColumn(0));
+			tableFacturasEmpr.getColumnModel().getColumn(6).setCellRenderer(new StatusCellRenderer(7));
+		SwingUtil.autoAdjustColumns(tableFacturasEmpr);
 	}
 
 	@SuppressWarnings("unchecked")

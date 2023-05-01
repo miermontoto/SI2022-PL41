@@ -10,7 +10,7 @@ public class EntidadDTO implements DTO {
     private String nombre;
     private String email;
     private String telefono;
-    private String importe; // Necesario para almacenar importe al RegistrarCursos
+    private String importe;
 
     @Override
 	public String toString() { 

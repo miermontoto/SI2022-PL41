@@ -16,7 +16,7 @@ class Alumno < Persona # telefono is optional
 end
 
 class Docente < Persona
-    attr_accessor :dni, :direccion, :entidad_id
+    attr_accessor :dni, :direccion
 end
 
 class Inscripcion # grupo_id is optional
@@ -27,7 +27,7 @@ end
 class Curso
     attr_accessor :nombre, :descripcion
     attr_accessor :start_inscr, :end_inscr, :plazas
-    attr_accessor :start, :end, :entidad_id
+    attr_accessor :start, :end, :entidad_id, :importe
 
     def initialize(nombre = nil, descripcion = nil,
         startInscr = nil, endInscr = nil, plazas = nil,
@@ -40,6 +40,7 @@ class Curso
         @start = startCourse unless startCourse.nil?
         @end = endCourse unless endCourse.nil?
         @entidad_id = nil
+        @importe = nil
     end
 end
 

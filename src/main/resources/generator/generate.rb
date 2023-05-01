@@ -31,7 +31,6 @@ def generate_docentes(num, entidades)
         d.telefono = phonify(Faker::PhoneNumber.cell_phone)
         d.direccion = Faker::Address.street_address
         d.dni = Faker::IDNumber.spanish_citizen_number
-        d.entidad_id = rand > 0.8 ? rand(1..entidades.length - 1) : nil
 
         docentes.push(d)
     end

@@ -146,17 +146,17 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	public String insertCursoExterno(
 			String nombre, String descripcion,
 			String inscrStart, String inscrEnd, String start, String end,
-			String plazas, java.util.Map<String, Double> costes, String idEntidad) {
+			String plazas, java.util.Map<String, Double> costes, String idEntidad, String importe) {
 
-		String sql = "INSERT INTO curso(nombre, descripcion, start_inscr, end_inscr, plazas, start, end, entidad_id)"
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO curso(nombre, descripcion, start_inscr, end_inscr, plazas, start, end, entidad_id, importe)"
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		this.getDatabase().executeUpdate(sql, nombre, descripcion, inscrStart, inscrEnd, plazas, start, end, idEntidad);
+		this.getDatabase().executeUpdate(sql, nombre, descripcion, inscrStart, inscrEnd, plazas, start, end, idEntidad, importe);
 
 		String idCurso = String.valueOf(this.getDatabase().executeQuerySingle(
 			"SELECT id FROM curso WHERE nombre = ? and start_inscr = ?" + 
-			" and start = ? and plazas = ? and entidad_id = ?",
-			nombre, inscrStart, start, plazas, idEntidad));
+			" and start = ? and plazas = ? and entidad_id = ? and importe = ?",
+			nombre, inscrStart, start, plazas, idEntidad, importe));
 
 		this.insertCostes(costes, idCurso);
 

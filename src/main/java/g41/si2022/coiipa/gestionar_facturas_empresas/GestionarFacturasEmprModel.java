@@ -10,7 +10,12 @@ import g41.si2022.ui.util.Dialog;
 
 public class GestionarFacturasEmprModel extends g41.si2022.mvc.Model {
 
-    public List<FacturaDTO> getListaFacturas() {
+	/**
+	 * Obtain a list of outstanding bills to companies
+	 * 
+	 * @return lsit of bills
+	 */
+    public List<FacturaDTO> getListaFacturasEmpr() {
 		String sql = "select f.*, dca.remuneracion,"
 		+ " dce.nombre as doc_nombre, dce.apellidos as doc_apellidos, c.nombre as curso_nombre,"
 		+ " CASE WHEN sum(p.importe) IS NOT NULL THEN sum(p.importe) ELSE 0 END as pagado"

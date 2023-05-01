@@ -234,12 +234,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				JTable tablaEnt = getView().getTableEntidades();
 				TableModel entModel = tablaEnt.getModel();
 				for (int i = 0; i < tablaEnt.getRowCount(); i++) {
-					if (tablaEnt.getValueAt(i, 2) != null) {
-						String idEntidad = entModel.getValueAt(i, 0).toString(); 
-						String importe = entModel.getValueAt(i, 3).toString();
-						EntidadDTO entidad = getModel().getEntidadById(idEntidad);
-						entidad.setImporte(importe);
-					}	
 					if (!modified && e.getFirstRow() != i) {
 						modified = true;
 						entModel.setValueAt(null, i, 3);
@@ -373,8 +367,12 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		} else if (this.getView().getRbtn2().isSelected()) {
 			JTable tableEnt = getView().getTableEntidades();
 			String idEntidad = tableEnt.getModel().getValueAt(tableEnt.convertRowIndexToModel(tableEnt.getSelectedRow()), 0).toString();
+			String importe = tableEnt.getModel().getValueAt(tableEnt.convertRowIndexToModel(tableEnt.getSelectedRow()), 3).toString();
 			if (idEntidad == null)
-				throw new UnexpectedException("No se ha seleccionado ninguna entidad");
+				throw new UnexpectedException("No se ha seleccionado ninguna empresa");
+
+			if (importe == null)
+				throw new UnexpectedException("No se ha seleccionado importe a pagar entidad");
 
 			String idCurso = this.getModel().insertCursoExterno(
 					getView().getTxtNombre().getText(),
@@ -388,13 +386,13 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 						java.util.stream.Collectors.toMap(
 							row -> row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
 							row -> Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1))))
-						), idEntidad);
+						), idEntidad, importe);
 
 			this.getModel().insertEvento(eventos, idCurso);
 			Dialog.show("Curso registrado con éxito.");
 			
 		} else {
-			Dialog.show("Debes seleccionar uno/varios profesores o, en su defecto, una entidad");
+			Dialog.show("Debes seleccionar uno/varios profesores o, en su defecto, una empresa");
 		}
 	}
 
