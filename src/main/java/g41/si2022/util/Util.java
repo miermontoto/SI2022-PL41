@@ -31,11 +31,17 @@ public class Util {
 
 	public static final String EMAIL_REGEX = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
-	public static void emptyTable(javax.swing.JTable table) {
+	public static void emptyTable(JTable table) {
 		while (table.getRowCount() > 0)
 			((javax.swing.table.DefaultTableModel) table.getModel()).removeRow(0);
 	}
 
+	public static void removeColumn(JTable table, int... column) {
+		for(int i : column)
+			table.removeColumn(table.getColumnModel().getColumn(i));
+	}
+
+	@SuppressWarnings("unchecked") // es oficial, odio java
 	public static void sortTable(JTable table, Pair<Integer, SortOrder>... columnPair) {
 		TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
 		table.setRowSorter(sorter);
@@ -59,9 +65,9 @@ public class Util {
 	 * @return Data structure containing the data from this table.
 	 */
 	public static List<Map<String, String>> getData (javax.swing.JTable theTable) {
-		List<Map<String, String>> out = new java.util.ArrayList<Map<String, String>> ();
+		List<Map<String, String>> out = new java.util.ArrayList<> ();
 		for (int i = 0 ; i < theTable.getRowCount() ; i++) {
-			out.add(new java.util.HashMap<String, String> ());
+			out.add(new java.util.HashMap<> ());
 			for (int j = 0 ; j < theTable.getColumnCount() ; j++)
 				out.get(i).put(theTable.getColumnName(j),
 						theTable.getValueAt(i, j).toString().trim().equals(theTable.getColumnName(j).trim()) ||
@@ -71,9 +77,9 @@ public class Util {
 				);
 		}
 		return out.stream()
-				.filter(row -> row.values().stream()
-						.anyMatch(value -> value != null))
-				.collect(java.util.stream.Collectors.toList());
+			.filter(row -> row.values().stream()
+			.anyMatch(java.util.Objects::nonNull))
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	private Util() {
@@ -120,7 +126,6 @@ public class Util {
 	public static void sendEmail(String address, String subject, String content) {
 		try (FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + address + ".txt")) {
 			fw.write("[" + subject + ", " + LocalDateTime.now() + "] " + content + "\n");
-			fw.close();
 		} catch (IOException e) { throw new ApplicationException(e); }
 	}
 

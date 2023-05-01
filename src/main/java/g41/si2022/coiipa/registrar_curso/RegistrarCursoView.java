@@ -213,14 +213,11 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 
 		JScrollPane sp = new JScrollPane();
 		sp.getVerticalScrollBar().setUnitIncrement(20);
-		sp.setPreferredSize(new java.awt.Dimension(
-				this.getWidth(), 150
-				));
+		sp.setPreferredSize(new java.awt.Dimension(this.getWidth(), 150));
 
 		this.tableProfesores = new JTable();
 		this.tableProfesores.setName("Profesor:");
 		this.tableProfesores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		// this.profTable.setDefaultEditor(Object.class, null); // No editable
 
 		sp.setViewportView(this.tableProfesores);
 		bottomPane.add(sp, BorderLayout.CENTER);
@@ -232,15 +229,15 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 		this.add(bottomPane, BorderLayout.SOUTH);
 
 		focusableComponents = new JComponent[] {
-				this.txtNombre,
-				this.txtPlazas,
-				this.dateInscrStart,
-				this.dateInscrEnd,
-				this.dateCursoStart,
-				this.dateCursoEnd,
-				this.tablaCostes,
-				this.tableSesiones,
-				this.tableProfesores
+			this.txtNombre,
+			this.txtPlazas,
+			this.dateInscrStart,
+			this.dateInscrEnd,
+			this.dateCursoStart,
+			this.dateCursoEnd,
+			this.tablaCostes,
+			this.tableSesiones,
+			this.tableProfesores
 		};
 	}
 
