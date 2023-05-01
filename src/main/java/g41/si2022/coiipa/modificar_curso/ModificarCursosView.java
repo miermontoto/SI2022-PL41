@@ -128,10 +128,14 @@ public class ModificarCursosView extends View {
 				right.gridy = 3;
 				right.fill = GridBagConstraints.BOTH;
 				contentModificar.add(this.tablaCostes = new g41.si2022.ui.components.table.RowAppendableJTable(
+						new String[] {"ID", "Nombre Colectivo", "Coste"},
 						new String[] {"Nombre Colectivo", "Coste"},
 						new java.util.TreeMap<Integer, java.util.regex.Pattern>() {
 							private static final long serialVersionUID = 1L;
-							{put(1, java.util.regex.Pattern.compile("\\d*"));}
+							{ 
+								put(2, java.util.regex.Pattern.compile("\\d*(\\.(\\d){1,2})?")); 
+								put(1, java.util.regex.Pattern.compile(".*"));
+							}
 						},
 						new boolean[] {true, true}
 					), right

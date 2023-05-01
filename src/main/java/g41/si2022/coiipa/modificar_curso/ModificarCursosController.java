@@ -227,12 +227,12 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
         tablaSesiones.removeColumn(tablaSesiones.getColumnModel().getColumn(0));
 
         RowAppendableJTable tablaCostes = getView().getTablaCostes();
-        tablaCostes.setData(SwingUtil.getTableModelFromPojos(
+        tablaCostes.setData(
             getModel().getColectivosFromCurso(cursoId),
             new String[] { "id", "nombre", "coste" },
-            new String[] { "", "Nombre Colectivo", "Importe" },
+            new String[] { "id", "Nombre Colectivo", "Importe" },
             null
-        ));
+        );
         tablaCostes.removeColumn(tablaCostes.getColumnModel().getColumn(0));
 
         getView().getTxtNombre().setText(getInfoFromCurso(1));
