@@ -74,9 +74,9 @@ public class ModificarCursosModel extends Model {
         }
     }
 
-    public String getColectivoIdFromNombre(String nombre) {
-        String sql = "select id from colectivo where nombre = ?";
-        return getDatabase().executeQueryPojo(ColectivoDTO.class, sql, nombre).get(0).getId();
+    public boolean checkIfCursoHasInscripciones(String idCurso) {
+        String sql = "select count(*) from inscripcion where curso_id = ?";
+        return Integer.parseInt(getDatabase().executeQuerySingle(sql, idCurso).toString()) > 0;
     }
 
     public void updateCostes(String idCurso, List<CosteDTO> costes) {

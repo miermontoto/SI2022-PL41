@@ -32,9 +32,7 @@ import g41.si2022.util.state.CursoState;
 
 public class ModificarCursosController extends Controller<ModificarCursosView, ModificarCursosModel> {
 
-    private boolean dirtyName = false;
-    private boolean dirtyDesc = false;
-    private boolean dirtyPlazas = false;
+    private boolean dirtyInfo = false;
     private boolean dirtyCostes = false;
     private boolean dirtySesiones = false;
     private boolean dirtyProf = false;
@@ -62,12 +60,16 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
         getView().getBtnRemoveSesion().addActionListener(e -> handleRemoveSession());
         getView().getBtnAddSesion().addActionListener(e -> handleAddSession());
         getView().getBtnGuardar().addActionListener(e -> handleGuardar());
-        getView().getTableProfesores().getModel().addTableModelListener(e -> dirtyProf = true);
         getView().getTableSesiones().getModel().addTableModelListener(e -> dirtySesiones = true);
+        getView().getTablaCostes().getModel().addTableModelListener(e -> dirtyCostes = true);
+        getView().getTableSesiones().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent evt) { handleSelectSesion(); }
+        });
 
         KeyAdapter dirtyAdapter = new KeyAdapter() {
             @Override
-            public void keyReleased(KeyEvent e) { dirtyName = true; }
+            public void keyReleased(KeyEvent e) { dirtyInfo = true; }
         };
 
         getView().getTxtNombre().addKeyListener(dirtyAdapter);
@@ -75,10 +77,18 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
         getView().getTxtPlazas().addKeyListener(dirtyAdapter);
     }
 
+    private void handleSelectSesion() {
+        JTable table = getView().getTableSesiones();
+        int row = table.convertRowIndexToModel(table.getSelectedRow());
+        if(row == -1) return;
+
+        getView().getBtnRemoveSesion().setEnabled(getView().getMain().getToday().isBefore(LocalDate.parse(sesiones.get(row).getFecha())));
+    }
+
     private void handleGuardar() {
         if(dirtySesiones) getModel().updateSesiones(getInfoFromCurso(0), sesiones);
 
-        if(dirtyName || dirtyDesc || dirtyPlazas) {
+        if(dirtyInfo) {
             getModel().updateCurso(getInfoFromCurso(0), getView().getTxtNombre(), getView().getTxtDescripcion(), getView().getTxtPlazas());
         }
 
@@ -90,8 +100,8 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
             String remuneracion;
 
             for(int i = 0; i < getView().getTableProfesores().getRowCount(); i++) {
-                idDocente = getView().getTableProfesores().getModel().getValueAt(i, 1).toString();
-                remuneracion = getView().getTableProfesores().getModel().getValueAt(i, 2).toString();
+                idDocente = getView().getTableProfesores().getModel().getValueAt(i, 0).toString();
+                remuneracion = getView().getTableProfesores().getModel().getValueAt(i, 4).toString();
                 docencias.add(new DocenciaDTO(idCurso, idDocente, remuneracion));
             }
 
@@ -107,7 +117,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
             String coste;
 
             for(int i = 0; i < getView().getTablaCostes().getRowCount(); i++) {
-                idColectivo = getModel().getColectivoIdFromNombre(getView().getTablaCostes().getModel().getValueAt(i, 0).toString());
+                idColectivo = getView().getTablaCostes().getModel().getValueAt(i, 0).toString();
                 coste = getView().getTablaCostes().getModel().getValueAt(i, 2).toString();
                 costes.add(new CosteDTO(idCurso, idColectivo, coste));
             }
@@ -117,9 +127,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
         }
 
         // Actualizar dirty flags
-        dirtyName = false;
-        dirtyDesc = false;
-        dirtyPlazas = false;
+        dirtyInfo = false;
         dirtyCostes = false;
         dirtySesiones = false;
         dirtyProf = false;
@@ -137,8 +145,10 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
     private boolean handleAddSession() {
         EventDialog ed;
         JTable table = getView().getTableSesiones();
-        if(sesiones.isEmpty()) ed = new EventDialog(start, end);
-        else ed = new EventDialog(start, end, sesiones.getLast());
+        LocalDate check = getView().getMain().getToday();
+        check = check.isAfter(start) ? check : start;
+        if(sesiones.isEmpty()) ed = new EventDialog(check, end);
+        else ed = new EventDialog(check, end, sesiones.getLast());
 
         if(!ed.showDialog()) return false;
 
@@ -215,6 +225,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
         ));
         Util.removeColumn(tablaProfesores, 0);
         Util.sortTable(tablaProfesores, new Pair<>(4, SortOrder.DESCENDING), new Pair<>(3, SortOrder.ASCENDING));
+        getView().getTableProfesores().getModel().addTableModelListener(e -> dirtyProf = true);
 
         JTable tablaSesiones = getView().getTableSesiones();
         sesiones = new LinkedList<>(getModel().getSesionesFromCurso(cursoId));
@@ -269,11 +280,17 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
 
         switch(status) {
             case PLANEADO:
+                break;
             case EN_INSCRIPCION:
+                tablaCostes.setEnabled(getModel().checkIfCursoHasInscripciones(getInfoFromCurso(0)));
                 break;
             case INSCRIPCION_CERRADA:
+                tablaCostes.setEnabled(false);
                 break;
             case EN_CURSO:
+                tablaProfesores.setEnabled(false);
+                txtPlazas.setEnabled(false);
+                txtNombre.setEnabled(false);
                 break;
             case CERRADO:
             case CANCELADO:
@@ -281,11 +298,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
                 btnGuardar.setEnabled(false);
                 btnAddSesion.setEnabled(false);
                 btnRemoveSesion.setEnabled(false);
-                txtNombre.setEnabled(false);
                 txtDescripcion.setEnabled(false);
-                txtPlazas.setEnabled(false);
-                tablaCostes.setEnabled(false);
-                tablaProfesores.setEnabled(false);
                 break;
             default:
                 throw new ApplicationException("Invalid status: " + status);
