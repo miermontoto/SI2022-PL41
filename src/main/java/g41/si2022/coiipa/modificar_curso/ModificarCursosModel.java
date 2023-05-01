@@ -91,4 +91,13 @@ public class ModificarCursosModel extends Model {
         }
     }
 
+    public boolean validatePlazas(String idCurso, String plazas) {
+        int n = Integer.parseInt(plazas);
+        if(n < 0) return false;
+
+        String sql = "select count(*) from inscripcion where curso_id = ?";
+        int inscripciones = Integer.parseInt(getDatabase().executeQuerySingle(sql, idCurso).toString());
+        return n >= inscripciones;
+    }
+
 }

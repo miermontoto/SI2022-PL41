@@ -86,16 +86,21 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
     }
 
     private void handleGuardar() {
-        if(dirtySesiones) getModel().updateSesiones(getInfoFromCurso(0), sesiones);
+        String idCurso = getInfoFromCurso(0);
+        if(dirtySesiones) getModel().updateSesiones(idCurso, sesiones);
 
         if(dirtyInfo) {
+            if(!getModel().validatePlazas(idCurso, getView().getTxtPlazas().getText())) {
+                Dialog.showError("Número de plazas inválido.\n(Debe tener más plazas que alumnos ya inscritos)");
+                return;
+            }
             getModel().updateCurso(getInfoFromCurso(0), getView().getTxtNombre(), getView().getTxtDescripcion(), getView().getTxtPlazas());
         }
 
         if(dirtyProf) {
             // Compilar la tabla de profesores en una lista de docencias.
             List<DocenciaDTO> docencias = new ArrayList<>();
-            String idCurso = getInfoFromCurso(0);
+
             String idDocente;
             String remuneracion;
 
@@ -112,7 +117,6 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
         if(dirtyCostes) {
             // Compilar la lista de costes.
             List<CosteDTO> costes = new ArrayList<>();
-            String idCurso = getInfoFromCurso(0);
             String idColectivo;
             String coste;
 
