@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.table.TableModel;
 
 import g41.si2022.dto.AlumnoDTO;
+import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.GrupoDTO;
 import g41.si2022.ui.SwingUtil;
@@ -45,31 +46,43 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 			@Override
 			public void mouseReleased(MouseEvent ent) {
 				SwingUtil.exceptionWrapper(() -> updateCursoValue());
-				SwingUtil.exceptionWrapper(() -> manageForm());
+				InscribirMultiplesUsuariosEntidadController.this
+					.getView().getComboBoxEditors().parallelStream()
+				.forEach(cbe -> 
+					cbe.setData(
+					InscribirMultiplesUsuariosEntidadController.this
+						.getModel().getColectivosFromCurso(cursoId)
+						.stream().collect(new g41.si2022.util.collector.HalfwayListCollector<ColectivoDTO, String> () {
+
+							@Override
+							public BiConsumer<List<String>, ColectivoDTO> accumulator() {
+								return (list, item) -> list.add(item.getNombre());
+							}
+							
+						})
+					)
+				);
 			}
 		});
-
-		KeyAdapter ka = new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent evt) {
-				SwingUtil.exceptionWrapper(() -> manageForm());
-			}
-		};
-
-		Stream.of(
-				this.getView().getTxtEmailLogin(),
-				this.getView().getTxtEmail(),
-				this.getView().getTxtNombre(),
-				this.getView().getTxtTelefono(),
-				this.getView().getRadioSignin(),
-				this.getView().getRadioSignup()
-				).forEach(x -> x.addKeyListener(ka));
-
-		Stream.of(
-				this.getView().getRadioSignin(),
-				this.getView().getRadioSignup()
-				).forEach(x -> x.addActionListener(e -> SwingUtil.exceptionWrapper( () -> manageForm())));
-
+		
+		g41.si2022.ui.components.table.editors.JComboBoxEditor<String> cellEditor = 
+			((g41.si2022.ui.components.table.editors.JComboBoxEditor<String>) 
+			InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos()
+				.getColumnModel().getColumn(4).getCellEditor());
+		this.getView().getTablaInscritos().addRowAppendedListener(e -> { 
+			InscribirMultiplesUsuariosEntidadController.this.getView().getBtnInscribir().setEnabled(true);
+			InscribirMultiplesUsuariosEntidadController.this
+				.getView().getComboBoxEditors().add(cellEditor);
+			cellEditor.setData(InscribirMultiplesUsuariosEntidadController.this
+				.getModel().getColectivosFromCurso(cursoId)
+				.stream().collect(new g41.si2022.util.collector.HalfwayListCollector<ColectivoDTO, String> () {
+					@Override
+					public BiConsumer<List<String>, ColectivoDTO> accumulator() {
+						return (lista, item) -> lista.add(item.getNombre());
+					}
+				}));
+		});
+		
 		this.getView().getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageMain()));
 	}
 
@@ -100,8 +113,9 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 		grupo = getModel().getGrupoFromEmail(email).get(0);
 
 		getModel().insertInscripciones(
-			getView().getMain().getToday().toString(), cursoId,
-			getModel().insertAlumnos(gatherAllAlumnos()),
+			getView().getMain().getToday().toString(),
+			cursoId,
+			gatherAllAlumnos(),
 			grupo.getId()
 		);
 
@@ -123,7 +137,9 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 	public List<AlumnoDTO> gatherAllAlumnos () {
 		java.util.function.BiFunction<Map<String, Object>, Integer, String> tableGetter = 
 				(map, columnIndex) -> map.get(InscribirMultiplesUsuariosEntidadController.this.getView()
-				.getTablaInscritos().getColumnNames()[columnIndex]).toString();
+				.getTablaInscritos().getColumnNames()[columnIndex]) == null
+				? ""
+				: map.get(InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos().getColumnNames()[columnIndex]).toString();
 
 		return this.getView().getTablaInscritos().getData().stream().collect(
 				new g41.si2022.util.collector.HalfwayListCollector<Map<String, Object>, AlumnoDTO>() {
@@ -135,50 +151,11 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 							alumno.setApellidos(tableGetter.apply(row, 1));
 							alumno.setEmail(tableGetter.apply(row, 2));
 							alumno.setTelefono(tableGetter.apply(row, 3));
+							alumno.setNombreColectivo(tableGetter.apply(row, 4));
 							list.add(alumno);
 						};
 					}
 				});
-	}
-
-	public void manageForm() {
-		this.getView().getBtnInscribir().setEnabled(false);
-		if (cursoId == null) return;
-		String signinEmail = getView().getTxtEmailLogin().getText();
-		String signupEmail = getView().getTxtEmail().getText();
-
-		if(signinEmail.isEmpty() && signupEmail.isEmpty()) return;
-
-		getView().getLblSignin().setForeground(Color.RED);
-		getView().getLblSignup().setForeground(Color.RED);
-
-		boolean validEmail = false;
-		JLabel target = null;
-		String errorMsg = "";
-		switch(this.getView().getRadioSignin().isSelected() ? SIGN_IN : SIGN_UP) {
-			case SIGN_IN:
-				target = this.getView().getLblSignin();
-				if (!Util.verifyEmailStructure(signinEmail)) { // Check basic structure
-					target.setText("");
-					break;
-				}
-				validEmail = this.getModel().verifyEmail(signinEmail); // Check if email exists in database
-				errorMsg = "Email desconocido";
-				break;
-			case SIGN_UP:
-				target = this.getView().getLblSignup();
-				if (!Util.verifyEmailStructure(signupEmail)) {
-					this.getView().getLblSignup().setText("");
-					break;
-				}
-				validEmail = !this.getModel().verifyEmail(signupEmail); // Check if email doesn't already exist in db
-				errorMsg = "El email ya está registrado";
-				break;
-			default:
-				throw new ApplicationException("Invalid radio button value");
-		}
-		target.setText(validEmail ? "" : errorMsg);
-		this.getView().getBtnInscribir().setEnabled(validEmail);
 	}
 
 	public void updateCursoValue() {

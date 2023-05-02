@@ -57,13 +57,8 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 		return this.getDatabase().executeQueryPojo(CursoDTO.class, "select * from curso");
 	}
 
-	public List<GrupoDTO> getGrupoFromEmail(String email) {
-		String sql = "select * from entidad where email like ?;";
-		return this.getDatabase().executeQueryPojo(GrupoDTO.class, sql, email);
-	}
-
 	public List<AlumnoDTO> getAlumnoFromEmail(String email) {
-		String sql = "select id, nombre, email, telefono"
+		String sql = "select *"
 				+ " from alumno where email like ?;";
 		return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql, email);
 	}
@@ -226,7 +221,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 
 		this.getDatabase().insertBulk(
 				"inscripcion",
-				new String[] {"fecha", "alumno_id", "curso_id", "coste_id"},
+				new String[] {"fecha", "alumno_id", "curso_id", "entidad_id"},
 				insertTheseAlumnos,
 				new java.util.ArrayList<java.util.function.Function<g41.si2022.dto.DTO, Object>> () {
 					private static final long serialVersionUID = 1L;

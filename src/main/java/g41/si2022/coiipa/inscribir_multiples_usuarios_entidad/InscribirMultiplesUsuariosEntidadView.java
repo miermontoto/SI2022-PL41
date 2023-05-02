@@ -5,6 +5,7 @@ import java.awt.Color;
 
 import lombok.Getter;
 import java.awt.GridLayout;
+import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
@@ -25,7 +26,9 @@ import java.awt.GridBagConstraints;
 
 import g41.si2022.mvc.View;
 import g41.si2022.ui.components.hint.HintingJTextField;
+import g41.si2022.ui.components.table.RowAppendableComponentableJTable;
 import g41.si2022.ui.components.table.RowAppendableJTable;
+import g41.si2022.ui.components.table.editors.JComboBoxEditor;
 import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
 
@@ -57,6 +60,8 @@ public class InscribirMultiplesUsuariosEntidadView extends View {
 	private JLabel lblSignup;
 	private JLabel lblStatus;
 
+	private java.util.LinkedList<g41.si2022.ui.components.table.editors.JComboBoxEditor<String>> comboBoxEditors;
+
 	public InscribirMultiplesUsuariosEntidadView(g41.si2022.ui.SwingMain main) {
 		super(main, InscribirMultiplesUsuariosEntidadModel.class, InscribirMultiplesUsuariosEntidadView.class, InscribirMultiplesUsuariosEntidadController.class);
 	}
@@ -82,16 +87,23 @@ public class InscribirMultiplesUsuariosEntidadView extends View {
 		sp.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		JPanel inscrollPanel = makeLoginPanel();
 		JPanel tablesPanel = new JPanel(new GridLayout(0, 1));
+		this.comboBoxEditors = new LinkedList<JComboBoxEditor<String>> ();
+		this.comboBoxEditors.add(new JComboBoxEditor<String> ());
 		inscrollPanel.add(tablesPanel, BorderLayout.SOUTH);
-		tablesPanel.add(this.tablaInscritos = new RowAppendableJTable (
-				new String[]{"Nombre", "Apellidos", "Email", "Telefono"},
+		tablesPanel.add(this.tablaInscritos = new RowAppendableComponentableJTable (
+				new String[]{"Nombre", "Apellidos", "Email", "Telefono", "Colectivo"},
 				new java.util.TreeMap<Integer, java.util.regex.Pattern> () {
 					private static final long serialVersionUID = 1L;
 					{
 						this.put(2, Pattern.compile("[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+"));
 						this.put(3, Pattern.compile("^([0-9]{3}( )?){3}$"));
 					}},
-				new boolean[] {true, true, true, false}
+				new boolean[] {true, true, true, false, true},
+				new java.util.TreeMap<Integer, javax.swing.table.TableCellEditor> () {
+					private static final long serialVersionUID = 1L;
+					{
+						this.put(4, InscribirMultiplesUsuariosEntidadView.this.getComboBoxEditors().getFirst());
+					}}
 				));
 
 		sp.setViewportView(inscrollPanel);
