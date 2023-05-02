@@ -215,4 +215,25 @@ public class Util {
 		return new SimpleDateFormat("yyyy-MM-dd").format(javaDate);
 	}
 
+	/**
+	 * Datos del recibo
+	 * Nombre de la persona que realiza el pago
+	 * Curso por el que se paga la inscripción
+	 * Importe pagado
+	 * Especificar que el pago se ha hecho por caja
+	 */
+
+	public static void printReceipt(String idAlumno, String nombre, String apellidos, String curso, String importe) {
+		try (FileWriter fw = new FileWriter("Recibo" + idAlumno + ".txt")) {
+			fw.write(nombre + apellidos + "ha realizado su pago de inscripción al curso:" + curso + "\n");
+			fw.write("Pago con importe de:" + importe + "€\n");
+			fw.write("\n\n\n");
+			fw.write("Pago realizado en caja en la sede del colegio\n");
+			fw.write("\n\n\n" + "                 ");
+			fw.write("COIIPA. Colegio Oficial de Ingenieros en Informática del Principado de Asturias");
+		} catch (IOException e) { 
+			throw new ApplicationException(e); 
+		}
+	}
+
 }
