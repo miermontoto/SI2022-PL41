@@ -16,7 +16,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.Border;
 import javax.swing.ScrollPaneConstants;
 
 import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
@@ -24,7 +23,6 @@ import com.github.lgooddatepicker.zinternaltools.JIntegerTextField;
 import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
-
 import lombok.Getter;
 
 @Getter
@@ -39,7 +37,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 	private JTable tablaCostes;
 	private JTable tableProfesores;
 	private JTable tableEntidades;
-	private JTable tableEventos;
+	private JTable tableSesiones;
 	private JButton btnAddEvento;
 	private JButton btnRemoveEvento;
 	private JButton btnRegistrar;
@@ -208,7 +206,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				JPanel btnPanel = new JPanel(new GridLayout(1, 2, 10, 10));
 				btnPanel.add(this.btnAddEvento = new JButton("Añadir evento"));
 				btnPanel.add(this.btnRemoveEvento = new JButton("Eliminar evento"));
-				eventosPanel.add(btnPanel, BorderLayout.SOUTH);
+				sesionesPanel.add(btnPanel, BorderLayout.SOUTH);
 				btnAddEvento.setToolTipText("Necesario rango de fechas de curso");
 			} { // Radio buttons
 				left.gridy = 7;
@@ -226,7 +224,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 
 		JPanel bottomPane = new JPanel();
 		bottomPane.setLayout(new BorderLayout());
-		
+
 		JPanel leftBottomPane = new JPanel();
 		leftBottomPane.setLayout(new BorderLayout());
 		leftBottomPane.add(JLabelFactory.getLabel(FontType.subtitle, "Seleccionar profesor"), BorderLayout.NORTH);
@@ -274,7 +272,7 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				this.dateCursoStart,
 				this.dateCursoEnd,
 				this.tablaCostes,
-				this.tableEventos,
+				this.tableSesiones,
 				this.tableProfesores,
 				this.tableEntidades
 		};
