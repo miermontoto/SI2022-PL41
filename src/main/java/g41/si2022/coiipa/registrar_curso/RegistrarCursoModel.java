@@ -36,7 +36,7 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 * @param colectivosInTable List of colectivos to be added. This is a list of colectivo Names
 	 * @return List of colectivos that were actually added.
 	 */
-	public Map<String, ColectivoDTO> insertColectivos(List<String> colectivosInTable) {
+	public Map<String, ColectivoDTO> insertColectivos (List<String> colectivosInTable) {
 		Map<String, ColectivoDTO> existingColectivos = this.getColectivos().stream()
 				.collect(Collectors.toMap(e -> e.getNombre(), e -> e));
 
@@ -44,22 +44,22 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 			.filter(nombreColectivo -> !existingColectivos.keySet().contains(nombreColectivo))
 			.collect(Collectors.toList());
 
-		StringBuilder sql = new StringBuilder();
+		String sql;
 		if (!missingColectivosInDatabase.isEmpty()) {
-			sql.append("INSERT INTO colectivo (nombre) VALUES (?)");
+			sql = "INSERT INTO colectivo (nombre) VALUES (?)";
 			for (int i = 0 ; i < missingColectivosInDatabase.size() - 1 ; i++) {
-				sql.append(", (?)");
+				sql += ", (?)";
 			}
 			this.getDatabase().executeUpdate(sql+";", missingColectivosInDatabase.toArray());
 		}
 
-		sql.append("SELECT * FROM colectivo WHERE colectivo.nombre IN (?");
+		sql = "SELECT * FROM colectivo WHERE colectivo.nombre IN (?";
 		for (int i = 0 ; i < colectivosInTable.size() - 1 ; i++) {
-			sql.append(", ?");
+			sql += ", ?";
 		}
-		sql.append(")");
+		sql += ")";
 
-		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, sql.toString(), colectivosInTable.toArray())
+		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, sql, colectivosInTable.toArray())
 				.stream().collect(Collectors.toMap(e -> e.getNombre(), e -> e));
 	}
 
@@ -75,23 +75,23 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		java.util.Iterator<Map.Entry<String, Double>> itr = costes.entrySet().stream()
 			.collect(Collectors.toMap(
 				row -> colectivos.get(row.getKey()).getId(),
-				Map.Entry::getValue
+				row -> row.getValue()
 			))
 			.entrySet().iterator();
 		Map.Entry<String, Double> current = itr.next();
-		StringBuilder sql = new StringBuilder("INSERT INTO coste (colectivo_id, coste, curso_id) VALUES (?, ?, ?)");
-		List<String> data = new java.util.ArrayList<> ();
+		String sql = "INSERT INTO coste (colectivo_id, coste, curso_id) VALUES (?, ?, ?)";
+		java.util.List<String> data = new java.util.ArrayList<> ();
 		data.add(current.getKey());
 		data.add(current.getValue().toString());
 		data.add(idCurso);
 		while (itr.hasNext()) {
 			current = itr.next();
-			sql.append(", (?, ?, ?)");
+			sql += ", (?, ?, ?)";
 			data.add(current.getKey());
 			data.add(current.getValue().toString());
 			data.add(idCurso);
 		}
-		this.getDatabase().executeUpdate(sql.toString(), data.toArray());
+		this.getDatabase().executeUpdate(sql, data.toArray());
 	}
 
 	/**

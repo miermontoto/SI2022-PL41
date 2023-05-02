@@ -52,6 +52,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	public void initVolatileData() {
 		SwingUtil.exceptionWrapper(this::getListaEntidades);  // Load entidades List
 		SwingUtil.exceptionWrapper(this::getListaProfesores);
+		loadTableListeners();
 	}
 
 	@Override
@@ -200,18 +201,22 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		});
 
 		this.getView().getTableEntidades().getModel().addTableModelListener(new TableModelListener() {
+			/**
+			 * When calling {@code setValueAt}, this listener is triggered recursively. <br>
+			 * This attribute is expected to stop the recursion on the first depth.
+			 */
 			private boolean modified = false;
+			private int lastEditedRow = -1;
+
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				JTable tablaEnt = getView().getTableEntidades();
-				TableModel entModel = tablaEnt.getModel();
-				for (int i = 0; i < tablaEnt.getRowCount(); i++) {
-					if (!modified && e.getFirstRow() != i) {
-						modified = true;
-						entModel.setValueAt(null, i, 3);
-						modified = false;
-					}
+				if (!modified && lastEditedRow >= 0 && lastEditedRow != e.getFirstRow()) {
+					JTable tablaEnt = getView().getTableEntidades();
+					modified = true;
+					tablaEnt.setValueAt(null, lastEditedRow, 2);
+					modified = false;
 				}
+				this.lastEditedRow = e.getFirstRow();
 			}
 		});
 	}
@@ -288,7 +293,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
         )
     );
 		SwingUtil.autoAdjustColumns(this.getView().getTableProfesores());
-		loadTableListeners();
 	}
 
 	public void getListaEntidades() {
@@ -308,7 +312,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		getView().getTableEntidades().setModel(tableModel);
 		tableEntidades.removeColumn(tableEntidades.getColumnModel().getColumn(0));
 		SwingUtil.autoAdjustColumns(tableEntidades);
-		loadTableListeners();
 	}
 
 	public void insertCurso() {
