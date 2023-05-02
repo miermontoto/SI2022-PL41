@@ -1,11 +1,14 @@
 package g41.si2022.coiipa.inscribir_multiples_usuarios;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.GrupoDTO;
+import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.util.Util;
 
 public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
@@ -21,6 +24,22 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 		if (this.listaColectivos == null)
 			this.listaColectivos = this.getDatabase().executeQueryPojo(ColectivoDTO.class, "SELECT * FROM colectivo");
 		return this.listaColectivos;
+	}
+	
+	/**
+	 * getColectivosFromCurso. Returns the colectivos that appear on a given curso.
+	 * 
+	 * @param cursoId ID of the curso
+	 * @return List of colectivos that may access the curso.
+	 */
+	public List<ColectivoDTO> getColectivosFromCurso (String cursoId) {
+		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, 
+				"SELECT colectivo.* "
+				+ "FROM colectivo "
+				+ "INNER JOIN coste ON colectivo.id = coste.colectivo_id "
+				+ "INNER JOIN curso ON curso.id = coste.curso_id "
+				+ "WHERE curso.id = ?",
+				cursoId);
 	}
 
 	public List<CursoDTO> getListaCursos(String date) {
@@ -85,13 +104,6 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 					this.add(e -> ((AlumnoDTO) e).getTelefono());
 				}}
 			);
-			/*
-			for(AlumnoDTO alumno : alumnosToRegister) {
-				String sql = "insert into alumno (nombre, apellidos, email, telefono) values (?, ?, ?, ?);";
-				InscribirMultiplesUsuariosModel.this.getDatabase().executeUpdate(sql, alumno.getNombre(),
-					alumno.getApellidos(),alumno.getEmail(), alumno.getTelefono());
-			}
-			*/
 		}
 	}
 
@@ -134,9 +146,19 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 		return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql);
 	}
 
-	public List<ColectivoDTO> getCostes(String idCurso) {
-		String sql = "select * from coste where curso_id = ?;";
-		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, sql, idCurso);
+	/**
+	 * getCoste. Gets the coste_id for a given curso and nombreColectivo.
+	 * 
+	 * @param idCurso Curso to be checked
+	 * @param nombreColectivo Name of the colectivo to be checked
+	 * @return Coste_id that the colectivo has to pay for the curso.
+	 */
+	public String getCostes(String idCurso, String nombreColectivo) {
+		String sql = "SELECT coste.id "
+				+ "FROM coste "
+				+ "INNER JOIN colectivo ON coste.colectivo_id = colectivo.id "
+				+ "WHERE curso_id = ? AND colectivo.nombre = ?";
+		return this.getDatabase().executeQuerySingle(sql, idCurso, nombreColectivo).toString();
 	}
 
 	/**
@@ -145,16 +167,9 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @param curso_id ID of the curso to be retrieved
 	 * @return List of alumnos that are in the curso with curso_id
 	 */
-	public List<AlumnoDTO> getAlumnosInCurso (String curso_id) {
+	public List<InscripcionDTO> getAlumnosInCurso (String curso_id) {
 		String sql = "select * from inscripcion where curso_id = ?";
-		return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql, curso_id);
-	}
-
-	public void insertGrupo(String nombre, String email, String telefono) {
-		String sql =
-				"insert into entidad (nombre, email, telefono)"
-						+ " values (?, ?, ?);";
-		this.getDatabase().executeUpdate(sql, nombre, email, telefono);
+		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, curso_id);
 	}
 
 	/**
@@ -167,11 +182,21 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @param curso_id curso id
 	 */
 	public void insertInscripciones(List<AlumnoDTO> alumnos, String fecha, String curso_id) {
-		List<AlumnoDTO> alumnosInCurso = this.getAlumnosInCurso(curso_id);
-		alumnos = this.insertAlumnos(alumnos).parallelStream() // Remove alumnos that are already in this curso
-				.filter((id) -> alumnosInCurso.parallelStream()
-						.allMatch((alumnoInCurso) -> !alumnoInCurso.getId().equals(id.getId())))
-				.collect(java.util.stream.Collectors.toList());
+		List<InscripcionDTO> alumnosInCurso = this.getAlumnosInCurso(curso_id);
+		List<AlumnoDTO> alumnosModifiable = new java.util.ArrayList<AlumnoDTO> ();
+		alumnos.forEach(alumno -> alumnosModifiable.add(alumno));
+		alumnosModifiable.removeIf(alumno -> alumnosInCurso.parallelStream().allMatch(
+			alumnoInCurso -> alumnoInCurso.getAlumno_id().equals(alumno.getId())
+		));
+		List<AlumnoDTO> emails = this.getAlumnosFromEmails(alumnosModifiable);
+		alumnosModifiable.forEach(alumno -> { 
+			AlumnoDTO current;
+			java.util.Iterator<AlumnoDTO> itr = emails.iterator();
+			do
+				current = itr.next();
+			while (itr.hasNext() && current.getEmail().equals(alumno.getEmail()));
+			alumno.setId(current.getId());
+		});
 
 		this.getDatabase().insertBulk(
 				"inscripcion",
@@ -183,11 +208,12 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 					this.add(e -> fecha);
 					this.add(e -> ((AlumnoDTO) e).getId());
 					this.add(e -> curso_id);
-					this.add(e -> ((AlumnoDTO) e).getCoste());
+					this.add(e -> InscribirMultiplesUsuariosModel.this.getCostes(curso_id, ((AlumnoDTO) e).getNombreColectivo()));
 				}});
 	}
 
 	public boolean verifyEmail(String email) {
 		return Util.verifyEmailInGrupo(this.getDatabase(), email);
 	}
+
 }

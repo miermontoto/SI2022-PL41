@@ -121,20 +121,23 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 	 * @return List of alumnos that are listed in the table
 	 */
 	public List<AlumnoDTO> gatherAllAlumnos () {
+		java.util.function.BiFunction<Map<String, Object>, Integer, String> tableGetter = 
+				(map, columnIndex) -> map.get(InscribirMultiplesUsuariosEntidadController.this.getView()
+				.getTablaInscritos().getColumnNames()[columnIndex]).toString();
+
 		return this.getView().getTablaInscritos().getData().stream().collect(
-				new g41.si2022.util.collector.HalfwayListCollector<Map<String, String>, AlumnoDTO>() {
+				new g41.si2022.util.collector.HalfwayListCollector<Map<String, Object>, AlumnoDTO>() {
 					@Override
-					public BiConsumer<List<AlumnoDTO>, Map<String, String>> accumulator() {
+					public BiConsumer<List<AlumnoDTO>, Map<String, Object>> accumulator() {
 						return (list, row) -> {
 							AlumnoDTO alumno = new AlumnoDTO();
-							alumno.setNombre(row.get(InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos().getColumnNames()[0]));
-							alumno.setApellidos(row.get(InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos().getColumnNames()[1]));
-							alumno.setEmail(row.get(InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos().getColumnNames()[2]));
-							alumno.setTelefono(row.get(InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos().getColumnNames()[3]));
+							alumno.setNombre(tableGetter.apply(row, 0));
+							alumno.setApellidos(tableGetter.apply(row, 1));
+							alumno.setEmail(tableGetter.apply(row, 2));
+							alumno.setTelefono(tableGetter.apply(row, 3));
 							list.add(alumno);
 						};
 					}
-
 				});
 	}
 

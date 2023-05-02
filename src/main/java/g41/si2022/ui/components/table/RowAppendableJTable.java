@@ -160,16 +160,16 @@ public class RowAppendableJTable extends javax.swing.JTable {
 	 * 
 	 * @return Data structure containing the data from this table.
 	 */
-	public List<Map<String, String>> getData () {
-		List<Map<String, String>> out = new java.util.ArrayList<Map<String, String>> ();
+	public List<Map<String, Object>> getData () {
+		List<Map<String, Object>> out = new java.util.ArrayList<Map<String, Object>> ();
 		for (int i = 0 ; i < this.getRowCount() ; i++) {
-			out.add(new java.util.HashMap<String, String> ());
+			out.add(new java.util.HashMap<String, Object> ());
 			for (int j = 0 ; j < RowAppendableJTable.this.getColumnNames().length ; j++)
 				out.get(i).put(this.getColumnNames()[j], 
 						this.getValueAt(i, j).toString().trim().equals(this.getColumnNames()[j].trim()) ||
 						this.getValueAt(i, j).toString().trim().isEmpty()
 								? null
-								: this.getValueAt(i, j).toString()
+								: this.getValueAt(i, j)
 				);
 		}
 		return out.stream()

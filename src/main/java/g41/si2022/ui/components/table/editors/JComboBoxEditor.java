@@ -24,6 +24,7 @@ public class JComboBoxEditor<T> extends AbstractCellEditor implements TableCellE
 	}
 	
 	public void setData (java.util.List<T> data) {
+		this.theCb.removeAllItems();
 		data.forEach(item -> this.theCb.addItem(item));
 	}
 
@@ -39,6 +40,11 @@ public class JComboBoxEditor<T> extends AbstractCellEditor implements TableCellE
 
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+		if (value != null) this.theCb.setSelectedItem(value);
+		return this.theCb;
+	}
+	
+	public JComboBox<T> getComboBox () {
 		return this.theCb;
 	}
 

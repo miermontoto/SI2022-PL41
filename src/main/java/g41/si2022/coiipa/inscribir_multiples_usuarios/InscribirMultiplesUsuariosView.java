@@ -57,30 +57,30 @@ public class InscribirMultiplesUsuariosView extends View {
 		this.comboBoxEditors.add(new JComboBoxEditor<String> ());
 		inscrollPanel.add(
 		this.tablaInscritos = new RowAppendableComponentableJTable (
-				new String[]{"Nombre", "Apellidos", "Email", "Telefono"},
+				new String[]{"Nombre", "Apellidos", "Email", "Telefono", "Colectivo"},
 				new java.util.TreeMap<Integer, java.util.regex.Pattern> () {
 					private static final long serialVersionUID = 1L;
 					{
 						this.put(2, Pattern.compile("[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+"));
 						this.put(3, Pattern.compile("^([0-9]{3}( )?){3}$"));
 					}},
-				new boolean[] {true, true, true, false},
+				new boolean[] {true, true, true, false, true},
 				new java.util.TreeMap<Integer, javax.swing.table.TableCellEditor> () {
 					private static final long serialVersionUID = 1L;
 					{
 						this.put(4, InscribirMultiplesUsuariosView.this.getComboBoxEditors().getFirst());
 					}}
-				), BorderLayout.SOUTH);
+				), BorderLayout.CENTER);
 
 		sp.setViewportView(inscrollPanel);
 
 		this.add(sp, BorderLayout.CENTER);
-		this.add(makeBottomPanel(), BorderLayout.SOUTH);
+		this.add(makeCursosPanel(), BorderLayout.SOUTH);
 
 		btnInscribir.setEnabled(false);
 	}
 
-	private JPanel makeBottomPanel() {
+	private JPanel makeCursosPanel() {
 		JPanel bottomPane = new JPanel(new BorderLayout());
 
 		tablaCursos = new JTable();
