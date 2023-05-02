@@ -46,7 +46,7 @@ create table curso (
     end date not null,
     estado text,
     entidad_id integer,
-    importe integer,
+    importe float,
     foreign key (entidad_id) references entidad(id)
 );
 

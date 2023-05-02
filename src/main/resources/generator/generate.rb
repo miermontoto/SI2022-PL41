@@ -191,7 +191,7 @@ def generate_cursos(num, entidades)
         c = Curso.new
 
         c.nombre = "[G] " + Faker::Educator.course_name
-        c.descripcion = "Inserte descripcion"
+        c.descripcion = Faker::Lorem.paragraph
         c.start_inscr = Date.today + rand(-365..365)
         c.end_inscr = c.start_inscr + rand(1..30)
         c.plazas = rand(10..200)
@@ -199,7 +199,9 @@ def generate_cursos(num, entidades)
         c.end = c.start + rand(1..30)
         c.entidad_id = rand > 0.5 ? rand(1..entidades.length - 1) : nil
         c.importe = c.entidad_id != nil ? rand(10..250) : nil
-
+        if c.entidad_id != nil
+            c.nombre += " [E]"
+        end
         cursos.push(c)
     end
 

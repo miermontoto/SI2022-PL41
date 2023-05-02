@@ -136,14 +136,10 @@ public class GestionarFacturasEmprView extends View {
 		gbc.fill = GridBagConstraints.NONE;
 		registrarPanel.add(lblEmpresa = new JLabel("N/A"), gbc);
 
-
 		gbc.insets = next;
 		gbc.gridy = 4;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		// registrarPanel.add(cmbEmpresa = new JXComboBox(), gbc);
-		// cmbEmpresa.addItem("Seleccione una empresa");
-		// cmbEmpresa.setEnabled(false);
 
 		gbc.insets = spacer;
 		gbc.gridy = 5;

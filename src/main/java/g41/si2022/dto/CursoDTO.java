@@ -45,6 +45,9 @@ public class CursoDTO implements DTO {
 		return this.estado;
 	}
 
+	public void setImporte(String value) {
+		this.importe = value.equals("") ? null : value;
+	}
 
 	@Override
 	public String toString() {

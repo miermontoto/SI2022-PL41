@@ -65,25 +65,28 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 	}
 
 	private void handleSelectCurso() {
-			try {
-				String nombreEmpresa = ((CursoDTO) getView().getCmbCurso().getSelectedItem()).getE_nombre();
-				getView().getLblEmpresa().setText(nombreEmpresa);
-				String importeAPagar = ((CursoDTO) getView().getCmbCurso().getSelectedItem()).getImporte();
+		try {
+			JXComboBox cmbCurso = getView().getCmbCurso();
+			String nombreEmpresa = ((CursoDTO) cmbCurso.getSelectedItem()).getE_nombre();
+			getView().getLblEmpresa().setText(nombreEmpresa);
+			String importeAPagar = ((CursoDTO) cmbCurso.getSelectedItem()).getImporte();
 			getView().getTxtImporteFactura().setText(importeAPagar);
-			} catch (NullPointerException | ClassCastException e) { 
-				// No se hace nada
-			}	
+		} catch (NullPointerException | ClassCastException e) { 
+			// No se hace nada
+		}	
 	}
 
 	private void handleInsertarFactura() {
+		JXComboBox cmbCurso = getView().getCmbCurso();
 		String fecha = getView().getDateFactura().toString();
-		String idEntidad = ((CursoDTO) getView().getCmbCurso().getSelectedItem()).getEntidad_id();
-		String idCurso = ((CursoDTO) getView().getCmbCurso().getSelectedItem()).getId();
+		String idEntidad = ((CursoDTO) cmbCurso.getSelectedItem()).getEntidad_id();
+		String idCurso = ((CursoDTO) cmbCurso.getSelectedItem()).getId();
 		String importe = getView().getTxtImporteFactura().getText();
 		if(getModel().insertFacturaEmpresa(fecha, idCurso, idEntidad, importe)) {
 			getListaFacturasEmpr();
 			getView().getTxtImporteFactura().setText("");
 		}
+		cmbCurso.removeItem(cmbCurso.getSelectedItem());
 	}
 
 	private void handleInsertarPago() {
@@ -105,7 +108,7 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 		row = tableCursoEmpr.convertRowIndexToModel(tableCursoEmpr.getSelectedRow());
 
 		getView().getDatePago().setDate(getView().getMain().getToday());
-		getView().getTxtImporte().setText(model.getValueAt(row, 4).toString());
+		getView().getTxtImporte().setText(model.getValueAt(row, 3).toString());
 	}
 
 	private void getListaFacturasEmpr() {
