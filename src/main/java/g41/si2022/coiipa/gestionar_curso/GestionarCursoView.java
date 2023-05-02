@@ -95,6 +95,7 @@ public class GestionarCursoView extends View {
 	    formatter.setMaximum(Integer.MAX_VALUE);
 	    formatter.setAllowsInvalid(true);
 	    formatter.setCommitsOnValidEdit(true);
+		formatter.setFormat(null); // disable automatic formatting
 
 		handlePanel.add(infoPanel);
 		handlePanel.add(retrasarPanel);

@@ -67,6 +67,7 @@ public class GestionarListaEsperaView extends View {
 		formatter.setMaximum(Integer.MAX_VALUE);
 		formatter.setAllowsInvalid(true);
 		formatter.setCommitsOnValidEdit(true);
+		formatter.setFormat(null); // disable automatic formatting
 
 		JXTitledPanel seleccionarCursoPanel = new JXTitledPanel("Seleccionar curso");
 		JXTitledPanel datosInscripcionPanel = new JXTitledPanel("Datos del alumno seleccionado");

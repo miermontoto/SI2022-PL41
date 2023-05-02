@@ -83,6 +83,7 @@ public class GestionarInscripcionesView extends View {
 	    formatter.setMaximum(Integer.MAX_VALUE);
 	    formatter.setAllowsInvalid(true);
 	    formatter.setCommitsOnValidEdit(true);
+		formatter.setFormat(null); // disable automatic formatting
 
 		handlePanel.add(infoPanel);
 		handlePanel.add(pagarPanel);
