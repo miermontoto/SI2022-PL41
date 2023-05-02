@@ -136,6 +136,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 			)
 		);
 		SwingUtil.autoAdjustColumns(table);
+		table.setAutoCreateRowSorter(true);
 	}
 
 	/**
