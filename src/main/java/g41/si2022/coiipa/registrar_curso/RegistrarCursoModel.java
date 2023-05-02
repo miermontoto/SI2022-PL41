@@ -13,7 +13,7 @@ import g41.si2022.dto.SesionDTO;
 
 public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 
-	public java.util.List<ProfesorDTO> getListaProfesores() {
+	public List<ProfesorDTO> getListaProfesores() {
 		String sql = "SELECT * FROM docente ORDER BY nombre";
 		return this.getDatabase().executeQueryPojo(ProfesorDTO.class, sql);
 	}
@@ -23,9 +23,8 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 *
 	 * @return List of stored entities
 	 */
-	public java.util.List<EntidadDTO> getListaEntidades() {
+	public List<EntidadDTO> getListaEntidades() {
 		String sql = "SELECT * FROM entidad ORDER BY nombre";
-
 		return this.getDatabase().executeQueryPojo(EntidadDTO.class, sql);
 	}
 
@@ -37,7 +36,7 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 * @param colectivosInTable List of colectivos to be added. This is a list of colectivo Names
 	 * @return List of colectivos that were actually added.
 	 */
-	public Map<String, ColectivoDTO> insertColectivos (List<String> colectivosInTable) {
+	public Map<String, ColectivoDTO> insertColectivos(List<String> colectivosInTable) {
 		Map<String, ColectivoDTO> existingColectivos = this.getColectivos().stream()
 				.collect(Collectors.toMap(e -> e.getNombre(), e -> e));
 
@@ -45,22 +44,22 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 			.filter(nombreColectivo -> !existingColectivos.keySet().contains(nombreColectivo))
 			.collect(Collectors.toList());
 
-		String sql;
+		StringBuilder sql = new StringBuilder();
 		if (!missingColectivosInDatabase.isEmpty()) {
-			sql = "INSERT INTO colectivo (nombre) VALUES (?)";
+			sql.append("INSERT INTO colectivo (nombre) VALUES (?)");
 			for (int i = 0 ; i < missingColectivosInDatabase.size() - 1 ; i++) {
-				sql += ", (?)";
+				sql.append(", (?)");
 			}
 			this.getDatabase().executeUpdate(sql+";", missingColectivosInDatabase.toArray());
 		}
 
-		sql = "SELECT * FROM colectivo WHERE colectivo.nombre IN (?";
+		sql.append("SELECT * FROM colectivo WHERE colectivo.nombre IN (?");
 		for (int i = 0 ; i < colectivosInTable.size() - 1 ; i++) {
-			sql += ", ?";
+			sql.append(", ?");
 		}
-		sql += ")";
+		sql.append(")");
 
-		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, sql, colectivosInTable.toArray())
+		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, sql.toString(), colectivosInTable.toArray())
 				.stream().collect(Collectors.toMap(e -> e.getNombre(), e -> e));
 	}
 
@@ -76,23 +75,23 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		java.util.Iterator<Map.Entry<String, Double>> itr = costes.entrySet().stream()
 			.collect(Collectors.toMap(
 				row -> colectivos.get(row.getKey()).getId(),
-				row -> row.getValue()
+				Map.Entry::getValue
 			))
 			.entrySet().iterator();
 		Map.Entry<String, Double> current = itr.next();
-		String sql = "INSERT INTO coste (colectivo_id, coste, curso_id) VALUES (?, ?, ?)";
-		java.util.List<String> data = new java.util.ArrayList<> ();
+		StringBuilder sql = new StringBuilder("INSERT INTO coste (colectivo_id, coste, curso_id) VALUES (?, ?, ?)");
+		List<String> data = new java.util.ArrayList<> ();
 		data.add(current.getKey());
 		data.add(current.getValue().toString());
 		data.add(idCurso);
 		while (itr.hasNext()) {
 			current = itr.next();
-			sql += ", (?, ?, ?)";
+			sql.append(", (?, ?, ?)");
 			data.add(current.getKey());
 			data.add(current.getValue().toString());
 			data.add(idCurso);
 		}
-		this.getDatabase().executeUpdate(sql, data.toArray());
+		this.getDatabase().executeUpdate(sql.toString(), data.toArray());
 	}
 
 	/**
@@ -165,7 +164,7 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 *
 	 * @return List of colectivos
 	 */
-	public java.util.List<g41.si2022.dto.ColectivoDTO> getColectivos () {
+	public List<g41.si2022.dto.ColectivoDTO> getColectivos () {
 		return this.getDatabase().executeQueryPojo(g41.si2022.dto.ColectivoDTO.class, "SELECT * FROM colectivo;");
 	}
 

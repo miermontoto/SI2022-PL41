@@ -131,7 +131,7 @@ public class Util {
 		        String value = mapper.writeValueAsString(pojoList);
 		    	return value.replace("],", "],\n").replace("\"", ""); // Con saltos de linea y sin comillas
 				// Otra alternativa es utilizar las clases especificas para csv que suministra Jackson (jackson-dataformat-csv)
-			} else return mapper.writeValueAsString(pojoList).replaceAll("},", "},\n"); // Con saltos de linea
+			} else return mapper.writeValueAsString(pojoList).replace("},", "}, \n"); // Con saltos de linea
 		} catch (JsonProcessingException e) {
 			throw new ApplicationException(e);
 		}
