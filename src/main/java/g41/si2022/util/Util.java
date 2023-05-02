@@ -241,7 +241,7 @@ public class Util {
 	public static void printReceipt(String idAlumno, String nombreCompleto,
 			String nombreCurso, String importe, String fecha) {
 		try (FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + "Recibo" + idAlumno + ".txt")) {
-			fw.write("\t\t\t\t" + "COMPROBANTE DE PAGO" + "\n\n");
+			fw.write("\t\t\t\t\t\t\t\t" + "COMPROBANTE DE PAGO" + "\n\n");
 			fw.write("Fecha de hoy: " + fecha + "\n");
 			fw.write("Recibí de: " + nombreCompleto);
 			fw.write("La cantidad de: " + importe + "€\n");
