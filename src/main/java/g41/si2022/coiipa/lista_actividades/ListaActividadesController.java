@@ -1,5 +1,6 @@
 package g41.si2022.coiipa.lista_actividades;
 
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
@@ -17,20 +19,20 @@ import javax.swing.table.TableRowSorter;
 import org.jdesktop.swingx.JXComboBox;
 
 import g41.si2022.dto.CursoDTO;
-import g41.si2022.dto.EventoDTO;
+import g41.si2022.dto.SesionDTO;
 import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.ui.SwingUtil;
+import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.util.state.CursoState;
 
 public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaActividadesView, ListaActividadesModel> {
 
-    private List<CursoDTO> cursos;
     private List<CursoDTO> cursosActivos;
 
     private Supplier<List<CursoDTO>> supCursos = () -> {
         // Get the selected item from the the filter
 		CursoState selectedItem = (CursoState) this.getView().getCbFiltro().getSelectedItem();
-		List<CursoDTO> output = new ArrayList<CursoDTO>(), // Will contain the entries that meet the filter
+		List<CursoDTO> output = new ArrayList<>(), // Will contain the entries that meet the filter
 			aux; // Is used as auxiliary list to avoid concurrent modifications
 
 		// FIRST : WE FILTER THE STATES
@@ -41,7 +43,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 			    .filter(x -> selectedItem.equals(x.getEstado()))
 			    .collect(Collectors.toList());
 		}
-		aux = new ArrayList<CursoDTO>(output); // DO NOT REMOVE -> Concurrent Modifications will happen if removed
+		aux = new ArrayList<>(output); // DO NOT REMOVE -> Concurrent Modifications will happen if removed
 
 		// SECOND : WE FILTER THE DATES
 		java.time.LocalDate
@@ -61,13 +63,13 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 		return output; // We return the filtered array
     };
 
-    private Supplier<List<EventoDTO>> supEventos = () -> {
-        List<EventoDTO> eventos = getModel().getEventosCurso(SwingUtil.getSelectedKey(this.getView().getTablaCursos()));
+    private Supplier<List<SesionDTO>> supSesiones = () -> {
+        List<SesionDTO> sesiones = getModel().getSesionesCurso(SwingUtil.getSelectedKey(this.getView().getTablaCursos()));
         try {
             String locSelected = getView().getInfoLocalizaciones().getSelectedItem().toString();
-            if (locSelected.equals("------")) return eventos;
-            return eventos.stream().filter(x -> x.getLoc().equals(locSelected)).collect(Collectors.toList());
-        } catch (java.lang.NullPointerException npe) {return eventos;}
+            if (locSelected.equals("------")) return sesiones;
+            return sesiones.stream().filter(x -> x.getLoc().equals(locSelected)).collect(Collectors.toList());
+        } catch (java.lang.NullPointerException npe) {return sesiones;}
     };
 
     public ListaActividadesController(ListaActividadesModel model, ListaActividadesView view) {
@@ -79,42 +81,35 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
     	this.loadComboBox();
     	this.loadDates();
     	// Mostrar más detalles para cada curso seleccionado
-        this.getView().getTablaCursos().addMouseListener(new MouseAdapter() {
+        getView().getTablaCursos().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent evt) {
                 SwingUtil.exceptionWrapper(() -> showDetallesCurso());
-                SwingUtil.exceptionWrapper(() -> showListaEventos());
+                SwingUtil.exceptionWrapper(() -> showListaSesiones());
             }
         });
-        // Filtrar los cursos en función de su fecha ó estado
-        this.getView().getCbFiltro().addMouseListener(new MouseAdapter() {
+        // Filtrar los cursos en función de su fecha o estado
+        getView().getCbFiltro().addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseReleased(MouseEvent evt)
-            {
-                // SwingUtil.exceptionWrapper(() -> filtrarCursos());
-                SwingUtil.exceptionWrapper(() -> {
-                    ListaActividadesController.this.showListaCursos();
-                });
+            public void mouseReleased(MouseEvent evt) {
+                SwingUtil.exceptionWrapper(ListaActividadesController.this::showListaCursos);
             }
         });
 
-        getView().getInfoLocalizaciones().addActionListener(e -> {
-            SwingUtil.exceptionWrapper(() -> {
-                ListaActividadesController.this.showListaEventos();
-            });
-        });
+        getView().getInfoLocalizaciones().addActionListener(e ->
+            SwingUtil.exceptionWrapper(ListaActividadesController.this::showListaSesiones)
+        );
     }
 
     @Override
     public void initVolatileData() {
-    	this.getCursosActivos();
-    	this.showListaCursos();
+    	getCursosActivos();
+    	showListaCursos();
     }
 
     private void getCursosActivos() {
         cursosActivos = new LinkedList<>();
-        cursos = this.getModel().getListaCursos();
-        for (CursoDTO curso : cursos) {
+        for (CursoDTO curso : getModel().getListaCursos()) {
             CursoState estadoCurso = curso.updateEstado(getView().getMain().getToday());
 
             if (estadoCurso != CursoState.FINALIZADO && estadoCurso != CursoState.CERRADO) {
@@ -138,12 +133,13 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
         SwingUtil.autoAdjustColumns(table);
     }
 
-    private void showListaEventos() {
-        JTable table = this.getView().getTableEventos();
-        table.setModel(SwingUtil.getTableModelFromPojos(supEventos.get(),
+    private void showListaSesiones() {
+        JTable table = this.getView().getTableSesiones();
+        table.setModel(SwingUtil.getTableModelFromPojos(supSesiones.get(),
             new String[] {"loc", "fecha", "horaIni", "horaFin"},
             new String[] {"Localización (aula)", "Fecha", "Hora de inicio", "Hora de fin"},
-            null));
+            null)
+        );
 
 
         // Order by date and then by time
@@ -164,12 +160,12 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
     @SuppressWarnings("unchecked") // <- no tiene sentido que se necesite esto!! (raw type en comboboxes)
     private void showDetallesCurso() {
         for (CursoDTO curso : cursosActivos) {
-            if (!curso.getId().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) continue;
+            if (!curso.getId().equals(SwingUtil.getSelectedKey(getView().getTablaCursos()))) continue;
             // Mostrar la descripción del curso
-            this.getView().getInfoDescripcion().setText(" " + this.getModel().getDescripcionCurso(curso.getId()));
+            getView().getInfoDescripcion().setText(" " + getModel().getDescripcionCurso(curso.getId()));
 
             // Obtener docente/s que imparten el curso
-            JXComboBox comboProf = this.getView().getInfoProfesores();
+            JXComboBox comboProf = getView().getInfoProfesores();
             comboProf.removeAllItems();
             List<ProfesorDTO> docentes = getModel().getDocentesCurso(curso);
 
@@ -177,48 +173,47 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
             else for (ProfesorDTO docente : docentes) comboProf.addItem(docente.getNombre() + " " + docente.getApellidos() + " (" + docente.getRemuneracion() + "€)");
 
             // Mostrar las localizaciones del curso
-            JXComboBox comboLocs = this.getView().getInfoLocalizaciones();
+            JXComboBox comboLocs = getView().getInfoLocalizaciones();
             comboLocs.removeAllItems();
-            List<EventoDTO> eventos = getModel().getEventosCurso(curso);
+            List<SesionDTO> sesiones = getModel().getSesionesCurso(curso);
             ArrayList<String> locs = new ArrayList<>();
 
             comboLocs.addItem("------");
-            if (!eventos.isEmpty()) for(EventoDTO evento : eventos) {
-                if(!locs.contains(evento.getLoc())) {
-                    locs.add(evento.getLoc());
-                    comboLocs.addItem(evento.getLoc());
+            if (!sesiones.isEmpty()) for(SesionDTO sesion : sesiones) {
+                if(!locs.contains(sesion.getLoc())) {
+                    locs.add(sesion.getLoc());
+                    comboLocs.addItem(sesion.getLoc());
                 }
-
             }
-
         }
     }
 
     private void loadComboBox() {
-		java.util.stream.Stream.of(CursoState.values())
-        .filter(x -> !x.equals(CursoState.CERRADO) && !x.equals(CursoState.FINALIZADO))
-        .forEach(e -> this.getView().getCbFiltro().addItem(e));
-		this.getView().getCbFiltro().addItemListener((e) -> {
-			if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
-				this.showListaCursos();
-			}
+		Stream.of(CursoState.values())
+            .filter(x -> !x.equals(CursoState.CERRADO) && !x.equals(CursoState.FINALIZADO))
+            .forEach(e -> this.getView().getCbFiltro().addItem(e));
+		getView().getCbFiltro().addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) showListaCursos();
 		});
 	}
 
     private void loadDates() {
-        g41.si2022.ui.components.BetterDatePicker start = this.getView().getStartDate(),
-        end = this.getView().getEndDate();
-        start.addDateChangeListener((e) -> {
+        BetterDatePicker
+            start = getView().getStartDate(),
+            end = getView().getEndDate();
+
+        start.addDateChangeListener(e -> {
 			if (start.getDate() != null && end.getDate() != null && start.compareTo(end) >= 0) {
 				end.setDate(start.getDate().plusDays(1));
 			}
-			this.showListaCursos();
+			showListaCursos();
 		});
-        end.addDateChangeListener((e) -> {
+
+        end.addDateChangeListener(e -> {
 			if (end.getDate() != null && start.getDate() != null && start.compareTo(end) >= 0) {
 				start.setDate(end.getDate().plusDays(-1));
 			}
-			this.showListaCursos();
+			showListaCursos();
 		});
     }
 }

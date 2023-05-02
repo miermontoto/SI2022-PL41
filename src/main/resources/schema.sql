@@ -8,7 +8,7 @@ drop table if exists docente;
 drop table if exists docencia;
 drop table if exists pago;
 drop table if exists factura;
-drop table if exists evento;
+drop table if exists sesion;
 drop table if exists entidad;
 drop table if exists coste;
 drop table if exists colectivo;
@@ -118,7 +118,7 @@ create table factura (
     foreign key (curso_id) references curso(id)
 );
 
-create table evento (
+create table sesion (
     id integer primary key autoincrement,
     fecha date not null,
     hora_ini time not null,

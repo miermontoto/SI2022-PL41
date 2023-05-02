@@ -1,7 +1,6 @@
 package g41.si2022.coiipa.gestionar_curso;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -17,14 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
 import org.jdesktop.swingx.JXTitledPanel;
 
-
 import com.github.lgooddatepicker.components.DatePicker;
-
 
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
@@ -93,10 +89,6 @@ public class GestionarCursoView extends View {
 		this.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
 
-		// chkAll = new JCheckBox("Ver todas las inscripciones");
-		// chkAll.setHorizontalAlignment(SwingConstants.LEFT);
-		// panel.add(chkAll);
-
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 	    formatter.setValueClass(Integer.class);
 	    formatter.setMinimum(Integer.MIN_VALUE);
@@ -123,14 +115,6 @@ public class GestionarCursoView extends View {
 		gbc.insets = next;
 		gbc.gridy = 1;
 		infoPanelContent.add(lblInfoNombre = JLabelFactory.getLabel("N/A"), gbc);
-
-		gbc.insets = spacer;
-		gbc.gridy = 2;
-		/*infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Días desde inscripción | hasta curso"), gbc);
-
-		gbc.insets = next;
-		gbc.gridy = 3;
-		infoPanelContent.add(lblInfoDias = JLabelFactory.getLabel("N/A"), gbc);*/
 
 		gbc.insets = spacer;
 		gbc.gridy = 3;
@@ -206,12 +190,6 @@ public class GestionarCursoView extends View {
 
 		gbc.gridy = 2;
 		devolverPanelContent.add(btnCambiarDetalles = new JButton("Cambiar detalles"), gbc);
-
-		gbc.gridy = 3;
-		// devolverPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Importe a devolver (€)"), gbc);
-
-		gbc.gridy = 4;
-		// devolverPanelContent.add(lblDevolverCalculo = JLabelFactory.getLabel("N/A"), gbc);
 
 		gbc.gridy = 9;
 		gbc.gridheight = 2;

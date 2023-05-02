@@ -2,6 +2,7 @@ package g41.si2022.ui.panels;
 
 import g41.si2022.coiipa.consultar_ingresos_gastos.ConsultarIngresosGastosView;
 import g41.si2022.coiipa.gestionar_curso.GestionarCursoView;
+import g41.si2022.coiipa.modificar_curso.ModificarCursosView;
 import g41.si2022.coiipa.registrar_curso.RegistrarCursoView;
 import g41.si2022.ui.SwingMain;
 
@@ -13,8 +14,7 @@ public class TabsResponsable extends TabbedFrame {
         tabs.put("Consultar ingresos y gastos", new ConsultarIngresosGastosView(main));
         tabs.put("Registrar cursos", new RegistrarCursoView(main));
         tabs.put("Gestionar cursos", new GestionarCursoView(main));
-
-
+        tabs.put("Modificar cursos", new ModificarCursosView(main));
 
         addTabs();
     }

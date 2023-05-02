@@ -38,23 +38,23 @@ def generate_docentes(num, entidades)
     docentes
 end
 
-def generate_eventos(num, aulas, curso, curso_id)
-    eventos = []
+def generate_sesiones(num, aulas, curso, curso_id)
+    sesiones = []
 
     num.times do
-        e = Evento.new
+        e = Sesion.new
 
         e.loc = aulas.sample
         e.fecha = curso.start + rand(0..(curso.end - curso.start))
         e.hora_ini = OnlyTime.new(rand(8..18))
         e.hora_fin = OnlyTime.new(e.hora_ini.hours + rand(1..3))
         e.curso_id = curso_id + 1
-        e.observaciones = 'Evento generado automáticamente'
+        e.observaciones = 'Sesion generado automáticamente'
 
-        eventos.push(e)
+        sesiones.push(e)
     end
 
-    eventos
+    sesiones
 end
 
 def generate_docencias(num, docentes, curso_id)

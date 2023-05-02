@@ -23,10 +23,6 @@ import g41.si2022.util.state.StateUtilities;
 public class EstadoActividadesController extends g41.si2022.mvc.Controller<EstadoActividadesView, EstadoActividadesModel> {
 
 	private List<CursoDTO> cursos;
-	private List<InscripcionDTO> listaInscr;
-	private String gastos;
-	private String ingresosEstimados;
-	private String ingresosReales;
 
 	public EstadoActividadesController(EstadoActividadesModel m, EstadoActividadesView t) {
 		super(t, m);
@@ -65,6 +61,7 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 	}
 
 	public void getListaInscr() {
+		List<InscripcionDTO> listaInscr;
 		cursos = this.getModel().getListaCursos();
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
@@ -76,10 +73,9 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 					new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "curso_coste" , "pagado", "estado", "entidad_nombre" },
 						new String[] { "Fecha de inscripción", "Nombre", "Apellidos", "Coste", "Pagado", "Estado", "Entidad" }, null);
 				table.setModel(tableModel);
-				//SwingUtil.autoAdjustColumns(table);
 				table.setDefaultEditor(Object.class, null);
 				table.getColumnModel().getColumn(5).setCellRenderer(new StatusCellRenderer(5));
-				TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
+				TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
 				table.setRowSorter(sorter);
 				List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 				sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
@@ -92,6 +88,10 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 	}
 
 	public void balance() {
+		String gastos;
+		String ingresosEstimados;
+		String ingresosReales;
+
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
 				gastos = curso.getImporte() == null ? this.getModel().getGastos(curso.getId()) : curso.getImporte();

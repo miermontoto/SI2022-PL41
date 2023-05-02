@@ -1,23 +1,15 @@
 package g41.si2022.coiipa.gestionar_lista_espera;
 
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
-
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
-
-
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-
 import g41.si2022.dto.CursoDTO;
-
 import g41.si2022.dto.ListaEsperaDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
@@ -25,9 +17,8 @@ import g41.si2022.ui.util.Dialog;
 public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<GestionarListaEsperaView, GestionarListaEsperaModel> {
 
 	private int row;
-	int id;
 	private JTable table;
-	String cursoNombre;
+	private String cursoNombre;
 
 	public GestionarListaEsperaController(GestionarListaEsperaModel modelo, GestionarListaEsperaView vista) {
 		super(vista, modelo);
@@ -35,42 +26,45 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 	}
 
 	public void updateCombos() {
-
 		JComboBox<String> comboCursos = this.getView().getCmbCurso();
 		comboCursos.removeAllItems();
-		List<CursoDTO> eventos = this.getModel().getListaCursosConEspera(this.getView().getMain().getToday().toString());
+		List<CursoDTO> sesiones = this.getModel().getListaCursosConEspera(this.getView().getMain().getToday().toString());
 		DefaultComboBoxModel<String> cmbCursoModel = this.getView().getCmbCursoModel();
 
-
-		if (!eventos.isEmpty()) for(CursoDTO evento : eventos) {
-			String curso = evento.toString();
+		if (!sesiones.isEmpty()) for(CursoDTO sesion : sesiones) {
+			String curso = sesion.toString();
 			cmbCursoModel.addElement(curso);
-			comboCursos.setModel(cmbCursoModel); // Actualizar el modelo de datos del JComboBox
+			comboCursos.setModel(cmbCursoModel);
+			setJComboIfStudents(true);
+		} else setJComboIfStudents(false);
+	}
 
+	public void setJComboIfStudents(boolean status) {
+		if(status) {
+			this.getView().getError().setVisible(false);
+			this.getView().getCmbCurso().setVisible(true);
+		} else {
+			this.getView().getError().setVisible(true);
+			this.getView().getCmbCurso().setVisible(false);
 		}
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void initNonVolatileData() {
 		this.getView().getBtnEliminarListaEspera().addActionListener(e -> handleEliminar());
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseReleased(MouseEvent evt) { 
-				handleSelect(); 
-			}
+			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
 
-		this.getView().getCmbCurso().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
-				String elementoSeleccionado = (String) comboBox.getSelectedItem();
-				if(elementoSeleccionado != null) {
-					cursoNombre = elementoSeleccionado;
-					getListaEspera(getModel().getCursoId(elementoSeleccionado));
-				}
-				// Realiza las acciones necesarias con el elemento seleccionado
-			}
+		this.getView().getCmbCurso().addActionListener(e -> {
+			JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
+			String elementoSeleccionado = (String) comboBox.getSelectedItem();
+			cursoNombre = elementoSeleccionado;
+			if(elementoSeleccionado == null) return;
+			getListaEspera(getModel().getCursoId(elementoSeleccionado));
+			clear();
 		});
 	}
 
@@ -81,23 +75,27 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 	}
 
 	public void clear() {
+		getView().getBtnEliminarListaEspera().setEnabled(false);
 		this.getView().getNombreApellidosLabel().setText("Seleccionar alumno");
-		this.getView().getFechaListaLabel().setText("SeleccionarAlumno");
+		this.getView().getFechaListaLabel().setText("Seleccionar alumno");
+	}
+
+	public void enable() {
+		getView().getBtnEliminarListaEspera().setEnabled(true);
 	}
 
 	private void handleEliminar() {
-		String id = table.getModel().getValueAt(row, 0).toString();
-		getModel().eliminarInscripcion(id);
-		Dialog.show("Alumno eliminado de la lista de espera con éxito");
+		String nombreApellidosAlumno = table.getModel().getValueAt(row, 1).toString() + " " + table.getModel().getValueAt(row, 2).toString();
+		getModel().eliminarInscripcion(table.getModel().getValueAt(row, 0).toString());
+		Dialog.show("El alumno " + nombreApellidosAlumno + " ha sido eliminado de la lista de espera del curso " + cursoNombre + " con éxito");
 		this.getListaEspera(getModel().getCursoId(cursoNombre));
+		updateCombos();
 		this.clear();
-
 	}
 
 	private void handleSelect() {
 		TableModel model = table.getModel();
 		row = table.convertRowIndexToModel(table.getSelectedRow());
-		id = Integer.valueOf(model.getValueAt(row, 0).toString());
 		String nombreAlumno = model.getValueAt(row, 1).toString();
 		String apellidosAlumno = model.getValueAt(row, 2).toString();
 		String fechaEntradaListaEspera = model.getValueAt(row, 3).toString();
@@ -105,17 +103,18 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 		String nombreApellidosAlumno = nombreAlumno + " " + apellidosAlumno;
 		this.getView().getNombreApellidosLabel().setText(nombreApellidosAlumno);
 		this.getView().getFechaListaLabel().setText(fechaEntradaListaEspera);
+		this.enable();
 	}
 
 	private void getListaEspera(String cursoID) {
 		List<ListaEsperaDTO> listaespera = this.getModel().getListaEspera(cursoID);
 
 		table.setModel(SwingUtil.getTableModelFromPojos(listaespera,
-				new String[] {"id", "nombre", "apellidos", "fecha_entrada"},
-				new String[] {"", "Nombre alumno", "Apellidos", "Fecha entrada en lista de espera"},
-				null));
+			new String[] {"id", "nombre", "apellidos", "fecha_entrada"},
+			new String[] {"", "Nombre alumno", "Apellidos", "Fecha entrada en lista de espera"},
+			null
+		));
 		table.removeColumn(table.getColumnModel().getColumn(0));
-		//table.getColumnModel().getColumn(6).setCellRenderer(new StatusCellRenderer(7));
 		SwingUtil.autoAdjustColumns(table);
 	}
 
