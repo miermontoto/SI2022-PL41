@@ -15,7 +15,7 @@ public class ListaActividadesModel extends g41.si2022.mvc.Model {
 
     public String getDescripcionCurso(String idCurso) {
         String sql = "SELECT descripcion FROM curso WHERE id = ?";
-        return String.valueOf((String) getDatabase().executeQuerySingle(sql, idCurso));
+        return String.valueOf(getDatabase().executeQuerySingle(sql, idCurso));
     }
 
     public String getNumInscripciones(String idCurso) {
@@ -23,7 +23,7 @@ public class ListaActividadesModel extends g41.si2022.mvc.Model {
                    + "INNER JOIN inscripcion as i on c.id = i.curso_id "
                    + "WHERE i.curso_id = ? AND i.cancelada = FALSE";
 
-        return String.valueOf((Integer) getDatabase().executeQuerySingle(sql, idCurso));
+        return String.valueOf(getDatabase().executeQuerySingle(sql, idCurso));
     }
 
     public List<ProfesorDTO> getDocentesCurso(CursoDTO curso) {

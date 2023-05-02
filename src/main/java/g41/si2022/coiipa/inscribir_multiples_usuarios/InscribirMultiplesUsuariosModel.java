@@ -85,8 +85,8 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	private void insertMissingAlumnos(List<AlumnoDTO> alumnos) {
 		List<AlumnoDTO> existingAlumnos = InscribirMultiplesUsuariosModel.this.getAlumnos(),
 				alumnosToRegister = alumnos.parallelStream() // Remove the alumnos that are already in the DB
-				.filter((alumnoInsertar) -> existingAlumnos.parallelStream()
-						.allMatch((alumnoDatabase) -> !alumnoDatabase.getEmail().equals(alumnoInsertar.getEmail())))
+				.filter(alumnoInsertar -> existingAlumnos.parallelStream()
+						.allMatch(alumnoDatabase -> !alumnoDatabase.getEmail().equals(alumnoInsertar.getEmail())))
 				.collect(java.util.stream.Collectors.toList());
 
 		if (alumnosToRegister.size() != 0) {
@@ -120,7 +120,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @return List of AlumnoDTO
 	 */
 	private List<AlumnoDTO> getAlumnosFromEmails (List<AlumnoDTO> alumnos) {
-		if (alumnos.size() != 0) {
+		if (!alumnos.isEmpty()) {
 			String outputSql = "SELECT * FROM alumno WHERE alumno.email IN (? ";
 			String[] outputDatos = new String[alumnos.size()];
 			outputDatos[0] = alumnos.get(0).getEmail();
@@ -178,11 +178,12 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 *
 	 * @param alumnos List of alumnos to be added
 	 * @param fecha today's date
-	 * @param curso_id curso id
+	 * @param idCurso curso id
+	 * @param idsAlumno alumno id
+	 * @param idGrupo grupo id
 	 */
 	public void insertInscripciones(List<AlumnoDTO> alumnos, String fecha, String curso_id) {
 		Map<String, AlumnoDTO> emailToAlumnoDictionary = alumnos.stream().collect(new java.util.stream.Collector<AlumnoDTO, Map<String, AlumnoDTO>, Map<String, AlumnoDTO>> () {
-
 			@Override
 			public Supplier<Map<String, AlumnoDTO>> supplier() {
 				return java.util.TreeMap<String, AlumnoDTO>::new;

@@ -174,7 +174,6 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
 				if (curso.getPlazas_libres().equals("0") || Integer.valueOf(curso.getPlazas_libres()) < 0) {
-					Dialog.showError("No quedan plazas libres para este curso. Sin embargo, te vamos a dejar inscribirte en la lista de espera. Muchas gracias por confiar en el COIIPA.");
 					lleno = true;
 					cursoId = curso.getId();
 					this.getView().getBtnInscribir().setText("Añadirme a la lista de espera");

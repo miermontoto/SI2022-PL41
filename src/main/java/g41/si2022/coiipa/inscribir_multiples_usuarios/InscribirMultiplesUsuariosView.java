@@ -49,7 +49,6 @@ public class InscribirMultiplesUsuariosView extends View {
 	protected void initView() {
 		this.setLayout(new BorderLayout());
 		btnInscribir = new JButton("Inscribirse");
-
 		JScrollPane sp = new JScrollPane ();
 		sp.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		JPanel inscrollPanel = new JXTitledPanel(signTitle);
@@ -62,7 +61,7 @@ public class InscribirMultiplesUsuariosView extends View {
 					private static final long serialVersionUID = 1L;
 					{
 						this.put(2, Pattern.compile("[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+"));
-						this.put(3, Pattern.compile("^([0-9]{3}( )?){3}$"));
+						this.put(3, Pattern.compile("^(\\d{3}( )?){3}$"));
 					}},
 				new boolean[] {true, true, true, false, true},
 				new java.util.TreeMap<Integer, javax.swing.table.TableCellEditor> () {
@@ -81,6 +80,7 @@ public class InscribirMultiplesUsuariosView extends View {
 	}
 
 	private JPanel makeCursosPanel() {
+
 		JPanel bottomPane = new JPanel(new BorderLayout());
 
 		tablaCursos = new JTable();

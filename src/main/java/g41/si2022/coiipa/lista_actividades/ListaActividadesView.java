@@ -51,7 +51,7 @@ public class ListaActividadesView extends View {
         JScrollPane scrCursos = new JScrollPane(tablaCursos);
 
         JLabel lblFiltro = JLabelFactory.getLabel("Filtrar por:");
-        cbFiltro = new JComboBox<CursoState>();
+        cbFiltro = new JComboBox<>();
 
         JPanel filterPanel = new JPanel(new GridLayout());
 

@@ -28,11 +28,11 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 
 	public GestionarFacturasProfController(GestionarFacturasProfModel modelo, GestionarFacturasProfView vista) {
 		super(vista, modelo);
-		this.table = this.getView().getTableInscripciones();
+		this.table = this.getView().getTableFacturasProf();
 	}
 
 	private Supplier<List<FacturaDTO>> supFacturas = () -> {
-		List<FacturaDTO> facturas = getModel().getListaFacturas();
+		facturas = getModel().getListaFacturas();
 		facturas.forEach(f -> f.updateEstado());
 		if(this.getView().getChkAll().isSelected()) return facturas;
 		return facturas.stream().filter(f -> f.getEstado() != FacturaState.PAGADA).collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 	public void initNonVolatileData() {
 		this.getView().getBtnInsertarPago().addActionListener(e -> handleInsertarPago());
 		this.getView().getBtnInsertarFactura().addActionListener(e -> handleInsertarFactura());
-		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+		this.getView().getTableFacturasProf().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
@@ -53,7 +53,7 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 	@Override
 	public void initVolatileData() {
 		clear();
-		getListaFacturas(); // Precarga inicial de la lista de inscripciones
+		getListaFacturas();
 		getListaCursos();
 	}
 
@@ -66,13 +66,12 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 	private void handleInsertarFactura() {
 		String fecha = getView().getDateFactura().toString();
 		String idDocencia = ((DocenciaDTO) getView().getCmbProfesor().getSelectedItem()).getId();
-		String importe = getView().getTxtImporteFactura().getText().toString();
+		String importe = getView().getTxtImporteFactura().getText();
 		if(getModel().insertFactura(fecha, idDocencia, importe)) {
 			getListaFacturas();
 			getListaDocentes();
 			getView().getTxtImporteFactura().setText("");
 		}
-
 	}
 
 	private void handleInsertarPago() {

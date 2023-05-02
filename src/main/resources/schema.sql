@@ -44,7 +44,10 @@ create table curso (
     plazas integer not null,
     start date not null,
     end date not null,
-    estado text
+    estado text,
+    entidad_id integer,
+    importe float,
+    foreign key (entidad_id) references entidad(id)
 );
 
 create table inscripcion (
@@ -109,8 +112,10 @@ create table pago (
 create table factura (
     id integer primary key autoincrement,
     fecha date not null,
-    docencia_id integer not null,
-    foreign key (docencia_id) references docencia(id)
+    docencia_id integer,
+    curso_id integer,
+    foreign key (docencia_id) references docencia(id),
+    foreign key (curso_id) references curso(id)
 );
 
 create table sesion (

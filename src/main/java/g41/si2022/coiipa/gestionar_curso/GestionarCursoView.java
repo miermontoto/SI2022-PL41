@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -16,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.text.NumberFormatter;
 
 import org.jdesktop.swingx.JXTitledPanel;
 
@@ -27,6 +25,7 @@ import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
+import g41.si2022.util.Util;
 import lombok.Getter;
 
 @Getter
@@ -88,13 +87,6 @@ public class GestionarCursoView extends View {
 		panel = new JPanel();
 		this.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
-
-		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
-	    formatter.setValueClass(Integer.class);
-	    formatter.setMinimum(Integer.MIN_VALUE);
-	    formatter.setMaximum(Integer.MAX_VALUE);
-	    formatter.setAllowsInvalid(true);
-	    formatter.setCommitsOnValidEdit(true);
 
 		handlePanel.add(infoPanel);
 		handlePanel.add(retrasarPanel);
@@ -186,7 +178,7 @@ public class GestionarCursoView extends View {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.fill = GridBagConstraints.CENTER;
 		gbc.weightx = 1.0;
-		devolverPanelContent.add(txtFieldPlazas = new JFormattedTextField(formatter), gbc);
+		devolverPanelContent.add(txtFieldPlazas = new JFormattedTextField(Util.getMoneyFormatter()), gbc);
 
 		gbc.gridy = 2;
 		devolverPanelContent.add(btnCambiarDetalles = new JButton("Cambiar detalles"), gbc);

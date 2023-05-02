@@ -10,6 +10,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JTable;
+import javax.swing.SortOrder;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.text.NumberFormatter;
+
 import org.apache.commons.beanutils.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,9 +32,38 @@ public class Util {
 
 	public static final String EMAIL_REGEX = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
-	public static void emptyTable(javax.swing.JTable table) {
+	public static NumberFormatter getMoneyFormatter() {
+		NumberFormatter formatter = new NumberFormatter(java.text.NumberFormat.getInstance());
+
+		formatter.setValueClass(Double.class);
+		formatter.setMinimum(Double.MIN_VALUE);
+		formatter.setMaximum(Double.MAX_VALUE);
+		formatter.setAllowsInvalid(true);
+		formatter.setCommitsOnValidEdit(true);
+		formatter.setFormat(null); // disable automatic formatting
+
+		return formatter;
+	}
+
+	public static void emptyTable(JTable table) {
 		while (table.getRowCount() > 0)
 			((javax.swing.table.DefaultTableModel) table.getModel()).removeRow(0);
+	}
+
+	public static void removeColumn(JTable table, int... column) {
+		for(int i : column)
+			table.removeColumn(table.getColumnModel().getColumn(i));
+	}
+
+	@SuppressWarnings("unchecked") // es oficial, odio java
+	public static void sortTable(JTable table, Pair<Integer, SortOrder>... columnPair) {
+		TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+		table.setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
+		List<SortKey> sortKeys = new java.util.ArrayList<>();
+		for (Pair<Integer, SortOrder> pair : columnPair)
+			sortKeys.add(new SortKey(pair.getFirst(), pair.getSecond()));
+		sorter.setSortKeys(sortKeys);
 	}
 
 	/**
@@ -43,9 +79,9 @@ public class Util {
 	 * @return Data structure containing the data from this table.
 	 */
 	public static List<Map<String, String>> getData (javax.swing.JTable theTable) {
-		List<Map<String, String>> out = new java.util.ArrayList<Map<String, String>> ();
+		List<Map<String, String>> out = new java.util.ArrayList<> ();
 		for (int i = 0 ; i < theTable.getRowCount() ; i++) {
-			out.add(new java.util.HashMap<String, String> ());
+			out.add(new java.util.HashMap<> ());
 			for (int j = 0 ; j < theTable.getColumnCount() ; j++)
 				out.get(i).put(theTable.getColumnName(j),
 						theTable.getValueAt(i, j).toString().trim().equals(theTable.getColumnName(j).trim()) ||
@@ -55,9 +91,9 @@ public class Util {
 				);
 		}
 		return out.stream()
-				.filter(row -> row.values().stream()
-						.anyMatch(value -> value != null))
-				.collect(java.util.stream.Collectors.toList());
+			.filter(row -> row.values().stream()
+			.anyMatch(java.util.Objects::nonNull))
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	private Util() {
@@ -104,7 +140,6 @@ public class Util {
 	public static void sendEmail(String address, String subject, String content) {
 		try (FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + address + ".txt")) {
 			fw.write("[" + subject + ", " + LocalDateTime.now() + "] " + content + "\n");
-			fw.close();
 		} catch (IOException e) { throw new ApplicationException(e); }
 	}
 
@@ -194,4 +229,26 @@ public class Util {
 		return new SimpleDateFormat("yyyy-MM-dd").format(javaDate);
 	}
 
+	/**
+	 * Print a receipt of a payment made by cashier
+	 *
+	 * @param idAlumno id of the student making the payment
+	 * @param nombreCompleto name and surnames of the student making the payment
+	 * @param curso course for which payment is done
+	 * @param importe amount paid for inscription
+	 * @param fecha date of payment
+	 */
+	public static void printReceipt(String idAlumno, String nombreCompleto,
+			String nombreCurso, String importe, String fecha) {
+		try (FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + "Recibo" + idAlumno + ".txt")) {
+			fw.write("\t\t\t\t\t\t\t\t" + "COMPROBANTE DE PAGO" + "\n\n");
+			fw.write("Fecha de hoy: " + fecha + "\n");
+			fw.write("Recibí de: " + nombreCompleto);
+			fw.write("La cantidad de: " + importe + "€\n");
+			fw.write("Por concepto de: Inscripción al curso " + nombreCurso);
+			fw.write("\n\n");
+			fw.write("Pago realizado en caja en la sede del colegio\n");
+			fw.write("[COIIPA]: Colegio Oficial de Ingenieros en Informática del Principado de Asturias");
+		} catch (IOException e) { throw new ApplicationException(e); }
+	}
 }

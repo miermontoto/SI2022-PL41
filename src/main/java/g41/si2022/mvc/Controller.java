@@ -52,7 +52,7 @@ public abstract class Controller <V extends View, M extends Model> {
 	 * @see View
 	 * @see Model
 	 */
-	public Controller (V myView, M myModel) {
+	protected Controller (V myView, M myModel) {
 		this.myView = myView;
 		this.myModel = myModel;
 		this.nonVolatileLoaded = false;

@@ -45,7 +45,7 @@ public class ConsultarIngresosGastosView extends g41.si2022.mvc.View {
 			{ // Filters
 				JPanel filters = new JPanel (new java.awt.FlowLayout());
 				filters.add(JLabelFactory.getLabel("Mostrar cursos "));
-				filters.add(this.filterEstado = new JComboBox<CursoState>());
+				filters.add(this.filterEstado = new JComboBox<>());
 				filters.add(JLabelFactory.getLabel(" entre "));
 				filters.add(this.startDate = new BetterDatePicker());
 				filters.add(JLabelFactory.getLabel(" y "));

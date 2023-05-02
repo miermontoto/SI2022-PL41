@@ -1,8 +1,10 @@
+
 package g41.si2022.coiipa.gestionar_inscripciones;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List; // <- cabronazo
+import java.util.Optional;
 
 import javax.swing.JTable;
 import javax.swing.RowSorter;
@@ -37,7 +39,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	private LocalDate today;
 
 	// optimization
-	private static TableModel[] modelStorage = new TableModel[2];
+	private TableModel[] modelStorage = new TableModel[2];
 
 	public GestionarInscripcionesController(GestionarInscripcionesModel modelo, GestionarInscripcionesView vista) {
 		super(vista, modelo);
@@ -54,6 +56,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		});
 	}
 
+
 	@Override
 	public void initVolatileData() {
 		today = getView().getMain().getToday();
@@ -68,7 +71,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		getView().getDatePicker().setEnabled(status);
 	}
 
-	private void eraseControls(boolean eliminarAviso) {
+	private void eraseControls() {
 		getView().getLblInfoNombre().setText("");
 		getView().getTxtImporte().setText("");
 		getView().getDatePicker().setText("");
@@ -76,7 +79,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	}
 
 	private void handleSelect() {
-		eraseControls(true); // Borramos también el aviso de pago insertado con éxito/error
+		eraseControls(); // Borramos también el aviso de pago insertado con éxito/error
 		JTable table = getView().getTableInscripciones();
 		int fila = table.getSelectedRow();
 		if (fila == -1) return;
@@ -133,11 +136,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 			return;
 		}
 
-		Date fechaActual = Date.from(this.getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
-		Date fechaCurso = Util.isoStringToDate(getModel().getFechaCurso(idCurso));
-		long dias = ChronoUnit.DAYS.between(fechaActual.toInstant(), fechaCurso.toInstant());
-
-		getModel().cancelarInscripcion(idInscripcion, dias);
+		getModel().cancelarInscripcion(idInscripcion);
 		Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: Cancelación de inscripción", "Se ha cancelado su inscripción"
 			+ " al curso \"" + nombreCurso + "\" con éxito. Se le devolverán " + aDevolver + "€ en los próximos días.");
 		Dialog.show("La cancelación de la inscripción del alumno " + nombreCompleto + " ha sido realizada con éxito. Se le han de devolver " + aDevolver + "€");
@@ -150,11 +149,13 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		String importe = this.getView().getTxtImporte().getText();
 		LocalDate fecha = this.getView().getDatePicker().getDate();
 
-		if(importe.length() == 0 || importe == null || fecha == null) {
+		if (importe.length() == 0) {
 			Dialog.showError("Por favor, rellena todos los campos para continuar");
 			return;
 		}
 
+		int ret = Dialog.choices("Tipo de Pago", new String[]{"Pago por transferencia", "Pago por caja"});
+		
 		this.getModel().registrarPago(importe, fecha.toString(), idInscripcion);
 		Dialog.show("Pago por importe de " + importe + " € de parte del alumno " + nombreCompleto + " insertado con éxito");
 
@@ -165,15 +166,25 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		 * un filter, se itera por toda la lista de inscripciones, por lo que puede que el
 		 * rendimiento no sea óptimo.
 		 */
-		InscripcionState estado = inscripciones.stream().filter(x -> x.getId().equals(idInscripcion)).findFirst().get().updateEstado(today);
+		Optional<InscripcionDTO> opt = inscripciones.stream().filter(x -> x.getId().equals(idInscripcion)).findFirst();
+		if (!opt.isPresent()) {
+			Dialog.showError("Algo ha ido mal al actualizar el estado de la inscripción.\nCompruebe el estado de los datos.");
+			return;
+		}
+		InscripcionState estado = opt.get().updateEstado(today);
 
-		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
+		if (estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
 			Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: inscripción completada",
 				"El pago de su inscripción ha sido registrado correctamente y su inscripción ha sido completada.");
 		} else Dialog.showWarning("El importe total es incorrecto y la inscripción no está comlpeta.");
 
+		if (ret == 1) {
+			Util.printReceipt(idAlumno, nombreCompleto, nombreCurso, importe, fecha.toString());
+			Dialog.show("Se ha almacenado el correspondiente recibo");
+		}
+
 		getListaInscripciones(false); // Refrescar tabla al insertar el pago
-		eraseControls(false);
+		eraseControls();
 	}
 
 	public void getListaInscripciones(boolean fromCheckBox) {
@@ -206,7 +217,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		// Ocultar foreign keys de la tabla
 		for(int i = 0; i < 3; i++) table.removeColumn(table.getColumnModel().getColumn(0));
 		table.setDefaultEditor(Object.class, null); // Deshabilitar edición
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
+		TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
 		table.setRowSorter(sorter);
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new RowSorter.SortKey(5, SortOrder.ASCENDING));

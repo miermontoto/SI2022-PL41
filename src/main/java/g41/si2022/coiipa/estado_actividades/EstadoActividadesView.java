@@ -41,8 +41,6 @@ public class EstadoActividadesView extends View {
 		// ahora estoy triste, pasadlo bien vacas. ~rubennmg
 
 		JPanel panel1 = new JPanel();
-		// Add elements
-		//panel1.add(btnCargarDatos, BorderLayout.WEST);
 		this.add(panel1, BorderLayout.NORTH);
 
 		// ------------- BorderLayout -> CENTER -------------

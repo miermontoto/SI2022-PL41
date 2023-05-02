@@ -30,10 +30,8 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model {
 	}
 
 	public boolean updateFechas(int idCurso, String fechaCursoInicio, String fechaCursoFin, String fechaInscripcionInicio, String fechaInscripcionFin) {
-		
 
-
-		if (fechaCursoInicio == "" || fechaCursoFin == "" || fechaInscripcionInicio == "" || fechaInscripcionFin == "") {
+		if (fechaCursoInicio.equals("") || fechaCursoFin.equals("") || fechaInscripcionInicio.equals("") || fechaInscripcionFin.equals("")) {
 			Dialog.showError("Las fechas no pueden ser nulas");
 		}
 
@@ -58,19 +56,17 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model {
 		// El inicio de inscripciones es después del inicio del curso.
 
 		start = LocalDate.parse(fechaInscripcionInicio);
-		System.out.println(fechaInscripcionInicio);
 		stop = LocalDate.parse(fechaCursoInicio);
 
 		if(start.isAfter(stop)) {
 			Dialog.showError("No pueden empezar las inscripciones más tarde que el curso");
 			return false;
 		}
-		
-		//Todo ha ido bien
-		
+
+		// Todo ha ido bien
 		String sql = "UPDATE curso SET start = ?, end = ?, start_inscr = ?, end_inscr = ? WHERE id = ?";
 		this.getDatabase().executeUpdate(sql, fechaCursoInicio, fechaCursoFin, fechaInscripcionInicio, fechaInscripcionFin, idCurso);
-		
+
 		return true;
 	}
 
@@ -81,73 +77,67 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model {
 
 	/**
 	 * Gets all the attributes of a course stored in the database.
-	 * 
+	 *
 	 * @param idCurso Id of the course to get all its attributes
 	 * @return All the attributes of the specified course.
 	 */
 	public CursoDTO getCurso(String idCurso) {
-
 		String sql = "SELECT * FROM curso where id = ?";
-
-		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, idCurso).get(0);
+		return getDatabase().executeQueryPojo(CursoDTO.class, sql, idCurso).get(0);
 	}
 
-    /** 
+    /**
 	 * Gets the value of the status attribute of the course table. By default this attribute is 'null'.
-	 * In the class GestionarCursoController.java this attribute is modified to 'CANCELADO' in order to 
+	 * In the class GestionarCursoController.java this attribute is modified to 'CANCELADO' in order to
 	 * perform course cancellations.
-	 * 
+	 *
 	 * @param idCurso Id of the course to get its status stored in the database.
 	 * @return The value of the specified course status attribute.
 	 */
 	public String getDBcursoState(String idCurso) {
 		String sql = "SELECT estado FROM curso WHERE id = ?";
-
 		return String.valueOf(this.getDatabase().executeQuerySingle(sql, idCurso));
 	}
 
 	/**
 	 * Updates the status attribute of a course.
-	 * 
+	 *
 	 * @param estado New final status of a course to be stored in the database. By default, CANCELADO.
 	 * @param idCurso Course id to modify its status.
 	 */
 	public void updateCursoStateToCancelled(String estado, String idCurso) {
 		String sql = "UPDATE curso SET estado = ? WHERE id = ?";
-
-		this.getDatabase().executeUpdate(sql, estado, idCurso);
+		getDatabase().executeUpdate(sql, estado, idCurso);
 	}
 
 	/**
 	 * Gets the e-mails of the students enrolled in a course.
-	 * 
+	 *
 	 * @param idCurso Id of the course to get e-mails.
 	 * @return E-mails of the students registered in the course.
 	 */
 	public List<String> getAlumnosEmail(String idCurso) {
-		String sql = "SELECT al.email FROM inscripcion as i " + 
+		String sql = "SELECT al.email FROM inscripcion as i " +
 					 "INNER JOIN alumno as al " +
 					 "WHERE curso_id = ?";
-
-		return this.getDatabase().executeQueryPojo(String.class, sql, idCurso);
+		return getDatabase().executeQueryPojo(String.class, sql, idCurso);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param idCurso
-	 * @return 
+	 * @return
 	 */
 	public List<InscripcionDTO> getCursoInscripciones(String idCurso) {
 		String sql = "SELECT * FROM inscripcion " +
 					 "WHERE curso_id = ?";
-
-		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
+		return getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
 	}
 
 
 	public void cancelarInscripcion(String idInscripcion) {
 		String sql = "UPDATE inscripcion SET cancelada = TRUE WHERE id = ?";
-		this.getDatabase().executeUpdate(sql, idInscripcion);
+		getDatabase().executeUpdate(sql, idInscripcion);
 	}
 
 	public List<String> getProfesoresEmail(String idCurso) {
@@ -155,6 +145,6 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model {
 			+ " INNER JOIN docente as dce ON dca.docente_id = dce.id"
 			+ " WHERE dca.curso_id = ?";
 
-		return this.getDatabase().executeQueryPojo(String.class, sql, idCurso);
+		return getDatabase().executeQueryPojo(String.class, sql, idCurso);
 	}
 }

@@ -197,5 +197,4 @@ public class StateUtilities {
 		if (paid < cost) return FacturaState.PENDIENTE;
 		return FacturaState.PAGADA;
 	}
-
 }

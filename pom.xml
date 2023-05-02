@@ -5,7 +5,7 @@
 
 	<groupId>G41</groupId>
 	<artifactId>si2022</artifactId>
-	<version>2.0.0</version>
+	<version>3.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>SI2022-PL41</name>
@@ -131,7 +131,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.9</version>
+				<version>0.8.10</version>
 				<configuration>
 					<excludes>
 						<exclude>**/TableColumnAdjuster.*</exclude>

@@ -161,57 +161,6 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		} else Dialog.showError("No hemos modificado nada, ya que había parámetros incorrectos. Por favor, corrígelos e inténtalo de nuevo.");
 	}
 
-
-	// Función que implementa un sistema para comprobar las fechas que se introducen
-	// En caso de que algo esté mal, devuelve falso y un mensaje de error.
-	/*public boolean checkFechas() {
-		String fechaCursoInicio = getView().getDateNewIniCurso().getDateStringOrEmptyString();
-		String fechaCursoFin = getView().getDateNewFinCurso().getDateStringOrEmptyString();
-		String fechaInscripcionInicio = getView().getDateNewIniInscr().getDateStringOrEmptyString();
-		String fechaInscripcionFin = getView().getDateNewFinInscr().getDateStringOrEmptyString();
-
-		if (fechaCursoInicio == "" || fechaCursoFin == "" || fechaInscripcionInicio == "" || fechaInscripcionFin == "") {
-			Dialog.showError("Las fechas no pueden ser nulas");
-		}
-
-		// Acabamos el curso antes de empezar el curso
-		LocalDate start = LocalDate.parse(fechaCursoInicio);
-		LocalDate stop = LocalDate.parse(fechaCursoFin);
-
-		if (start.isAfter(stop)) {
-			Dialog.showError("No puede acabar el curso antes de la fecha de inicio del curso");
-			return false;
-		}
-
-		// Acabamos las inscripciones antes de empezar las inscripciones.
-		start = LocalDate.parse(fechaInscripcionInicio);
-		stop = LocalDate.parse(fechaInscripcionFin);
-
-		if(start.isAfter(stop)) {
-			Dialog.showError("No pueden acabar las inscripciones antes de empezar las inscripciones");
-			return false;
-		}
-
-		// El inicio de inscripciones es después del inicio del curso.
-
-		start = LocalDate.parse(fechaInscripcionInicio);
-		stop = LocalDate.parse(fechaCursoInicio);
-
-		if(start.isAfter(stop)) {
-			Dialog.showError("No pueden empezar las inscripciones más tarde que el curso");
-			return false;
-		}
-
-		// Todo ha ido bien, guardamos las fechas.
-		this.fechaIniCurso = fechaCursoInicio;
-		this.fechaFinCurso = fechaCursoFin;
-		this.fechaIniInscr = fechaInscripcionInicio;
-		this.fechaFinInscr = fechaInscripcionFin;
-
-		return true;
-	}*/
-
-
 	public void handleCambiarDetalles() {
 		String plazasNuevas = this.getView().getTxtFieldPlazas().getText(); //Obtengo el texto.
 		int ocupadas = Integer.parseInt(plazas) - Integer.parseInt(plazasLibres);
@@ -273,7 +222,6 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		eraseControls();
-		//SwingUtil.autoAdjustColumns(table);
 	}
 
 	/**
@@ -283,10 +231,6 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	 */
 	public void cancelarInscripciones(CursoDTO curso) {
 		listaInscr = getModel().getCursoInscripciones(curso.getId());
-
-		for (InscripcionDTO inscr: listaInscr)
-			getModel().cancelarInscripcion(inscr.getId());
-
-
+		for (InscripcionDTO inscr : listaInscr) getModel().cancelarInscripcion(inscr.getId());
 	}
 }

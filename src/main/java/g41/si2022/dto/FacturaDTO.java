@@ -19,6 +19,8 @@ public class FacturaDTO implements DTO {
         doc_apellidos,
         curso_nombre;
 
+    private String nombre_entidad; // Necesario facturas a empresas
+    private String curso_importe; // Necesario facturas a empresas
     private FacturaState estado;
 
     public void updateEstado() {
