@@ -1,3 +1,4 @@
+
 package g41.si2022.coiipa.gestionar_inscripciones;
 
 import java.util.ArrayList;

@@ -13,7 +13,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
 import g41.si2022.dto.CursoDTO;
-import g41.si2022.dto.DocenciaDTO;
 import g41.si2022.dto.FacturaDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
@@ -48,15 +47,15 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 			@Override
 			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
-		this.getView().getChkAll().addActionListener(e -> getListaFacturasEmrp());
-		this.getView().getCmbCurso().addActionListener(e -> getListaCursosEmpr());
+		this.getView().getChkAll().addActionListener(e -> getListaFacturasEmpr());
+		this.getView().getCmbCurso().addActionListener(e -> handleSelectCurso());
     }
 
     @Override
     public void initVolatileData() {
         clear();
-		getListaFacturasEmrp(); // Precarga inicial de la lista de facturas
-		getListaCursosEmpr();
+		getListaFacturasEmpr(); // Precarga inicial de la lista de facturas
+		getListaCursosEmpr();   // Precarga inicial de cursos asociados a una empresa
     }
 
     public void clear() {
@@ -65,14 +64,24 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 		getView().getDateFactura().setDate(getView().getMain().getToday());
 	}
 
+	private void handleSelectCurso() {
+			try {
+				String nombreEmpresa = ((CursoDTO) getView().getCmbCurso().getSelectedItem()).getE_nombre();
+				getView().getLblEmpresa().setText(nombreEmpresa);
+				String importeAPagar = ((CursoDTO) getView().getCmbCurso().getSelectedItem()).getImporte();
+			getView().getTxtImporteFactura().setText(importeAPagar);
+			} catch (NullPointerException | ClassCastException e) { 
+				// No se hace nada
+			}	
+	}
+
 	private void handleInsertarFactura() {
 		String fecha = getView().getDateFactura().toString();
 		String idEntidad = ((CursoDTO) getView().getCmbCurso().getSelectedItem()).getEntidad_id();
 		String idCurso = ((CursoDTO) getView().getCmbCurso().getSelectedItem()).getId();
 		String importe = getView().getTxtImporteFactura().getText();
 		if(getModel().insertFacturaEmpresa(fecha, idCurso, idEntidad, importe)) {
-			getListaFacturasEmrp();
-			// getListaDocentes();
+			getListaFacturasEmpr();
 			getView().getTxtImporteFactura().setText("");
 		}
 	}
@@ -85,7 +94,7 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 			getView().getTxtImporte().getText(),
 			id
 		);
-		getListaFacturasEmrp();
+		getListaFacturasEmpr();
 		Dialog.show("Pago registrado correctamente");
 		if(facturasEmpr.size() == facturasPorPagar)
 			Dialog.showWarning("El importe total no coincide con el importe de la factura");
@@ -99,7 +108,7 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 		getView().getTxtImporte().setText(model.getValueAt(row, 4).toString());
 	}
 
-	private void getListaFacturasEmrp() {
+	private void getListaFacturasEmpr() {
 		facturasEmpr = supFacturasEmpr.get();
 		tableCursoEmpr.setModel(SwingUtil.getTableModelFromPojos(facturasEmpr,
 			new String[] {"id", "nombre_entidad", "curso_nombre", "remuneracion", "pagado", "fecha", "estado"},
@@ -116,23 +125,6 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 		cmb.removeAllItems();
 		List<CursoDTO> cursos = getModel().getListaCursosEmpr();
 		cmb.addItem("Seleccione un curso");
-		for (CursoDTO curso: cursos) {
-			this.getView().getCmbCurso().addItem(curso.getNombre());
-		}
+		cursos.forEach(cmb::addItem);
 	}
-
-	// @SuppressWarnings("unchecked")
-	// private void getListaDocentes() {
-	// 	getView().getCmbEmpresa().removeAllItems();
-	// 	try {
-	// 		String idCurso = ((CursoDTO) getView().getCmbCurso().getSelectedItem()).getId();
-	// 		List<DocenciaDTO> empresas = getModel().getListaDocentes(idCurso);
-	// 		empresas.forEach(x -> getView().getCmbEmpresa().addItem(x));
-	// 		getView().getCmbEmpresa().setEnabled(true);
-	// 		getView().getBtnInsertarFactura().setEnabled(true);
-	// 	} catch (ClassCastException | NullPointerException e) {
-	// 		getView().getCmbEmpresa().setEnabled(false);
-	// 		getView().getBtnInsertarFactura().setEnabled(false);
-	// 	} // No se ha seleccionado un curso.
-	// }
 }

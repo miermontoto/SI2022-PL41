@@ -72,7 +72,6 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 			getListaDocentes();
 			getView().getTxtImporteFactura().setText("");
 		}
-
 	}
 
 	private void handleInsertarPago() {

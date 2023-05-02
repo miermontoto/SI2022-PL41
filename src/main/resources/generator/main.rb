@@ -88,16 +88,6 @@ def obtain_data(ratio)
     ## No se necesitan casos específicos.
     docentes = generate_docentes((75 * ratio).to_i, entidades)
 
-    # Generar eventos para los cursos
-    ## Sin mayor relevancia para casos específicos.
-    ## Se genera como mínimo un evento por curso.
-    aulas = ['AN-B3', 'AN-B6', 'AN-B1', 'AN-E', 'AN-B', 'AS-1', 'AN-P3', 'DO-1.S.31', 'DO-9', 'AN-S6', 'AN-C']
-    eventos = []
-
-    cursos.each.with_index do |c, i|
-        eventos += generate_eventos(rand(1..(5 * ratio).to_i), aulas, c, i)
-    end
-
     # Generar docencias
     ## Se necesita al menos una docencia por curso.
     ## No importa qué docentes imparten qué cursos.
@@ -123,11 +113,21 @@ def obtain_data(ratio)
         inscripciones += generate_inscripciones(rand(1..c.plazas), alumnos, c, i, entidades, costes)
     end
 
+    # Generar eventos para los cursos
+    ## Sin mayor relevancia para casos específicos.
+    ## Se genera como mínimo un evento por curso.
+    aulas = ['AN-B3', 'AN-B6', 'AN-B1', 'AN-E', 'AN-B', 'AS-1', 'AN-P3', 'DO-1.S.31', 'DO-9', 'AN-S6', 'AN-C']
+    eventos = []
+
+    cursos.each.with_index do |c, i|
+        eventos += generate_eventos(rand(1..(5 * ratio).to_i), aulas, c, i)
+    end
+
     # Generar facturas
     ## Solo se generan facturas de cursos completados.
     facturas = []
     cursos.each.with_index do |c, i|
-        if c.end < Date.today
+        if c.end > Date.today
             next
         end
         if c.entidad_id != nil && rand < 0.75
@@ -193,4 +193,8 @@ File.open(filename, 'w') do |f|; f.write(sql); end # Guardar la cadena SQL en el
 
 # salida de resultados
 puts "\rGenerando datos... [OK] (#{(Time.now - time).round(3)}s)"
-puts "#{File.open(filename, 'r').readlines.length} líneas generadas en #{filename}"
+length = File.open(filename, 'r').readlines.length
+puts "#{length} líneas generadas en #{filename}"
+if length > 50000
+    puts "WARNING! presumiblemente, el archivo generado es demasiado grande para sqlite."
+end

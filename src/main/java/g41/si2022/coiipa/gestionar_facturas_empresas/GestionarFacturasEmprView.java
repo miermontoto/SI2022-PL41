@@ -9,13 +9,13 @@ import java.awt.Insets;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.text.NumberFormatter;
 
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTitledPanel;
 
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -40,10 +40,10 @@ public class GestionarFacturasEmprView extends View {
 	private BetterDatePicker datePago;
 	private BetterDatePicker dateFactura;
 	private JXComboBox cmbCurso;
-	// private JXComboBox cmbEmpresa;
 	private JFormattedTextField txtImporte;
 	private JFormattedTextField txtImporteFactura;
 	private JCheckBox chkAll;
+	private JLabel lblEmpresa; 
 
 	public GestionarFacturasEmprView(SwingMain main) {
 		super(main, GestionarFacturasEmprModel.class, GestionarFacturasEmprView.class, GestionarFacturasEmprController.class);
@@ -129,10 +129,16 @@ public class GestionarFacturasEmprView extends View {
 		gbc.gridy = 2;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weightx = 0.0;
-		registrarPanel.add(JLabelFactory.getLabel(FontType.bold, "Empresa"), gbc);
-
+		registrarPanel.add(JLabelFactory.getLabel(FontType.bold, "Empresa a la que pertenece"), gbc);
+		
 		gbc.insets = next;
 		gbc.gridy = 3;
+		gbc.fill = GridBagConstraints.NONE;
+		registrarPanel.add(lblEmpresa = new JLabel("N/A"), gbc);
+
+
+		gbc.insets = next;
+		gbc.gridy = 4;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
 		// registrarPanel.add(cmbEmpresa = new JXComboBox(), gbc);
@@ -140,32 +146,32 @@ public class GestionarFacturasEmprView extends View {
 		// cmbEmpresa.setEnabled(false);
 
 		gbc.insets = spacer;
-		gbc.gridy = 4;
+		gbc.gridy = 5;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weightx = 0.0;
 		registrarPanel.add(JLabelFactory.getLabel(FontType.bold, "Fecha"), gbc);
 
 		gbc.insets = next;
-		gbc.gridy = 5;
+		gbc.gridy = 6;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
 		registrarPanel.add(dateFactura = new BetterDatePicker(), gbc);
 		dateFactura.setDate(getMain().getToday());
 
 		gbc.insets = spacer;
-		gbc.gridy = 6;
+		gbc.gridy = 7;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weightx = 0.0;
 		registrarPanel.add(JLabelFactory.getLabel(FontType.bold, "Importe (€)"), gbc);
 
 		gbc.insets = next;
-		gbc.gridy = 7;
+		gbc.gridy = 8;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
 		registrarPanel.add(txtImporteFactura = new JFormattedTextField(formatter), gbc);
 
 		gbc.insets = spacer;
-		gbc.gridy = 8;
+		gbc.gridy = 9;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weightx = 0.0;
 		registrarPanel.add(btnInsertarFactura = new JButton("Insertar factura"), gbc);
