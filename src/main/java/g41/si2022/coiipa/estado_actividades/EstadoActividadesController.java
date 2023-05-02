@@ -1,24 +1,18 @@
 package g41.si2022.coiipa.estado_actividades;
 
-import g41.si2022.dto.CursoDTO;
-import g41.si2022.dto.InscripcionDTO;
-import g41.si2022.ui.SwingUtil;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.JTable;
-import javax.swing.RowSorter;
 import javax.swing.SortOrder;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
+import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.InscripcionDTO;
+import g41.si2022.ui.SwingUtil;
+import g41.si2022.util.Pair;
 import g41.si2022.util.StatusCellRenderer;
 import g41.si2022.util.Util;
 import g41.si2022.util.exception.ApplicationException;
-import g41.si2022.util.state.StateUtilities;
 
 public class EstadoActividadesController extends g41.si2022.mvc.Controller<EstadoActividadesView, EstadoActividadesModel> {
 
@@ -34,11 +28,11 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 	}
 
 	public void initNonVolatileData() {
-		this.getView().getTablaCursos().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent ent) {
-				SwingUtil.exceptionWrapper(() -> getListaInscr());
-				SwingUtil.exceptionWrapper(() -> balance());
+		JTable table = getView().getTablaCursos();
+		table.getSelectionModel().addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
+				SwingUtil.exceptionWrapper(this::getListaInscr);
+				SwingUtil.exceptionWrapper(this::balance);
 			}
 		});
 	}
@@ -50,43 +44,38 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 
 	public void getListaCursos() {
 		cursos = this.getModel().getListaCursos();
+		JTable table = getView().getTablaCursos();
+		LocalDate today = getToday();
 
-		for (CursoDTO curso : cursos) {
-			curso.updateEstado(getToday());
-			curso.updateType();
-		}
+		cursos.forEach(x -> {
+			x.updateEstado(today);
+			x.updateType();
+		});
 
-        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "estado", "plazas", "start_inscr", "end_inscr", "start", "end", "tipo" },
-        	new String[] { "Nombre", "Estado", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr.", "Fecha ini. curso", "Fecha fin curso", "Tipo" }, null);
-        this.getView().getTablaCursos().setModel(tableModel);
-        SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
+        table.setModel(SwingUtil.getTableModelFromPojos(cursos, new String[] { "id", "nombre", "estado", "plazas", "start_inscr", "end_inscr", "start", "end", "tipo" },
+        	new String[] { "", "Nombre", "Estado", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr.", "Fecha ini. curso", "Fecha fin curso", "Tipo" }, null));
+        SwingUtil.autoAdjustColumns(table);
+		Util.removeColumn(table, 0);
 	}
 
+	@SuppressWarnings("unchecked") // Por el Util.sortOrder
 	public void getListaInscr() {
-		List<InscripcionDTO> listaInscr;
-		cursos = this.getModel().getListaCursos();
-		for (CursoDTO curso : cursos) {
-			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
-				listaInscr = this.getModel().getListaInscr(curso.getId());
-				for(InscripcionDTO inscripcion : listaInscr) inscripcion.updateEstado(getToday());
+		JTable table = getView().getTablaInscr();
+		List<InscripcionDTO> inscripciones = this.getModel().getListaInscr(this.getId());
+		LocalDate today = getToday();
+		inscripciones.forEach(x -> x.updateEstado(today));
 
-				JTable table = this.getView().getTablaInscr();
-				TableModel tableModel = SwingUtil.getTableModelFromPojos(listaInscr,
-					new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "curso_coste" , "pagado", "estado", "entidad_nombre" },
-						new String[] { "Fecha de inscripción", "Nombre", "Apellidos", "Coste", "Pagado", "Estado", "Entidad" }, null);
-				table.setModel(tableModel);
-				table.setDefaultEditor(Object.class, null);
-				table.getColumnModel().getColumn(5).setCellRenderer(new StatusCellRenderer(5));
-				TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
-				table.setRowSorter(sorter);
-				List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-				sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
-				sorter.setSortKeys(sortKeys);
+		table.setModel(SwingUtil.getTableModelFromPojos(inscripciones,
+		new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "curso_coste" , "pagado", "estado", "entidad_nombre" },
+			new String[] { "Fecha de inscripción", "Nombre", "Apellidos", "Coste", "Pagado", "Estado", "Entidad" }, null));
+		table.setDefaultEditor(Object.class, null);
+		table.getColumnModel().getColumn(5).setCellRenderer(new StatusCellRenderer(5));
+		Util.sortTable(table, new Pair<Integer, SortOrder>(0, SortOrder.DESCENDING));
+	}
 
-				return;
-			}
-		}
-        throw new ApplicationException("Curso seleccionado desconocido");
+	private String getId() {
+		JTable table = getView().getTablaCursos();
+		return table.getModel().getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 0).toString();
 	}
 
 	public void balance() {
@@ -94,29 +83,25 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 		String ingresosEstimados;
 		String ingresosReales;
 
-		for (CursoDTO curso : cursos) {
-			if (!curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
-				return;
-			}
+		CursoDTO curso = cursos.stream().filter(x -> x.getId().equals(getId())).findFirst().orElseThrow(() -> new ApplicationException("No se ha encontrado el curso"));
 
-			gastos = curso.getImporte() == null ? this.getModel().getGastos(curso.getId()) : curso.getImporte();
-			ingresosEstimados = this.getModel().getIngresosEstimados(curso.getId());
-			ingresosReales = this.getModel().getImportePagosFromCurso(curso.getId());
-			String balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Double.parseDouble(gastos));
-			String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Double.parseDouble(gastos));
-			String colorReal = Double.parseDouble(balanceReal) > 0 ? "green" : "red";
-			String colorEstimado = Double.parseDouble(balanceEstimado) > 0 ? "green" : "red";
-			StringBuilder sb = new StringBuilder();
-			sb.append("<html><body>");
-			sb.append("<p><b>Gastos actuales:</b> " + gastos + "€");
-			sb.append("<p><p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
-			sb.append("<p><b>Balance estimado:</b> <span style=\"color:" + colorEstimado + ";\">" + balanceEstimado + "€</span>");
-			sb.append("<p><p><b>Ingresos actuales:</b> " + ingresosReales + "€");
-			sb.append("<p><b>Balance real:</b> <span style=\"color:" + colorReal + ";\">" + balanceReal + "€</span>");
-			sb.append("</body></html>");
-			this.getView().getLblEconomicInfo().setText(sb.toString());
-		}
-		throw new ApplicationException("Curso seleccionado desconocido");
+		gastos = curso.getImporte() == null ? curso.getGastos() : curso.getImporte();
+		ingresosEstimados = this.getModel().getIngresosEstimados(curso.getId());
+		ingresosReales = this.getModel().getImportePagosFromCurso(curso.getId());
+		String balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Double.parseDouble(gastos));
+		String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Double.parseDouble(gastos));
+		String colorReal = Double.parseDouble(balanceReal) > 0 ? "green" : "red";
+		String colorEstimado = Double.parseDouble(balanceEstimado) > 0 ? "green" : "red";
+		StringBuilder sb = new StringBuilder();
+		sb.append("<html><body>");
+		sb.append("<p><b>Gastos actuales:</b> " + gastos + "€");
+		sb.append("<p><p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
+		sb.append("<p><b>Balance estimado:</b> <span style=\"color:" + colorEstimado + ";\">" + balanceEstimado + "€</span>");
+		sb.append("<p><p><b>Ingresos actuales:</b> " + ingresosReales + "€");
+		sb.append("<p><b>Balance real:</b> <span style=\"color:" + colorReal + ";\">" + balanceReal + "€</span>");
+		sb.append("</body></html>");
+		this.getView().getLblEconomicInfo().setText(sb.toString());
+
 	}
 
 }
