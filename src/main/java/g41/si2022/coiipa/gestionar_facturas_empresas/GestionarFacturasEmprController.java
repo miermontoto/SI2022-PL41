@@ -85,8 +85,8 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 		if(getModel().insertFacturaEmpresa(fecha, idCurso, idEntidad, importe)) {
 			getListaFacturasEmpr();
 			getView().getTxtImporteFactura().setText("");
-		}
-		cmbCurso.removeItem(cmbCurso.getSelectedItem());
+			cmbCurso.removeItem(cmbCurso.getSelectedItem());
+		}	
 	}
 
 	private void handleInsertarPago() {

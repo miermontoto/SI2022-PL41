@@ -53,7 +53,7 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 	@Override
 	public void initVolatileData() {
 		clear();
-		getListaFacturas(); // Precarga inicial de la lista de inscripciones
+		getListaFacturas(); 
 		getListaCursos();
 	}
 
