@@ -68,7 +68,7 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 
 	public void clear() {
 		getView().getNombreApellidosLabel().setText("Seleccionar alumno");
-		getView().getFechaListaLabel().setText("SeleccionarAlumno");
+		getView().getFechaListaLabel().setText("Seleccionar alumno");
 	}
 
 	private void handleEliminar() {
