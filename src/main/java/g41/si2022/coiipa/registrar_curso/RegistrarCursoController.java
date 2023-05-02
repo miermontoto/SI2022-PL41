@@ -35,7 +35,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 	private Map<String, ProfesorDTO> profesoresMap;
 	private LinkedList<SesionDTO> sesiones;
-	private List<EntidadDTO> entidadesList;
 
 	private final java.util.function.Supplier<List<ProfesorDTO>> sup = () -> {
 		ArrayList<ProfesorDTO> out = new ArrayList<> ();
@@ -65,15 +64,6 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		loadEventListeners();
 		getView().getBtnRegistrar().setEnabled(false);
 		getView().getRbtn1().setSelected(true);
-	}
-
-	private void loadColectivos() {
-		((g41.si2022.ui.components.table.RowAppendableJTable) getView().getTablaCostes()).setData(
-				this.getModel().getColectivos(),
-				new String[]{"nombre", "coste"},
-				new String[]{"Colectivo", "Coste"},
-				null
-		);
 	}
 
 	private void loadEventListeners() {
@@ -121,9 +111,9 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 		});
 
 		Stream.of(
-				this.getView().getRbtn1(),
-				this.getView().getRbtn2()
-				).forEach(x -> x.addActionListener(e -> SwingUtil.exceptionWrapper( () -> manageForm())));
+			this.getView().getRbtn1(),
+			this.getView().getRbtn2()
+		).forEach(x -> x.addActionListener(e -> SwingUtil.exceptionWrapper(this::manageForm)));
 
 		btnAdd.setEnabled(false);
 		btnRemove.setEnabled(false);
@@ -159,7 +149,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 					public void mouseClicked(java.awt.event.MouseEvent e) { checkValidity(); }
 				});
 
-				((JTable) c).getModel().addTableModelListener((e) -> checkValidity());
+				((JTable) c).getModel().addTableModelListener(e -> checkValidity());
 			}
 		}
 	}
@@ -302,7 +292,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 	}
 
 	public void getListaEntidades() {
-		entidadesList = getModel().getListaEntidades();
+		List<EntidadDTO> entidadesList = getModel().getListaEntidades();
 
 		TableModel tableModel = SwingUtil.getTableModelFromPojos(
 			entidadesList,
@@ -312,7 +302,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				private static final long serialVersionUID = 1L;
 				{ put(3, Pattern.compile("\\d+(\\.\\d+)?")); }
 			}
-			);
+		);
 
 		JTable tableEntidades = getView().getTableEntidades();
 		getView().getTableEntidades().setModel(tableModel);

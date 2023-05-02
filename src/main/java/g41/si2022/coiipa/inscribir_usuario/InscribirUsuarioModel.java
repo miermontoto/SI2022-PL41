@@ -1,7 +1,6 @@
 package g41.si2022.coiipa.inscribir_usuario;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;
@@ -20,18 +19,6 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
 
     public List<CursoDTO> getListaCursos() {
         return this.getDatabase().executeQueryPojo(CursoDTO.class, "select * from curso");
-    }
-
-    public List<String> getColectivosFromCursos(List<String> idCursos) {
-    	String sql = "SELECT c.nombre FROM colectivo AS c";
-    	return this.getDatabase()
-            .executeQueryPojo(ColectivoDTO.class, sql)
-            .stream().collect(new g41.si2022.util.collector.HalfwayListCollector<ColectivoDTO, String> () {
-                @Override
-                public BiConsumer<List<String>, ColectivoDTO> accumulator() {
-                    return (list, data) -> list.add(data.getNombre());
-                }
-        });
     }
 
     public List<ColectivoDTO> getColectivos() {

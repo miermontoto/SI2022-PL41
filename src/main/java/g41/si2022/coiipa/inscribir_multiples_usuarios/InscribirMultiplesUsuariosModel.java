@@ -14,7 +14,6 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	public List<CursoDTO> getListaCursos(String date) {
 		String sql = "select *, (c.plazas -"
 				+ " (select count(*) from inscripcion as i where i.curso_id = c.id)"
-				//+ " (select count(*) from cancelada as ca where ca.curso_id = c.id)"
 				+ ") as plazas_libres from curso as c where start_inscr <= ? and end_inscr >= ?";
 		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, date, date);
 	}

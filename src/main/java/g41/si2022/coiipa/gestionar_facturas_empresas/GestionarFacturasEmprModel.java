@@ -12,11 +12,11 @@ public class GestionarFacturasEmprModel extends g41.si2022.mvc.Model {
 
 	/**
 	 * Obtain unpaid bills from companies
-	 * 
+	 *
 	 * @return list of bills
 	 */
 	public List<FacturaDTO> getListaFacturasEmpr() {
-		String sql = "SELECT f.*, c.nombre AS curso_nombre, c.importe AS remuneracion, e.nombre AS nombre_entidad," 
+		String sql = "SELECT f.*, c.nombre AS curso_nombre, c.importe AS remuneracion, e.nombre AS nombre_entidad,"
 				   + " CASE WHEN sum(p.importe) IS NOT NULL THEN sum(p.importe) ELSE 0 END AS pagado"
 				   + " FROM factura AS f"
 				   + " INNER JOIN curso AS c ON f.curso_id = c.id"
@@ -38,14 +38,14 @@ public class GestionarFacturasEmprModel extends g41.si2022.mvc.Model {
 
 	/**
 	 * Insert a new bill from a company to pay for the teaching of a course
-	 * 
+	 *
 	 * @param fecha date of the bill
 	 * @param curso_id id of the course associated to the company
 	 * @param entidad_id id of the company
 	 * @param importe amount to be paid
-	 * 
+	 *
 	 * @return {@code true} if the bill is inserted correctly
-	 * 		   {@code false} if the amount of money to pay does not match the agreed 
+	 * 		   {@code false} if the amount of money to pay does not match the agreed
 	 */
 	public boolean insertFacturaEmpresa(String fecha, String curso_id, String entidad_id, String importe) {
 		String sql;
@@ -73,7 +73,7 @@ public class GestionarFacturasEmprModel extends g41.si2022.mvc.Model {
 
 	/**
 	 * Obtain a list of courses associated with a company
-	 * 
+	 *
 	 * @return list of courses
 	 */
 	public List<CursoDTO> getListaCursosEmpr() {

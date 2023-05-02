@@ -22,24 +22,17 @@ public class GestionarFacturasProfModel extends g41.si2022.mvc.Model {
 		return this.getDatabase().executeQueryPojo(FacturaDTO.class, sql);
 	}
 
-	public void insertPago(String fecha, String importe, String factura_id) {
+	public void insertPago(String fecha, String importe, String idFactura) {
 		String sql = "insert into pago (fecha, importe, factura_id) values (?, ?, ?)";
-		this.getDatabase().executeUpdate(sql, fecha, importe, factura_id);
+		this.getDatabase().executeUpdate(sql, fecha, importe, idFactura);
 	}
 
-	public boolean insertFactura(String fecha, String docencia_id, String importe) {
+	public boolean insertFactura(String fecha, String idDocencia, String importe) {
 		String sql;
-
-		// Comprobar que la docencia no tiene ya una factura asociada (imposible por la view)
-		/*sql = "select count(*) from factura as f where f.docencia_id = ?";
-		if (!getDatabase().executeQuerySingle(sql, docencia_id).equals("0")) {
-			Dialog.showError("La docencia ya tiene una factura asociada");
-			return false;
-		}*/
 
 		// Comprobar que el importe introducido concuerda con lo acordado.
 		sql = "select dca.remuneracion from docencia as dca where dca.id = ?";
-		Double acordado = (double) getDatabase().executeQuerySingle(sql, docencia_id);
+		Double acordado = (double) getDatabase().executeQuerySingle(sql, idDocencia);
 		Double insertado = Double.parseDouble(importe);
 		if (!acordado.equals(insertado)) {
 			Dialog.showError("El importe introducido no concuerda con lo acordado."
@@ -49,7 +42,7 @@ public class GestionarFacturasProfModel extends g41.si2022.mvc.Model {
 
 		// Insertar factura tras comprobar la validez del importe.
 		sql = "insert into factura (fecha, docencia_id) values (?, ?)";
-		this.getDatabase().executeUpdate(sql, fecha, docencia_id);
+		this.getDatabase().executeUpdate(sql, fecha, idDocencia);
 		Dialog.show("Factura creada correctamente");
 		return true;
 	}

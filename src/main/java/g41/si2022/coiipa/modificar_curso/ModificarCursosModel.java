@@ -1,7 +1,6 @@
 package g41.si2022.coiipa.modificar_curso;
 
 import java.time.LocalDate;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JTextArea;

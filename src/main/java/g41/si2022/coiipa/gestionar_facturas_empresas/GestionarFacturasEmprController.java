@@ -20,11 +20,11 @@ import g41.si2022.util.StatusCellRenderer;
 import g41.si2022.util.state.FacturaState;
 
 public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<GestionarFacturasEmprView, GestionarFacturasEmprModel> {
-    
+
     private int row;
 	private JTable tableCursoEmpr;
 	private List<FacturaDTO> facturasEmpr;
-    
+
     public GestionarFacturasEmprController(GestionarFacturasEmprModel modelo, GestionarFacturasEmprView vista) {
 		super(vista, modelo);
 		this.tableCursoEmpr = this.getView().getTableFacturasEmpr();
@@ -33,8 +33,7 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
     private Supplier<List<FacturaDTO>> supFacturasEmpr = () -> {
 		List<FacturaDTO> facturasEmpr2 = getModel().getListaFacturasEmpr();
 		facturasEmpr2.forEach(f -> f.updateEstado());
-		if(this.getView().getChkAll().isSelected()) 
-			return facturasEmpr2;
+		if(this.getView().getChkAll().isSelected()) return facturasEmpr2;
 
 		return facturasEmpr2.stream().filter(f -> f.getEstado() != FacturaState.PAGADA).collect(Collectors.toList());
 	};
@@ -54,8 +53,8 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
     @Override
     public void initVolatileData() {
         clear();
-		getListaFacturasEmpr(); // Precarga inicial de la lista de facturas
-		getListaCursosEmpr();   // Precarga inicial de cursos asociados a una empresa
+		getListaFacturasEmpr();
+		getListaCursosEmpr();
     }
 
     public void clear() {
@@ -71,9 +70,7 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 			getView().getLblEmpresa().setText(nombreEmpresa);
 			String importeAPagar = ((CursoDTO) cmbCurso.getSelectedItem()).getImporte();
 			getView().getTxtImporteFactura().setText(importeAPagar);
-		} catch (NullPointerException | ClassCastException e) { 
-			// No se hace nada
-		}	
+		} catch (NullPointerException | ClassCastException e) { }
 	}
 
 	private void handleInsertarFactura() {
@@ -86,7 +83,7 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 			getListaFacturasEmpr();
 			getView().getTxtImporteFactura().setText("");
 			cmbCurso.removeItem(cmbCurso.getSelectedItem());
-		}	
+		}
 	}
 
 	private void handleInsertarPago() {
