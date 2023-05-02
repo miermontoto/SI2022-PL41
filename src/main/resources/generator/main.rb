@@ -88,30 +88,10 @@ def obtain_data(ratio)
     ## No se necesitan casos específicos.
     docentes = generate_docentes((75 * ratio).to_i, entidades)
 
-    # Generar docencias
-    ## Se necesita al menos una docencia por curso.
-    ## No importa qué docentes imparten qué cursos.
-    ## Las remuneraciones se generan aleatoriamente.
-    docencias = []
-
-    cursos.length.times do |i|
-        docencias += generate_docencias(rand(1..(6 * ratio).to_i), docentes, i)
-    end
-
     # Generar cursos aleatorios
     ## Estos cursos pueden (o no) ser cursos externos
     ## contratados a empresas.
     cursos += generate_cursos((10 * ratio).to_i, entidades)
-
-    # Generar inscripciones
-    ## Se necesita una inscripción cancelada por curso.
-    ## Como el estado de las inscripciones depende de los pagos,
-    ## se generarán pagos para obtener varios estados de inscripción.
-    inscripciones = []
-
-    cursos.each.with_index do |c, i|
-        inscripciones += generate_inscripciones(rand(1..c.plazas), alumnos, c, i, entidades, costes)
-    end
 
     ### Se genera un curso con una sola plaza después de generar inscripciones para que
     ### siempre tenga una plaza libre.
@@ -119,9 +99,22 @@ def obtain_data(ratio)
         start_this_month, end_this_month, 1,
         start_next_month, end_next_month))
 
+    # Generar docencias
+    ## Se necesita al menos una docencia por curso.
+    ## No importa qué docentes imparten qué cursos.
+    ## Las remuneraciones se generan aleatoriamente.
+    ## No se pueden generar docencias de cursos externos.
+    docencias = []
+
+    cursos.each.with_index do |c, i|
+        if c.entidad_id == nil
+            docencias += generate_docencias(rand(1..(6 * ratio).to_i), docentes, i)
+        end
+    end
+
     # Generar docentes
     ## No se necesitan casos específicos.
-    docentes = generate_docentes((50 * ratio).to_i)
+    docentes = generate_docentes((50 * ratio).to_i, entidades)
 
     # Generar sesiones para los cursos
     ## Sin mayor relevancia para casos específicos.
@@ -153,10 +146,19 @@ def obtain_data(ratio)
         start_last_month, end_last_month, alumnos.length, start_this_month, end_this_month))
     sesiones += generate_sesiones(rand((200 * ratio).to_i..(500 * ratio).to_i), aulas, cursos.last, cursos.length - 1)
     docencias += generate_docencias(rand(docentes.length/2..docentes.length), docentes, cursos.length - 1)
-    inscripciones += generate_inscripciones(rand(2*cursos.last.plazas/3..cursos.last.plazas), alumnos, cursos.last, cursos.length - 1, entidades, costes)
 
     alumnos.push(Alumno.new('Juan', 'Mier', 'mier@mier.info', ''))
     alumnos.push(Alumno.new('Test', 'Test', 'test@test.com', ''))
+
+    # Generar inscripciones
+    ## Se necesita una inscripción cancelada por curso.
+    ## Como el estado de las inscripciones depende de los pagos,
+    ## se generarán pagos para obtener varios estados de inscripción.
+    inscripciones = []
+
+    cursos.each.with_index do |c, i|
+        inscripciones += generate_inscripciones(rand(1..c.plazas), alumnos, c, i, entidades, costes)
+    end
 
     # Generar pagos
     ## Se generan una porción de pagos para todas las inscripciones, de forma
