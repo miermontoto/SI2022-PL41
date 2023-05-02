@@ -62,7 +62,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 	@Override
 	public void initVolatileData() {
-		today = getView().getMain().getToday();
+		today = getToday();
 		modelStorage = new TableModel[2];
 		getListaInscripciones(false);
 		setControls(false); // Inicio la vista con todo deshabilitado
@@ -127,7 +127,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		getView().getLblInfoDiferencia().setText(String.valueOf(importePagado - costeCurso) + "€");
 
 		// Calculamos el número de días que quedan
-		Date fechaActual = Date.from(getView().getMain().getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		Date fechaActual = Date.from(getToday().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		Date fechaInscr = Util.isoStringToDate(model.getValueAt(fila, 6).toString());
 		Date fechaCurso = Util.isoStringToDate(getModel().getFechaCurso(idCurso));
 

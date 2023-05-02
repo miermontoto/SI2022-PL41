@@ -110,7 +110,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
     private void getCursosActivos() {
         cursosActivos = new LinkedList<>();
         for (CursoDTO curso : getModel().getListaCursos()) {
-            CursoState estadoCurso = curso.updateEstado(getView().getMain().getToday());
+            CursoState estadoCurso = curso.updateEstado(getToday());
             curso.updateType();
 
             if (estadoCurso != CursoState.FINALIZADO && estadoCurso != CursoState.CERRADO) {

@@ -29,7 +29,7 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 	public void updateCombos() {
 		JComboBox<String> comboCursos = this.getView().getCmbCurso();
 		comboCursos.removeAllItems();
-		List<CursoDTO> sesiones = this.getModel().getListaCursosConEspera(this.getView().getMain().getToday().toString());
+		List<CursoDTO> sesiones = this.getModel().getListaCursosConEspera(this.getToday().toString());
 		DefaultComboBoxModel<String> cmbCursoModel = this.getView().getCmbCursoModel();
 
 		if (!sesiones.isEmpty()) for(CursoDTO sesion : sesiones) {

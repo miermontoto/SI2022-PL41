@@ -52,7 +52,7 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 		cursos = this.getModel().getListaCursos();
 
 		for (CursoDTO curso : cursos) {
-			curso.updateEstado(getView().getMain().getToday());
+			curso.updateEstado(getToday());
 			curso.updateType();
 		}
 
@@ -68,7 +68,7 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
 				listaInscr = this.getModel().getListaInscr(curso.getId());
-				for(InscripcionDTO inscripcion : listaInscr) inscripcion.updateEstado(getView().getMain().getToday());
+				for(InscripcionDTO inscripcion : listaInscr) inscripcion.updateEstado(getToday());
 
 				JTable table = this.getView().getTablaInscr();
 				TableModel tableModel = SwingUtil.getTableModelFromPojos(listaInscr,

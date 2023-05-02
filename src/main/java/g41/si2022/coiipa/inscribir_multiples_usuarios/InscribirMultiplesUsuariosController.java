@@ -100,7 +100,7 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 		grupo = getModel().getGrupoFromEmail(email).get(0);
 
 		getModel().insertInscripciones(
-			getView().getMain().getToday().toString(), cursoId,
+			getToday().toString(), cursoId,
 			getModel().insertAlumnos(gatherAllAlumnos()),
 			grupo.getId()
 		);
@@ -193,7 +193,7 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 	}
 
 	public void getListaCursos() {
-		cursos = getModel().getListaCursos(getView().getMain().getToday().toString());
+		cursos = getModel().getListaCursos(getToday().toString());
 		TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas_libres", "start_inscr", "end_inscr" },
 			new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
 		getView().getTablaCursos().setModel(tableModel);

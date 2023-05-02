@@ -111,12 +111,12 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 			return;
 		}
 
-		getModel().insertInscripcion(getView().getMain().getToday().toString(),
+		getModel().insertInscripcion(getToday().toString(),
 			cursoId, alumno.getId(), ((ColectivoDTO) getView().getCbColectivo().getSelectedItem()).getId());
 
 		if(lleno) {
 			String idInscripcion = this.getModel().getIdInscripcionFromCursoAlumno(alumno.getId(), cursoId).getId();
-			getModel().insertListaEspera(idInscripcion, getView().getMain().getToday().toString());
+			getModel().insertListaEspera(idInscripcion, getToday().toString());
 			getListaCursos();
 			Dialog.show("Inscripción en la lista de espera realizada con éxito");
 		} else {
@@ -189,7 +189,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 	}
 
 	public void getListaCursos() {
-		cursos = this.getModel().getListaCursos(this.getView().getMain().getToday().toString());
+		cursos = this.getModel().getListaCursos(this.getToday().toString());
 		TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas_libres", "start_inscr", "end_inscr" },
 			new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
 		this.getView().getTablaCursos().setModel(tableModel);

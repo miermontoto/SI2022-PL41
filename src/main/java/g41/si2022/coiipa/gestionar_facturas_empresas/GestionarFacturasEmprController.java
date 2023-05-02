@@ -60,7 +60,7 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
     public void clear() {
 		getView().getTxtImporte().setText("");
 		getView().getDatePago().setText("");
-		getView().getDateFactura().setDate(getView().getMain().getToday());
+		getView().getDateFactura().setDate(getToday());
 	}
 
 	private void handleSelectCurso() {
@@ -104,7 +104,7 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 		TableModel model = tableCursoEmpr.getModel();
 		row = tableCursoEmpr.convertRowIndexToModel(tableCursoEmpr.getSelectedRow());
 
-		getView().getDatePago().setDate(getView().getMain().getToday());
+		getView().getDatePago().setDate(getToday());
 		getView().getTxtImporte().setText(model.getValueAt(row, 3).toString());
 	}
 
