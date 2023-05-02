@@ -55,7 +55,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		});
 	}
 
-	
+
 	@Override
 	public void initVolatileData() {
 		today = getView().getMain().getToday();
@@ -148,11 +148,13 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		String importe = this.getView().getTxtImporte().getText();
 		LocalDate fecha = this.getView().getDatePicker().getDate();
 
-		if(importe.length() == 0) {
+		if (importe.length() == 0) {
 			Dialog.showError("Por favor, rellena todos los campos para continuar");
 			return;
 		}
 
+		int ret = Dialog.choices("Tipo de Pago", new String[]{"Pago por transferencia", "Pago por caja"});
+		
 		this.getModel().registrarPago(importe, fecha.toString(), idInscripcion);
 		Dialog.show("Pago por importe de " + importe + " € de parte del alumno " + nombreCompleto + " insertado con éxito");
 
@@ -164,16 +166,21 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		 * rendimiento no sea óptimo.
 		 */
 		Optional<InscripcionDTO> opt = inscripciones.stream().filter(x -> x.getId().equals(idInscripcion)).findFirst();
-		if(!opt.isPresent()) {
+		if (!opt.isPresent()) {
 			Dialog.showError("Algo ha ido mal al actualizar el estado de la inscripción.\nCompruebe el estado de los datos.");
 			return;
 		}
 		InscripcionState estado = opt.get().updateEstado(today);
 
-		if(estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
+		if (estado == InscripcionState.PAGADA) { // Si pagada, enviar email de plaza cerrada al alumno
 			Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: inscripción completada",
 				"El pago de su inscripción ha sido registrado correctamente y su inscripción ha sido completada.");
 		} else Dialog.showWarning("El importe total es incorrecto y la inscripción no está comlpeta.");
+
+		if (ret == 1) {
+			Util.printReceipt(idAlumno, nombreCompleto, nombreCurso, importe, fecha.toString());
+			Dialog.show("Se ha almacenado el correspondiente recibo");
+		}
 
 		getListaInscripciones(false); // Refrescar tabla al insertar el pago
 		eraseControls();
