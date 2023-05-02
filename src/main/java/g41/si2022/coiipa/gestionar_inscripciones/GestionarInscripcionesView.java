@@ -5,28 +5,27 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.text.NumberFormat;
 
-import javax.swing.JPanel;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
-import javax.swing.JTable;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.text.NumberFormatter;
+import javax.swing.SwingConstants;
 
 import org.jdesktop.swingx.JXTitledPanel;
 
 import com.github.lgooddatepicker.components.DatePicker;
-import lombok.Getter;
+
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
-
-import javax.swing.JCheckBox;
+import g41.si2022.util.Util;
+import lombok.Getter;
 
 @Getter
 public class GestionarInscripcionesView extends View {
@@ -77,14 +76,6 @@ public class GestionarInscripcionesView extends View {
 		chkAll.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(chkAll);
 
-		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
-	    formatter.setValueClass(Integer.class);
-	    formatter.setMinimum(Integer.MIN_VALUE);
-	    formatter.setMaximum(Integer.MAX_VALUE);
-	    formatter.setAllowsInvalid(true);
-	    formatter.setCommitsOnValidEdit(true);
-		formatter.setFormat(null); // disable automatic formatting
-
 		handlePanel.add(infoPanel);
 		handlePanel.add(pagarPanel);
 		handlePanel.add(devolverPanel);
@@ -129,7 +120,7 @@ public class GestionarInscripcionesView extends View {
 		gbc.gridy = 4;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		pagarPanelContent.add(txtImporte = new JFormattedTextField(formatter), gbc);
+		pagarPanelContent.add(txtImporte = new JFormattedTextField(Util.getMoneyFormatter()), gbc);
 
 		gbc.insets = spacer;
 		gbc.gridy = 5;

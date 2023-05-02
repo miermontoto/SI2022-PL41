@@ -6,28 +6,25 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 
-import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-import javax.swing.text.NumberFormatter;
 
 import org.jdesktop.swingx.JXComboBox;
 import org.jdesktop.swingx.JXTitledPanel;
 
-import javax.swing.JFormattedTextField;
-import javax.swing.JTable;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-
-import lombok.Getter;
 import g41.si2022.mvc.View;
 import g41.si2022.ui.SwingMain;
 import g41.si2022.ui.components.BetterDatePicker;
 import g41.si2022.ui.util.FontType;
 import g41.si2022.ui.util.JLabelFactory;
-
-import javax.swing.JCheckBox;
+import g41.si2022.util.Util;
+import lombok.Getter;
 
 @Getter
 public class GestionarFacturasProfView extends View {
@@ -64,14 +61,6 @@ public class GestionarFacturasProfView extends View {
 		formPanel.setPreferredSize(new java.awt.Dimension(SwingMain.DEFAULT_WINDOW_WIDTH/4, SwingMain.DEFAULT_WINDOW_HEIGHT));
 		this.add(formPanel, BorderLayout.EAST);
 
-		NumberFormatter formatter = new NumberFormatter(java.text.NumberFormat.getInstance());
-	    formatter.setValueClass(Double.class);
-	    formatter.setMinimum(Double.MIN_VALUE);
-	    formatter.setMaximum(Double.MAX_VALUE);
-	    formatter.setAllowsInvalid(true);
-	    formatter.setCommitsOnValidEdit(true);
-		formatter.setFormat(null); // disable automatic formatting
-
 		JXTitledPanel pagarTitledPanel = new JXTitledPanel("Pagar factura seleccionada");
 		JXTitledPanel registrarTitledPanel = new JXTitledPanel("Registrar nueva factura");
 		formPanel.add(pagarTitledPanel);
@@ -92,7 +81,7 @@ public class GestionarFacturasProfView extends View {
 		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		pagarPanel.add(txtImporte = new JFormattedTextField(formatter), gbc);
+		pagarPanel.add(txtImporte = new JFormattedTextField(Util.getMoneyFormatter()), gbc);
 
 		gbc.insets = spacer;
 		gbc.gridy = 2;
@@ -163,7 +152,7 @@ public class GestionarFacturasProfView extends View {
 		gbc.gridy = 7;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		registrarPanel.add(txtImporteFactura = new JFormattedTextField(formatter), gbc);
+		registrarPanel.add(txtImporteFactura = new JFormattedTextField(Util.getMoneyFormatter()), gbc);
 
 		gbc.insets = spacer;
 		gbc.gridy = 8;

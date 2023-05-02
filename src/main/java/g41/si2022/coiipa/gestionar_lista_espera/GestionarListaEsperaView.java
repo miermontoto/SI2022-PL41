@@ -61,14 +61,6 @@ public class GestionarListaEsperaView extends View {
 		formPanel.setPreferredSize(new java.awt.Dimension(SwingMain.DEFAULT_WINDOW_WIDTH/4, SwingMain.DEFAULT_WINDOW_HEIGHT));
 		this.add(formPanel, BorderLayout.EAST);
 
-		NumberFormatter formatter = new NumberFormatter(java.text.NumberFormat.getInstance());
-		formatter.setValueClass(Integer.class);
-		formatter.setMinimum(Integer.MIN_VALUE);
-		formatter.setMaximum(Integer.MAX_VALUE);
-		formatter.setAllowsInvalid(true);
-		formatter.setCommitsOnValidEdit(true);
-		formatter.setFormat(null); // disable automatic formatting
-
 		JXTitledPanel seleccionarCursoPanel = new JXTitledPanel("Seleccionar curso");
 		JXTitledPanel datosInscripcionPanel = new JXTitledPanel("Datos del alumno seleccionado");
 		formPanel.add(seleccionarCursoPanel);

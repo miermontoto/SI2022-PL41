@@ -15,6 +15,7 @@ import javax.swing.SortOrder;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.NumberFormatter;
 
 import org.apache.commons.beanutils.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -30,6 +31,19 @@ import g41.si2022.util.exception.ApplicationException;
 public class Util {
 
 	public static final String EMAIL_REGEX = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+
+	public static NumberFormatter getMoneyFormatter() {
+		NumberFormatter formatter = new NumberFormatter(java.text.NumberFormat.getInstance());
+
+		formatter.setValueClass(Double.class);
+		formatter.setMinimum(Double.MIN_VALUE);
+		formatter.setMaximum(Double.MAX_VALUE);
+		formatter.setAllowsInvalid(true);
+		formatter.setCommitsOnValidEdit(true);
+		formatter.setFormat(null); // disable automatic formatting
+
+		return formatter;
+	}
 
 	public static void emptyTable(JTable table) {
 		while (table.getRowCount() > 0)
@@ -217,7 +231,7 @@ public class Util {
 
 	/**
 	 * Print a receipt of a payment made by cashier
-	 * 
+	 *
 	 * @param idAlumno id of the student making the payment
 	 * @param nombreCompleto name and surnames of the student making the payment
 	 * @param curso course for which payment is done
@@ -227,7 +241,7 @@ public class Util {
 	public static void printReceipt(String idAlumno, String nombreCompleto,
 			String nombreCurso, String importe, String fecha) {
 		try (FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + "Recibo" + idAlumno + ".txt")) {
-			fw.write("                              " + "COMPROBANTE DE PAGO" + "\n\n");
+			fw.write("\t\t\t\t" + "COMPROBANTE DE PAGO" + "\n\n");
 			fw.write("Fecha de hoy: " + fecha + "\n");
 			fw.write("Recibí de: " + nombreCompleto);
 			fw.write("La cantidad de: " + importe + "€\n");
@@ -235,8 +249,6 @@ public class Util {
 			fw.write("\n\n");
 			fw.write("Pago realizado en caja en la sede del colegio\n");
 			fw.write("[COIIPA]: Colegio Oficial de Ingenieros en Informática del Principado de Asturias");
-		} catch (IOException e) { 
-			throw new ApplicationException(e); 
-		}
+		} catch (IOException e) { throw new ApplicationException(e); }
 	}
 }
