@@ -2,7 +2,11 @@ package g41.si2022.coiipa.inscribir_multiples_usuarios;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;
@@ -182,26 +186,48 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @param curso_id curso id
 	 */
 	public void insertInscripciones(List<AlumnoDTO> alumnos, String fecha, String curso_id) {
-		List<InscripcionDTO> alumnosInCurso = this.getAlumnosInCurso(curso_id);
-		List<AlumnoDTO> alumnosModifiable = new java.util.ArrayList<AlumnoDTO> ();
-		alumnos.forEach(alumno -> alumnosModifiable.add(alumno));
-		alumnosModifiable.removeIf(alumno -> alumnosInCurso.parallelStream().allMatch(
-			alumnoInCurso -> alumnoInCurso.getAlumno_id().equals(alumno.getId())
-		));
-		List<AlumnoDTO> emails = this.getAlumnosFromEmails(alumnosModifiable);
-		alumnosModifiable.forEach(alumno -> { 
-			AlumnoDTO current;
-			java.util.Iterator<AlumnoDTO> itr = emails.iterator();
-			do
-				current = itr.next();
-			while (itr.hasNext() && current.getEmail().equals(alumno.getEmail()));
-			alumno.setId(current.getId());
+		Map<String, AlumnoDTO> emailToAlumnoDictionary = alumnos.stream().collect(new java.util.stream.Collector<AlumnoDTO, Map<String, AlumnoDTO>, Map<String, AlumnoDTO>> () {
+
+			@Override
+			public Supplier<Map<String, AlumnoDTO>> supplier() {
+				return java.util.TreeMap<String, AlumnoDTO>::new;
+			}
+
+			@Override
+			public BiConsumer<Map<String, AlumnoDTO>, AlumnoDTO> accumulator() {
+				return (map, value) -> map.put(value.getEmail(), value);
+			}
+
+			@Override
+			public BinaryOperator<Map<String, AlumnoDTO>> combiner() {
+				return (mapA, mapB) -> { mapA.putAll(mapB); return mapA; };
+			}
+
+			@Override
+			public Function<Map<String, AlumnoDTO>, Map<String, AlumnoDTO>> finisher() {
+				return java.util.Collections::unmodifiableMap;
+			}
+
+			@Override
+			public Set<Characteristics> characteristics() {
+				return new java.util.HashSet<>(java.util.Arrays.asList(Characteristics.CONCURRENT));
+			}
+			
+		});
+		
+		List<AlumnoDTO> insertTheseAlumnos = this.insertAlumnos(alumnos).stream().collect(new g41.si2022.util.collector.HalfwayListCollector<AlumnoDTO, AlumnoDTO>() {
+
+			@Override
+			public BiConsumer<List<AlumnoDTO>, AlumnoDTO> accumulator() {
+				return (list, entry) -> { entry.setNombreColectivo(emailToAlumnoDictionary.get(entry.getEmail()).getNombreColectivo()); list.add(entry); };
+			}
+			
 		});
 
 		this.getDatabase().insertBulk(
 				"inscripcion",
 				new String[] {"fecha", "alumno_id", "curso_id", "coste_id"},
-				alumnos,
+				insertTheseAlumnos,
 				new java.util.ArrayList<java.util.function.Function<g41.si2022.dto.DTO, Object>> () {
 					private static final long serialVersionUID = 1L;
 				{
