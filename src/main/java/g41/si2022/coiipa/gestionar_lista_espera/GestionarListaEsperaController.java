@@ -17,9 +17,8 @@ import g41.si2022.ui.util.Dialog;
 public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<GestionarListaEsperaView, GestionarListaEsperaModel> {
 
 	private int row;
-	int id;
 	private JTable table;
-	String cursoNombre;
+	private String cursoNombre;
 
 	public GestionarListaEsperaController(GestionarListaEsperaModel modelo, GestionarListaEsperaView vista) {
 		super(vista, modelo);
@@ -32,25 +31,19 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 		List<CursoDTO> sesiones = this.getModel().getListaCursosConEspera(this.getView().getMain().getToday().toString());
 		DefaultComboBoxModel<String> cmbCursoModel = this.getView().getCmbCursoModel();
 
-		if (!sesiones.isEmpty()) for(CursoDTO evento : sesiones) {
-			String curso = evento.toString();
+		if (!sesiones.isEmpty()) for(CursoDTO sesion : sesiones) {
+			String curso = sesion.toString();
 			cmbCursoModel.addElement(curso);
-			comboCursos.setModel(cmbCursoModel); // Actualizar el modelo de datos del JComboBox
+			comboCursos.setModel(cmbCursoModel);
 			setJComboIfStudents(true);
-		}
-		else
-		{
-			setJComboIfStudents(false);
-		}
+		} else setJComboIfStudents(false);
 	}
 
 	public void setJComboIfStudents(boolean status) {
-
 		if(status) {
 			this.getView().getError().setVisible(false);
 			this.getView().getCmbCurso().setVisible(true);
-		}
-		else {
+		} else {
 			this.getView().getError().setVisible(true);
 			this.getView().getCmbCurso().setVisible(false);
 		}
@@ -59,28 +52,19 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 	@Override
 	@SuppressWarnings("unchecked")
 	public void initNonVolatileData() {
-		//Handler del botón de eliminar
 		this.getView().getBtnEliminarListaEspera().addActionListener(e -> handleEliminar());
-		//Handler de la tabla de inscripciones en lista de espera
 		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseReleased(MouseEvent evt) {
-				handleSelect();
-			}
+			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
 
-		//Handler del JComboBox, al seleccionar algo, nos va a rellenar
-		this.getView().getCmbCurso().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
-				String elementoSeleccionado = (String) comboBox.getSelectedItem(); //Obtenemos lo que hemos seleccionado en el comboBox
-				if(elementoSeleccionado != null) {
-					cursoNombre = elementoSeleccionado; //Obtenemos en la variable global el nombre del curso seleccionado.
-					getListaEspera(getModel().getCursoId(elementoSeleccionado)); //Obtenemos la lista de espera y cargamos la tabla.
-					clear(); //Apagamos los controles
-				}
-			}
+		this.getView().getCmbCurso().addActionListener(e -> {
+			JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
+			String elementoSeleccionado = (String) comboBox.getSelectedItem();
+			cursoNombre = elementoSeleccionado;
+			if(elementoSeleccionado == null) return;
+			getListaEspera(getModel().getCursoId(elementoSeleccionado));
+			clear();
 		});
 	}
 
@@ -90,30 +74,28 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 		updateCombos();
 	}
 
-	public void clear() { //Función dedicada a poner a valores nulos los controles, o habilitarlos
-		getView().getBtnEliminarListaEspera().setEnabled(false); //Apagamos el botón de la lista de espera.
-		this.getView().getNombreApellidosLabel().setText("Seleccionar alumno"); //Quitamos los nombres y apellidos
-		this.getView().getFechaListaLabel().setText("Seleccionar alumno"); //Quitamos la fecha de inscripción
+	public void clear() {
+		getView().getBtnEliminarListaEspera().setEnabled(false);
+		this.getView().getNombreApellidosLabel().setText("Seleccionar alumno");
+		this.getView().getFechaListaLabel().setText("Seleccionar alumno");
 	}
 
 	public void enable() {
-		getView().getBtnEliminarListaEspera().setEnabled(true); //Encendemos el botón de la lista de espera.
+		getView().getBtnEliminarListaEspera().setEnabled(true);
 	}
 
 	private void handleEliminar() {
-		String id = table.getModel().getValueAt(row, 0).toString();
 		String nombreApellidosAlumno = table.getModel().getValueAt(row, 1).toString() + " " + table.getModel().getValueAt(row, 2).toString();
-		getModel().eliminarInscripcion(id);
+		getModel().eliminarInscripcion(table.getModel().getValueAt(row, 0).toString());
 		Dialog.show("El alumno " + nombreApellidosAlumno + " ha sido eliminado de la lista de espera del curso " + cursoNombre + " con éxito");
 		this.getListaEspera(getModel().getCursoId(cursoNombre));
-		updateCombos(); //Actualizamos el JComboBox
+		updateCombos();
 		this.clear();
 	}
 
 	private void handleSelect() {
 		TableModel model = table.getModel();
 		row = table.convertRowIndexToModel(table.getSelectedRow());
-		id = Integer.valueOf(model.getValueAt(row, 0).toString());
 		String nombreAlumno = model.getValueAt(row, 1).toString();
 		String apellidosAlumno = model.getValueAt(row, 2).toString();
 		String fechaEntradaListaEspera = model.getValueAt(row, 3).toString();
@@ -128,9 +110,10 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 		List<ListaEsperaDTO> listaespera = this.getModel().getListaEspera(cursoID);
 
 		table.setModel(SwingUtil.getTableModelFromPojos(listaespera,
-				new String[] {"id", "nombre", "apellidos", "fecha_entrada"},
-				new String[] {"", "Nombre alumno", "Apellidos", "Fecha entrada en lista de espera"},
-				null));
+			new String[] {"id", "nombre", "apellidos", "fecha_entrada"},
+			new String[] {"", "Nombre alumno", "Apellidos", "Fecha entrada en lista de espera"},
+			null
+		));
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		SwingUtil.autoAdjustColumns(table);
 	}

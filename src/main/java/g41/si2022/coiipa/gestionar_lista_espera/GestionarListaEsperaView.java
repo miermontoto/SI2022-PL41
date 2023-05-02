@@ -39,13 +39,13 @@ public class GestionarListaEsperaView extends View {
 	private BetterDatePicker datePago;
 	private BetterDatePicker dateFactura;
 	private JComboBox<String> cmbCurso;
-	DefaultComboBoxModel<String> cmbCursoModel;
+	private DefaultComboBoxModel<String> cmbCursoModel;
 	private JFormattedTextField txtImporte;
 	private JCheckBox chkAll;
 
-	JLabel nombreApellidosLabel;
-	JLabel fechaListaLabel;a
-	JLabel error;
+	private JLabel nombreApellidosLabel;
+	private JLabel fechaListaLabel;
+	private JLabel error;
 
 
 	public GestionarListaEsperaView(SwingMain main) {
@@ -53,7 +53,6 @@ public class GestionarListaEsperaView extends View {
 	}
 
 	@Override
-	//@SuppressWarnings("unchecked") // odio los combobox
 	protected void initView () {
 		JPanel formPanel = new JPanel();
 		this.setLayout(new BorderLayout(0, 0));
@@ -85,13 +84,13 @@ public class GestionarListaEsperaView extends View {
 		pagarPanel.add(JLabelFactory.getLabel(FontType.bold, "Seleccionar curso: "), gbc);
 
 		gbc.gridy = 2;
-		pagarPanel.add(error = JLabelFactory.getLabel(FontType.bold, "Sin alumnos en lista de espera"), gbc);
+		pagarPanel.add(error = JLabelFactory.getLabel("Sin alumnos en lista de espera"), gbc);
 
 		gbc.insets = spacer;
 		gbc.gridy = 2;
 		gbc.fill = GridBagConstraints.CENTER;
 		cmbCursoModel = new DefaultComboBoxModel<>();
-		pagarPanel.add(cmbCurso = new JComboBox<String>(cmbCursoModel), gbc);
+		pagarPanel.add(cmbCurso = new JComboBox<>(cmbCursoModel), gbc);
 
 		seleccionarCursoPanel.setContentContainer(pagarPanel);
 
@@ -103,7 +102,7 @@ public class GestionarListaEsperaView extends View {
 		gbc.gridy = 1;
 		datosPanel.add(nombreApellidosLabel = new JLabel("Seleccionar alumno"), gbc);
 
-		gbc.insets = spacer;	
+		gbc.insets = spacer;
 		gbc.gridy = 2;
 		datosPanel.add(JLabelFactory.getLabel(FontType.bold, "Fecha de entrada en la lista de espera: "), gbc);
 
