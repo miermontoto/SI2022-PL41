@@ -78,12 +78,6 @@ def obtain_data(ratio)
     ## curso y colectivo.
     costes = generate_costes(cursos, colectivos)
 
-    ### Se genera un curso con una sola plaza después de generar inscripciones para que
-    ### siempre tenga una plaza libre.
-    cursos.push(Curso.new('[G] Curso con una plaza', 'Curso generado que tiene una plaza',
-        start_this_month, end_this_month, 1,
-        start_next_month, end_next_month))
-
     # Generar docentes
     ## No se necesitan casos específicos.
     docentes = generate_docentes((75 * ratio).to_i, entidades)
