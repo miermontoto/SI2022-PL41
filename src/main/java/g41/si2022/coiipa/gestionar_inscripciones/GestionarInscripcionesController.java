@@ -55,6 +55,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		});
 	}
 
+	
 	@Override
 	public void initVolatileData() {
 		today = getView().getMain().getToday();
