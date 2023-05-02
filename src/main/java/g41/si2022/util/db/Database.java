@@ -5,6 +5,7 @@ import java.nio.file.NoSuchFileException;
 import java.io.File;
 
 import java.util.Properties;
+import java.util.function.Function;
 
 import org.apache.commons.dbutils.DbUtils;
 
@@ -67,8 +68,8 @@ public class Database extends DbUtil {
 		Object [] readyData = new Object[data.size() * dataSuppliers.size()];
 		int i = 0;
 		for (DTO entry : data) {
-			for (java.util.function.Function<DTO, Object> sup : dataSuppliers) {
-				readyData[i++] = sup.apply(entry);
+			for (Function<? super DTO, Object> sup : dataSuppliers) {
+				readyData[i++] =  sup.apply(entry);
 			}
 		}
 		this.executeUpdate(sql, readyData);

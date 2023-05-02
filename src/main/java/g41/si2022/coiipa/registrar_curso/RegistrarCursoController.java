@@ -202,7 +202,11 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 
 		this.getView().getTableEntidades().getModel().addTableModelListener(new TableModelListener() {
 			/**
+<<<<<<< HEAD
+			 * When calling {@code setValueAt}, this listener is triggered recursively.<br>
+=======
 			 * When calling {@code setValueAt}, this listener is triggered recursively. <br>
+>>>>>>> refs/heads/main
 			 * This attribute is expected to stop the recursion on the first depth.
 			 */
 			private boolean modified = false;
@@ -213,7 +217,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 				if (!modified && lastEditedRow >= 0 && lastEditedRow != e.getFirstRow()) {
 					JTable tablaEnt = getView().getTableEntidades();
 					modified = true;
-					tablaEnt.setValueAt(null, lastEditedRow, 2);
+					tablaEnt.setValueAt(null, this.lastEditedRow, 2);
 					modified = false;
 				}
 				this.lastEditedRow = e.getFirstRow();

@@ -1,24 +1,36 @@
-package g41.si2022.coiipa.inscribir_multiples_usuarios;
+package g41.si2022.coiipa.inscribir_multiples_usuarios_entidad;
 
+import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
+import javax.swing.JLabel;
 import javax.swing.table.TableModel;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.GrupoDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
+import g41.si2022.util.Util;
+import g41.si2022.util.exception.ApplicationException;
 
-public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Controller<InscribirMultiplesUsuariosView, InscribirMultiplesUsuariosModel> {
+public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.Controller<InscribirMultiplesUsuariosEntidadView, InscribirMultiplesUsuariosEntidadModel> {
+
+	private static final String SIGN_IN = "sign-in";
+	private static final String SIGN_UP = "sign-up";
 
 	private List<CursoDTO> cursos;
 	private String cursoId;
 
-	public InscribirMultiplesUsuariosController(InscribirMultiplesUsuariosModel m, InscribirMultiplesUsuariosView v) {
+	public InscribirMultiplesUsuariosEntidadController(InscribirMultiplesUsuariosEntidadModel m, InscribirMultiplesUsuariosEntidadView v) {
 		super(v, m);
 		this.cursoId = null;
 	}
@@ -30,24 +42,15 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 
 	@Override
 	public void initNonVolatileData() {
-		this.getView().getBtnInscribir().addActionListener(e -> this.insertInscripciones());
-		this.getView().getTablaCursos().addMouseListener(new java.awt.event.MouseListener () {
-
+		this.getView().getTablaCursos().addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) { }
-
-			@Override
-			public void mousePressed(MouseEvent e) { }
-
-			@Override
-			public void mouseReleased(MouseEvent e) { 
-				InscribirMultiplesUsuariosController.this
-					.updateCursoValue();
-				InscribirMultiplesUsuariosController.this
+			public void mouseReleased(MouseEvent ent) {
+				SwingUtil.exceptionWrapper(() -> updateCursoValue());
+				InscribirMultiplesUsuariosEntidadController.this
 					.getView().getComboBoxEditors().parallelStream()
 				.forEach(cbe -> 
 					cbe.setData(
-					InscribirMultiplesUsuariosController.this
+					InscribirMultiplesUsuariosEntidadController.this
 						.getModel().getColectivosFromCurso(cursoId)
 						.stream().collect(new g41.si2022.util.collector.HalfwayListCollector<ColectivoDTO, String> () {
 
@@ -60,28 +63,17 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 					)
 				);
 			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) { }
-
-			@Override
-			public void mouseExited(MouseEvent e) { }
-			
 		});
-		this.loadColectivosListeners();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void loadColectivosListeners () {
+		
 		g41.si2022.ui.components.table.editors.JComboBoxEditor<String> cellEditor = 
 			((g41.si2022.ui.components.table.editors.JComboBoxEditor<String>) 
-			InscribirMultiplesUsuariosController.this.getView().getTablaInscritos()
+			InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos()
 				.getColumnModel().getColumn(4).getCellEditor());
 		this.getView().getTablaInscritos().addRowAppendedListener(e -> { 
-			InscribirMultiplesUsuariosController.this.getView().getBtnInscribir().setEnabled(true);
-			InscribirMultiplesUsuariosController.this
+			InscribirMultiplesUsuariosEntidadController.this.getView().getBtnInscribir().setEnabled(true);
+			InscribirMultiplesUsuariosEntidadController.this
 				.getView().getComboBoxEditors().add(cellEditor);
-			cellEditor.setData(InscribirMultiplesUsuariosController.this
+			cellEditor.setData(InscribirMultiplesUsuariosEntidadController.this
 				.getModel().getColectivosFromCurso(cursoId)
 				.stream().collect(new g41.si2022.util.collector.HalfwayListCollector<ColectivoDTO, String> () {
 					@Override
@@ -90,18 +82,46 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 					}
 				}));
 		});
+		
+		this.getView().getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageMain()));
 	}
-	
+
 	/**
-	 * insertInscripciones. Inserts all the inscripciones that are listed in the table.<br>
-	 * This will also add as many alumnos as needed in the database 
+	 * This method handles the inserting of the group, alumnos and inscripciones.
 	 */
-	private void insertInscripciones () {
-		this.getModel().insertInscripciones(
-			this.gatherAllAlumnos(),
-			this.getView().getMain().getToday().toString(),
-			cursoId
+	public void manageMain() {
+		if (cursoId == null) return;
+
+		String email = "";
+		GrupoDTO grupo;
+		switch (this.getView().getRadioSignin().isSelected() ? SIGN_IN : SIGN_UP) {
+			case SIGN_IN:
+				email = getView().getTxtEmailLogin().getText();
+				break;
+			case SIGN_UP:
+				email = getView().getTxtEmail().getText();
+				getModel().insertGrupo(
+					getView().getTxtNombre().getText(),
+					email,
+					getView().getTxtTelefono().getText()
+				);
+				break;
+			default:
+				throw new ApplicationException("Invalid radio button value");
+		}
+
+		grupo = getModel().getGrupoFromEmail(email).get(0);
+
+		getModel().insertInscripciones(
+			getView().getMain().getToday().toString(),
+			cursoId,
+			gatherAllAlumnos(),
+			grupo.getId()
 		);
+
+		getListaCursos();
+		Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.");
+		Dialog.show("Inscripción realizada con éxito");
 	}
 
 	/**
@@ -115,11 +135,12 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 	 * @return List of alumnos that are listed in the table
 	 */
 	public List<AlumnoDTO> gatherAllAlumnos () {
-		java.util.function.BiFunction<Map<String, Object>, Integer, String> tableGetter = (map, index) ->
-			map.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[index]) == null
-			? ""
-			: map.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[index]).toString();
-			
+		java.util.function.BiFunction<Map<String, Object>, Integer, String> tableGetter = 
+				(map, columnIndex) -> map.get(InscribirMultiplesUsuariosEntidadController.this.getView()
+				.getTablaInscritos().getColumnNames()[columnIndex]) == null
+				? ""
+				: map.get(InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos().getColumnNames()[columnIndex]).toString();
+
 		return this.getView().getTablaInscritos().getData().stream().collect(
 				new g41.si2022.util.collector.HalfwayListCollector<Map<String, Object>, AlumnoDTO>() {
 					@Override
@@ -134,7 +155,6 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 							list.add(alumno);
 						};
 					}
-
 				});
 	}
 

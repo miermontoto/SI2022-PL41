@@ -53,6 +53,12 @@ public class RowAppendableJTable extends javax.swing.JTable {
 	 * A new row will be aded only when all mandatory columns are filled.
 	 */
 	private boolean[] mandatoryColumns;
+	
+	/**
+	 * These are the listeners that will be executed when a new row is added.<br>
+	 * They have access to the table model.
+	 */
+	private List<RowAppendedListener> rowAppendedListeners;
 
 	/**
 	 * Creates a new {@code RowAppendableJTable}.
@@ -89,6 +95,7 @@ public class RowAppendableJTable extends javax.swing.JTable {
 			Map<Integer, Pattern> treeMap,
 			boolean[] mandatoryColumns) {
 		super();
+		this.rowAppendedListeners = new java.util.LinkedList<RowAppendedListener> ();
 		this.visibleColumnNames = visibleColumnNames;
 		this.columnNames = columnNames;
 		this.columnMatchers = treeMap;
@@ -155,22 +162,30 @@ public class RowAppendableJTable extends javax.swing.JTable {
 	 *
 	 * @return Data structure containing the data from this table.
 	 */
-	public List<Map<String, String>> getData () {
-		List<Map<String, String>> out = new java.util.ArrayList<Map<String, String>> ();
+	public List<Map<String, Object>> getData () {
+		List<Map<String, Object>> out = new java.util.ArrayList<Map<String, Object>> ();
 		for (int i = 0 ; i < this.getRowCount() ; i++) {
-			out.add(new java.util.HashMap<String, String> ());
+			out.add(new java.util.HashMap<String, Object> ());
 			for (int j = 0 ; j < RowAppendableJTable.this.getColumnNames().length ; j++)
 				out.get(i).put(this.getColumnNames()[j],
 						this.getValueAt(i, j).toString().trim().equals(this.getColumnNames()[j].trim()) ||
 						this.getValueAt(i, j).toString().trim().isEmpty()
 								? null
-								: this.getValueAt(i, j).toString()
+								: this.getValueAt(i, j)
 				);
 		}
 		return out.stream()
 				.filter(row -> row.values().stream()
 						.anyMatch(value -> value != null))
 				.collect(java.util.stream.Collectors.toList());
+	}
+	
+	public void addRowAppendedListener (RowAppendedListener e) {
+		this.rowAppendedListeners.add(e);
+	}
+	
+	public interface RowAppendedListener {
+		public void rowAppended (javax.swing.table.TableModel e);
 	}
 
 	private <E> TableModel getTableModelFromPojos(List<E> pojos, String[] colProperties,
