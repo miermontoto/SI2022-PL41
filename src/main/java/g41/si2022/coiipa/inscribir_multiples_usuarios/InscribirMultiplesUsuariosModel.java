@@ -42,9 +42,9 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 *
 	 * @param IDs of the alumnos that have been registered
 	 */
-	public List<String> insertAlumnos (List<AlumnoDTO> alumnos) {
+	public List<AlumnoDTO> insertAlumnos (List<AlumnoDTO> alumnos) {
 		this.insertMissingAlumnos(alumnos);
-		return getAlumnosIDsFromEmails (alumnos);
+		return getAlumnosFromEmails (alumnos);
 	}
 
 	/**
@@ -82,29 +82,18 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @param alumnos Array of alumnos the be checked
 	 * @return List of IDs
 	 */
-	private List<String> getAlumnosIDsFromEmails (List<AlumnoDTO> alumnos) {
+	private List<AlumnoDTO> getAlumnosFromEmails (List<AlumnoDTO> alumnos) {
 		if (alumnos.size() != 0) {
-			String outputSql = "SELECT id FROM alumno WHERE alumno.email IN (? ";
+			String outputSql = "SELECT * FROM alumno WHERE alumno.email IN (? ";
 			String[] outputDatos = new String[alumnos.size()];
 			outputDatos[0] = alumnos.get(0).getEmail();
 			for (int i = 1 ; i < alumnos.size() ; i++) {
 				outputSql += ", ?";
 				outputDatos[i] = alumnos.get(i).getEmail();
 			}
-
-			return InscribirMultiplesUsuariosModel.this.getDatabase()
-					.executeQueryArray(outputSql+");", (Object[]) outputDatos) // Query all the alumnos IDs. This will return a List<Object[]>
-					.stream() //  Form a stream
-					.collect(new g41.si2022.util.collector.HalfwayListCollector<Object[], String> () {
-						// This Collector will go from List<Object[]> to List<String> where String is each alumno's ID
-						@Override
-						public BiConsumer<List<String>, Object[]> accumulator() {
-							return (list, item) -> list.add(item[0].toString());
-						}
-
-					});
+			return this.getDatabase().executeQueryPojo(AlumnoDTO.class, outputSql, (Object[]) outputDatos);
 		}
-		return new java.util.ArrayList<String>();
+		return new java.util.ArrayList<AlumnoDTO>();
 	}
 
 	/**
@@ -149,20 +138,24 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @param alumno_id alumno id
 	 * @param grupo_id grupo id
 	 */
-	public void insertInscripciones(String fecha, String curso_id, List<String> alumno_id, String grupo_id) {
+	public void insertInscripciones(String fecha, String curso_id, List<AlumnoDTO> alumnos, String grupo_id) {
 		List<AlumnoDTO> alumnosInCurso = this.getAlumnosInCurso(curso_id);
-		alumno_id = alumno_id.parallelStream() // Remove alumnos that are already in this curso
-				.filter((id) -> alumnosInCurso.parallelStream()
-						.allMatch((alumnoInCurso) -> !alumnoInCurso.getId().equals(id)))
+		alumnos = alumnos.parallelStream() // Remove alumnos that are already in this curso
+				.filter((alumno) -> alumnosInCurso.parallelStream()
+						.allMatch((alumnoInCurso) -> !alumnoInCurso.getId().equals(alumno.getId())))
 				.collect(java.util.stream.Collectors.toList());
 
-		if (alumno_id.size() != 0) {
+		if (alumnos.size() != 0) {
 			String sql = "INSERT INTO inscripcion (fecha, alumno_id, entidad_id, curso_id, coste_id)"
 					+ " VALUES (?, ?, ?, ?, ?);";
-			for (String id : alumno_id) {
-				this.getDatabase().executeUpdate(sql, fecha, id, grupo_id, curso_id, "1");
+			for (AlumnoDTO alumno : alumnos) {
+				this.getDatabase().executeUpdate(sql, fecha, alumno.getId(), grupo_id, curso_id, this.getColectivoIdFromColectivoNombre(alumno.getColectivo()));
 			}
 		}
+	}
+	
+	private String getColectivoIdFromColectivoNombre (String nombre) {
+		return this.getDatabase().executeQuerySingle("SELECT id FROM colectivo WHERE colectivo.name = ?", nombre).toString();
 	}
 
 	public boolean verifyEmail(String email) {

@@ -12,6 +12,7 @@ public class AlumnoDTO implements DTO {
         apellidos,
         email,
         telefono,
-        id;
+        id,
+        colectivo;
 
 }

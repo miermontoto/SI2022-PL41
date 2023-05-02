@@ -129,6 +129,7 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 							alumno.setApellidos(row.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[1]));
 							alumno.setEmail(row.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[2]));
 							alumno.setTelefono(row.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[3]));
+							alumno.setColectivo(row.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[4]).toString());
 							list.add(alumno);
 						};
 					}
