@@ -1,18 +1,14 @@
 package g41.si2022.coiipa.inscribir_multiples_usuarios;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 import javax.swing.JLabel;
 import javax.swing.table.TableModel;
@@ -23,8 +19,12 @@ import g41.si2022.dto.GrupoDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.Util;
+import g41.si2022.util.exception.ApplicationException;
 
 public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Controller<InscribirMultiplesUsuariosView, InscribirMultiplesUsuariosModel> {
+
+	private static final String SIGN_IN = "sign-in";
+	private static final String SIGN_UP = "sign-up";
 
 	private List<CursoDTO> cursos;
 	private String cursoId;
@@ -81,29 +81,32 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 
 		String email = "";
 		GrupoDTO grupo;
-		switch (this.getView().getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
-		case "sign-in":
-			email = this.getView().getTxtEmailLogin().getText();
-			break;
-		case "sign-up":
-			email = this.getView().getTxtEmail().getText();
-			this.getModel().insertGrupo(
-					this.getView().getTxtNombre().getText(),
+		switch (this.getView().getRadioSignin().isSelected() ? SIGN_IN : SIGN_UP) {
+			case SIGN_IN:
+				email = getView().getTxtEmailLogin().getText();
+				break;
+			case SIGN_UP:
+				email = getView().getTxtEmail().getText();
+				getModel().insertGrupo(
+					getView().getTxtNombre().getText(),
 					email,
-					this.getView().getTxtTelefono().getText()
-					);
-			break;
+					getView().getTxtTelefono().getText()
+				);
+				break;
+			default:
+				throw new ApplicationException("Invalid radio button value");
 		}
 
-		grupo = this.getModel().getGrupoFromEmail(email).get(0);
+		grupo = getModel().getGrupoFromEmail(email).get(0);
 
-		this.getModel().insertInscripciones(
-				this.getView().getMain().getToday().toString(), cursoId, 
-				this.getModel().insertAlumnos(this.gatherAllAlumnos())
-				,grupo.getId());
+		getModel().insertInscripciones(
+			getView().getMain().getToday().toString(), cursoId,
+			getModel().insertAlumnos(gatherAllAlumnos()),
+			grupo.getId()
+		);
+
 		getListaCursos();
 		Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.");
-
 		Dialog.show("Inscripción realizada con éxito");
 	}
 
@@ -112,15 +115,14 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 	 * In the context of the HU InscribirMultiplesUsuarios, the Alumnos have to:<br>
 	 * <ol>
 	 * <li> Be inserted in the DB (table alumno) if they are not already there. Use email as PK.
-	 * <li> Create an entry in the table inscripcion that relates this alumno with the curso if the alumno has not joined yet. 
+	 * <li> Create an entry in the table inscripcion that relates this alumno with the curso if the alumno has not joined yet.
 	 * </ol>
-	 * 
+	 *
 	 * @return List of alumnos that are listed in the table
 	 */
 	public List<AlumnoDTO> gatherAllAlumnos () {
 		return this.getView().getTablaInscritos().getData().stream().collect(
-				new g41.si2022.util.HalfwayListCollector<Map<String, String>, AlumnoDTO>() {
-
+				new g41.si2022.util.collector.HalfwayListCollector<Map<String, String>, AlumnoDTO>() {
 					@Override
 					public BiConsumer<List<AlumnoDTO>, Map<String, String>> accumulator() {
 						return (list, row) -> {
@@ -139,37 +141,38 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 	public void manageForm() {
 		this.getView().getBtnInscribir().setEnabled(false);
 		if (cursoId == null) return;
-		String signinEmail = this.getView().getTxtEmailLogin().getText();
-		String signupEmail = this.getView().getTxtEmail().getText();
+		String signinEmail = getView().getTxtEmailLogin().getText();
+		String signupEmail = getView().getTxtEmail().getText();
 
 		if(signinEmail.isEmpty() && signupEmail.isEmpty()) return;
 
-		this.getView().getLblSignin().setForeground(Color.RED);
-		this.getView().getLblSignup().setForeground(Color.RED);
+		getView().getLblSignin().setForeground(Color.RED);
+		getView().getLblSignup().setForeground(Color.RED);
 
 		boolean validEmail = false;
 		JLabel target = null;
 		String errorMsg = "";
-		switch(this.getView().getRadioSignin().isSelected() ? "sign-in" : "sign-up") {
-		case "sign-in":
-			target = this.getView().getLblSignin();
-			if (!Util.verifyEmailStructure(signinEmail)) { // Check basic structure
-				target.setText("");
+		switch(this.getView().getRadioSignin().isSelected() ? SIGN_IN : SIGN_UP) {
+			case SIGN_IN:
+				target = this.getView().getLblSignin();
+				if (!Util.verifyEmailStructure(signinEmail)) { // Check basic structure
+					target.setText("");
+					break;
+				}
+				validEmail = this.getModel().verifyEmail(signinEmail); // Check if email exists in database
+				errorMsg = "Email desconocido";
 				break;
-			}
-			validEmail = this.getModel().verifyEmail(signinEmail); // Check if email exists in database
-			errorMsg = "Email desconocido";
-			break;
-
-		case "sign-up":
-			target = this.getView().getLblSignup();
-			if (!Util.verifyEmailStructure(signupEmail)) {
-				this.getView().getLblSignup().setText("");
+			case SIGN_UP:
+				target = this.getView().getLblSignup();
+				if (!Util.verifyEmailStructure(signupEmail)) {
+					this.getView().getLblSignup().setText("");
+					break;
+				}
+				validEmail = !this.getModel().verifyEmail(signupEmail); // Check if email doesn't already exist in db
+				errorMsg = "El email ya está registrado";
 				break;
-			}
-			validEmail = !this.getModel().verifyEmail(signupEmail); // Check if email doesn't already exist in db
-			errorMsg = "El email ya está registrado";
-			break;
+			default:
+				throw new ApplicationException("Invalid radio button value");
 		}
 		target.setText(validEmail ? "" : errorMsg);
 		this.getView().getBtnInscribir().setEnabled(validEmail);
@@ -190,10 +193,10 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 	}
 
 	public void getListaCursos() {
-		cursos = this.getModel().getListaCursos(this.getView().getMain().getToday().toString());
+		cursos = getModel().getListaCursos(getView().getMain().getToday().toString());
 		TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas_libres", "start_inscr", "end_inscr" },
-				new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
-		this.getView().getTablaCursos().setModel(tableModel);
-		SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
+			new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
+		getView().getTablaCursos().setModel(tableModel);
+		SwingUtil.autoAdjustColumns(getView().getTablaCursos());
 	}
 }

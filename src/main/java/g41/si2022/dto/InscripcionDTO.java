@@ -10,7 +10,7 @@ import g41.si2022.util.state.StateUtilities;
 import lombok.Data;
 
 @Getter @Setter @Data
-public class InscripcionDTO {
+public class InscripcionDTO implements DTO {
 
     private String
     	id,
@@ -27,8 +27,9 @@ public class InscripcionDTO {
 		entidad_nombre;
     private InscripcionState estado;
 
-	public void updateEstado(LocalDate today) {
+	public InscripcionState updateEstado(LocalDate today) {
 		this.estado = StateUtilities.getInscripcionState(this, today);
+		return this.estado;
 	}
 
 }

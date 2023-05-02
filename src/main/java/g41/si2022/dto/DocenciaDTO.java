@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.Data;
 
 @Getter @Setter @Data
-public class DocenciaDTO {
+public class DocenciaDTO implements DTO {
 
     private String
         id,
@@ -14,6 +14,14 @@ public class DocenciaDTO {
         remuneracion,
         curso_id,
         docente_id;
+
+    public DocenciaDTO(String idCurso, String idDocente, String remuneracion) {
+        this.curso_id = idCurso;
+        this.docente_id = idDocente;
+        this.remuneracion = remuneracion;
+    }
+
+    public DocenciaDTO() {}
 
     @Override
     public String toString() {

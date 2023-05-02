@@ -65,15 +65,12 @@ public class SwingMain {
 	 */
 	public static void main(String[] args) {
 		FlatLightLaf.setup();
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Database db = new Database(); // Avoid crashing if the db is not created
-					if (db.createDatabase(true)) db.loadDatabase();
-					SwingMain window = new SwingMain();
-					window.frame.setVisible(true);
-				} catch (Exception e) { e.printStackTrace(); }
-			}
+		EventQueue.invokeLater(() -> {
+			try {
+				Database db = new Database(); // Avoid crashing if the db is not created
+				if (db.createDatabase(true)) db.loadDatabase();
+				new SwingMain().frame.setVisible(true);
+			} catch (Exception e) { e.printStackTrace(); }
 		});
 	}
 
@@ -87,9 +84,11 @@ public class SwingMain {
 		frame.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 		java.awt.Image logo = new ImageIcon(ImageIO.read(new File("src/main/resources/logoBlanco.png"))).getImage();
 		frame.setIconImage(logo);
-
-		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setResizable(true);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		// NO hacer setVisible desde aquí! Supone una pérdida de rendimiento
+		// por el uso de SwingUtilities.invokeLater.
 
 		total = new JPanel();
 		total.setLayout(new GridBagLayout());
@@ -113,9 +112,9 @@ public class SwingMain {
 
 		Map<String, Pair<JButton, TabbedFrame>> tabbedFrameButtons = new TreeMap<>();
 
-		tabbedFrameButtons.put("Secretaría administrativa", new Pair<JButton, TabbedFrame>(new JButton(), new TabsSecretaria(this)));
-		tabbedFrameButtons.put("Responsable de formación", new Pair<JButton, TabbedFrame>(new JButton(), new TabsResponsable(this)));
-		tabbedFrameButtons.put("Alumnado", new Pair<JButton, TabbedFrame>(new JButton(), new TabsProfesional(this)));
+		tabbedFrameButtons.put("Secretaría administrativa", new Pair<>(new JButton(), new TabsSecretaria(this)));
+		tabbedFrameButtons.put("Responsable de formación", new Pair<>(new JButton(), new TabsResponsable(this)));
+		tabbedFrameButtons.put("Alumnado", new Pair<>(new JButton(), new TabsProfesional(this)));
 
 		tabbedFrameButtons.forEach((name, pair) -> {
 			pair.getFirst().setText(name);
@@ -168,7 +167,7 @@ public class SwingMain {
 		gbc.gridx = 2;
 		gbc.gridy = 6;
 		JButton btnDebug = new JButton("Debug menu");
-		btnDebug.addActionListener(e -> {setMainPanel(new Debug(this).getComponent(), "Debug menu");});
+		btnDebug.addActionListener(e -> setMainPanel(new Debug(this).getComponent(), "Debug menu"));
 		mainMenu.add(btnDebug, gbc);
 	}
 

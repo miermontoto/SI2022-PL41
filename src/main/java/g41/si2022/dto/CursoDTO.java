@@ -12,7 +12,7 @@ import g41.si2022.util.state.InscripcionState;
 import g41.si2022.util.state.StateUtilities;
 
 @Setter @Getter @Data
-public class CursoDTO {
+public class CursoDTO implements DTO {
 
 	private String
 		nombre,
@@ -30,7 +30,7 @@ public class CursoDTO {
 		balance, // Annadido por ConsultarIngresosGastos
 		pagoHighestFecha, // Annadido por ConsultarIngresosGastos
 		pagoLowestFecha, // Annadido por ConsultarIngresosGastos
-		pago_importe_devuelto; // Annadido por consultarCursos 
+		pago_importe_devuelto; // Annadido por consultarCursos
 
 
 	private InscripcionState inscripcion_estado; // Annadido por consultarCursos
@@ -39,10 +39,9 @@ public class CursoDTO {
 	// private boolean isCancelled = false; // Annadido por gestionarCursos
 
 	public CursoState updateEstado(LocalDate today) {
-		this.estado = StateUtilities.getCursoState(this.getId(), today);
+		this.estado = StateUtilities.getCursoState(this, today);
 		return this.estado;
 	}
-
 
 	@Override
 	public String toString() {

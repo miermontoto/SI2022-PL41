@@ -1,11 +1,8 @@
 package g41.si2022.coiipa.gestionar_curso;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -14,9 +11,7 @@ import javax.swing.table.TableModel;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.ui.SwingUtil;
-
 import g41.si2022.ui.util.Dialog;
-
 import g41.si2022.util.Util;
 import g41.si2022.util.state.CursoState;
 import g41.si2022.util.state.StateUtilities;
@@ -50,61 +45,61 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 	@Override
 	public void initNonVolatileData() {
 
-		this.getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+		getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) { handleSelect(); }
 		});
 
-		this.getView().getBtnCambiarFechas().addActionListener(e -> handleCambiarFechas());
-		this.getView().getBtnCambiarDetalles().addActionListener(e -> handleCambiarDetalles());
+		getView().getBtnCambiarFechas().addActionListener(e -> handleCambiarFechas());
+		getView().getBtnCambiarDetalles().addActionListener(e -> handleCambiarDetalles());
 
 		// Acción del botón para cancelar cursos
-		this.getView().getBtnCancelarCurso().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
-
-				// selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
-				// Si el curso no está cancelado, se cancela. En la database sólo se guarda el estado CANCELADO
-				// de un curso. Por defecto el atributo estado es null
-				if (estadoDB.equals("null")) {
-					// Modificar estado del curso a CANCELADO. Se modifica el atributo en la database
-					getModel().updateCursoStateToCancelled(String.valueOf(CursoState.CANCELADO), selectedCurso.getId());
-					selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
-
-					// Obtener emails de los alumnos para enviar un correo.
-					List<String> emailsAlumnos = getModel().getAlumnosEmail(String.valueOf(idCurso));
-					List<String> emailsProfs = getModel().getProfesoresEmail(String.valueOf(idCurso));
-
-					// Enviar correo a alumnos para informar de la cancelación del curso
-					for (String email : emailsAlumnos) {
-						Util.sendEmail(email, "Cancelación de curso",
-						"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
-					}
-
-					for (String email : emailsProfs) {
-						Util.sendEmail(email, "Cancelación de curso",
-						"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
-					}
-
-					cancelarInscripciones(selectedCurso); // Cancelar inscripciones relacionadas con el curso
-
-					Dialog.show("Curso cancelado. Se ha enviado un e-mail tanto a los inscritos como al profesorado. Se devolverá el 100% del importe pagado");
-				}
-
-				updateTables();
-			}
-		});
+		getView().getBtnCancelarCurso().addActionListener(e -> handleCancelar());
 	}
 
 	@Override
 	public void initVolatileData() {
 
-		eraseControls(true);
+		eraseControls();
 		updateTables();
 
 		//Listener de la tabla, para poder detectar los distintos clicks en la tabla
 		getView().getTableInscripciones().addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) { handleSelect(); }
 		});
+
+		updateTables();
+	}
+
+	private void handleCancelar() {
+		String estadoDB = getModel().getDBcursoState(String.valueOf(idCurso));
+
+		// Si el curso no está cancelado, se cancela. En la database sólo se guarda el estado CANCELADO
+		// de un curso. Por defecto el atributo estado es null
+		if (estadoDB.equals("null")) {
+			// Modificar estado del curso a CANCELADO. Se modifica el atributo en la database
+			getModel().updateCursoStateToCancelled(String.valueOf(CursoState.CANCELADO), selectedCurso.getId());
+			selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
+
+			// Obtener emails de los alumnos para enviar un correo.
+			List<String> emailsAlumnos = getModel().getAlumnosEmail(String.valueOf(idCurso));
+			List<String> emailsProfs = getModel().getProfesoresEmail(String.valueOf(idCurso));
+
+			// Enviar correo a alumnos para informar de la cancelación del curso
+			for (String email : emailsAlumnos) {
+				Util.sendEmail(email, "Cancelación de curso",
+				"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
+			}
+
+			for (String email : emailsProfs) {
+				Util.sendEmail(email, "Cancelación de curso",
+				"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
+			}
+
+			cancelarInscripciones(selectedCurso); // Cancelar inscripciones relacionadas con el curso
+			Dialog.show("Curso cancelado. Se ha enviado un e-mail tanto a los inscritos como al profesorado. Se devolverá el 100% del importe pagado");
+		}
 
 		updateTables();
 	}
@@ -116,19 +111,19 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 
 		idCurso = Integer.parseInt(model.getValueAt(row, 0).toString());
 		nombreCurso = model.getValueAt(row, 1).toString();
-		
+
 		//Obtengo los valores para las distintas fechas que voy a probar.
 		fechaIniCurso = model.getValueAt(row, 2).toString();
 		fechaFinCurso = model.getValueAt(row, 3).toString();
 		fechaIniInscr = model.getValueAt(row, 4).toString();
 		fechaFinInscr = model.getValueAt(row, 5).toString();
-		
+
 		plazas = model.getValueAt(row, 6).toString();
 		plazasLibres = model.getValueAt(row, 7).toString();
 		selectedCurso = this.getModel().getCurso(String.valueOf(idCurso));
 
-		if (idCurso == -1) { //Lo que se ha seleccionado está mal.
-			eraseControls(true);
+		if (idCurso == -1) { // Lo que se ha seleccionado está mal.
+			eraseControls();
 			return;
 		}
 
@@ -157,17 +152,13 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		String fechaFinCursoEdit = getView().getDateNewFinCurso().toString();
 		String fechaIniInscrEdit = getView().getDateNewIniInscr().toString();
 		String fechaFinInscrEdit = getView().getDateNewFinInscr().toString();
-		
+
 		boolean returnValue = getModel().updateFechas(idCurso, fechaIniCursoEdit, fechaFinCursoEdit, fechaIniInscrEdit, fechaFinInscrEdit);
-		
+
 		if(returnValue) {
 			updateTables(); // Actualizamos la tabla de los datos tras producir la inserción
 			Dialog.show("Se han modificado las fechas del curso con éxito");
-		}
-		else {
-			Dialog.showError("No hemos modificado nada, ya que había parámetros incorrectos. Por favor, corrígelos e inténtalo de nuevo.");
-		}
-
+		} else Dialog.showError("No hemos modificado nada, ya que había parámetros incorrectos. Por favor, corrígelos e inténtalo de nuevo.");
 	}
 
 
@@ -252,7 +243,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		getView().getBtnCambiarDetalles().setEnabled(status);
 	}
 
-	private void eraseControls(boolean eliminarAviso) {
+	private void eraseControls() {
 		getView().getLblInfoNombre().setText("N/A");
 		getView().getLblFechaCurso().setText("N/A");
 		getView().getDateNewIniCurso().setText("");
@@ -262,12 +253,6 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		getView().getTxtFieldPlazas().setText("");
 
 		setControls(false);
-
-		/*
-		this.getView().getDatePickerNewDateCurso().setEnabled(false);
-		this.getView().getDatePickerNewDateInscripciones().setEnabled(false);
-		if(eliminarAviso) this.getView().getLblError().setText("");
-		*/
 	}
 
 	public void updateTables() {
@@ -287,21 +272,21 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
-		eraseControls(false);
-		// SwingUtil.autoAdjustColumns(table);
+		eraseControls();
+		//SwingUtil.autoAdjustColumns(table);
 	}
 
 	/**
 	 * Change the status of all inscriptions in the course inscription list to 'CANCELADA'
-	 * 
+	 *
 	 * @param curso To cancel it inscriptions
 	 */
 	public void cancelarInscripciones(CursoDTO curso) {
 		listaInscr = getModel().getCursoInscripciones(curso.getId());
 
-		for (InscripcionDTO inscr: listaInscr) 
+		for (InscripcionDTO inscr: listaInscr)
 			getModel().cancelarInscripcion(inscr.getId());
-		
+
 
 	}
 }

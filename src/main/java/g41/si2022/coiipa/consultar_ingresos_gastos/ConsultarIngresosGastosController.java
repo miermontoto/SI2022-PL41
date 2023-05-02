@@ -39,7 +39,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 	private List<CursoDTO> filterData () {
 		// Get the selected item from the the filter
 		CursoState selectedItem = (CursoState) this.getView().getFilterEstadoComboBox().getSelectedItem();
-		List<CursoDTO> output = new ArrayList<CursoDTO>(), // Will contain the entries that meet the filter
+		List<CursoDTO> output = new ArrayList<>(), // Will contain the entries that meet the filter
 			aux; // Is used as auxiliary list to avoid concurrent modifications
 
 		// FIRST : WE FILTER THE STATES
@@ -50,7 +50,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 			.filter(x -> selectedItem.equals(x.getEstado()))
 			.collect(Collectors.toList());
 		}
-		aux = new ArrayList<CursoDTO>(output); // DO NOT REMOVE -> Concurrent Modifications will happen if removed
+		aux = new ArrayList<>(output); // DO NOT REMOVE -> Concurrent Modifications will happen if removed
 
 		// SECOND : WE FILTER THE DATES
 		java.time.LocalDate
@@ -69,11 +69,13 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 		// THIRD: We add the balance to each row (just in case it hasn't been added yet).
 		// TODO: Can this be avoided?
 		output.forEach(
-				x -> x.setBalance(
-						String.format("%.2f",
-								Double.parseDouble(x.getIngresos() == null ? "0.0" : x.getIngresos()) -
-								Double.parseDouble(x.getGastos() == null ? "0.0" : x.getGastos()))
-						));
+			x -> x.setBalance(
+				String.format("%.2f",
+					Double.parseDouble(x.getIngresos() == null ? "0.0" : x.getIngresos()) -
+					Double.parseDouble(x.getGastos() == null ? "0.0" : x.getGastos())
+				)
+			)
+		);
 		return output; // We return the filtered array
 	}
 
@@ -90,7 +92,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 	@Override
 	public void initVolatileData() {
 		this.cursos = this.getModel().getCursosBalance();
-		this.cursos.forEach((x) -> x.setEstado(StateUtilities.getCursoState(x, this.getView().getMain().getToday(), false)));
+		this.cursos.forEach(x -> x.setEstado(StateUtilities.getCursoState(x, this.getView().getMain().getToday(), false)));
 		this.loadTable();
 	}
 
@@ -105,7 +107,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 	 */
 	private void loadComboBox () {
 		Stream.of(CursoState.values()).forEach(e -> this.getView().getFilterEstadoComboBox().addItem(e));
-		this.getView().getFilterEstadoComboBox().addItemListener((e) -> {
+		this.getView().getFilterEstadoComboBox().addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				this.loadTable();
 			}
@@ -134,6 +136,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 			)
 		);
 		SwingUtil.autoAdjustColumns(table);
+		table.setAutoCreateRowSorter(true);
 	}
 
 	/**
@@ -142,12 +145,12 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 	private void loadDateListeners() {
 		BetterDatePicker start = this.getView().getStartDatePicker();
 		BetterDatePicker end = this.getView().getEndDatePicker();
-		start.addDateChangeListener((e) -> {
+		start.addDateChangeListener(e -> {
 			if (start.getDate() != null && end.getDate() != null && start.compareTo(end) >= 0) {
 				end.setDate(start.getDate().plusDays(1));
 			}
 		});
-		end.addDateChangeListener((e) -> {
+		end.addDateChangeListener(e -> {
 			if (end.getDate() != null && start.getDate() != null && start.compareTo(end) >= 0) {
 				start.setDate(end.getDate().plusDays(-1));
 			}

@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.Data;
 
 @Setter @Getter @Data
-public class ProfesorDTO {
+public class ProfesorDTO implements DTO {
 	private String
 		nombre, apellidos,
 		dni, id,

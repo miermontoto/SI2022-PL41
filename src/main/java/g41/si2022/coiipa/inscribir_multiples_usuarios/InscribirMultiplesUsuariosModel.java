@@ -56,11 +56,11 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	private void insertMissingAlumnos(List<AlumnoDTO> alumnos) {
 		List<AlumnoDTO> existingAlumnos = InscribirMultiplesUsuariosModel.this.getAlumnos(),
 				alumnosToRegister = alumnos.parallelStream() // Remove the alumnos that are already in the DB
-				.filter((alumnoInsertar) -> existingAlumnos.parallelStream()
-						.allMatch((alumnoDatabase) -> !alumnoDatabase.getEmail().equals(alumnoInsertar.getEmail())))
+				.filter(alumnoInsertar -> existingAlumnos.parallelStream()
+						.allMatch(alumnoDatabase -> !alumnoDatabase.getEmail().equals(alumnoInsertar.getEmail())))
 				.collect(java.util.stream.Collectors.toList());
 
-		if (alumnosToRegister.size() != 0) {
+		if (!alumnosToRegister.isEmpty()) {
 			for(AlumnoDTO alumno : alumnosToRegister) {
 				String sql = "insert into alumno (nombre, apellidos, email, telefono) values (?, ?, ?, ?);";
 				InscribirMultiplesUsuariosModel.this.getDatabase().executeUpdate(sql, alumno.getNombre(),
@@ -83,7 +83,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @return List of IDs
 	 */
 	private List<String> getAlumnosIDsFromEmails (List<AlumnoDTO> alumnos) {
-		if (alumnos.size() != 0) {
+		if (!alumnos.isEmpty()) {
 			String outputSql = "SELECT id FROM alumno WHERE alumno.email IN (? ";
 			String[] outputDatos = new String[alumnos.size()];
 			outputDatos[0] = alumnos.get(0).getEmail();
@@ -95,7 +95,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 			return InscribirMultiplesUsuariosModel.this.getDatabase()
 					.executeQueryArray(outputSql+");", (Object[]) outputDatos) // Query all the alumnos IDs. This will return a List<Object[]>
 					.stream() //  Form a stream
-					.collect(new g41.si2022.util.HalfwayListCollector<Object[], String> () {
+					.collect(new g41.si2022.util.collector.HalfwayListCollector<Object[], String> () {
 						// This Collector will go from List<Object[]> to List<String> where String is each alumno's ID
 						@Override
 						public BiConsumer<List<String>, Object[]> accumulator() {
@@ -104,7 +104,8 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 
 					});
 		}
-		return new java.util.ArrayList<String>();
+
+		return new java.util.ArrayList<>();
 	}
 
 	/**
@@ -145,22 +146,22 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * If an alumno is already inserted for this course, they will not be added again.
 	 *
 	 * @param fecha today's date
-	 * @param curso_id curso id
-	 * @param alumno_id alumno id
-	 * @param grupo_id grupo id
+	 * @param idCurso curso id
+	 * @param idsAlumno alumno id
+	 * @param idGrupo grupo id
 	 */
-	public void insertInscripciones(String fecha, String curso_id, List<String> alumno_id, String grupo_id) {
-		List<AlumnoDTO> alumnosInCurso = this.getAlumnosInCurso(curso_id);
-		alumno_id = alumno_id.parallelStream() // Remove alumnos that are already in this curso
-				.filter((id) -> alumnosInCurso.parallelStream()
-						.allMatch((alumnoInCurso) -> !alumnoInCurso.getId().equals(id)))
+	public void insertInscripciones(String fecha, String idCurso, List<String> idsAlumno, String idGrupo) {
+		List<AlumnoDTO> alumnosInCurso = this.getAlumnosInCurso(idCurso);
+		idsAlumno = idsAlumno.parallelStream() // Remove alumnos that are already in this curso
+				.filter(id -> alumnosInCurso.parallelStream()
+						.allMatch(alumnoInCurso -> !alumnoInCurso.getId().equals(id)))
 				.collect(java.util.stream.Collectors.toList());
 
-		if (alumno_id.size() != 0) {
+		if (!idsAlumno.isEmpty()) {
 			String sql = "INSERT INTO inscripcion (fecha, alumno_id, entidad_id, curso_id, coste_id)"
 					+ " VALUES (?, ?, ?, ?, ?);";
-			for (String id : alumno_id) {
-				this.getDatabase().executeUpdate(sql, fecha, id, grupo_id, curso_id, "1");
+			for (String id : idsAlumno) {
+				this.getDatabase().executeUpdate(sql, fecha, id, idGrupo, idCurso, "1");
 			}
 		}
 	}
