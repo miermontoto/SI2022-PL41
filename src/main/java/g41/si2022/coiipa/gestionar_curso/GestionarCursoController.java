@@ -89,12 +89,12 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 			// Enviar correo a alumnos para informar de la cancelación del curso
 			for (String email : emailsAlumnos) {
 				Util.sendEmail(email, "Cancelación de curso",
-				"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
+				"Desde COIIPA le informamos de que el curso al que estaba inscrito: " + selectedCurso.getNombre() + " ha sido cancelado.");
 			}
 
 			for (String email : emailsProfs) {
 				Util.sendEmail(email, "Cancelación de curso",
-				"Desde COIIPA le informamos de que el curso al que estaba inscrito " + selectedCurso.getNombre() + " ha sido cancelado.");
+				"Desde COIIPA le informamos de que el curso en el que tenía docencia: " + selectedCurso.getNombre() + " ha sido cancelado.");
 			}
 
 			cancelarInscripciones(selectedCurso); // Cancelar inscripciones relacionadas con el curso

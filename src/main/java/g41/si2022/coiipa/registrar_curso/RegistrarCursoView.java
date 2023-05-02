@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.util.regex.Pattern;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -119,13 +120,13 @@ public class RegistrarCursoView extends g41.si2022.mvc.View {
 				right.fill = GridBagConstraints.BOTH;
 				centerPanel.add(this.tablaCostes = new g41.si2022.ui.components.table.RowAppendableJTable(
 						new String[] {"Nombre Colectivo", "Coste"},
-						new java.util.TreeMap<Integer, java.util.regex.Pattern>() {
+						new java.util.TreeMap<Integer, Pattern>() {
 							private static final long serialVersionUID = 1L;
 							{
-								put(1, java.util.regex.Pattern.compile("\\d*"));
+								put(0, Pattern.compile(".*"));
+								put(1, Pattern.compile("\\d*"));
 							}
-						},
-						new boolean[] {true, true}
+						}, null
 					), right
 				);
 			}

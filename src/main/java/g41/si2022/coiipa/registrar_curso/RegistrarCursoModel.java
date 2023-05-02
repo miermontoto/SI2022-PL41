@@ -13,7 +13,7 @@ import g41.si2022.dto.SesionDTO;
 
 public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 
-	public java.util.List<ProfesorDTO> getListaProfesores() {
+	public List<ProfesorDTO> getListaProfesores() {
 		String sql = "SELECT * FROM docente ORDER BY nombre";
 		return this.getDatabase().executeQueryPojo(ProfesorDTO.class, sql);
 	}
@@ -23,9 +23,8 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 *
 	 * @return List of stored entities
 	 */
-	public java.util.List<EntidadDTO> getListaEntidades() {
+	public List<EntidadDTO> getListaEntidades() {
 		String sql = "SELECT * FROM entidad ORDER BY nombre";
-
 		return this.getDatabase().executeQueryPojo(EntidadDTO.class, sql);
 	}
 
@@ -165,7 +164,7 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 *
 	 * @return List of colectivos
 	 */
-	public java.util.List<g41.si2022.dto.ColectivoDTO> getColectivos () {
+	public List<g41.si2022.dto.ColectivoDTO> getColectivos () {
 		return this.getDatabase().executeQueryPojo(g41.si2022.dto.ColectivoDTO.class, "SELECT * FROM colectivo;");
 	}
 
