@@ -37,12 +37,14 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	private List<InscripcionDTO> inscripciones;
 	private double aDevolver;
 	private LocalDate today;
+	private List<Integer> avisadas;
 
 	// optimization
 	private TableModel[] modelStorage = new TableModel[2];
 
 	public GestionarInscripcionesController(GestionarInscripcionesModel modelo, GestionarInscripcionesView vista) {
 		super(vista, modelo);
+		avisadas = new ArrayList<>();
 	}
 
 	@Override
@@ -54,6 +56,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 			@Override
 			public void mouseReleased(MouseEvent evt) { handleSelect(); }
 		});
+		getView().getBtnAvisar().addActionListener(e -> handleAvisar());
 	}
 
 
@@ -72,10 +75,29 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 	}
 
 	private void eraseControls() {
-		getView().getLblInfoNombre().setText("");
+		getView().getBtnAvisar().setEnabled(false);
 		getView().getTxtImporte().setText("");
 		getView().getDatePicker().setText("");
 		setControls(false);
+	}
+
+	private void handleAvisar() {
+		int id = Integer.parseInt(idInscripcion);
+		if(avisadas.contains(id)) {
+			if (!Dialog.confirm("Ya se ha avisado previamente a este alumno.\n¿Desea volver a avisar el retraso?")) {
+				return;
+			}
+			avisadas.remove((Object) id);
+		}
+
+		avisadas.add(id);
+		Util.sendEmail(getModel().getEmailAlumno(idAlumno), "COIIPA: Recordatorio de pago", "Estimado/a " + nombreCompleto + ",\n\n" +
+			"Le recordamos que tiene una inscripción pendiente de pago para el curso " + nombreCurso + ".\n" +
+			"Mientras no se realice el pago, su plaza no estará fijada.\n\n" +
+			"Atentamente,\n" +
+			"Equipo de gestión del COIIPA"
+		);
+		Dialog.show("Aviso por retraso enviado.");
 	}
 
 	private void handleSelect() {
@@ -91,13 +113,13 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		idCurso = model.getValueAt(fila, 2).toString();
 		nombreCompleto = model.getValueAt(fila, 3).toString() + " " + model.getValueAt(fila, 4).toString();
 		nombreCurso = (String) model.getValueAt(fila, 5);
-		this.getView().getLblInfoNombre().setText(nombreCompleto);
 
 		getView().getDatePicker().setDate(today);
 
 		InscripcionState estado = inscripciones.get(fila).getEstado();
 		setControls(estado != InscripcionState.PAGADA && estado != InscripcionState.CANCELADA);
 		getView().getBtnCancelarInscripcion().setEnabled(estado != InscripcionState.CANCELADA);
+		getView().getBtnAvisar().setEnabled(estado == InscripcionState.RETRASADA || estado == InscripcionState.RETRASADA_EXCESO);
 
 		Double costeCurso = Double.valueOf(model.getValueAt(fila,  7).toString());
 		Double importePagado = Double.valueOf(model.getValueAt(fila, 8).toString());
@@ -155,7 +177,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 		}
 
 		int ret = Dialog.choices("Tipo de Pago", new String[]{"Pago por transferencia", "Pago por caja"});
-		
+
 		this.getModel().registrarPago(importe, fecha.toString(), idInscripcion);
 		Dialog.show("Pago por importe de " + importe + " € de parte del alumno " + nombreCompleto + " insertado con éxito");
 
