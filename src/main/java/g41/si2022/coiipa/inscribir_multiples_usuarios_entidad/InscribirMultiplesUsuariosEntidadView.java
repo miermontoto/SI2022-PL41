@@ -95,6 +95,8 @@ public class InscribirMultiplesUsuariosEntidadView extends View {
 				new java.util.TreeMap<Integer, java.util.regex.Pattern> () {
 					private static final long serialVersionUID = 1L;
 					{
+						this.put(0, Pattern.compile(".*"));
+						this.put(1, Pattern.compile(".*"));
 						this.put(2, Pattern.compile("[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+"));
 						this.put(3, Pattern.compile("^([0-9]{3}( )?){3}$"));
 					}},
