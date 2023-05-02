@@ -103,6 +103,16 @@ public class StateUtilities {
 		return lc;
 	}
 
+	/* --- CURSO TYPES --- */
+	public static CursoType getCursoType(String idCurso) {
+		String sql = "SELECT id, entidad_id FROM curso WHERE id = ?";
+		return getCursoType(new Database().executeQueryPojo(CursoDTO.class, sql, idCurso).get(0));
+	}
+
+	public static CursoType getCursoType(CursoDTO curso) {
+		return curso.getEntidad_id().equals("") ? CursoType.INTERNO : CursoType.EXTERNO;
+	}
+
 
 	/* --- INSCRIPCION STATES --- */
 
@@ -141,6 +151,7 @@ public class StateUtilities {
 	 */
 	public static InscripcionState getInscripcionState(InscripcionDTO inscr, List<PagoDTO> pagos, LocalDate today) {
 		if(Integer.parseInt(inscr.getCancelada()) == 1) return InscripcionState.CANCELADA;
+		if(Integer.parseInt(inscr.getEn_espera()) == 1) return InscripcionState.EN_ESPERA;
 		InscripcionState state = getInscripcionState(Double.parseDouble(inscr.getCurso_coste()), pagos);
 		if (isDelayed(inscr, today)) {
 			if (state == InscripcionState.PENDIENTE) return InscripcionState.RETRASADA;

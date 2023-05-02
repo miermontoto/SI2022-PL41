@@ -51,11 +51,13 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 	public void getListaCursos() {
 		cursos = this.getModel().getListaCursos();
 
-		for (CursoDTO curso : cursos)
-			curso.setEstado(StateUtilities.getCursoState(curso, this.getTab().getMain().getToday()));
+		for (CursoDTO curso : cursos) {
+			curso.updateEstado(getView().getMain().getToday());
+			curso.updateType();
+		}
 
-        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "estado", "plazas", "start_inscr", "end_inscr", "start", "end" },
-        		new String[] { "Nombre", "Estado", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr.", "Fecha ini. curso", "Fecha fin curso" }, null);
+        TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "estado", "plazas", "start_inscr", "end_inscr", "start", "end", "tipo" },
+        	new String[] { "Nombre", "Estado", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr.", "Fecha ini. curso", "Fecha fin curso", "Tipo" }, null);
         this.getView().getTablaCursos().setModel(tableModel);
         SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
 	}
@@ -93,26 +95,26 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 		String ingresosReales;
 
 		for (CursoDTO curso : cursos) {
-			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
-				gastos = curso.getImporte() == null ? this.getModel().getGastos(curso.getId()) : curso.getImporte();
-				ingresosEstimados = this.getModel().getIngresosEstimados(curso.getId());
-				ingresosReales = this.getModel().getImportePagosFromCurso(curso.getId());
-				String balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Double.parseDouble(gastos));
-				String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Double.parseDouble(gastos));
-				String colorReal = Double.parseDouble(balanceReal) > 0 ? "green" : "red";
-				String colorEstimado = Double.parseDouble(balanceEstimado) > 0 ? "green" : "red";
-				StringBuilder sb = new StringBuilder();
-				sb.append("<html><body>");
-				sb.append("<p><b>Gastos actuales:</b> " + gastos + "€");
-				sb.append("<p><p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
-				sb.append("<p><b>Balance estimado:</b> <span style=\"color:" + colorEstimado + ";\">" + balanceEstimado + "€</span>");
-				sb.append("<p><p><b>Ingresos actuales:</b> " + ingresosReales + "€");
-				sb.append("<p><b>Balance real:</b> <span style=\"color:" + colorReal + ";\">" + balanceReal + "€</span>");
-				sb.append("</body></html>");
-				this.getView().getLblEconomicInfo().setText(sb.toString());
-
+			if (!curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
 				return;
 			}
+
+			gastos = curso.getImporte() == null ? this.getModel().getGastos(curso.getId()) : curso.getImporte();
+			ingresosEstimados = this.getModel().getIngresosEstimados(curso.getId());
+			ingresosReales = this.getModel().getImportePagosFromCurso(curso.getId());
+			String balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Double.parseDouble(gastos));
+			String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Double.parseDouble(gastos));
+			String colorReal = Double.parseDouble(balanceReal) > 0 ? "green" : "red";
+			String colorEstimado = Double.parseDouble(balanceEstimado) > 0 ? "green" : "red";
+			StringBuilder sb = new StringBuilder();
+			sb.append("<html><body>");
+			sb.append("<p><b>Gastos actuales:</b> " + gastos + "€");
+			sb.append("<p><p><b>Ingresos estimados:</b> " + ingresosEstimados + "€");
+			sb.append("<p><b>Balance estimado:</b> <span style=\"color:" + colorEstimado + ";\">" + balanceEstimado + "€</span>");
+			sb.append("<p><p><b>Ingresos actuales:</b> " + ingresosReales + "€");
+			sb.append("<p><b>Balance real:</b> <span style=\"color:" + colorReal + ";\">" + balanceReal + "€</span>");
+			sb.append("</body></html>");
+			this.getView().getLblEconomicInfo().setText(sb.toString());
 		}
 		throw new ApplicationException("Curso seleccionado desconocido");
 	}

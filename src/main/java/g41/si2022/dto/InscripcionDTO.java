@@ -24,6 +24,7 @@ public class InscripcionDTO implements DTO {
     	curso_coste,
     	curso_nombre,
     	grupo_id,
+		en_espera,
 		entidad_nombre;
     private InscripcionState estado;
 

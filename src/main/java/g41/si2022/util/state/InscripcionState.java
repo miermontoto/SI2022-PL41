@@ -40,5 +40,6 @@ public enum InscripcionState {
 	/**
 	 * An inscripcion whose payment is delayed and has an excess.
 	 */
-	RETRASADA_EXCESO
+	RETRASADA_EXCESO,
+	EN_ESPERA;
 }

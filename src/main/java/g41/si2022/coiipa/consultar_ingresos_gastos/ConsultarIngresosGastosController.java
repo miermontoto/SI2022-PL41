@@ -7,6 +7,7 @@ import javax.swing.JTable;
 
 import java.util.List;
 import java.awt.event.ItemEvent;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import g41.si2022.dto.CursoDTO;
@@ -91,8 +92,12 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 
 	@Override
 	public void initVolatileData() {
-		this.cursos = this.getModel().getCursosBalance();
-		this.cursos.forEach(x -> x.setEstado(StateUtilities.getCursoState(x, this.getView().getMain().getToday(), false)));
+		LocalDate today = getToday();
+		this.cursos = this.getModel().getCursos();
+		this.cursos.forEach(x -> {
+			x.updateEstado(today);
+			x.updateType();
+		});
 		this.loadTable();
 	}
 
@@ -118,20 +123,24 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 	 * Loads the listeners and data needed for the different JTables in the view.
 	 */
 	private void loadTable() {
+		String[] colProperties = { "nombre", "start_inscr", "end_inscr", "start", "end", "ingresos", "gastos", "balance", "tipo" };
+		String[] colNames = { "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Ingresos", "Gastos", "Balance", "Tipo" };
+
 		JTable table = this.getView().getMovimientosTable();
 		table.setModel(
 			SwingUtil.getTableModelFromPojos(
 				this.sup.get(),
-				new String[] { "nombre", "start_inscr", "end_inscr", "start", "end", "ingresos", "gastos", "balance" },
-				new String[] { "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Ingresos", "Gastos", "Balance" },
+				colProperties,
+				colNames,
 				null
 			)
 		);
+
 		getView().getOffMovimientosTable().setModel(
 			SwingUtil.getTableModelFromPojos(
 				this.supOutOfRangeDates.get(),
-				new String[] { "nombre", "start_inscr", "end_inscr", "start", "end", "ingresos", "gastos", "balance" },
-				new String[] { "Nombre", "Inicio Inscripciones", "Fin Inscripciones", "Inicio Curso", "Fin Curso", "Ingresos", "Gastos", "Balance" },
+				colProperties,
+				colNames,
 				null
 			)
 		);
