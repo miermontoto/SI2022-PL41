@@ -215,4 +215,28 @@ public class Util {
 		return new SimpleDateFormat("yyyy-MM-dd").format(javaDate);
 	}
 
+	/**
+	 * Print a receipt of a payment made by cashier
+	 * 
+	 * @param idAlumno id of the student making the payment
+	 * @param nombreCompleto name and surnames of the student making the payment
+	 * @param curso course for which payment is done
+	 * @param importe amount paid for inscription
+	 * @param fecha date of payment
+	 */
+	public static void printReceipt(String idAlumno, String nombreCompleto,
+			String nombreCurso, String importe, String fecha) {
+		try (FileWriter fw = new FileWriter(System.getProperty("user.dir") + "/target/" + "Recibo" + idAlumno + ".txt")) {
+			fw.write("                              " + "COMPROBANTE DE PAGO" + "\n\n");
+			fw.write("Fecha de hoy: " + fecha + "\n");
+			fw.write("Recibí de: " + nombreCompleto);
+			fw.write("La cantidad de: " + importe + "€\n");
+			fw.write("Por concepto de: Inscripción al curso " + nombreCurso);
+			fw.write("\n\n");
+			fw.write("Pago realizado en caja en la sede del colegio\n");
+			fw.write("[COIIPA]: Colegio Oficial de Ingenieros en Informática del Principado de Asturias");
+		} catch (IOException e) { 
+			throw new ApplicationException(e); 
+		}
+	}
 }
