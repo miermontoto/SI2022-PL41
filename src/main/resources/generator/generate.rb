@@ -1,4 +1,6 @@
 require_relative 'util.rb'
+require 'faker'
+Faker::Config.locale = 'es'
 
 def generate_alumnos(num)
     alumnos = []
@@ -17,7 +19,7 @@ def generate_alumnos(num)
     alumnos
 end
 
-def generate_docentes(num)
+def generate_docentes(num, entidades)
     docentes = []
 
     num.times do
@@ -101,12 +103,24 @@ def generate_facturas_docencias(num, docencias, curso, curso_id)
         while facturas.any? { |fact| fact.docencia_id == f.docencia_id }
             f.docencia_id = (1..docencias.length).to_a.sample
         end
-        f.fecha = curso.end + rand(0..(Date.today - curso.end))
+        f.fecha = curso.end + rand(0..(Date.today - curso.end)).to_i
+        f.curso_id = nil
 
         facturas.push(f)
     end
 
     facturas
+end
+
+def generate_factura_empresa(curso, curso_id)
+    f = Factura.new
+
+    f.docencia_id = nil
+    f.curso_id = curso_id + 1
+    f.docencia_id = nil
+    f.fecha = curso.end + rand(0..(Date.today - curso.end)).to_i
+
+    f
 end
 
 def generate_pagos(num, inscripciones, cursos, tipo, costes)
@@ -168,4 +182,28 @@ def generate_costes(cursos, colectivos)
     end
 
     costes
+end
+
+def generate_cursos(num, entidades)
+    cursos = []
+
+    num.times do
+        c = Curso.new
+
+        c.nombre = "[G] " + Faker::Educator.course_name
+        c.descripcion = Faker::Lorem.paragraph
+        c.start_inscr = Date.today + rand(-365..365)
+        c.end_inscr = c.start_inscr + rand(1..30)
+        c.plazas = rand(10..200)
+        c.start = c.end_inscr + rand(1..30)
+        c.end = c.start + rand(1..30)
+        c.entidad_id = rand > 0.5 ? rand(1..entidades.length - 1) : nil
+        c.importe = c.entidad_id != nil ? rand(10..250) : nil
+        if c.entidad_id != nil
+            c.nombre += " [E]"
+        end
+        cursos.push(c)
+    end
+
+    cursos
 end

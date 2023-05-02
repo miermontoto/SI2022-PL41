@@ -41,6 +41,9 @@ def obtain_data(ratio)
     start_two_months_ago = Date.new(year, month - 2, 1)
     end_two_months_ago = Date.new(year, month - 2, -1)
 
+    # Generar entidades
+    ## Sin mayor relevancia para casos específicos.
+    entidades = generate_entidades((30 * ratio).to_i)
 
     cursos.push(Curso.new('[G] Curso ya finalizado', 'Curso generado que ya ha finalizado',
         start_two_months_ago, end_two_months_ago, rand(1..alumnos.length),
@@ -58,9 +61,7 @@ def obtain_data(ratio)
         start_next_month, end_next_month, rand(1..alumnos.length),
         start_two_months_ago, end_two_months_ago))
 
-    # Generar entidades
-    ## Sin mayor relevancia para casos específicos.
-    entidades = generate_entidades((10 * ratio).to_i)
+    # cursos += generate_cursos((10 * ratio).to_i, entidades)
 
     # Generar colectivos
     ## Se necesitan colectivos preestablecidos.
@@ -76,6 +77,31 @@ def obtain_data(ratio)
     ## Se genera un coste para cada combinación de
     ## curso y colectivo.
     costes = generate_costes(cursos, colectivos)
+
+    ### Se genera un curso con una sola plaza después de generar inscripciones para que
+    ### siempre tenga una plaza libre.
+    cursos.push(Curso.new('[G] Curso con una plaza', 'Curso generado que tiene una plaza',
+        start_this_month, end_this_month, 1,
+        start_next_month, end_next_month))
+
+    # Generar docentes
+    ## No se necesitan casos específicos.
+    docentes = generate_docentes((75 * ratio).to_i, entidades)
+
+    # Generar docencias
+    ## Se necesita al menos una docencia por curso.
+    ## No importa qué docentes imparten qué cursos.
+    ## Las remuneraciones se generan aleatoriamente.
+    docencias = []
+
+    cursos.length.times do |i|
+        docencias += generate_docencias(rand(1..(6 * ratio).to_i), docentes, i)
+    end
+
+    # Generar cursos aleatorios
+    ## Estos cursos pueden (o no) ser cursos externos
+    ## contratados a empresas.
+    cursos += generate_cursos((10 * ratio).to_i, entidades)
 
     # Generar inscripciones
     ## Se necesita una inscripción cancelada por curso.
@@ -107,23 +133,19 @@ def obtain_data(ratio)
         sesiones += generate_sesiones(rand(1..(5 * ratio).to_i), aulas, c, i)
     end
 
-    # Generar docencias
-    ## Se necesita al menos una docencia por curso.
-    ## No importa qué docentes imparten qué cursos.
-    ## Las remuneraciones se generan aleatoriamente.
-    docencias = []
-
-    cursos.length.times do |i|
-        docencias += generate_docencias(rand(1..(6 * ratio).to_i), docentes, i)
-    end
-
     # Generar facturas
-    ## SOLO DEL CURSO COMPLETADO se generan facturas
-    ## DE TODOS los docentes.
+    ## Solo se generan facturas de cursos completados.
     facturas = []
-    cursos.filter { |c| c.end < Time.now.to_date }.each.with_index do |c, i|
-        num_docencias = docencias.filter { |d| d.curso_id == i }.length
-        facturas += generate_facturas_docencias(rand(num_docencias/2..num_docencias), docencias, c, i)
+    cursos.each.with_index do |c, i|
+        if c.end > Date.today
+            next
+        end
+        if c.entidad_id != nil && rand < 0.75
+            facturas.push(generate_factura_empresa(c, i))
+        else
+            num_docencias = docencias.filter { |d| d.curso_id == i }.length
+            facturas += generate_facturas_docencias(rand(num_docencias/2..num_docencias), docencias, c, i)
+        end
     end
 
     ## Generar un curso con MUCHOS sesiones, docencias e inscripciones.
@@ -181,4 +203,8 @@ File.open(filename, 'w') do |f|; f.write(sql); end # Guardar la cadena SQL en el
 
 # salida de resultados
 puts "\rGenerando datos... [OK] (#{(Time.now - time).round(3)}s)"
-puts "#{File.open(filename, 'r').readlines.length} líneas generadas en #{filename}"
+length = File.open(filename, 'r').readlines.length
+puts "#{length} líneas generadas en #{filename}"
+if length > 50000
+    puts "WARNING! presumiblemente, el archivo generado es demasiado grande para sqlite."
+end

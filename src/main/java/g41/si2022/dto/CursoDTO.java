@@ -30,9 +30,12 @@ public class CursoDTO implements DTO {
 		balance, // Annadido por ConsultarIngresosGastos
 		pagoHighestFecha, // Annadido por ConsultarIngresosGastos
 		pagoLowestFecha, // Annadido por ConsultarIngresosGastos
-		pago_importe_devuelto; // Annadido por consultarCursos
+		pago_importe_devuelto, // Annadido por consultarCursos 
+		entidad_id; // Annadido por RegistrarCursos
 
 
+	private String e_nombre;
+	private String importe; // Necesario para almacenar importe (a pagar a empresa) al RegistrarCursos
 	private InscripcionState inscripcion_estado; // Annadido por consultarCursos
 	private CursoState estado; // Annadido por ?
 
@@ -43,6 +46,11 @@ public class CursoDTO implements DTO {
 		return this.estado;
 	}
 
+
+	public void setImporte(String value) {
+		this.importe = value.equals("") ? null : value;
+	}
+  
 	@Override
 	public String toString() {
 		return this.getNombre();

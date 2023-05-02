@@ -94,13 +94,11 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 
 		for (CursoDTO curso : cursos) {
 			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
-				gastos = this.getModel().getGastos(curso.getId());
+				gastos = curso.getImporte() == null ? this.getModel().getGastos(curso.getId()) : curso.getImporte();
 				ingresosEstimados = this.getModel().getIngresosEstimados(curso.getId());
 				ingresosReales = this.getModel().getImportePagosFromCurso(curso.getId());
-
-				String balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Integer.parseInt(gastos));
-				String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Integer.parseInt(gastos));
-
+				String balanceReal = gastos.equals("-") ? ingresosReales : String.valueOf(Double.parseDouble(ingresosReales) - Double.parseDouble(gastos));
+				String balanceEstimado = gastos.equals("-") ? ingresosEstimados : String.valueOf(Double.parseDouble(ingresosEstimados) - Double.parseDouble(gastos));
 				String colorReal = Double.parseDouble(balanceReal) > 0 ? "green" : "red";
 				String colorEstimado = Double.parseDouble(balanceEstimado) > 0 ? "green" : "red";
 				StringBuilder sb = new StringBuilder();

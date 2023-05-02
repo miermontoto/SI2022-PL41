@@ -26,7 +26,7 @@ def add_data_to_sql(data, table)
     sql = sql[0..-3] + ") VALUES\n"
     data.each do |d|
         sql += "("
-        d.instance_variables.each do |var|
+        data[0].instance_variables.each do |var|
             sql += "'#{d.instance_variable_get(var)}', "
         end
         sql = sql[0..-3] + "),\n"

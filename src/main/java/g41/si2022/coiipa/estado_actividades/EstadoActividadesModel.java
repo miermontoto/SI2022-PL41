@@ -9,7 +9,7 @@ import g41.si2022.dto.PagoDTO;
 public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 
 	public List<CursoDTO> getListaCursos() {
-		String sql = "select id, nombre, plazas, start, end, start_inscr, end_inscr from curso";
+		String sql = "select id, nombre, plazas, start, end, start_inscr, end_inscr, importe from curso";
 		return getDatabase().executeQueryPojo(CursoDTO.class, sql);
 	}
 
@@ -34,7 +34,7 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 		String sql = "SELECT sum(remuneracion) FROM docencia WHERE curso_id = ?";
 
 		try {
-			return String.valueOf((int) getDatabase().executeQuerySingle(sql, idCurso));
+			return getDatabase().executeQuerySingle(sql, idCurso).toString();
 		} catch (Exception ex) {return "-";}
 	}
 

@@ -1,12 +1,13 @@
 package g41.si2022.coiipa.registrar_curso;
 
-import java.util.Map;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.DTO;
+import g41.si2022.dto.EntidadDTO;
 import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.dto.SesionDTO;
 
@@ -15,6 +16,17 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	public java.util.List<ProfesorDTO> getListaProfesores() {
 		String sql = "SELECT * FROM docente ORDER BY nombre";
 		return this.getDatabase().executeQueryPojo(ProfesorDTO.class, sql);
+	}
+
+	/**
+	 * Obtain a list of all entities
+	 *
+	 * @return List of stored entities
+	 */
+	public java.util.List<EntidadDTO> getListaEntidades() {
+		String sql = "SELECT * FROM entidad ORDER BY nombre";
+
+		return this.getDatabase().executeQueryPojo(EntidadDTO.class, sql);
 	}
 
 	/**
@@ -115,6 +127,40 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	}
 
 	/**
+	 * Inserta un curso externo (contratado a una entidad) en la base de datos
+	 * @param nombre Nombre del curso
+	 * @param descripcion Descripcion del curso
+	 * @param inscrStart Fecha de inicio de inscripción
+	 * @param inscrEnd Fecha de fin de inscripción
+	 * @param start Fecha de inicio del curso
+	 * @param end Fecha de fin del curso
+	 * @param plazas Cantidad de plazas disponibles
+	 * @param localizacion Localización del curso
+	 * @param costes Diccionario de costes Colectivo, Coste
+	 * @param idEntidad Entidad asociada al curso
+	 * @return El ID del curso insertado
+	 */
+	public String insertCursoExterno(
+			String nombre, String descripcion,
+			String inscrStart, String inscrEnd, String start, String end,
+			String plazas, java.util.Map<String, Double> costes, String idEntidad, String importe) {
+
+		String sql = "INSERT INTO curso(nombre, descripcion, start_inscr, end_inscr, plazas, start, end, entidad_id, importe)"
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		this.getDatabase().executeUpdate(sql, nombre, descripcion, inscrStart, inscrEnd, plazas, start, end, idEntidad, importe);
+
+		String idCurso = String.valueOf(this.getDatabase().executeQuerySingle(
+			"SELECT id FROM curso WHERE nombre = ? and start_inscr = ?" +
+			" and start = ? and plazas = ? and entidad_id = ? and importe = ?",
+			nombre, inscrStart, start, plazas, idEntidad, importe));
+
+		this.insertCostes(costes, idCurso);
+
+		return idCurso;
+	}
+
+	/**
 	 * Returns the list of colectivos
 	 *
 	 * @return List of colectivos
@@ -165,5 +211,18 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 						add(e -> cursoId);
 					}}
 				);
+	}
+
+	/**
+	 * Obtain an entity given it's id
+	 *
+	 * @param idEntidad id of the entity to get
+	 * @return the specified entity
+	 */
+	public EntidadDTO getEntidadById (String idEntidad) {
+		String sql = "SELECT * FROM entidad"
+				   + " WHERE id = ?";
+
+		return this.getDatabase().executeQueryPojo(EntidadDTO.class, sql, idEntidad).get(0);
 	}
 }
