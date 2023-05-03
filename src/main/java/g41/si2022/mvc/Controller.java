@@ -1,5 +1,7 @@
 package g41.si2022.mvc;
 
+import java.time.LocalDate;
+
 /**
  * <p>
  * A <code>Controller</code> is the intermediary that joins the data supplied by the {@link Model}
@@ -61,6 +63,8 @@ public abstract class Controller <V extends View, M extends Model> {
 	public V getTab () { return this.myView; }
 	public V getView () { return this.getTab(); }
 	public M getModel () { return this.myModel; }
+
+	public LocalDate getToday() { return this.getView().getMain().getToday(); }
 
 	/**
 	 * <p>

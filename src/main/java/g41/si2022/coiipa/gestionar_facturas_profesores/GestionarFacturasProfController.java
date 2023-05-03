@@ -60,7 +60,7 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 	public void clear() {
 		getView().getTxtImporte().setText("");
 		getView().getDatePago().setText("");
-		getView().getDateFactura().setDate(getView().getMain().getToday());
+		getView().getDateFactura().setDate(getToday());
 	}
 
 	private void handleInsertarFactura() {
@@ -92,7 +92,7 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 		TableModel model = table.getModel();
 		row = table.convertRowIndexToModel(table.getSelectedRow());
 
-		getView().getDatePago().setDate(getView().getMain().getToday());
+		getView().getDatePago().setDate(getToday());
 		getView().getTxtImporte().setText(model.getValueAt(row, 4).toString());
 	}
 
@@ -111,7 +111,7 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 	private void getListaCursos() {
 		JXComboBox cmb = getView().getCmbCurso();
 		cmb.removeAllItems();
-		List<CursoDTO> cursos = getModel().getListaCursos(getView().getMain().getToday().toString());
+		List<CursoDTO> cursos = getModel().getListaCursos(getToday().toString());
 		cmb.addItem("Seleccione un curso");
 		cursos.forEach(x -> cmb.addItem(x));
 	}

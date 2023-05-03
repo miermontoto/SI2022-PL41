@@ -14,6 +14,7 @@ public class FacturaDTO implements DTO {
         remuneracion,
         pagado,
         fecha,
+        email,
         docencia_id,
         doc_nombre,
         doc_apellidos,

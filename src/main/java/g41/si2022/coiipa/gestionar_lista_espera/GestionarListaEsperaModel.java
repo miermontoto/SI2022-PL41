@@ -17,14 +17,14 @@ public class GestionarListaEsperaModel extends g41.si2022.mvc.Model {
 		return this.getDatabase().executeQueryPojo(ListaEsperaDTO.class, sql, cursoID);
 	}
 
-	public void insertPago(String fecha, String importe, String factura_id) {
+	public void insertPago(String fecha, String importe, String idFactura) {
 		String sql = "insert into pago (fecha, importe, factura_id) values (?, ?, ?)";
-		this.getDatabase().executeUpdate(sql, fecha, importe, factura_id);
+		this.getDatabase().executeUpdate(sql, fecha, importe, idFactura);
 	}
 
-	public void insertFactura(String fecha, String docencia_id) {
+	public void insertFactura(String fecha, String idDocencia) {
 		String sql = "insert into factura (fecha, docencia_id) values (?, ?)";
-		this.getDatabase().executeUpdate(sql, fecha, docencia_id);
+		this.getDatabase().executeUpdate(sql, fecha, idDocencia);
 	}
 
 	public List<CursoDTO> getListaCursos(String today) {
@@ -81,4 +81,9 @@ public class GestionarListaEsperaModel extends g41.si2022.mvc.Model {
 		eliminarListaEspera(idLista);
 
 	}
+
+    public String getEmailAlumno(String id) {
+        String sql = "SELECT email FROM alumno WHERE id = ?";
+		return this.getDatabase().executeQuerySingle(sql, id).toString();
+    }
 }

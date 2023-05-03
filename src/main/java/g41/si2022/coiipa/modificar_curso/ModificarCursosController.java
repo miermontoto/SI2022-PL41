@@ -82,7 +82,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
         int row = table.convertRowIndexToModel(table.getSelectedRow());
         if(row == -1) return;
 
-        getView().getBtnRemoveSesion().setEnabled(getView().getMain().getToday().isBefore(LocalDate.parse(sesiones.get(row).getFecha())));
+        getView().getBtnRemoveSesion().setEnabled(getToday().isBefore(LocalDate.parse(sesiones.get(row).getFecha())));
     }
 
     private void handleGuardar() {
@@ -149,7 +149,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
     private boolean handleAddSession() {
         EventDialog ed;
         JTable table = getView().getTableSesiones();
-        LocalDate check = getView().getMain().getToday();
+        LocalDate check = getToday();
         check = check.isAfter(start) ? check : start;
         if(sesiones.isEmpty()) ed = new EventDialog(check, end);
         else ed = new EventDialog(check, end, sesiones.getLast());
@@ -186,7 +186,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
     private void updateTable() {
         JTable tabla = getView().getTableCursos();
         tabla.setModel(SwingUtil.getTableModelFromPojos(
-            getModel().getListaCursos(getView().getMain().getToday()),
+            getModel().getListaCursos(getToday()),
             new String[] { "id", "nombre", "estado", "plazas", "descripcion", "start_inscr", "end_inscr", "start", "end" },
             new String[] { "", "Nombre", "Estado", "", "", "", "", "", "" },
             null

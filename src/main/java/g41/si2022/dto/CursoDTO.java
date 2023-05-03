@@ -8,6 +8,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 import g41.si2022.util.state.CursoState;
+import g41.si2022.util.state.CursoType;
 import g41.si2022.util.state.InscripcionState;
 import g41.si2022.util.state.StateUtilities;
 
@@ -30,14 +31,14 @@ public class CursoDTO implements DTO {
 		balance, // Annadido por ConsultarIngresosGastos
 		pagoHighestFecha, // Annadido por ConsultarIngresosGastos
 		pagoLowestFecha, // Annadido por ConsultarIngresosGastos
-		pago_importe_devuelto, // Annadido por consultarCursos 
+		pago_importe_devuelto, // Annadido por consultarCursos
 		entidad_id; // Annadido por RegistrarCursos
-
 
 	private String e_nombre;
 	private String importe; // Necesario para almacenar importe (a pagar a empresa) al RegistrarCursos
 	private InscripcionState inscripcion_estado; // Annadido por consultarCursos
 	private CursoState estado; // Annadido por ?
+	private CursoType tipo;
 
 	// private boolean isCancelled = false; // Annadido por gestionarCursos
 
@@ -46,11 +47,15 @@ public class CursoDTO implements DTO {
 		return this.estado;
 	}
 
+	public CursoType updateType() {
+		this.tipo = StateUtilities.getCursoType(this);
+		return this.tipo;
+	}
 
 	public void setImporte(String value) {
 		this.importe = value.equals("") ? null : value;
 	}
-  
+
 	@Override
 	public String toString() {
 		return this.getNombre();

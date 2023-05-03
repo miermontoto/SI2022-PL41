@@ -39,6 +39,7 @@ public class GestionarInscripcionesView extends View {
 	private JLabel lblDevolverCalculo;
 	private JButton btnInsertarPago;
 	private JButton btnCancelarInscripcion;
+	private JButton btnAvisar;
 
 	private DatePicker datePicker;
 	private JFormattedTextField txtImporte;
@@ -86,13 +87,6 @@ public class GestionarInscripcionesView extends View {
 		Insets next = new Insets(0, 5, 5, 5);
 
 		infoPanelContent.setLayout(new GridBagLayout());
-		gbc.insets = spacer;
-		gbc.gridy = 0;
-		infoPanelContent.add(JLabelFactory.getLabel(FontType.bold, "Nombre del inscrito"), gbc);
-
-		gbc.insets = next;
-		gbc.gridy = 1;
-		infoPanelContent.add(lblInfoNombre = JLabelFactory.getLabel("N/A"), gbc);
 
 		gbc.insets = spacer;
 		gbc.gridy = 2;
@@ -109,6 +103,10 @@ public class GestionarInscripcionesView extends View {
 		gbc.insets = next;
 		gbc.gridy = 5;
 		infoPanelContent.add(lblInfoDiferencia = JLabelFactory.getLabel("N/A"), gbc);
+
+		gbc.insets = spacer;
+		gbc.gridy = 6;
+		infoPanelContent.add(btnAvisar = new JButton("Comunicar retraso"), gbc);
 
 		pagarPanelContent.setLayout(new GridBagLayout());
 

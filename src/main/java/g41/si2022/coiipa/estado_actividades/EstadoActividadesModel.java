@@ -9,7 +9,11 @@ import g41.si2022.dto.PagoDTO;
 public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 
 	public List<CursoDTO> getListaCursos() {
-		String sql = "select id, nombre, plazas, start, end, start_inscr, end_inscr, importe from curso";
+		String sql = "select c.*,"
+		+ " sum(dca.remuneracion) as gastos"
+		+ " from curso as c"
+		+ " left join docencia as dca on dca.curso_id = c.id"
+		+ " group by c.id";
 		return getDatabase().executeQueryPojo(CursoDTO.class, sql);
 	}
 
@@ -18,6 +22,7 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 		String sql = "SELECT i.id, i.fecha, a.nombre as alumno_nombre,"
 		+ " a.apellidos as alumno_apellidos, cos.coste as curso_coste,"
 		+ " i.cancelada as cancelada, e.nombre as entidad_nombre,"
+		+ " case when le.id is not null then true else false end as en_espera,"
 		+ " CASE WHEN sum(p.importe) is null THEN 0 ELSE sum(p.importe) END as pagado"
 		+ " FROM inscripcion as i"
 		+ " INNER JOIN alumno as a ON i.alumno_id = a.id"
@@ -25,17 +30,10 @@ public class EstadoActividadesModel extends g41.si2022.mvc.Model {
 		+ " INNER JOIN coste AS cos ON cos.id = i.coste_id"
 		+ " LEFT JOIN entidad AS e ON e.id = i.entidad_id"
 		+ " LEFT JOIN pago AS p ON p.inscripcion_id = i.id"
+		+ " LEFT JOIN lista_espera AS le ON le.inscripcion_id = i.id"
 		+ " WHERE cur.id = ? group by i.id";
 
 		return getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
-	}
-
-	public String getGastos(String idCurso) {
-		String sql = "SELECT sum(remuneracion) FROM docencia WHERE curso_id = ?";
-
-		try {
-			return getDatabase().executeQuerySingle(sql, idCurso).toString();
-		} catch (Exception ex) {return "-";}
 	}
 
 	/**

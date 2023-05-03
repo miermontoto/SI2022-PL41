@@ -21,11 +21,13 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 			+ " i.id as inscripcion_id, "
 			+ " i.curso_id as curso_id,"
 			+ " i.fecha as fecha,"
-			+ " i.cancelada as cancelada"
+			+ " i.cancelada as cancelada,"
+			+ " case when le.id is not null then true else false end as en_espera"
 			+ " from inscripcion as i inner join alumno as a ON i.alumno_id = a.id"
 			+ " inner join coste ON coste.id = i.coste_id"
 			+ " inner join curso as c on c.id = i.curso_id"
 			+ " left join pago as pa on pa.inscripcion_id = i.id"
+			+ " left join lista_espera as le on le.inscripcion_id = i.id"
 			+ " group by i.id order by i.fecha asc";
 		List<InscripcionDTO> lista = this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql);
 		lista.forEach(i -> i.updateEstado(today)); // Actualizar todos los estados de las inscripciones.

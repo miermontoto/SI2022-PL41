@@ -45,6 +45,7 @@ public class StatusCellRenderer extends DefaultTableCellRenderer {
         else if(status.contains("_EXC")) l.setBackground(new Color(255, 100, 0, COLOR_TRANSPARENCY));
         else if(status.contains("EXCES")) l.setBackground(new Color(255, 255, 0, COLOR_TRANSPARENCY));
         else if(status.contains("RETRASAD")) l.setBackground(new Color(255, 165, 0, COLOR_TRANSPARENCY));
+        else if(status.contains("ESPERA")) l.setBackground(new Color(100, 255, 0, LIGHT_COLOR_TRANSPARENCY));
         else l.setBackground(new Color(0, 0, 0, 0));
 
         return l;

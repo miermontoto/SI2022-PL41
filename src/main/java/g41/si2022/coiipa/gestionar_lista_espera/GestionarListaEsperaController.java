@@ -13,6 +13,7 @@ import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.ListaEsperaDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
+import g41.si2022.util.Util;
 
 public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<GestionarListaEsperaView, GestionarListaEsperaModel> {
 
@@ -28,7 +29,7 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 	public void updateCombos() {
 		JComboBox<String> comboCursos = this.getView().getCmbCurso();
 		comboCursos.removeAllItems();
-		List<CursoDTO> sesiones = this.getModel().getListaCursosConEspera(this.getView().getMain().getToday().toString());
+		List<CursoDTO> sesiones = this.getModel().getListaCursosConEspera(this.getToday().toString());
 		DefaultComboBoxModel<String> cmbCursoModel = this.getView().getCmbCursoModel();
 
 		if (!sesiones.isEmpty()) for(CursoDTO sesion : sesiones) {
@@ -88,6 +89,10 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 		String nombreApellidosAlumno = table.getModel().getValueAt(row, 1).toString() + " " + table.getModel().getValueAt(row, 2).toString();
 		getModel().eliminarInscripcion(table.getModel().getValueAt(row, 0).toString());
 		Dialog.show("El alumno " + nombreApellidosAlumno + " ha sido eliminado de la lista de espera del curso " + cursoNombre + " con éxito");
+		Util.sendEmail(getModel().getEmailAlumno(table.getModel().getValueAt(row, 0).toString()), "COIIPA: Lista de espera", "Estimado/a alumno:\n\n"
+			+ "Le informamos que ha sido eliminado de la lista de espera del curso " + cursoNombre + ".\n\n"
+			+ "Reciba un cordial saludo,\n"
+			+ "Equipo de gestión del COIIPA");
 		this.getListaEspera(getModel().getCursoId(cursoNombre));
 		updateCombos();
 		this.clear();
