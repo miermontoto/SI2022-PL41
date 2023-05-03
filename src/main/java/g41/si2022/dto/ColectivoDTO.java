@@ -12,5 +12,5 @@ public class ColectivoDTO implements DTO {
 		id;
 
 	@Override
-	public String toString() { return this.nombre; }
+	public String toString() { return String.format("%s (%s€)", this.nombre, this.coste); }
 }

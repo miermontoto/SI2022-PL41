@@ -30,10 +30,24 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
         return this.getDatabase().executeQueryPojo(CursoDTO.class, "select * from curso");
     }
 
-    public List<ColectivoDTO> getColectivos() {
-        String sql = "select * from colectivo";
-        return getDatabase().executeQueryPojo(ColectivoDTO.class, sql);
+    public List<ColectivoDTO> getColectivos(String cursoId) {
+        return this.getDatabase().executeQueryPojo(ColectivoDTO.class,
+                "SELECT colectivo.*, coste.coste as coste "
+                + "FROM colectivo "
+                + "INNER JOIN coste ON colectivo.id = coste.colectivo_id "
+                + "INNER JOIN curso ON curso.id = coste.curso_id "
+                + "WHERE curso.id = ?",
+                cursoId);
+
     }
+
+    public String getCostes(String idCurso, String nombreColectivo) {
+		String sql = "SELECT coste.id "
+				+ "FROM coste "
+				+ "INNER JOIN colectivo ON coste.colectivo_id = colectivo.id "
+				+ "WHERE curso_id = ? AND colectivo.nombre = ?";
+		return this.getDatabase().executeQuerySingle(sql, idCurso, nombreColectivo).toString();
+	}
 
     public Optional<AlumnoDTO> getAlumnoFromEmail(String email) {
         String sql = "select alumno.*"
