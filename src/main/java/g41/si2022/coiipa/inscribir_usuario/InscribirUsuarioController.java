@@ -122,7 +122,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 		}
 
 		getModel().insertInscripcion(getToday().toString(),
-			cursoId, alumno.getId(), ((ColectivoDTO) getView().getCbColectivo().getSelectedItem()).getId());
+			cursoId, alumno.getId(), getModel().getCostes(cursoId, ((ColectivoDTO) getView().getCbColectivo().getSelectedItem()).getNombre()));
 
 		if(lleno) {
 			String idInscripcion = this.getModel().getIdInscripcionFromCursoAlumno(alumno.getId(), cursoId).getId();
@@ -194,6 +194,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 		curso = temp.get();
 		cursoId = curso.getId();
 		alumnos = getModel().getAlumnosInCurso(cursoId);
+		loadColectivosComboBox();
 
 		if (curso.getPlazas_libres().equals("0") || Integer.valueOf(curso.getPlazas_libres()) < 0) {
 			lleno = true;
@@ -222,7 +223,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 	private void loadColectivosComboBox() {
 		javax.swing.JComboBox<ColectivoDTO> cb = this.getView().getCbColectivo();
 		cb.removeAllItems();
-		this.getModel().getColectivos().forEach(cb::addItem);
+		this.getModel().getColectivos(cursoId).forEach(cb::addItem);
 	}
 
 }

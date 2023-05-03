@@ -115,8 +115,8 @@ public class GestionarListaEsperaController extends g41.si2022.mvc.Controller<Ge
 		List<ListaEsperaDTO> listaespera = this.getModel().getListaEspera(cursoID);
 
 		table.setModel(SwingUtil.getTableModelFromPojos(listaespera,
-			new String[] {"id", "nombre", "apellidos", "fecha_entrada"},
-			new String[] {"", "Nombre alumno", "Apellidos", "Fecha entrada en lista de espera"},
+			new String[] {"id", "nombre", "apellidos", "fecha_entrada", "coste"},
+			new String[] {"", "Nombre alumno", "Apellidos", "Fecha entrada en lista de espera", "Coste de la inscripción"},
 			null
 		));
 		table.removeColumn(table.getColumnModel().getColumn(0));

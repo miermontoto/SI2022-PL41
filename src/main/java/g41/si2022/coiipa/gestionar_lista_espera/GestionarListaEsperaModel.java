@@ -9,10 +9,11 @@ import g41.si2022.dto.ListaEsperaDTO;
 public class GestionarListaEsperaModel extends g41.si2022.mvc.Model {
 
 	public List<ListaEsperaDTO> getListaEspera(String cursoID) {
-		String sql = "SELECT le.id, le.fecha_entrada, alu.nombre, alu.apellidos, le.inscripcion_id FROM lista_espera as le"
+		String sql = "SELECT le.id, le.fecha_entrada, alu.nombre, alu.apellidos, cos.coste, le.inscripcion_id FROM lista_espera as le"
 			+ " INNER JOIN inscripcion insc ON le.inscripcion_id = insc.id"
 			+ " INNER JOIN alumno alu ON insc.alumno_id = alu.id"
 			+ " INNER JOIN curso cu ON insc.curso_id = cu.id"
+			+ " INNER JOIN coste cos ON insc.coste_id = cos.id"
 			+ " WHERE cu.id = ?";
 		return this.getDatabase().executeQueryPojo(ListaEsperaDTO.class, sql, cursoID);
 	}

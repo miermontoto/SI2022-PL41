@@ -15,5 +15,6 @@ public class ListaEsperaDTO {
 		curso_id,
 		inscripcion_id,
 		en_cola,
+		coste,
 		fecha_entrada;
 }
