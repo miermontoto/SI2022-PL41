@@ -188,6 +188,10 @@ public class RowAppendableJTable extends javax.swing.JTable {
 		public void rowAppended (javax.swing.table.TableModel e);
 	}
 
+	public boolean isCellEditable (int row, int column) {
+		return this.columnMatchers == null ? false : this.columnMatchers.keySet().stream().anyMatch( x -> x == column);
+	}
+
 	private <E> TableModel getTableModelFromPojos(List<E> pojos, String[] colProperties,
 			String[] colNames, java.util.Map<Integer, java.util.regex.Pattern> writeableColumns) {
 		// Creación inicial del tablemodel y dimensionamiento
@@ -209,7 +213,8 @@ public class RowAppendableJTable extends javax.swing.JTable {
 
 			@Override
 			public boolean isCellEditable (int row, int column) {
-				return writeableColumns == null ? false : writeableColumns.keySet().stream().anyMatch( x -> x == column);
+				// return writeableColumns == null ? false : writeableColumns.keySet().stream().anyMatch( x -> x == column);
+				return RowAppendableJTable.this.isCellEditable(row, column);
 			}
 		};
 

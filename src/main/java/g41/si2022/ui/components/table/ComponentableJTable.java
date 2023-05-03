@@ -1,5 +1,10 @@
 package g41.si2022.ui.components.table;
 
+import java.awt.Component;
+import java.util.Map;
+
+import javax.swing.table.TableCellEditor;
+
 /**
  * ComponentableJTable.
  * <p>
@@ -25,6 +30,8 @@ package g41.si2022.ui.components.table;
 public class ComponentableJTable extends javax.swing.JTable {
 
 	private static final long serialVersionUID = 1L;
+	
+	private Map<Integer, ? extends TableCellEditor> componentsMap;
 
 	/**
 	 * Creates a new ComponentableJTable.
@@ -35,8 +42,13 @@ public class ComponentableJTable extends javax.swing.JTable {
 	 */
 	public ComponentableJTable (java.util.Map<Integer, ? extends javax.swing.table.TableCellEditor> components) {
 		super();
+		this.componentsMap = components;
 		if (components != null)
 			components.forEach((col, comp) -> this.getColumnModel().getColumn(col).setCellEditor(comp));
+	}
+	
+	public Map<Integer, ? extends TableCellEditor> getComponentsMap () {
+		return this.componentsMap;
 	}
 	
 }

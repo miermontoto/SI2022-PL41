@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.swing.JTable;
+import javax.swing.table.TableCellEditor;
 
 /**
  * RowAppendableComponentableJTable.
@@ -35,6 +36,8 @@ import javax.swing.JTable;
 public class RowAppendableComponentableJTable extends RowAppendableJTable {
 
 	private static final long serialVersionUID = 1L;
+	
+	private Map<Integer, TableCellEditor> componentsMap;
 
 	/**
 	 * Creates a new RowAppendableComponentableJTable.
@@ -58,6 +61,7 @@ public class RowAppendableComponentableJTable extends RowAppendableJTable {
 				.filter((entry) -> !treeMap.containsKey(entry.getKey()))
 				.collect(Collectors.toMap((entry) -> entry.getKey(), (entry) -> entry.getValue())),
 				mandatory);
+		this.componentsMap = treeMap;
 		if (treeMap != null) 
 			treeMap.forEach( (col, comp) -> this.getColumnModel().getColumn(col).setCellEditor(comp));
 	}
@@ -76,6 +80,15 @@ public class RowAppendableComponentableJTable extends RowAppendableJTable {
 		super(columnNames);
 		if (components != null) 
 			components.forEach( (col, comp) -> this.getColumnModel().getColumn(col).setCellEditor(comp));
+	}
+	
+	@Override
+	public boolean isCellEditable (int row, int column) {
+		return super.isCellEditable(row, column) || this.getComponentsMap().containsKey(column);
+	}
+	
+	public Map<Integer, TableCellEditor> getComponentsMap () {
+		return this.componentsMap;
 	}
 
 }
