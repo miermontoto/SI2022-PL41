@@ -6,9 +6,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import g41.si2022.dto.AlumnoDTO;
@@ -25,8 +27,10 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 	private static final String SIGN_UP = "sign-up";
 
 	private List<CursoDTO> cursos;
+	private List<AlumnoDTO> alumnos;
 	boolean lleno = false;
 	private String cursoId;
+	private CursoDTO curso;
 
 	public InscribirUsuarioController(InscribirUsuarioModel m, InscribirUsuarioView v) {
 		super(v, m);
@@ -81,7 +85,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 	 * <p> Se envía un email de confirmación de inscripción.
 	 */
 	public void handleInscripcion() {
-		if (cursoId == null) return;
+		if (curso == null) return;
 
 		String email = "";
 		AlumnoDTO alumno;
@@ -104,9 +108,15 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 				throw new ApplicationException("Invalid radio button state");
 		}
 
-		alumno = getModel().getAlumnoFromEmail(email);
+		try {
+			alumno = getModel().getAlumnoFromEmail(email).get();
+		} catch (Exception ex) {
+			Dialog.showError("No existe ningún alumno con ese email");
+			return;
+		}
 
-		if(getModel().checkAlumnoInCurso(alumno.getId(), cursoId)) {
+
+		if(alumnos.stream().anyMatch(x -> x.getId().equals(alumno.getId()))) {
 			Dialog.showError("Ya está inscrito en este curso");
 			return;
 		}
@@ -121,7 +131,10 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 			Dialog.show("Inscripción en la lista de espera realizada con éxito");
 		} else {
 			getListaCursos();
-			Util.sendEmail(email, "COIIPA: Inscripción realizada", "Su inscripción al curso " + SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.");
+			Util.sendEmail(email, "COIIPA: Inscripción realizada", "Estimado alumno/a:\n\nSu inscripción al curso "
+			 	+ SwingUtil.getSelectedKey(this.getView().getTablaCursos()) + " ha sido realizada con éxito.\n\n"
+				+ "Su plaza no estará reservada hasta que se realice el pago completo del importe del curso.\n\n"
+				+ "Reciba un cordial saludo,\nEquipo de gestión del COIIPA");
 			Dialog.show("Inscripción realizada con éxito");
 		}
 	}
@@ -170,31 +183,37 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 	}
 
 	public void updateCursoValue() {
-		cursoId = null;
-		for (CursoDTO curso : cursos) {
-			if (curso.getNombre().equals(SwingUtil.getSelectedKey(this.getView().getTablaCursos()))) {
-				if (curso.getPlazas_libres().equals("0") || Integer.valueOf(curso.getPlazas_libres()) < 0) {
-					lleno = true;
-					cursoId = curso.getId();
-					this.getView().getBtnInscribir().setText("Añadirme a la lista de espera");
-					return;
-				}
-
-				getView().getBtnInscribir().setText("Inscribirme ahora");
-				lleno = false;
-				cursoId = curso.getId();
-				return;
-			}
+		String targetId = Util.getInfoFromTable(getView().getTablaCursos(), 0);
+		Optional<CursoDTO> temp = cursos.stream().filter(x -> x.getId().equals(targetId)).findFirst();
+		if (!temp.isPresent()) {
+			curso = null;
+			Dialog.showError("Error a la hora de seleccionar curso.");
+			return;
 		}
+
+		curso = temp.get();
+		cursoId = curso.getId();
+		alumnos = getModel().getAlumnosInCurso(cursoId);
+
+		if (curso.getPlazas_libres().equals("0") || Integer.valueOf(curso.getPlazas_libres()) < 0) {
+			lleno = true;
+			cursoId = curso.getId();
+			this.getView().getBtnInscribir().setText("Añadirme a la lista de espera");
+			return;
+		}
+
+		getView().getBtnInscribir().setText("Inscribirme ahora");
+		lleno = false;
 	}
 
 	public void getListaCursos() {
-		cursos = this.getModel().getListaCursos(this.getToday().toString());
-		TableModel tableModel = SwingUtil.getTableModelFromPojos(cursos, new String[] { "nombre", "plazas_libres", "start_inscr", "end_inscr" },
-			new String[] { "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null);
-		this.getView().getTablaCursos().setModel(tableModel);
+		cursos = this.getModel().getListaCursos(getToday().toString());
+		JTable table = getView().getTablaCursos();
+		table.setModel(SwingUtil.getTableModelFromPojos(cursos, new String[] { "id", "nombre", "plazas_libres", "start_inscr", "end_inscr" },
+			new String[] { "", "Nombre", "Plazas libres", "Fecha ini. inscr.", "Fecha fin inscr." }, null));
+		Util.removeColumn(table, 0);
 		this.loadColectivosComboBox();
-		SwingUtil.autoAdjustColumns(this.getView().getTablaCursos());
+		SwingUtil.autoAdjustColumns(table);
 	}
 	/**
 	 * This method will update the contents of the colectivos ComboBox.
@@ -202,7 +221,7 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 	 */
 	private void loadColectivosComboBox() {
 		javax.swing.JComboBox<ColectivoDTO> cb = this.getView().getCbColectivo();
-		cb.removeAllItems(); // Clear the cb
+		cb.removeAllItems();
 		this.getModel().getColectivos().forEach(cb::addItem);
 	}
 

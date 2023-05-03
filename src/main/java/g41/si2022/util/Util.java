@@ -32,6 +32,10 @@ public class Util {
 
 	public static final String EMAIL_REGEX = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
+	public static String getInfoFromTable(JTable table, int colIndex) {
+		return table.getModel().getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), colIndex).toString();
+	}
+
 	public static NumberFormatter getMoneyFormatter() {
 		NumberFormatter formatter = new NumberFormatter(java.text.NumberFormat.getInstance());
 

@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.inscribir_usuario;
 
 import java.util.List;
+import java.util.Optional;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;
@@ -11,10 +12,18 @@ import g41.si2022.util.Util;
 public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
 
     public List<CursoDTO> getListaCursos(String date) {
-        String sql = "select *, (c.plazas -"
+        String sql = "select c.*, (c.plazas -"
         + " (select count(*) from inscripcion as i where i.curso_id = c.id and i.cancelada = 0)"
         + ") as plazas_libres from curso as c where start_inscr <= ? and end_inscr >= ?";
         return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, date, date);
+    }
+
+    public List<AlumnoDTO> getAlumnosInCurso(String idCurso) {
+        String sql = "select a.* from alumno as a"
+        + " inner join inscripcion as i on i.alumno_id = a.id"
+        + " inner join curso as c on i.curso_id = c.id"
+        + " where c.id = ?";
+        return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql, idCurso);
     }
 
     public List<CursoDTO> getListaCursos() {
@@ -26,22 +35,23 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
         return getDatabase().executeQueryPojo(ColectivoDTO.class, sql);
     }
 
-    public AlumnoDTO getAlumnoFromEmail(String email) {
-        String sql = "select id, nombre, apellidos, email, telefono"
+    public Optional<AlumnoDTO> getAlumnoFromEmail(String email) {
+        String sql = "select alumno.*"
             + " from alumno where email like ?";
-        return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql, email).get(0);
+        List<AlumnoDTO> list = this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql, email);
+        return Optional.ofNullable(list.isEmpty() ? null : list.get(0));
     }
 
     /**
      * Método que comprueba si un alumno está ya inscrito en un curso
      * en base a su email.
-     * @param alumno_id
-     * @param curso_id
+     * @param idAlumno
+     * @param idCurso
      * @return Valor booleano: true si ya está inscrito.
      */
-    public boolean checkAlumnoInCurso(String alumno_id, String curso_id) {
+    public boolean checkAlumnoInCurso(String idAlumno, String idCurso) {
         String sql = "select count(*) from inscripcion where alumno_id = ? and curso_id = ?";
-        String result = getDatabase().executeQuerySingle(sql, alumno_id, curso_id).toString();
+        String result = getDatabase().executeQuerySingle(sql, idAlumno, idCurso).toString();
         return !result.equals("0");
     }
 

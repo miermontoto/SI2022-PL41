@@ -17,6 +17,7 @@ import g41.si2022.dto.FacturaDTO;
 import g41.si2022.ui.SwingUtil;
 import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.StatusCellRenderer;
+import g41.si2022.util.Util;
 import g41.si2022.util.state.FacturaState;
 
 public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<GestionarFacturasEmprView, GestionarFacturasEmprModel> {
@@ -98,6 +99,10 @@ public class GestionarFacturasEmprController extends g41.si2022.mvc.Controller<G
 		Dialog.show("Pago registrado correctamente");
 		if(facturasEmpr.size() == facturasPorPagar)
 			Dialog.showWarning("El importe total no coincide con el importe de la factura");
+		else
+			Util.sendEmail(facturasEmpr.get(row).getEmail(), "COIIPA: "+facturasEmpr.get(row).getCurso_nombre(),
+				"Se ha registrado un pago de "+getView().getTxtImporte().getText()+"€ por la contratación del curso "
+				+ facturasEmpr.get(row).getCurso_nombre() + ".\n\n");
 	}
 
 	private void handleSelect() {
