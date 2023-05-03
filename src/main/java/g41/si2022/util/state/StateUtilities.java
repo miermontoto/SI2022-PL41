@@ -110,6 +110,7 @@ public class StateUtilities {
 	}
 
 	public static CursoType getCursoType(CursoDTO curso) {
+		if(curso.getEntidad_id() == null) return CursoType.INTERNO;
 		return curso.getEntidad_id().equals("") ? CursoType.INTERNO : CursoType.EXTERNO;
 	}
 

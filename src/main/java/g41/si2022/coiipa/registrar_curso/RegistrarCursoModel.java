@@ -111,8 +111,8 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 			String nombre, String descripcion,
 			String inscrStart, String inscrEnd, String start, String end,
 			String plazas, java.util.Map<String, Double> costes) {
-		String sql = "INSERT INTO curso (nombre, descripcion, start_inscr, end_inscr, plazas, start, end) "
-						+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO curso (nombre, descripcion, start_inscr, end_inscr, plazas, start, end, importe, entidad_id) "
+						+ " VALUES (?, ?, ?, ?, ?, ?, ?, null, null)";
 		this.getDatabase().executeUpdate(sql,
 				nombre, descripcion,
 				inscrStart, inscrEnd, plazas, start, end);

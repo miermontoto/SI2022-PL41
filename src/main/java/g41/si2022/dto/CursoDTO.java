@@ -53,6 +53,10 @@ public class CursoDTO implements DTO {
 	}
 
 	public void setImporte(String value) {
+		if(value == null) {
+			this.importe = null;
+			return;
+		}
 		this.importe = value.equals("") ? null : value;
 	}
 
