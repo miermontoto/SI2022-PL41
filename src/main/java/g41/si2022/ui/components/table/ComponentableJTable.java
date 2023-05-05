@@ -1,6 +1,5 @@
 package g41.si2022.ui.components.table;
 
-import java.awt.Component;
 import java.util.Map;
 
 import javax.swing.table.TableCellEditor;

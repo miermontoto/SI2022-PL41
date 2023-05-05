@@ -17,7 +17,8 @@ import g41.si2022.util.state.InscripcionState;
  */
 public class StatusCellRenderer extends DefaultTableCellRenderer {
 
-    private int statusColIndex;
+    private static final long serialVersionUID = 1L;
+	private int statusColIndex;
     private static final int COLOR_TRANSPARENCY = 150;
     private static final int LIGHT_COLOR_TRANSPARENCY = 75;
 

@@ -31,7 +31,8 @@ import lombok.Getter;
 @Getter
 public class ModificarCursosView extends View {
 
-    private JTable tableCursos;
+    private static final long serialVersionUID = 1L;
+	private JTable tableCursos;
     private JTextField txtNombre;
     private JTextArea txtDescripcion;
     private JTextField txtPlazas;

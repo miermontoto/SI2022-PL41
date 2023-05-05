@@ -20,7 +20,8 @@ import g41.si2022.ui.components.BetterDatePicker;
 
 public class EventDialog extends javax.swing.JDialog {
 
-    private boolean pressedOk;
+    private static final long serialVersionUID = 1L;
+	private boolean pressedOk;
     private JTextField inputLocation;
     private BetterDatePicker inputDate;
     private TimePicker inputStartHour;

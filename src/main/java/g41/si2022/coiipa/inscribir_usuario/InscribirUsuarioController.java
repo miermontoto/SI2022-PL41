@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.table.TableModel;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;

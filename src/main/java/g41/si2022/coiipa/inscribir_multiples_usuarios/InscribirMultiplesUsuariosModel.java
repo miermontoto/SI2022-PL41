@@ -11,7 +11,6 @@ import java.util.function.Supplier;
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CursoDTO;
-import g41.si2022.dto.GrupoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.util.Util;
 

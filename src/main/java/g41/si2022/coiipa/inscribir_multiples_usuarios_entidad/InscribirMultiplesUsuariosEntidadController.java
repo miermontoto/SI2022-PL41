@@ -1,16 +1,11 @@
 package g41.si2022.coiipa.inscribir_multiples_usuarios_entidad;
 
-import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.stream.Stream;
 
-import javax.swing.JLabel;
 import javax.swing.table.TableModel;
 
 import g41.si2022.dto.AlumnoDTO;
@@ -65,6 +60,7 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 			}
 		});
 		
+		@SuppressWarnings("unchecked")
 		g41.si2022.ui.components.table.editors.JComboBoxEditor<String> cellEditor = 
 			((g41.si2022.ui.components.table.editors.JComboBoxEditor<String>) 
 			InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos()
