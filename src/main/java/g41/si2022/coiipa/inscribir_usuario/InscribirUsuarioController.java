@@ -108,7 +108,9 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 		}
 
 		try {
-			alumno = getModel().getAlumnoFromEmail(email).get();
+			Optional<AlumnoDTO> temp = getModel().getAlumnoFromEmail(email);
+			if(!temp.isPresent()) throw new ApplicationException("No existe ningún alumno con ese email");
+			alumno = temp.get();
 		} catch (Exception ex) {
 			Dialog.showError("No existe ningún alumno con ese email");
 			return;

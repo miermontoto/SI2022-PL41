@@ -20,7 +20,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 
 	/**
 	 * getListaColectivos. Returns the list of colectivos.
-	 * 
+	 *
 	 * @return List of existing colectivos in database.
 	 */
 	public List<ColectivoDTO> getListaColectivos () {
@@ -28,15 +28,15 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 			this.listaColectivos = this.getDatabase().executeQueryPojo(ColectivoDTO.class, "SELECT * FROM colectivo");
 		return this.listaColectivos;
 	}
-	
+
 	/**
 	 * getColectivosFromCurso. Returns the colectivos that appear on a given curso.
-	 * 
+	 *
 	 * @param cursoId ID of the curso
 	 * @return List of colectivos that may access the curso.
 	 */
 	public List<ColectivoDTO> getColectivosFromCurso (String cursoId) {
-		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, 
+		return this.getDatabase().executeQueryPojo(ColectivoDTO.class,
 				"SELECT colectivo.* "
 				+ "FROM colectivo "
 				+ "INNER JOIN coste ON colectivo.id = coste.colectivo_id "
@@ -57,8 +57,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	}
 
 	public List<AlumnoDTO> getAlumnoFromEmail(String email) {
-		String sql = "select *"
-				+ " from alumno where email like ?;";
+		String sql = "select * from alumno where email like ?;";
 		return this.getDatabase().executeQueryPojo(AlumnoDTO.class, sql, email);
 	}
 
@@ -72,7 +71,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 */
 	public List<AlumnoDTO> insertAlumnos (List<AlumnoDTO> alumnos) {
 		this.insertMissingAlumnos(alumnos);
-		return getAlumnosFromEmails (alumnos);
+		return getAlumnosFromEmails(alumnos);
 	}
 
 	/**
@@ -84,23 +83,24 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	private void insertMissingAlumnos(List<AlumnoDTO> alumnos) {
 		List<AlumnoDTO> existingAlumnos = InscribirMultiplesUsuariosModel.this.getAlumnos(),
 				alumnosToRegister = alumnos.parallelStream() // Remove the alumnos that are already in the DB
-				.filter(alumnoInsertar -> existingAlumnos.parallelStream()
+					.filter(alumnoInsertar -> existingAlumnos.parallelStream()
 						.allMatch(alumnoDatabase -> !alumnoDatabase.getEmail().equals(alumnoInsertar.getEmail())))
-				.collect(java.util.stream.Collectors.toList());
+							.collect(java.util.stream.Collectors.toList());
 
-		if (alumnosToRegister.size() != 0) {
+		if (!alumnosToRegister.isEmpty()) {
 			this.getDatabase().insertBulk(
 				"alumno",
-				new String[] {"nombre", "apellidos", "email", "telefono"}, 
-				alumnosToRegister, 
+				new String[] {"nombre", "apellidos", "email", "telefono"},
+				alumnosToRegister,
 				new java.util.ArrayList<java.util.function.Function<g41.si2022.dto.DTO, Object>> () {
 					private static final long serialVersionUID = 1L;
-				{
-					this.add(e -> ((AlumnoDTO) e).getNombre());
-					this.add(e -> ((AlumnoDTO) e).getApellidos());
-					this.add(e -> ((AlumnoDTO) e).getEmail());
-					this.add(e -> ((AlumnoDTO) e).getTelefono());
-				}}
+					{
+						this.add(e -> ((AlumnoDTO) e).getNombre());
+						this.add(e -> ((AlumnoDTO) e).getApellidos());
+						this.add(e -> ((AlumnoDTO) e).getEmail());
+						this.add(e -> ((AlumnoDTO) e).getTelefono());
+					}
+				}
 			);
 		}
 	}
@@ -131,7 +131,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 			return InscribirMultiplesUsuariosModel.this.getDatabase()
 					.executeQueryPojo(AlumnoDTO.class, outputSql+");", (Object[]) outputDatos);
 		}
-		return new java.util.ArrayList<AlumnoDTO>();
+		return new java.util.ArrayList<>();
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 
 	/**
 	 * getCoste. Gets the coste_id for a given curso and nombreColectivo.
-	 * 
+	 *
 	 * @param idCurso Curso to be checked
 	 * @param nombreColectivo Name of the colectivo to be checked
 	 * @return Coste_id that the colectivo has to pay for the curso.
@@ -162,12 +162,12 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	/**
 	 * getAlumnosInCurso. This method will return the list of alumnos in a given curso.
 	 *
-	 * @param curso_id ID of the curso to be retrieved
+	 * @param idCurso ID of the curso to be retrieved
 	 * @return List of alumnos that are in the curso with curso_id
 	 */
-	public List<InscripcionDTO> getAlumnosInCurso (String curso_id) {
+	public List<InscripcionDTO> getAlumnosInCurso (String idCurso) {
 		String sql = "select * from inscripcion where curso_id = ?";
-		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, curso_id);
+		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
 	}
 
 	/**
@@ -178,10 +178,9 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @param alumnos List of alumnos to be added
 	 * @param fecha today's date
 	 * @param idCurso curso id
-	 * @param idsAlumno alumno id
 	 * @param idGrupo grupo id
 	 */
-	public void insertInscripciones(List<AlumnoDTO> alumnos, String fecha, String curso_id) {
+	public void insertInscripciones(List<AlumnoDTO> alumnos, String fecha, String idCurso) {
 		Map<String, AlumnoDTO> emailToAlumnoDictionary = alumnos.stream().collect(new java.util.stream.Collector<AlumnoDTO, Map<String, AlumnoDTO>, Map<String, AlumnoDTO>> () {
 			@Override
 			public Supplier<Map<String, AlumnoDTO>> supplier() {
@@ -207,30 +206,30 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 			public Set<Characteristics> characteristics() {
 				return new java.util.HashSet<>(java.util.Arrays.asList(Characteristics.CONCURRENT));
 			}
-			
-		});
-		
-		List<AlumnoDTO> insertTheseAlumnos = this.insertAlumnos(alumnos).stream().collect(new g41.si2022.util.collector.HalfwayListCollector<AlumnoDTO, AlumnoDTO>() {
 
+		});
+
+		List<AlumnoDTO> insertTheseAlumnos = this.insertAlumnos(alumnos).stream().collect(new g41.si2022.util.collector.HalfwayListCollector<AlumnoDTO, AlumnoDTO>() {
 			@Override
 			public BiConsumer<List<AlumnoDTO>, AlumnoDTO> accumulator() {
 				return (list, entry) -> { entry.setNombreColectivo(emailToAlumnoDictionary.get(entry.getEmail()).getNombreColectivo()); list.add(entry); };
 			}
-			
 		});
 
 		this.getDatabase().insertBulk(
-				"inscripcion",
-				new String[] {"fecha", "alumno_id", "curso_id", "entidad_id"},
-				insertTheseAlumnos,
-				new java.util.ArrayList<java.util.function.Function<g41.si2022.dto.DTO, Object>> () {
-					private static final long serialVersionUID = 1L;
+			"inscripcion",
+			new String[] {"fecha", "alumno_id", "curso_id", "entidad_id"},
+			insertTheseAlumnos,
+			new java.util.ArrayList<java.util.function.Function<g41.si2022.dto.DTO, Object>> () {
+				private static final long serialVersionUID = 1L;
 				{
 					this.add(e -> fecha);
 					this.add(e -> ((AlumnoDTO) e).getId());
-					this.add(e -> curso_id);
-					this.add(e -> InscribirMultiplesUsuariosModel.this.getCostes(curso_id, ((AlumnoDTO) e).getNombreColectivo()));
-				}});
+					this.add(e -> idCurso);
+					this.add(e -> InscribirMultiplesUsuariosModel.this.getCostes(idCurso, ((AlumnoDTO) e).getNombreColectivo()));
+				}
+			}
+		);
 	}
 
 	public boolean verifyEmail(String email) {

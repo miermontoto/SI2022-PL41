@@ -8,8 +8,10 @@ import org.apache.commons.beanutils.PropertyUtils;
 import g41.si2022.util.exception.UnexpectedException;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -53,12 +55,12 @@ public class RowAppendableJTable extends javax.swing.JTable {
 	 * A new row will be aded only when all mandatory columns are filled.
 	 */
 	private boolean[] mandatoryColumns;
-	
+
 	/**
 	 * These are the listeners that will be executed when a new row is added.<br>
 	 * They have access to the table model.
 	 */
-	private List<RowAppendedListener> rowAppendedListeners;
+	private transient List<RowAppendedListener> rowAppendedListeners;
 
 	/**
 	 * Creates a new {@code RowAppendableJTable}.
@@ -95,7 +97,7 @@ public class RowAppendableJTable extends javax.swing.JTable {
 			Map<Integer, Pattern> treeMap,
 			boolean[] mandatoryColumns) {
 		super();
-		this.rowAppendedListeners = new java.util.LinkedList<RowAppendedListener> ();
+		this.rowAppendedListeners = new java.util.LinkedList<> ();
 		this.visibleColumnNames = visibleColumnNames;
 		this.columnNames = columnNames;
 		this.columnMatchers = treeMap;
@@ -163,52 +165,54 @@ public class RowAppendableJTable extends javax.swing.JTable {
 	 * @return Data structure containing the data from this table.
 	 */
 	public List<Map<String, Object>> getData () {
-		List<Map<String, Object>> out = new java.util.ArrayList<Map<String, Object>> ();
-		for (int i = 0 ; i < this.getRowCount() ; i++) {
-			out.add(new java.util.HashMap<String, Object> ());
+		List<Map<String, Object>> out = new ArrayList<>();
+
+		for(int i = 0; i < this.getRowCount(); i++) {
+			out.add(new java.util.HashMap<>());
 			for (int j = 0 ; j < RowAppendableJTable.this.getColumnNames().length ; j++)
 				out.get(i).put(this.getColumnNames()[j],
 						this.getValueAt(i, j).toString().trim().equals(this.getColumnNames()[j].trim()) ||
-						this.getValueAt(i, j).toString().trim().isEmpty()
-								? null
-								: this.getValueAt(i, j)
+						this.getValueAt(i, j).toString().trim().isEmpty() ? null : this.getValueAt(i, j)
 				);
 		}
+
 		return out.stream()
-				.filter(row -> row.values().stream()
-						.anyMatch(value -> value != null))
-				.collect(java.util.stream.Collectors.toList());
+			.filter(row -> row.values().stream()
+				.anyMatch(Objects::nonNull))
+					.collect(java.util.stream.Collectors.toList());
 	}
-	
+
 	public void addRowAppendedListener (RowAppendedListener e) {
 		this.rowAppendedListeners.add(e);
 	}
-	
+
 	public interface RowAppendedListener {
 		public void rowAppended (javax.swing.table.TableModel e);
 	}
 
-	public boolean isCellEditable (int row, int column) {
+	@Override
+	public boolean isCellEditable(int row, int column) {
 		return this.columnMatchers == null ? false : this.columnMatchers.keySet().stream().anyMatch( x -> x == column);
 	}
 
+	@Deprecated
 	private <E> TableModel getTableModelFromPojos(List<E> pojos, String[] colProperties,
 			String[] colNames, java.util.Map<Integer, java.util.regex.Pattern> writeableColumns) {
 		// Creación inicial del tablemodel y dimensionamiento
 		// Hay que tener en cuenta que para que la tabla pueda mostrar las columnas deberá estar dentro de un JScrollPane
 		TableModel tm = null;
 		if (colProperties != null && colNames.length != colProperties.length) throw new UnexpectedException("colProperties es distinto en tamaño a colNames");
-		if (pojos == null) pojos = new java.util.ArrayList<E> ();
+		if (pojos == null) pojos = new ArrayList<> ();
 		tm = new DefaultTableModel(colNames, pojos.size()) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void setValueAt(Object value, int row, int column) {
 				if ( value == null ||
-						RowAppendableJTable.this.columnMatchers == null ||
-						RowAppendableJTable.this.columnMatchers.get(column) == null ||
-						RowAppendableJTable.this.columnMatchers.get(column).matcher(value.toString()).matches()
-						) super.setValueAt(value, row, column);
+					RowAppendableJTable.this.columnMatchers == null ||
+					RowAppendableJTable.this.columnMatchers.get(column) == null ||
+					RowAppendableJTable.this.columnMatchers.get(column).matcher(value.toString()).matches()
+					) super.setValueAt(value, row, column);
 			}
 
 			@Override
@@ -220,7 +224,7 @@ public class RowAppendableJTable extends javax.swing.JTable {
 
 		// Carga cada uno de los valores de pojos usando PropertyUtils (de apache coommons beanutils)
 		for (int i = 0; i < pojos.size(); i++) {
-			for (int j=0; j<colProperties.length; j++) {
+			for (int j = 0; j < colProperties.length; j++) {
 				try {
 					Object value=PropertyUtils.getSimpleProperty(pojos.get(i), colProperties[j]);
 					tm.setValueAt(value, i, j);

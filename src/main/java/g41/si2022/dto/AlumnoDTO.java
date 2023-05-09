@@ -14,6 +14,6 @@ public class AlumnoDTO implements DTO {
         telefono,
         id,
         coste, // Added for InscribirMultiplesUsuarios
-        nombreColectivo; 
+        nombreColectivo;
 
 }

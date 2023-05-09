@@ -1,14 +1,14 @@
 package g41.si2022.coiipa.consultar_ingresos_gastos;
 
+import java.awt.event.ItemEvent;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.JTable;
-
-import java.util.List;
-import java.awt.event.ItemEvent;
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.ui.SwingUtil;
@@ -18,8 +18,8 @@ import g41.si2022.util.state.CursoState;
 public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller<ConsultarIngresosGastosView, ConsultarIngresosGastosModel> {
 
 	private List<CursoDTO> cursos;
-	private java.util.function.Supplier<List<CursoDTO>> sup = () -> filterData();
-	private java.util.function.Supplier<List<CursoDTO>> supOutOfRangeDates = () -> filterData().stream().filter(x ->
+	private Supplier<List<CursoDTO>> sup = () -> filterData();
+	private Supplier<List<CursoDTO>> supOutOfRangeDates = () -> filterData().stream().filter(x ->
 		 	(this.getView().getEndDatePicker().getDate() != null && x.getPagoHighestFecha() != null &&
 		 		x.getPagoHighestFecha().compareTo(this.getView().getEndDatePicker().getDate().toString()) > 0) ||
 			(this.getView().getStartDatePicker().getDate() != null && x.getPagoLowestFecha() != null &&
