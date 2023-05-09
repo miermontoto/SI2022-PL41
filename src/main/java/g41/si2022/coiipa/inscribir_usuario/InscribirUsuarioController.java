@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.table.TableModel;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;
@@ -109,7 +108,9 @@ public class InscribirUsuarioController extends g41.si2022.mvc.Controller<Inscri
 		}
 
 		try {
-			alumno = getModel().getAlumnoFromEmail(email).get();
+			Optional<AlumnoDTO> temp = getModel().getAlumnoFromEmail(email);
+			if(!temp.isPresent()) throw new ApplicationException("No existe ningún alumno con ese email");
+			alumno = temp.get();
 		} catch (Exception ex) {
 			Dialog.showError("No existe ningún alumno con ese email");
 			return;

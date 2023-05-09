@@ -1,5 +1,6 @@
 package g41.si2022.coiipa.inscribir_multiples_usuarios;
 
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
@@ -31,53 +32,34 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 	@Override
 	public void initNonVolatileData() {
 		this.getView().getBtnInscribir().addActionListener(e -> this.insertInscripciones());
-		this.getView().getTablaCursos().addMouseListener(new java.awt.event.MouseListener () {
-
+		this.getView().getTablaCursos().addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) { }
-
-			@Override
-			public void mousePressed(MouseEvent e) { }
-
-			@Override
-			public void mouseReleased(MouseEvent e) { 
-				InscribirMultiplesUsuariosController.this
-					.updateCursoValue();
-				InscribirMultiplesUsuariosController.this
-					.getView().getComboBoxEditors().parallelStream()
-				.forEach(cbe -> 
-					cbe.setData(
-					InscribirMultiplesUsuariosController.this
-						.getModel().getColectivosFromCurso(cursoId)
-						.stream().collect(new g41.si2022.util.collector.HalfwayListCollector<ColectivoDTO, String> () {
-
-							@Override
-							public BiConsumer<List<String>, ColectivoDTO> accumulator() {
-								return (list, item) -> list.add(item.getNombre());
-							}
-							
-						})
-					)
-				);
+			public void mouseReleased(MouseEvent e) {
+				InscribirMultiplesUsuariosController.this.updateCursoValue();
+				InscribirMultiplesUsuariosController.this.getView().getComboBoxEditors().parallelStream()
+					.forEach(cbe -> cbe.setData(
+							InscribirMultiplesUsuariosController.this
+								.getModel().getColectivosFromCurso(cursoId)
+								.stream().collect(new g41.si2022.util.collector.HalfwayListCollector<ColectivoDTO, String> () {
+									@Override
+									public BiConsumer<List<String>, ColectivoDTO> accumulator() {
+										return (list, item) -> list.add(item.getNombre());
+									}
+								})
+						)
+					);
 			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) { }
-
-			@Override
-			public void mouseExited(MouseEvent e) { }
-			
 		});
 		this.loadColectivosListeners();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void loadColectivosListeners () {
-		g41.si2022.ui.components.table.editors.JComboBoxEditor<String> cellEditor = 
-			((g41.si2022.ui.components.table.editors.JComboBoxEditor<String>) 
+		g41.si2022.ui.components.table.editors.JComboBoxEditor<String> cellEditor =
+			((g41.si2022.ui.components.table.editors.JComboBoxEditor<String>)
 			InscribirMultiplesUsuariosController.this.getView().getTablaInscritos()
 				.getColumnModel().getColumn(4).getCellEditor());
-		this.getView().getTablaInscritos().addRowAppendedListener(e -> { 
+		this.getView().getTablaInscritos().addRowAppendedListener(e -> {
 			InscribirMultiplesUsuariosController.this.getView().getBtnInscribir().setEnabled(true);
 			InscribirMultiplesUsuariosController.this
 				.getView().getComboBoxEditors().add(cellEditor);
@@ -91,10 +73,10 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 				}));
 		});
 	}
-	
+
 	/**
 	 * insertInscripciones. Inserts all the inscripciones that are listed in the table.<br>
-	 * This will also add as many alumnos as needed in the database 
+	 * This will also add as many alumnos as needed in the database
 	 */
 	private void insertInscripciones () {
 		this.getModel().insertInscripciones(
@@ -119,7 +101,7 @@ public class InscribirMultiplesUsuariosController extends g41.si2022.mvc.Control
 			map.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[index]) == null
 			? ""
 			: map.get(InscribirMultiplesUsuariosController.this.getView().getTablaInscritos().getColumnNames()[index]).toString();
-			
+
 		return this.getView().getTablaInscritos().getData().stream().collect(
 				new g41.si2022.util.collector.HalfwayListCollector<Map<String, Object>, AlumnoDTO>() {
 					@Override

@@ -36,10 +36,10 @@ import g41.si2022.ui.util.JLabelFactory;
 public class InscribirMultiplesUsuariosEntidadView extends View {
 
 	private static final long serialVersionUID = 1L;
-	private static final int panelBorder = 10;
+	private static final int PANEL_BORDER = 10;
 
-	private static final String signinTitle = "Iniciar sesión";
-	private static final String signupTitle = "Registro de grupo";
+	private static final String SINGIN_TITLE = "Iniciar sesión";
+	private static final String SIGNUP_TITLE = "Registro de grupo";
 
 	private JButton btnInscribir;
 	private JTable tablaCursos;
@@ -68,7 +68,7 @@ public class InscribirMultiplesUsuariosEntidadView extends View {
 
 	private void toggle() {
 		boolean isSignin = radioSignin.isSelected();
-		containerPanel.setTitle(isSignin ? signinTitle : signupTitle);
+		containerPanel.setTitle(isSignin ? SINGIN_TITLE : SIGNUP_TITLE);
 		containerPanel.setContentContainer(isSignin ? signinPanel() : signupPanel());
 	}
 
@@ -78,8 +78,8 @@ public class InscribirMultiplesUsuariosEntidadView extends View {
 		btnInscribir = new JButton("Inscribirse");
 
 		decideUserSelection = new ButtonGroup();
-		radioSignin = new JRadioButton(signinTitle);
-		radioSignup = new JRadioButton(signupTitle);
+		radioSignin = new JRadioButton(SINGIN_TITLE);
+		radioSignup = new JRadioButton(SIGNUP_TITLE);
 		decideUserSelection.add(radioSignin);
 		decideUserSelection.add(radioSignup);
 
@@ -87,8 +87,8 @@ public class InscribirMultiplesUsuariosEntidadView extends View {
 		sp.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		JPanel inscrollPanel = makeLoginPanel();
 		JPanel tablesPanel = new JPanel(new GridLayout(0, 1));
-		this.comboBoxEditors = new LinkedList<JComboBoxEditor<String>> ();
-		this.comboBoxEditors.add(new JComboBoxEditor<String> ());
+		this.comboBoxEditors = new LinkedList<> ();
+		this.comboBoxEditors.add(new JComboBoxEditor<> ());
 		inscrollPanel.add(tablesPanel, BorderLayout.SOUTH);
 		tablesPanel.add(this.tablaInscritos = new RowAppendableComponentableJTable (
 				new String[]{"Nombre", "Apellidos", "Email", "Telefono", "Colectivo"},
@@ -98,7 +98,7 @@ public class InscribirMultiplesUsuariosEntidadView extends View {
 						this.put(0, Pattern.compile(".*"));
 						this.put(1, Pattern.compile(".*"));
 						this.put(2, Pattern.compile("[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+"));
-						this.put(3, Pattern.compile("^([0-9]{3}( )?){3}$"));
+						this.put(3, Pattern.compile("^(\\d{3}( )?){3}$"));
 					}},
 				new boolean[] {true, true, true, false, true},
 				new java.util.TreeMap<Integer, javax.swing.table.TableCellEditor> () {
@@ -122,7 +122,7 @@ public class InscribirMultiplesUsuariosEntidadView extends View {
 		panel.add(radioPanel(), BorderLayout.NORTH);
 
 		JPanel mainPanel = new JPanel(new GridLayout(1, 0));
-		mainPanel.add(containerPanel = new JXTitledPanel(signupTitle));
+		mainPanel.add(containerPanel = new JXTitledPanel(SIGNUP_TITLE));
 		containerPanel.setContentContainer(signupPanel());
 		signinPanel();
 
@@ -151,7 +151,7 @@ public class InscribirMultiplesUsuariosEntidadView extends View {
 		JPanel signupPanel = new JPanel();
 		output.add(signupPanel, BorderLayout.CENTER);
 		signupPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(
-				InscribirMultiplesUsuariosEntidadView.panelBorder, 10, 10, InscribirMultiplesUsuariosEntidadView.panelBorder
+				InscribirMultiplesUsuariosEntidadView.PANEL_BORDER, 10, 10, InscribirMultiplesUsuariosEntidadView.PANEL_BORDER
 				));
 		signupPanel.setLayout(new GridLayout(0, 2)); // any rows, 2 columns
 
@@ -182,7 +182,7 @@ public class InscribirMultiplesUsuariosEntidadView extends View {
 		JPanel signinPanel = new JPanel(new GridBagLayout());
 		output.add(signinPanel, BorderLayout.CENTER);
 		GridBagConstraints gbc = new GridBagConstraints();
-		signinPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(InscribirMultiplesUsuariosEntidadView.panelBorder, 10, 10, InscribirMultiplesUsuariosEntidadView.panelBorder));
+		signinPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(InscribirMultiplesUsuariosEntidadView.PANEL_BORDER, 10, 10, InscribirMultiplesUsuariosEntidadView.PANEL_BORDER));
 		{ // email
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.gridx = 0;

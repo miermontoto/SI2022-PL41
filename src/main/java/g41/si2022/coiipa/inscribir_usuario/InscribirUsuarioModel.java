@@ -38,7 +38,6 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
                 + "INNER JOIN curso ON curso.id = coste.curso_id "
                 + "WHERE curso.id = ?",
                 cursoId);
-
     }
 
     public String getCostes(String idCurso, String nombreColectivo) {
@@ -75,26 +74,26 @@ public class InscribirUsuarioModel extends g41.si2022.mvc.Model {
         this.getDatabase().executeUpdate(sql, nombre, apellidos, email, telefono);
     }
 
-    public void insertInscripcion(String fecha, String curso_id, String alumno_id, String coste_id) {
+    public void insertInscripcion(String fecha, String idCurso, String idAlumno, String idCoste) {
         String sql = "insert into inscripcion (curso_id, alumno_id, fecha, cancelada, coste_id)"
             + " values (?, ?, ?, 0, ?)";
-        this.getDatabase().executeUpdate(sql, curso_id, alumno_id, fecha, coste_id);
+        this.getDatabase().executeUpdate(sql, idCurso, idAlumno, fecha, idCoste);
     }
 
     public boolean verifyEmail(String email) {
         return Util.verifyEmailInAlumno(this.getDatabase(), email);
     }
 
-    public void insertListaEspera(String inscripcion_id, String fecha_entrada) {
+    public void insertListaEspera(String idInscripcion, String fechaEntrada) {
         String sql = "insert into lista_espera (inscripcion_id, fecha_entrada)"
             + " values (?, ?)";
-        this.getDatabase().executeUpdate(sql, inscripcion_id, fecha_entrada);
+        this.getDatabase().executeUpdate(sql, idInscripcion, fechaEntrada);
     }
 
-    public InscripcionDTO getIdInscripcionFromCursoAlumno(String alumno_id, String curso_id) {
+    public InscripcionDTO getIdInscripcionFromCursoAlumno(String idAlumno, String idCurso) {
         String sql = "select id"
             + " from inscripcion where alumno_id = ? and curso_id = ?";
-        return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, alumno_id, curso_id).get(0);
+        return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idAlumno, idCurso).get(0);
     }
 
 }

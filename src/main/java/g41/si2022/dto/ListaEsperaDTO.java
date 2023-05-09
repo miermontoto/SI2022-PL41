@@ -17,4 +17,5 @@ public class ListaEsperaDTO {
 		en_cola,
 		coste,
 		fecha_entrada;
+
 }
