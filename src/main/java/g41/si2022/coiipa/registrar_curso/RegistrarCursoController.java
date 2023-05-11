@@ -332,7 +332,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 						java.util.stream.Collectors.toMap(
 							row -> row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
 							row -> Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1))))
-						));
+						)).get();
 
 			this.getModel().insertDocencia(docentes, idCurso);
 			this.getModel().insertEvento(sesiones, idCurso);
@@ -361,7 +361,7 @@ public class RegistrarCursoController extends g41.si2022.mvc.Controller<Registra
 						java.util.stream.Collectors.toMap(
 							row -> row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(0)),
 							row -> Double.parseDouble(row.get(RegistrarCursoController.this.getView().getTablaCostes().getColumnName(1))))
-						), idEntidad, importe);
+						), idEntidad, importe).get();
 
 			this.getModel().insertEvento(sesiones, idCurso);
 			Dialog.show("Curso registrado con éxito.");

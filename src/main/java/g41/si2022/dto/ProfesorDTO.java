@@ -13,6 +13,17 @@ public class ProfesorDTO implements DTO {
 		telefono,
 		remuneracion, // Necesario para almacenar remuneración al registrar cursos.
 		direccion;
+	
+	public ProfesorDTO () { }
+	
+	public ProfesorDTO (String nombre, String apellidos, String dni, String email, String direccion, String telefono) {
+		this.setNombre(nombre);
+		this.setApellidos(apellidos);
+		this.setDni(dni);
+		this.setEmail(email);
+		this.setDireccion(direccion);
+		this.setTelefono(telefono);
+	}
 
 	@Override
 	public String toString() {
