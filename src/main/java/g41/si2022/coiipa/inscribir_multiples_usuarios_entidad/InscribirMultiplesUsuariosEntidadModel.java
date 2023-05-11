@@ -7,11 +7,13 @@ import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.GrupoDTO;
+import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.Util;
 
 public class InscribirMultiplesUsuariosEntidadModel extends g41.si2022.mvc.Model {
@@ -158,44 +160,31 @@ public class InscribirMultiplesUsuariosEntidadModel extends g41.si2022.mvc.Model
 		this.getDatabase().executeUpdate(sql, nombre, email, telefono);
 	}
 
+	private CursoDTO getDTO(String idCurso) {
+		return getDatabase().executeQueryPojo(CursoDTO.class,
+			"select c.*, count(i.id) as ocupadas"
+			+ " from curso as c"
+			+ " left join inscripcion i on i.curso_id = c.id and i.cancelada = 0"
+			+ " where c.id = ? group by c.id", idCurso).get(0);
+	}
+
 	/**
 	 * insertInscripciones. Inserts a batch of inscripciones.
 	 * If an alumno is already inserted for this course, they will not be added again.
 	 *
 	 * @param fecha today's date
-	 * @param curso_id curso id
+	 * @param idCurso curso id
 	 * @param alumno_id alumno id
-	 * @param grupo_id grupo id
+	 * @param idGrupo grupo id
 	 */
-	public void insertInscripciones(String fecha, String curso_id, List<AlumnoDTO> alumnos, String grupo_id) {
-		Map<String, AlumnoDTO> emailToAlumnoDictionary = alumnos.stream().collect(new java.util.stream.Collector<AlumnoDTO, Map<String, AlumnoDTO>, Map<String, AlumnoDTO>> () {
+	public boolean insertInscripciones(String fecha, String idCurso, List<AlumnoDTO> alumnos, String idGrupo) {
+		if(Integer.parseInt(getDTO(idCurso).getOcupadas()) < alumnos.size()) {
+			Dialog.showError("ERROR: no hay plazas suficientes.");
+			return false;
+		}
 
-			@Override
-			public Supplier<Map<String, AlumnoDTO>> supplier() {
-				return java.util.TreeMap<String, AlumnoDTO>::new;
-			}
+		Map<String, AlumnoDTO> emailToAlumnoDictionary = alumnos.stream().collect(Collectors.toMap(AlumnoDTO::getEmail, Function.identity()));
 
-			@Override
-			public BiConsumer<Map<String, AlumnoDTO>, AlumnoDTO> accumulator() {
-				return (map, value) -> map.put(value.getEmail(), value);
-			}
-
-			@Override
-			public BinaryOperator<Map<String, AlumnoDTO>> combiner() {
-				return (mapA, mapB) -> { mapA.putAll(mapB); return mapA; };
-			}
-
-			@Override
-			public Function<Map<String, AlumnoDTO>, Map<String, AlumnoDTO>> finisher() {
-				return java.util.Collections::unmodifiableMap;
-			}
-
-			@Override
-			public Set<Characteristics> characteristics() {
-				return new java.util.HashSet<>(java.util.Arrays.asList(Characteristics.CONCURRENT));
-			}
-
-		});
 
 		List<AlumnoDTO> insertTheseAlumnos = this.insertAlumnos(alumnos).stream().collect(new g41.si2022.util.collector.HalfwayListCollector<AlumnoDTO, AlumnoDTO>() {
 
@@ -210,18 +199,21 @@ public class InscribirMultiplesUsuariosEntidadModel extends g41.si2022.mvc.Model
 		});
 
 		this.getDatabase().insertBulk(
-				"inscripcion",
-				new String[] {"fecha", "alumno_id", "curso_id", "coste_id", "entidad_id"},
-				insertTheseAlumnos,
-				new java.util.ArrayList<java.util.function.Function<g41.si2022.dto.DTO, Object>> () {
-					private static final long serialVersionUID = 1L;
+			"inscripcion",
+			new String[] {"fecha", "alumno_id", "curso_id", "coste_id", "entidad_id"},
+			insertTheseAlumnos,
+			new java.util.ArrayList<java.util.function.Function<g41.si2022.dto.DTO, Object>> () {
+				private static final long serialVersionUID = 1L;
 				{
 					this.add(e -> fecha);
 					this.add(e -> ((AlumnoDTO) e).getId());
-					this.add(e -> curso_id);
-					this.add(e -> InscribirMultiplesUsuariosEntidadModel.this.getCostes(curso_id, ((AlumnoDTO) e).getNombreColectivo()));
-					this.add(e -> grupo_id);
-				}});
+					this.add(e -> idCurso);
+					this.add(e -> InscribirMultiplesUsuariosEntidadModel.this.getCostes(idCurso, ((AlumnoDTO) e).getNombreColectivo()));
+					this.add(e -> idGrupo);
+				}
+			}
+		);
+		return true;
 	}
 
 	/**
