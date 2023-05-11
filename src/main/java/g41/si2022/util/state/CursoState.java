@@ -14,42 +14,20 @@ package g41.si2022.util.state;
  * <li> FINALIZADO. A curso whose end date has passed but its teachers have not been paid.
  * <li> CERRADO. A curso whose end date has passed and all its teachers have been paid.
  * <li> CANCELADO. A cancelled curso.
+ * <li> ABIERTO. A curso both in inscription and in course.
  * </ul>
  *
  * @author Alex // UO281827
  *
  */
 public enum CursoState {
-	/**
-	 * Any <code>CursoState</code>.
-	 */
 	CUALQUIERA,
-	/**
-	 * A curso whose inscription start has not began yet.
-	 */
 	PLANEADO,
-	/**
-	 * A curso whose inscripcion start has passed but its inscripcion end has not passed.
-	 */
 	EN_INSCRIPCION,
-	/**
-	 * A curso whose inscription end has passed.
-	 */
 	INSCRIPCION_CERRADA,
-	/**
-	 * A curso whose start date has passed.
-	 */
 	EN_CURSO,
-	/**
-	 * A curso whose end date has passed but its teachers have not been paid.
-	 */
 	FINALIZADO,
-	/**
-	 * A curso whose end date has passed and all its teachers have been paid.
-	 */
 	CERRADO,
-	/**
-	 * A cancelled curso.
-	 */
-	CANCELADO;
+	CANCELADO,
+	ABIERTO;
 }

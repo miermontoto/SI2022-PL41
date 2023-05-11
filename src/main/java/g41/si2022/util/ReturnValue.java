@@ -5,19 +5,19 @@ public class ReturnValue<T> {
 	private boolean state;
 	private T output;
 
-	public ReturnValue () {
+	public ReturnValue() {
 		this.state = false;
 	}
 
-	public ReturnValue (T value) {
+	public ReturnValue(T value) {
 		this.state = true;
 		this.output = value;
 	}
-	
-	public boolean isOkay () {
+
+	public boolean isOkay() {
 		return this.state;
 	}
-	
+
 	public T get() {
 		if (this.isOkay()) return this.output;
 		return null;

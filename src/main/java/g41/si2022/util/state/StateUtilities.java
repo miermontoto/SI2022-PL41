@@ -59,7 +59,10 @@ public class StateUtilities {
 		}
 
 		if (startInscr.isAfter(today)) return CursoState.PLANEADO;
-		if (endInscr.isAfter(today) || endInscr.equals(today)) return CursoState.EN_INSCRIPCION;
+		if (endInscr.isAfter(today) || endInscr.equals(today)) {
+			if (start.isBefore(today)) return CursoState.ABIERTO;
+			return CursoState.EN_INSCRIPCION;
+		}
 		if (start.isAfter(today)) return CursoState.INSCRIPCION_CERRADA;
 		if (end.isAfter(today) || end.isEqual(today)) return CursoState.EN_CURSO;
 		return CursoState.FINALIZADO;

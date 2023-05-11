@@ -112,7 +112,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
             }
 
             // Actualizar la remuneración de los profesores.
-            getModel().updateDocencias(idCurso, docencias);
+            getModel().updateDocencias(curso, docencias);
         }
 
         if(dirtyCostes) {

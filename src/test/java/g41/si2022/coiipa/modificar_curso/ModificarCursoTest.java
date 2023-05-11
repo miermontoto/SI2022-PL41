@@ -7,9 +7,8 @@ import java.util.stream.Collectors;
 
 import org.junit.*;
 
-import g41.si2022.dto.ColectivoDTO;
-import g41.si2022.dto.CosteDTO;
 import g41.si2022.dto.CursoDTO;
+import g41.si2022.dto.DocenciaDTO;
 import g41.si2022.dto.SesionDTO;
 
 public class ModificarCursoTest extends g41.si2022.coiipa.TestCase {
@@ -137,6 +136,52 @@ public class ModificarCursoTest extends g41.si2022.coiipa.TestCase {
         // Cursos con y sin inscripciones
         Assert.assertTrue("Sin inscripciones", model.updateCostes(getDTO("6"), new LinkedList<>()));
         Assert.assertFalse("Con inscripciones", model.updateCostes(getDTO("2"), new LinkedList<>()));
+    }
+
+    @Test
+    public void testDocencias() {
+        /*
+         * Las docencias de un curso se pueden modificar:
+         *
+         * - Si el curso no está en progreso, todo.
+         * - Si el curso está en progreso, solo añadir nuevas docencias.
+         * - Si el curso está finalizado, solo modificar acuerdos ya existentes.
+         * - Si el curso está cerrado, nada.
+         */
+
+        CursoDTO curso;
+        List<DocenciaDTO> docencias;
+
+        // PLANEADO
+        curso = getDTO("5");
+        Assert.assertTrue("PLANEADO (todo)", model.updateDocencias(curso, new LinkedList<>()));
+
+        // EN_INSCRIPCION
+        curso = getDTO("4");
+        Assert.assertTrue("EN_INSCRIPCION (todo)", model.updateDocencias(curso, new LinkedList<>()));
+
+        // INSCRIPCION_CERRADA
+        curso = getDTO("3");
+        Assert.assertTrue("INSCRIPCION_CERRADA (todo)", model.updateDocencias(curso, new LinkedList<>()));
+
+        // EN_CURSO
+        curso = getDTO("2");
+        docencias = model.getListaProfesores(curso.getId());
+        docencias.add(new DocenciaDTO(curso.getId(), "3", "100"));
+        Assert.assertTrue("EN_CURSO (añadir)", model.updateDocencias(curso, docencias));
+        Assert.assertFalse("EN_CURSO (eliminar)", model.updateDocencias(curso, docencias.subList(0, 1)));
+        docencias.get(0).setRemuneracion("30");
+        Assert.assertFalse("EN_CURSO (modificar)", model.updateDocencias(curso, docencias));
+
+        // FINALIZADO
+        curso = getDTO("1");
+        docencias = model.getListaProfesores(curso.getId());
+        docencias.add(new DocenciaDTO(curso.getId(), "3", "100"));
+        Assert.assertFalse("FINALIZADO (añadir)", model.updateDocencias(curso, docencias));
+        Assert.assertFalse("FINALIZADO (eliminar)", model.updateDocencias(curso, docencias.subList(0, 1)));
+        docencias = model.getListaProfesores(curso.getId());
+        docencias.get(0).setRemuneracion("30");
+        Assert.assertTrue("FINALIZADO (modificar)", model.updateDocencias(curso, docencias));
     }
 
 }

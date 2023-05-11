@@ -7,7 +7,6 @@ import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CosteDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.DocenciaDTO;
-import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.dto.SesionDTO;
 import g41.si2022.mvc.Model;
 import g41.si2022.ui.util.Dialog;
@@ -30,12 +29,12 @@ public class ModificarCursosModel extends Model {
         return getDatabase().executeQueryPojo(SesionDTO.class, sql, cursoId);
     }
 
-    public List<ProfesorDTO> getListaProfesores(String cursoId) {
-        String sql = "select dce.id, dce.dni, dce.nombre, dce.apellidos,"
+    public List<DocenciaDTO> getListaProfesores(String cursoId) {
+        String sql = "select dce.id as docente_id, dce.dni, dce.nombre, dce.apellidos,"
         + " case when dca.remuneracion is null then 0 else dca.remuneracion end as remuneracion"
         + " from docente as dce"
         + " left join docencia as dca on dca.docente_id = dce.id and dca.curso_id = ?";
-        return getDatabase().executeQueryPojo(ProfesorDTO.class, sql, cursoId);
+        return getDatabase().executeQueryPojo(DocenciaDTO.class, sql, cursoId);
     }
 
     public List<ColectivoDTO> getColectivosFromCurso(String cursoId) {
@@ -109,7 +108,39 @@ public class ModificarCursosModel extends Model {
         return true;
     }
 
-    public void updateDocencias(String idCurso, List<DocenciaDTO> docencias) {
+    public boolean updateDocencias(CursoDTO curso, List<DocenciaDTO> docencias) {
+        String idCurso = curso.getId();
+        List<DocenciaDTO> oldDocencias;
+
+        // Validaciones según el estado del curso
+        switch(curso.getState()) {
+            case PLANEADO:
+            case EN_INSCRIPCION:
+            case INSCRIPCION_CERRADA:
+                break;
+            case EN_CURSO:
+            case ABIERTO:
+                oldDocencias = getListaProfesores(idCurso);
+                if(oldDocencias.stream().filter(d -> Double.parseDouble(d.getRemuneracion()) != 0).anyMatch(
+                    d1 -> docencias.stream().noneMatch(d2 -> d2.equals(d1)))) {
+                    Dialog.showError("No se puede eliminar un docente con remuneración asignada.");
+                    return false;
+                }
+                break;
+            case CERRADO:
+            case CANCELADO:
+            case CUALQUIERA:
+                Dialog.showError("No se puede modificar las remuneraciones de un curso cerrado o cancelado.");
+                return false;
+            case FINALIZADO:
+                oldDocencias = getListaProfesores(idCurso);
+                if(docencias.stream().anyMatch(d1 -> oldDocencias.stream().noneMatch(d2 -> d2.getDni().equals(d1.getDni())))) {
+                    Dialog.showError("No se puede añadir un docente a un curso finalizado.");
+                    return false;
+                }
+                break;
+        }
+
         // Eliminar todas las docencias del curso
         String sql = "delete from docencia where curso_id = ?";
         getDatabase().executeUpdate(sql, idCurso);
@@ -119,6 +150,7 @@ public class ModificarCursosModel extends Model {
         for (DocenciaDTO docencia : docencias) {
             getDatabase().executeUpdate(sql, idCurso, docencia.getDocente_id(), docencia.getRemuneracion());
         }
+        return true;
     }
 
     public boolean updateCostes(CursoDTO curso, List<CosteDTO> costes) {

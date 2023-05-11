@@ -11,6 +11,8 @@ public class DocenciaDTO implements DTO {
         id,
         nombre,
         apellidos,
+        dni,
+        fecha,
         remuneracion,
         curso_id,
         docente_id;
