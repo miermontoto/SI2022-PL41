@@ -61,4 +61,31 @@ public class SesionDTO implements DTO {
     public void setHora_fin(String horaFin) {
         setHoraFin(horaFin);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null) return false;
+        if(!(o instanceof SesionDTO)) return false;
+        SesionDTO other = (SesionDTO) o;
+        return
+            (id == null ? other.id == null : id.equals(other.id)) &&
+            (curso_id == null ? other.curso_id == null : curso_id.equals(other.curso_id)) &&
+            (loc == null ? other.loc == null : loc.equals(other.loc)) &&
+            (fecha == null ? other.fecha == null : fecha.equals(other.fecha)) &&
+            (horaIni == null ? other.horaIni == null : horaIni.equals(other.horaIni)) &&
+            (duracion == null ? other.duracion == null : duracion.equals(other.duracion)) &&
+            (horaFin == null ? other.horaFin == null : horaFin.equals(other.horaFin));
+    }
+
+    @Override
+    public int hashCode() {
+        return
+            (id == null ? 0 : id.hashCode()) +
+            (curso_id == null ? 0 : curso_id.hashCode()) +
+            (loc == null ? 0 : loc.hashCode()) +
+            (fecha == null ? 0 : fecha.hashCode()) +
+            (horaIni == null ? 0 : horaIni.hashCode()) +
+            (duracion == null ? 0 : duracion.hashCode()) +
+            (horaFin == null ? 0 : horaFin.hashCode());
+    }
 }
