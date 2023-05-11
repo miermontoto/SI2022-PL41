@@ -28,7 +28,7 @@ public class InscribirMultiplesUsuariosView extends View {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String signTitle = "Inscribir Alumnos";
+	private static final String SIGNIN_TITLE = "Inscribir Alumnos";
 
 	private JButton btnInscribir;
 	private JTable tablaCursos;
@@ -51,27 +51,29 @@ public class InscribirMultiplesUsuariosView extends View {
 		btnInscribir = new JButton("Inscribirse");
 		JScrollPane sp = new JScrollPane ();
 		sp.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		JPanel inscrollPanel = new JXTitledPanel(signTitle);
-		this.comboBoxEditors = new LinkedList<JComboBoxEditor<String>> ();
-		this.comboBoxEditors.add(new JComboBoxEditor<String> ());
+		JPanel inscrollPanel = new JXTitledPanel(SIGNIN_TITLE);
+		this.comboBoxEditors = new LinkedList<> ();
+		this.comboBoxEditors.add(new JComboBoxEditor<> ());
 		inscrollPanel.add(
 		this.tablaInscritos = new RowAppendableComponentableJTable (
-				new String[]{"Nombre", "Apellidos", "Email", "Telefono", "Colectivo"},
-				new java.util.TreeMap<Integer, java.util.regex.Pattern> () {
-					private static final long serialVersionUID = 1L;
-					{
-						this.put(0, Pattern.compile(".*"));
-						this.put(1, Pattern.compile(".*"));
-						this.put(2, Pattern.compile("[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+"));
-						this.put(3, Pattern.compile("^(\\d{3}( )?){3}$"));
-					}},
-				new boolean[] {true, true, true, false, true},
-				new java.util.TreeMap<Integer, javax.swing.table.TableCellEditor> () {
-					private static final long serialVersionUID = 1L;
-					{
-						this.put(4, InscribirMultiplesUsuariosView.this.getComboBoxEditors().getFirst());
-					}}
-				), BorderLayout.CENTER);
+			new String[]{"Nombre", "Apellidos", "Email", "Telefono", "Colectivo"},
+			new java.util.TreeMap<Integer, java.util.regex.Pattern> () {
+				private static final long serialVersionUID = 1L;
+				{
+					this.put(0, Pattern.compile(".*"));
+					this.put(1, Pattern.compile(".*"));
+					this.put(2, Pattern.compile("[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+"));
+					this.put(3, Pattern.compile("^(\\d{3}( )?){3}$"));
+				}
+			},
+			new boolean[] {true, true, true, false, true},
+			new java.util.TreeMap<Integer, javax.swing.table.TableCellEditor> () {
+				private static final long serialVersionUID = 1L;
+				{
+					this.put(4, InscribirMultiplesUsuariosView.this.getComboBoxEditors().getFirst());
+				}
+			}
+		), BorderLayout.CENTER);
 
 		sp.setViewportView(inscrollPanel);
 
@@ -90,8 +92,8 @@ public class InscribirMultiplesUsuariosView extends View {
 		JScrollPane sp = new JScrollPane(this.tablaCursos);
 
 		sp.setPreferredSize(new java.awt.Dimension(
-				this.getWidth(), 200
-				));
+			this.getWidth(), 200
+		));
 
 		JPanel inscribirPanel = new JPanel();
 		lblStatus = JLabelFactory.getLabel("");

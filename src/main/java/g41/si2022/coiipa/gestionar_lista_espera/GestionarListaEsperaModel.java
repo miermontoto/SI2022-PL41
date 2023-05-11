@@ -67,7 +67,6 @@ public class GestionarListaEsperaModel extends g41.si2022.mvc.Model {
 	}
 
 	public void eliminarInscripcion(String idLista) {
-
 		String sql = "";
 		String idInscripcion = "";
 		sql = "SELECT inscripcion_id FROM lista_espera"
@@ -80,7 +79,6 @@ public class GestionarListaEsperaModel extends g41.si2022.mvc.Model {
 		this.getDatabase().executeUpdate(sql, idInscripcion);
 
 		eliminarListaEspera(idLista);
-
 	}
 
     public String getEmailAlumno(String id) {

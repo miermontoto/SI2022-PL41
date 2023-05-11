@@ -10,20 +10,20 @@ import javax.swing.JComboBox;
 import javax.swing.table.TableCellEditor;
 
 public class JComboBoxEditor<T> extends AbstractCellEditor implements TableCellEditor, ActionListener {
-	
+
 	private static final long serialVersionUID = 1L;
 	private JComboBox<T> theCb;
-	
-	public JComboBoxEditor () {
-		this(new java.util.ArrayList<T>());
+
+	public JComboBoxEditor() {
+		this(new java.util.ArrayList<>());
 	}
-	
-	public JComboBoxEditor (java.util.List<T> data) {
-		this.theCb = new JComboBox<T>();
+
+	public JComboBoxEditor(java.util.List<T> data) {
+		this.theCb = new JComboBox<>();
 		this.setData(data);
 	}
-	
-	public void setData (java.util.List<T> data) {
+
+	public void setData(java.util.List<T> data) {
 		this.theCb.removeAllItems();
 		data.forEach(item -> this.theCb.addItem(item));
 	}
@@ -34,17 +34,15 @@ public class JComboBoxEditor<T> extends AbstractCellEditor implements TableCellE
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-	}
+	public void actionPerformed(ActionEvent e) { }
 
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 		if (value != null) this.theCb.setSelectedItem(value);
 		return this.theCb;
 	}
-	
-	public JComboBox<T> getComboBox () {
+
+	public JComboBox<T> getComboBox() {
 		return this.theCb;
 	}
 

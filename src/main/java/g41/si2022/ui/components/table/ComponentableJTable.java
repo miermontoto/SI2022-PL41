@@ -2,18 +2,19 @@ package g41.si2022.ui.components.table;
 
 import java.util.Map;
 
+import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
 /**
  * ComponentableJTable.
  * <p>
  * This class is a {@link javax.swing.JTable} that may have some of its row be other Components.<br>
- * The components accepted by this {@link JTable} must implement the {@link javax.swing.table.TableCellEditor} interface. 
+ * The components accepted by this {@link JTable} must implement the {@link javax.swing.table.TableCellEditor} interface.
  * Check <a href=https://docs.oracle.com/javase/tutorial/uiswing/components/table.html#usingothereditors>Using other Editors</a> for more info.
  * </p>
  * <p>
  * In order to make a component available to this class, it must implement the {@link javax.swing.table.TableCellEditor} interface.<br>
- * Check <a href=https://docs.oracle.com/javase/tutorial/uiswing/components/table.html#usingothereditors>this documentation</a> and 
+ * Check <a href=https://docs.oracle.com/javase/tutorial/uiswing/components/table.html#usingothereditors>this documentation</a> and
  * <a href=http://www.java2s.com/Code/Java/Swing-JFC/CreatingaCustomTableCellEditorinaJTableComponent.htm>this example</a> for more details
  * </p>
  * <p>
@@ -29,25 +30,25 @@ import javax.swing.table.TableCellEditor;
 public class ComponentableJTable extends javax.swing.JTable {
 
 	private static final long serialVersionUID = 1L;
-	
-	private Map<Integer, ? extends TableCellEditor> componentsMap;
+
+	private transient Map<Integer, TableCellEditor> componentsMap;
 
 	/**
 	 * Creates a new ComponentableJTable.
 	 * This table may have components on some columns. These are set using the map.
 	 * If a given column is not featured in the map, this column will have the default component.
-	 * 
+	 *
 	 * @param components {@link Map} that relates each column to a component.
 	 */
-	public ComponentableJTable (java.util.Map<Integer, ? extends javax.swing.table.TableCellEditor> components) {
+	public ComponentableJTable(Map<Integer, TableCellEditor> components) {
 		super();
 		this.componentsMap = components;
 		if (components != null)
 			components.forEach((col, comp) -> this.getColumnModel().getColumn(col).setCellEditor(comp));
 	}
-	
-	public Map<Integer, ? extends TableCellEditor> getComponentsMap () {
+
+	public Map<Integer, TableCellEditor> getComponentsMap() {
 		return this.componentsMap;
 	}
-	
+
 }

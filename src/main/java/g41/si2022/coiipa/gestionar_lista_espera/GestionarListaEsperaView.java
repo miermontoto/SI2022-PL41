@@ -52,7 +52,7 @@ public class GestionarListaEsperaView extends View {
 	}
 
 	@Override
-	protected void initView () {
+	protected void initView() {
 		JPanel formPanel = new JPanel();
 		this.setLayout(new BorderLayout(0, 0));
 

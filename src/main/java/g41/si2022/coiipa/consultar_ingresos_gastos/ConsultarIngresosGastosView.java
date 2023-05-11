@@ -23,11 +23,11 @@ public class ConsultarIngresosGastosView extends g41.si2022.mvc.View {
 	private JComboBox<CursoState> filterEstado;
 	private BetterDatePicker startDate, endDate;
 
-	public JTable getMovimientosTable () { return this.movimientos; }
-	public JTable getOffMovimientosTable () { return this.offMovimientos; }
-	public JComboBox<CursoState> getFilterEstadoComboBox () { return this.filterEstado; }
-	public BetterDatePicker getStartDatePicker () { return this.startDate; }
-	public BetterDatePicker getEndDatePicker () { return this.endDate; }
+	public JTable getMovimientosTable() { return this.movimientos; }
+	public JTable getOffMovimientosTable() { return this.offMovimientos; }
+	public JComboBox<CursoState> getFilterEstadoComboBox() { return this.filterEstado; }
+	public BetterDatePicker getStartDatePicker() { return this.startDate; }
+	public BetterDatePicker getEndDatePicker() { return this.endDate; }
 
 	/**
 	 * Create the panel.

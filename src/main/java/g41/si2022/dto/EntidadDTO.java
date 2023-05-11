@@ -13,7 +13,5 @@ public class EntidadDTO implements DTO {
     private String importe;
 
     @Override
-	public String toString() { 
-        return this.nombre; 
-    }
+	public String toString() { return this.nombre; }
 }

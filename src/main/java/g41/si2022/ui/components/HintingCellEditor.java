@@ -12,7 +12,7 @@ public class HintingCellEditor extends AbstractCellEditor implements TableCellEd
 
 	private static final long serialVersionUID = 1L;
 	private HintingJTextField source;
-	
+
 	public HintingCellEditor (String hint) {
 		this.source = new HintingJTextField(hint);
 	}

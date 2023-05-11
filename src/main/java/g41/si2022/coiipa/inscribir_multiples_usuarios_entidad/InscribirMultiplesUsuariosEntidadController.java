@@ -43,7 +43,7 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 				SwingUtil.exceptionWrapper(() -> updateCursoValue());
 				InscribirMultiplesUsuariosEntidadController.this
 					.getView().getComboBoxEditors().parallelStream()
-				.forEach(cbe -> 
+				.forEach(cbe ->
 					cbe.setData(
 					InscribirMultiplesUsuariosEntidadController.this
 						.getModel().getColectivosFromCurso(cursoId)
@@ -53,7 +53,7 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 							public BiConsumer<List<String>, ColectivoDTO> accumulator() {
 								return (list, item) -> list.add(item.getNombre());
 							}
-							
+
 						})
 					)
 				);
@@ -65,7 +65,7 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 			((g41.si2022.ui.components.table.editors.JComboBoxEditor<String>) 
 			InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos()
 				.getColumnModel().getColumn(4).getCellEditor());
-		this.getView().getTablaInscritos().addRowAppendedListener(e -> { 
+		this.getView().getTablaInscritos().addRowAppendedListener(e -> {
 			InscribirMultiplesUsuariosEntidadController.this.getView().getBtnInscribir().setEnabled(true);
 			InscribirMultiplesUsuariosEntidadController.this
 				.getView().getComboBoxEditors().add(cellEditor);
@@ -78,7 +78,7 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 					}
 				}));
 		});
-		
+
 		this.getView().getBtnInscribir().addActionListener(e -> SwingUtil.exceptionWrapper(() -> manageMain()));
 	}
 
@@ -131,7 +131,7 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 	 * @return List of alumnos that are listed in the table
 	 */
 	public List<AlumnoDTO> gatherAllAlumnos () {
-		java.util.function.BiFunction<Map<String, Object>, Integer, String> tableGetter = 
+		java.util.function.BiFunction<Map<String, Object>, Integer, String> tableGetter =
 				(map, columnIndex) -> map.get(InscribirMultiplesUsuariosEntidadController.this.getView()
 				.getTablaInscritos().getColumnNames()[columnIndex]) == null
 				? ""

@@ -23,15 +23,15 @@ public class InscribirMultiplesUsuariosEntidadModel extends g41.si2022.mvc.Model
 				+ ") as plazas_libres from curso as c where start_inscr <= ? and end_inscr >= ?";
 		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, date, date);
 	}
-	
+
 	/**
 	 * getColectivosFromCurso. Returns the colectivos that appear on a given curso.
-	 * 
+	 *
 	 * @param cursoId ID of the curso
 	 * @return List of colectivos that may access the curso.
 	 */
 	public List<ColectivoDTO> getColectivosFromCurso (String cursoId) {
-		return this.getDatabase().executeQueryPojo(ColectivoDTO.class, 
+		return this.getDatabase().executeQueryPojo(ColectivoDTO.class,
 				"SELECT colectivo.* "
 				+ "FROM colectivo "
 				+ "INNER JOIN coste ON colectivo.id = coste.colectivo_id "
@@ -77,15 +77,15 @@ public class InscribirMultiplesUsuariosEntidadModel extends g41.si2022.mvc.Model
 	private void insertMissingAlumnos(List<AlumnoDTO> alumnos) {
 		List<AlumnoDTO> existingAlumnos = InscribirMultiplesUsuariosEntidadModel.this.getAlumnos(),
 				alumnosToRegister = alumnos.parallelStream() // Remove the alumnos that are already in the DB
-				.filter((alumnoInsertar) -> existingAlumnos.parallelStream()
-						.allMatch((alumnoDatabase) -> !alumnoDatabase.getEmail().equals(alumnoInsertar.getEmail())))
+				.filter(alumnoInsertar -> existingAlumnos.parallelStream()
+						.allMatch(alumnoDatabase -> !alumnoDatabase.getEmail().equals(alumnoInsertar.getEmail())))
 				.collect(java.util.stream.Collectors.toList());
 
-		if (alumnosToRegister.size() != 0) {
+		if (!alumnosToRegister.isEmpty()) {
 			this.getDatabase().insertBulk(
 				"alumno",
-				new String[] {"nombre", "apellidos", "email", "telefono"}, 
-				alumnosToRegister, 
+				new String[] {"nombre", "apellidos", "email", "telefono"},
+				alumnosToRegister,
 				new java.util.ArrayList<java.util.function.Function<g41.si2022.dto.DTO, Object>> () {
 					private static final long serialVersionUID = 1L;
 				{
@@ -194,19 +194,19 @@ public class InscribirMultiplesUsuariosEntidadModel extends g41.si2022.mvc.Model
 			public Set<Characteristics> characteristics() {
 				return new java.util.HashSet<>(java.util.Arrays.asList(Characteristics.CONCURRENT));
 			}
-			
+
 		});
 
 		List<AlumnoDTO> insertTheseAlumnos = this.insertAlumnos(alumnos).stream().collect(new g41.si2022.util.collector.HalfwayListCollector<AlumnoDTO, AlumnoDTO>() {
 
 			@Override
 			public BiConsumer<List<AlumnoDTO>, AlumnoDTO> accumulator() {
-				return (list, entry) -> { 
+				return (list, entry) -> {
 					entry.setNombreColectivo(emailToAlumnoDictionary.get(entry.getEmail()).getNombreColectivo());
 					list.add(entry);
 				};
 			}
-			
+
 		});
 
 		this.getDatabase().insertBulk(
@@ -223,10 +223,10 @@ public class InscribirMultiplesUsuariosEntidadModel extends g41.si2022.mvc.Model
 					this.add(e -> grupo_id);
 				}});
 	}
-	
+
 	/**
 	 * getCoste. Gets the coste_id for a given curso and nombreColectivo.
-	 * 
+	 *
 	 * @param idCurso Curso to be checked
 	 * @param nombreColectivo Name of the colectivo to be checked
 	 * @return Coste_id that the colectivo has to pay for the curso.
