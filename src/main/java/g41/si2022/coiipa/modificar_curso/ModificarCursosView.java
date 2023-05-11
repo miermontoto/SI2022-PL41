@@ -45,6 +45,7 @@ public class ModificarCursosView extends View {
 	private JLabel infoNombre;
 	private JLabel infoFechaInscr;
 	private JLabel infoFechaCurso;
+	private JLabel infoPlazasOcupadas;
 
     public ModificarCursosView(SwingMain main) {
         super(main, ModificarCursosModel.class, ModificarCursosView.class, ModificarCursosController.class);
@@ -133,8 +134,8 @@ public class ModificarCursosView extends View {
 						new String[] {"Nombre Colectivo", "Coste"},
 						new java.util.TreeMap<Integer, java.util.regex.Pattern>() {
 							private static final long serialVersionUID = 1L;
-							{ 
-								put(2, java.util.regex.Pattern.compile("\\d*(\\.(\\d){1,2})?")); 
+							{
+								put(2, java.util.regex.Pattern.compile("\\d*(\\.(\\d){1,2})?"));
 								put(1, java.util.regex.Pattern.compile(".*"));
 							}
 						},
@@ -221,6 +222,14 @@ public class ModificarCursosView extends View {
 		gbc.gridy = 5;
 		gbc.insets = next;
 		contentInfo.add(infoFechaCurso = new JLabel(), gbc);
+
+		gbc.gridy = 6;
+		gbc.insets = spacer;
+		contentInfo.add(JLabelFactory.getLabel(FontType.bold, "Plazas ocupadas"), gbc);
+
+		gbc.gridy = 7;
+		gbc.insets = next;
+		contentInfo.add(infoPlazasOcupadas = new JLabel(), gbc);
 
         rightPanel.add(panelInfo);
         rightPanel.add(panelTabla);
