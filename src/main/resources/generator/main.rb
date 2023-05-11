@@ -73,11 +73,6 @@ def obtain_data(ratio)
         colectivos.push(Colectivo.new(n))
     end
 
-    # Generar costes
-    ## Se genera un coste para cada combinación de
-    ## curso y colectivo.
-    costes = generate_costes(cursos, colectivos)
-
     # Generar docentes
     ## No se necesitan casos específicos.
     docentes = generate_docentes((75 * ratio).to_i, entidades)
@@ -143,6 +138,11 @@ def obtain_data(ratio)
 
     alumnos.push(Alumno.new('Juan', 'Mier', 'mier@mier.info', ''))
     alumnos.push(Alumno.new('Test', 'Test', 'test@test.com', ''))
+
+    # Generar costes
+    ## Se genera un coste para cada combinación de
+    ## curso y colectivo.
+    costes = generate_costes(cursos, colectivos)
 
     # Generar inscripciones
     ## Se necesita una inscripción cancelada por curso.

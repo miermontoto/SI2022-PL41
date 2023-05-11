@@ -228,7 +228,7 @@ public class GestionarInscripcionesController extends g41.si2022.mvc.Controller<
 
 			table.setModel(SwingUtil.getTableModelFromPojos(
 				inscripciones,
-				new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "alumno_apellidos", "curso_nombre", "fecha", "curso_coste", "pagado", "estado" }, // La primera columna estará oculta
+				new String[] { "id", "alumno_id", "curso_id", "alumno_nombre", "alumno_apellidos", "curso_nombre", "fecha", "curso_coste", "pagado", "state" }, // La primera columna estará oculta
 				new String[] { "", "", "", "Nombre", "Apellidos", "Curso", "Fecha", "Coste", "Importe pagado", "Estado" },
 				null
 			));

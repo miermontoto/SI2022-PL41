@@ -40,7 +40,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
 			output.addAll(this.cursosActivos);
 		} else { // If the CB has chosen something else, the entries are filtered
             output = this.cursosActivos.stream()
-			    .filter(x -> selectedItem.equals(x.getEstado()))
+			    .filter(x -> selectedItem.equals(x.getState()))
 			    .collect(Collectors.toList());
 		}
 		aux = new ArrayList<>(output); // DO NOT REMOVE -> Concurrent Modifications will happen if removed
@@ -110,7 +110,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
     private void getCursosActivos() {
         cursosActivos = new LinkedList<>();
         for (CursoDTO curso : getModel().getListaCursos()) {
-            CursoState estadoCurso = curso.updateEstado(getToday());
+            CursoState estadoCurso = curso.updateState(getToday());
             curso.updateType();
 
             if (estadoCurso != CursoState.FINALIZADO && estadoCurso != CursoState.CERRADO) {
@@ -126,7 +126,7 @@ public class ListaActividadesController extends g41.si2022.mvc.Controller<ListaA
         JTable table = this.getView().getTablaCursos();
         table.setModel(SwingUtil.getTableModelFromPojos(
             this.supCursos.get(),
-            new String[] { "id", "nombre", "estado", "start_inscr", "end_inscr", "plazas", "plazas_libres", "start", "end", "tipo" },
+            new String[] { "id", "nombre", "state", "start_inscr", "end_inscr", "plazas", "plazas_libres", "start", "end", "tipo" },
             new String[] { "", "Nombre", "Estado", "Inicio de inscripciones", "Fin de inscripciones", "Plazas", "Plazas vacantes" , "Inicio del curso", "Fin del curso", "Tipo" },
             null
         ));

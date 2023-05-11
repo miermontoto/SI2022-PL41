@@ -12,6 +12,7 @@ import g41.si2022.dto.AlumnoDTO;
 import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
+import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.Util;
 
 public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
@@ -35,7 +36,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @param cursoId ID of the curso
 	 * @return List of colectivos that may access the curso.
 	 */
-	public List<ColectivoDTO> getColectivosFromCurso (String cursoId) {
+	public List<ColectivoDTO> getColectivosFromCurso(String cursoId) {
 		return this.getDatabase().executeQueryPojo(ColectivoDTO.class,
 				"SELECT colectivo.* "
 				+ "FROM colectivo "
@@ -69,7 +70,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 *
 	 * @param List of AlumnoDTOs
 	 */
-	public List<AlumnoDTO> insertAlumnos (List<AlumnoDTO> alumnos) {
+	public List<AlumnoDTO> insertAlumnos(List<AlumnoDTO> alumnos) {
 		this.insertMissingAlumnos(alumnos);
 		return getAlumnosFromEmails(alumnos);
 	}
@@ -118,7 +119,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @param alumnos Array of alumnos the be checked
 	 * @return List of AlumnoDTO
 	 */
-	private List<AlumnoDTO> getAlumnosFromEmails (List<AlumnoDTO> alumnos) {
+	private List<AlumnoDTO> getAlumnosFromEmails(List<AlumnoDTO> alumnos) {
 		if (!alumnos.isEmpty()) {
 			String outputSql = "SELECT * FROM alumno WHERE alumno.email IN (? ";
 			String[] outputDatos = new String[alumnos.size()];
@@ -165,9 +166,17 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @param idCurso ID of the curso to be retrieved
 	 * @return List of alumnos that are in the curso with curso_id
 	 */
-	public List<InscripcionDTO> getAlumnosInCurso (String idCurso) {
+	public List<InscripcionDTO> getAlumnosInCurso(String idCurso) {
 		String sql = "select * from inscripcion where curso_id = ?";
 		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
+	}
+
+	private CursoDTO getDTO(String idCurso) {
+		return getDatabase().executeQueryPojo(CursoDTO.class,
+			"select c.*, count(i.id) as ocupadas"
+			+ " from curso as c"
+			+ " left join inscripcion i on i.curso_id = c.id and i.cancelada = 0"
+			+ " where c.id = ? group by c.id", idCurso).get(0);
 	}
 
 	/**
@@ -180,7 +189,12 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 	 * @param idCurso curso id
 	 * @param idGrupo grupo id
 	 */
-	public void insertInscripciones(List<AlumnoDTO> alumnos, String fecha, String idCurso) {
+	public boolean insertInscripciones(List<AlumnoDTO> alumnos, String fecha, String idCurso) {
+		if(Integer.parseInt(getDTO(idCurso).getOcupadas()) < alumnos.size()) {
+			Dialog.showError("ERROR: no hay plazas suficientes.");
+			return false;
+		}
+
 		Map<String, AlumnoDTO> emailToAlumnoDictionary = alumnos.stream().collect(new java.util.stream.Collector<AlumnoDTO, Map<String, AlumnoDTO>, Map<String, AlumnoDTO>> () {
 			@Override
 			public Supplier<Map<String, AlumnoDTO>> supplier() {
@@ -230,6 +244,7 @@ public class InscribirMultiplesUsuariosModel extends g41.si2022.mvc.Model {
 				}
 			}
 		);
+		return true;
 	}
 
 	public boolean verifyEmail(String email) {

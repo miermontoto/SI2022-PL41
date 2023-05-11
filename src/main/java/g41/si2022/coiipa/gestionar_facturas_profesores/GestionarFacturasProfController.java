@@ -113,7 +113,7 @@ public class GestionarFacturasProfController extends g41.si2022.mvc.Controller<G
 		cmb.removeAllItems();
 		List<CursoDTO> cursos = getModel().getListaCursos(getToday().toString());
 		cmb.addItem("Seleccione un curso");
-		cursos.forEach(x -> cmb.addItem(x));
+		cursos.forEach(cmb::addItem);
 	}
 
 	@SuppressWarnings("unchecked")

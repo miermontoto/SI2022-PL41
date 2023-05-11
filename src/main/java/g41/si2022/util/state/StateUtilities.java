@@ -33,21 +33,6 @@ public class StateUtilities {
 
 	/**
 	 * Returns the current state ({@link CursoState}) of a course for a given date.
-	 * NOTE: Calling this function will execute a query.
-	 *
-	 * @param curso {@link CursoDTO} to be checked.
-	 * @param today Reference date to be used.
-	 * @return {@link CursoState} of the course for the given date.
-	 *
-	 * @see CursoDTO
-	 * @see CursoState
-	 */
-	public static CursoState getCursoState(CursoDTO curso, LocalDate today) {
-		return getCursoState(curso, today, false);
-	}
-
-	/**
-	 * Returns the current state ({@link CursoState}) of a course for a given date.
 	 * NOTE: Calling this function will execute a query
 	 * if the parameter <code>canBeCerrado</code> is set to <code>true</code>.
 	 *
@@ -56,51 +41,31 @@ public class StateUtilities {
 	 * @param canBeCerrado true if the curso can be cerrado, false if not.
 	 * @return {@link CursoState} of the course for the given date.
 	 */
-	public static CursoState getCursoState(CursoDTO curso, LocalDate today, boolean canBeCerrado) {
+	public static CursoState getCursoState(CursoDTO curso, LocalDate today) {
 		LocalDate startInscr = LocalDate.parse(curso.getStart_inscr());
 		LocalDate endInscr = LocalDate.parse(curso.getEnd_inscr());
 		LocalDate start = LocalDate.parse(curso.getStart());
 		LocalDate end = LocalDate.parse(curso.getEnd());
 
-		if (canBeCerrado && getCursoDTOWithState(curso.getId(), today).get(0).getEstado() != null) return CursoState.CERRADO;
-    	if (getCursoStateDB(String.valueOf(curso.getId())).equals("CANCELADO")) return CursoState.CANCELADO;
+		if (curso.getEstado() != null) {
+			switch(curso.getEstado()) {
+				case "CANCELADO":
+					return CursoState.CANCELADO;
+				case "CERRADO":
+					return CursoState.CERRADO;
+				default: // ?????
+					break;
+			}
+		}
+
 		if (startInscr.isAfter(today)) return CursoState.PLANEADO;
-		if (endInscr.isAfter(today) || endInscr.equals(today)) return CursoState.EN_INSCRIPCION;
+		if (endInscr.isAfter(today) || endInscr.equals(today)) {
+			if (start.isBefore(today)) return CursoState.ABIERTO;
+			return CursoState.EN_INSCRIPCION;
+		}
 		if (start.isAfter(today)) return CursoState.INSCRIPCION_CERRADA;
 		if (end.isAfter(today) || end.isEqual(today)) return CursoState.EN_CURSO;
 		return CursoState.FINALIZADO;
-	}
-
-	/**
-	 * Gets the value of the status attribute of the course table. By default this attribute is 'null'.
-	 * In the class GestionarCursoController.java this attribute is modified to 'CANCELADO' in order to
-	 * perform course cancellations.
-	 *
-	 * @param idCurso Id of the course to get its status stored in the database.
-	 * @return The value of the specified course status attribute.
-	 */
-	public static String getCursoStateDB(String idCurso) {
-		String sql = "SELECT estado FROM curso WHERE id = ?";
-
-		return String.valueOf(new Database().executeQuerySingle(sql, idCurso));
-	}
-
-	/**
-	 * Returns the cursos with the states.
-	 * This function will return the CERRADO state in particular, which is not returned by <code>getCursoState</code>.
-	 *
-	 * @return Cursos with states.
-	 */
-	public static List<CursoDTO> getCursoDTOWithState(String cursoId, LocalDate today) {
-		String sql =
-				"SELECT *, CASE WHEN fecha_pago IS NOT NULL THEN 'CERRADO' ELSE NULL END AS cursoEstado\r\n "
-				+ "FROM curso "
-				+ "LEFT JOIN docencia ON curso.id = docencia.curso_id "
-				+ "LEFT JOIN factura ON factura.docencia_id = docencia.id "
-				+ "WHERE curso.id = ?";
-		List<CursoDTO> lc = new Database().executeQueryPojo(CursoDTO.class, sql, cursoId);
-		lc.forEach(x -> x.updateEstado(today));
-		return lc;
 	}
 
 	/* --- CURSO TYPES --- */

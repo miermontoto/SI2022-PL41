@@ -36,5 +36,5 @@ public abstract class TestCase extends g41.si2022.mvc.Model {
 	 * Here, the user may if needed add some data to the database.
 	 */
 	public abstract void loadData();
-	
+
 }

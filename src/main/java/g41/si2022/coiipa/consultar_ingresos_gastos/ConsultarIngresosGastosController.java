@@ -47,7 +47,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 			output.addAll(this.cursos);
 		} else { // If the CB has chosen something else, the entries are filtered
 			output = this.cursos.stream()
-			.filter(x -> selectedItem.equals(x.getEstado()))
+			.filter(x -> selectedItem.equals(x.getState()))
 			.collect(Collectors.toList());
 		}
 		aux = new ArrayList<>(output); // DO NOT REMOVE -> Concurrent Modifications will happen if removed
@@ -94,7 +94,7 @@ public class ConsultarIngresosGastosController extends g41.si2022.mvc.Controller
 		LocalDate today = getToday();
 		this.cursos = this.getModel().getCursos();
 		this.cursos.forEach(x -> {
-			x.updateEstado(today);
+			x.updateState(today);
 			x.updateType();
 		});
 		this.loadTable();

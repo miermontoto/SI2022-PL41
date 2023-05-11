@@ -20,11 +20,10 @@ import g41.si2022.util.exception.ApplicationException;
  */
 public class Database extends DbUtil {
 	// Localización de ficheros de configuracion y carga de bases de datos
-	private static final String APP_PROPERTIES = "src/main/resources/application.properties";
-	private static final String SQL_SCHEMA = "src/main/resources/schema.sql";
-	private static final String SQL_LOAD = "src/main/resources/data.sql";
-	
-	
+	public static final String APP_PROPERTIES = "src/main/resources/application.properties";
+	public static final String SQL_SCHEMA = "src/main/resources/schema.sql";
+	public static final String SQL_LOAD = "src/main/resources/data.sql";
+
 	// Parámetros de la base de datos leidos de application.properties (base de datos local sin usuario/password)
 	private String driver;
 	private String url;
@@ -44,19 +43,19 @@ public class Database extends DbUtil {
 
 	public String getUrl() { return url; }
 	public boolean exists() { return databaseFile.isFile(); }
-	
+
 	/**
 	 * insertBulk. This method will insert multiple entries in one query.
 	 * Note that this method's complexity is O(3*n+n^2).
-	 * 
+	 *
 	 * @param tableName Name of the table that the data should be inserted to
 	 * @param dataColumns Name of the columns that will be inserted
 	 * @param data List of DTOs
 	 * @param dataSuppliers Functions that will supply each value for each entry in the List of DTOs.
-	 * 
+	 *
 	 * @return Pair containing the Query as a String and the Array of Object consisting of the values passed to the query.
 	 */
-	public Pair<String, Object[]> insertBulk (String tableName, String[] dataColumns, java.util.List<? extends DTO> data, 
+	public Pair<String, Object[]> insertBulk (String tableName, String[] dataColumns, java.util.List<? extends DTO> data,
 			java.util.ArrayList<java.util.function.Function<DTO, Object>> dataSuppliers) {
 		if (data.isEmpty()) return new Pair<String, Object[]> ("", new Object[0]);
 		String sql = String.format("INSERT INTO %s (%s", tableName, dataColumns[0]);

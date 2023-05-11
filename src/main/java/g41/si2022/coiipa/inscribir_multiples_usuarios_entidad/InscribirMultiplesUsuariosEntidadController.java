@@ -59,10 +59,10 @@ public class InscribirMultiplesUsuariosEntidadController extends g41.si2022.mvc.
 				);
 			}
 		});
-		
+
 		@SuppressWarnings("unchecked")
-		g41.si2022.ui.components.table.editors.JComboBoxEditor<String> cellEditor = 
-			((g41.si2022.ui.components.table.editors.JComboBoxEditor<String>) 
+		g41.si2022.ui.components.table.editors.JComboBoxEditor<String> cellEditor =
+			((g41.si2022.ui.components.table.editors.JComboBoxEditor<String>)
 			InscribirMultiplesUsuariosEntidadController.this.getView().getTablaInscritos()
 				.getColumnModel().getColumn(4).getCellEditor());
 		this.getView().getTablaInscritos().addRowAppendedListener(e -> {

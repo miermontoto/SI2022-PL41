@@ -1,25 +1,27 @@
 package g41.si2022.coiipa.modificar_curso;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import g41.si2022.dto.ColectivoDTO;
 import g41.si2022.dto.CosteDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.DocenciaDTO;
-import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.dto.SesionDTO;
 import g41.si2022.mvc.Model;
+import g41.si2022.ui.util.Dialog;
+import g41.si2022.util.state.CursoState;
 
 public class ModificarCursosModel extends Model {
 
     public List<CursoDTO> getListaCursos(LocalDate today) {
-        String sql = "select * from curso";
+        String sql = "select c.*, count(i.id) as ocupadas"
+            + " from curso as c"
+            + " inner join inscripcion as i on i.curso_id = c.id"
+            + " where i.cancelada = 0 group by c.id";
         List<CursoDTO> lista = getDatabase().executeQueryPojo(CursoDTO.class, sql);
-        lista.forEach(c -> c.updateEstado(today)); // Actualizar todos los estados de los cursos.
+        lista.forEach(c -> c.updateState(today)); // Actualizar todos los estados de los cursos.
         return lista;
     }
 
@@ -28,12 +30,12 @@ public class ModificarCursosModel extends Model {
         return getDatabase().executeQueryPojo(SesionDTO.class, sql, cursoId);
     }
 
-    public List<ProfesorDTO> getListaProfesores(String cursoId) {
-        String sql = "select dce.id, dce.dni, dce.nombre, dce.apellidos,"
+    public List<DocenciaDTO> getListaProfesores(String cursoId) {
+        String sql = "select dce.id as docente_id, dce.dni, dce.nombre, dce.apellidos,"
         + " case when dca.remuneracion is null then 0 else dca.remuneracion end as remuneracion"
         + " from docente as dce"
         + " left join docencia as dca on dca.docente_id = dce.id and dca.curso_id = ?";
-        return getDatabase().executeQueryPojo(ProfesorDTO.class, sql, cursoId);
+        return getDatabase().executeQueryPojo(DocenciaDTO.class, sql, cursoId);
     }
 
     public List<ColectivoDTO> getColectivosFromCurso(String cursoId) {
@@ -43,7 +45,25 @@ public class ModificarCursosModel extends Model {
         return getDatabase().executeQueryPojo(ColectivoDTO.class, sql, cursoId);
     }
 
-    public void updateSesiones(String idCurso, List<SesionDTO> sesiones) {
+    public boolean updateSesiones(CursoDTO curso, List<SesionDTO> sesiones, LocalDate today) {
+        String idCurso = curso.getId();
+
+        if(curso.getState() == CursoState.FINALIZADO || curso.getState() == CursoState.CANCELADO ||
+            curso.getState() == CursoState.CERRADO) {
+            Dialog.showError("No se puede modificar un curso finalizado o cerrado.");
+            return false;
+        }
+
+        // Validar nuevo listado de sesiones
+        if(curso.getState() == CursoState.EN_CURSO) {
+                List<SesionDTO> oldSesiones = getSesionesFromCurso(idCurso);
+            if (oldSesiones.stream().filter(s -> LocalDate.parse(s.getFecha()).isBefore(today)).anyMatch(
+                s1 -> sesiones.stream().noneMatch(s2 -> s2.equals(s1)))) {
+                Dialog.showError("No se puede eliminar una sesión ya realizada.");
+                return false;
+            }
+        }
+
         // Eliminar todas las sesiones del curso
         String sql = "delete from sesion where curso_id = ?";
         getDatabase().executeUpdate(sql, idCurso);
@@ -53,15 +73,81 @@ public class ModificarCursosModel extends Model {
         for (SesionDTO sesion : sesiones) {
             getDatabase().executeUpdate(sql, idCurso, sesion.getFecha(), sesion.getHoraIni(), sesion.getHoraFin(), sesion.getLoc());
         }
+        return true;
     }
 
-    public void updateCurso(String infoFromCurso, JTextField txtNombre, JTextArea txtDescripcion,
-            JTextField txtPlazas) {
+    public boolean updateCurso(CursoDTO curso, String nombre, String descripcion, String plazas) {
+        String idCurso = curso.getId();
+        int plazasInt = Integer.parseInt(plazas);
+
+        if(plazasInt < 1) {
+            Dialog.showError("Número de plazas inválido.\n(Debe ser mayor que 0)");
+            return false;
+        }
+
+        if(plazasInt < Integer.parseInt(curso.getOcupadas())) {
+            Dialog.showError("Número de plazas inválido.\n(Debe tener más plazas que alumnos ya inscritos)");
+            return false;
+        }
+
+        switch (curso.getState()) {
+            case EN_CURSO:
+                if (!curso.getNombre().equals(nombre) || !curso.getPlazas().equals(plazas)) {
+                    Dialog.showError("No se puede modificar el nombre ni el número de plazas de un curso activo.");
+                    return false;
+                }
+                break;
+            case FINALIZADO:
+                Dialog.showError("No se puede modificar un curso finalizado.");
+                return false;
+            default:
+                break;
+        }
+
         String sql = "update curso set nombre = ?, descripcion = ?, plazas = ? where id = ?";
-        getDatabase().executeUpdate(sql, txtNombre.getText(), txtDescripcion.getText(), txtPlazas.getText(), infoFromCurso);
+        getDatabase().executeUpdate(sql, nombre, descripcion, plazas, idCurso);
+        return true;
     }
 
-    public void updateDocencias(String idCurso, List<DocenciaDTO> docencias) {
+    public boolean updateDocencias(CursoDTO curso, List<DocenciaDTO> docencias) {
+        String idCurso = curso.getId();
+        List<DocenciaDTO> oldDocencias;
+
+        // Validaciones según el estado del curso
+        switch(curso.getState()) {
+            case PLANEADO:
+            case EN_INSCRIPCION:
+            case INSCRIPCION_CERRADA:
+                break;
+            case EN_CURSO:
+            case ABIERTO:
+                oldDocencias = getListaProfesores(idCurso);
+                if(oldDocencias.stream().filter(d -> Double.parseDouble(d.getRemuneracion()) != 0).anyMatch(
+                    d1 -> docencias.stream().noneMatch(d2 -> d2.equals(d1)))) {
+                    Dialog.showError("No se puede eliminar un docente con remuneración asignada.");
+                    return false;
+                }
+                break;
+            case CERRADO:
+            case CANCELADO:
+            case CUALQUIERA:
+                Dialog.showError("No se puede modificar las remuneraciones de un curso cerrado o cancelado.");
+                return false;
+            case FINALIZADO:
+                oldDocencias = getListaProfesores(idCurso);
+                if(oldDocencias.size() != docencias.size()) {
+                    Dialog.showError("No se puede modificar el número de docentes de un curso finalizado.");
+                    return false;
+                }
+
+                if(oldDocencias.stream().noneMatch(d1 -> docencias.stream().anyMatch(d2 -> d2.getDni().equals(d1.getDni()))) ||
+                    docencias.stream().noneMatch(d1 -> oldDocencias.stream().anyMatch(d2 -> d2.getDni().equals(d1.getDni())))) {
+                    Dialog.showError("No se puede modificar los docentes de un curso finalizado.");
+                    return false;
+                }
+                break;
+        }
+
         // Eliminar todas las docencias del curso
         String sql = "delete from docencia where curso_id = ?";
         getDatabase().executeUpdate(sql, idCurso);
@@ -71,14 +157,18 @@ public class ModificarCursosModel extends Model {
         for (DocenciaDTO docencia : docencias) {
             getDatabase().executeUpdate(sql, idCurso, docencia.getDocente_id(), docencia.getRemuneracion());
         }
+        return true;
     }
 
-    public boolean checkIfCursoHasInscripciones(String idCurso) {
-        String sql = "select count(*) from inscripcion where curso_id = ?";
-        return Integer.parseInt(getDatabase().executeQuerySingle(sql, idCurso).toString()) > 0;
-    }
+    public boolean updateCostes(CursoDTO curso, List<CosteDTO> costes) {
+        String idCurso = curso.getId();
 
-    public void updateCostes(String idCurso, List<CosteDTO> costes) {
+        // Comprobar si ya existen inscripciones o si el curso está cerrado.
+        if (!curso.getOcupadas().equals("0") || curso.getState() == CursoState.CERRADO) {
+            Dialog.showError("No se puede modificar los costes de un curso con inscripciones o cerrado.");
+            return false;
+        }
+
         // Eliminar todos los costes del curso
         String sql = "delete from coste where curso_id = ?";
         getDatabase().executeUpdate(sql, idCurso);
@@ -88,15 +178,18 @@ public class ModificarCursosModel extends Model {
         for (CosteDTO coste : costes) {
             getDatabase().executeUpdate(sql, idCurso, coste.getColectivo_id(), coste.getCoste());
         }
+
+        return true;
     }
 
-    public boolean validatePlazas(String idCurso, String plazas) {
-        int n = Integer.parseInt(plazas);
-        if(n < 0) return false;
-
-        String sql = "select count(*) from inscripcion where curso_id = ?";
-        int inscripciones = Integer.parseInt(getDatabase().executeQuerySingle(sql, idCurso).toString());
-        return n >= inscripciones;
+    public CursoDTO getCurso(String idCurso) {
+        String sql = "select c.*, count(i.id) as ocupadas"
+            + " from curso as c"
+            + " left join inscripcion as i on i.curso_id = c.id"
+            + " where c.id = ? group by c.id ";
+        CursoDTO ret = getDatabase().executeQueryPojo(CursoDTO.class, sql, idCurso).get(0);
+        ret.updateState(LocalDate.now());
+        return ret;
     }
 
 }

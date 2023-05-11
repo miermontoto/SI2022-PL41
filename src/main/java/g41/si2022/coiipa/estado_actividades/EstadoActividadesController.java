@@ -48,11 +48,11 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 		LocalDate today = getToday();
 
 		cursos.forEach(x -> {
-			x.updateEstado(today);
+			x.updateState(today);
 			x.updateType();
 		});
 
-        table.setModel(SwingUtil.getTableModelFromPojos(cursos, new String[] { "id", "nombre", "estado", "plazas", "start_inscr", "end_inscr", "start", "end", "tipo" },
+        table.setModel(SwingUtil.getTableModelFromPojos(cursos, new String[] { "id", "nombre", "state", "plazas", "start_inscr", "end_inscr", "start", "end", "tipo" },
         	new String[] { "", "Nombre", "Estado", "Plazas", "Fecha ini. inscr.", "Fecha fin inscr.", "Fecha ini. curso", "Fecha fin curso", "Tipo" }, null));
         SwingUtil.autoAdjustColumns(table);
 		Util.removeColumn(table, 0);
@@ -66,7 +66,7 @@ public class EstadoActividadesController extends g41.si2022.mvc.Controller<Estad
 		inscripciones.forEach(x -> x.updateEstado(today));
 
 		table.setModel(SwingUtil.getTableModelFromPojos(inscripciones,
-		new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "curso_coste" , "pagado", "estado", "entidad_nombre" },
+		new String[] { "fecha", "alumno_nombre", "alumno_apellidos", "curso_coste" , "pagado", "state", "entidad_nombre" },
 			new String[] { "Fecha de inscripción", "Nombre", "Apellidos", "Coste", "Pagado", "Estado", "Entidad" }, null));
 		table.setDefaultEditor(Object.class, null);
 		table.getColumnModel().getColumn(5).setCellRenderer(new StatusCellRenderer(5));

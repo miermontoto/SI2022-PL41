@@ -18,6 +18,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 
 import g41.si2022.dto.CosteDTO;
+import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.DocenciaDTO;
 import g41.si2022.dto.SesionDTO;
 import g41.si2022.mvc.*;
@@ -37,6 +38,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
     private boolean dirtySesiones = false;
     private boolean dirtyProf = false;
 
+    private List<CursoDTO> cursos;
     private LinkedList<SesionDTO> sesiones;
     private LocalDate start;
     private LocalDate end;
@@ -82,20 +84,18 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
         int row = table.convertRowIndexToModel(table.getSelectedRow());
         if(row == -1) return;
 
+        // Habilitar botón de eliminar solo si la sesión es en el futuro.
         getView().getBtnRemoveSesion().setEnabled(getToday().isBefore(LocalDate.parse(sesiones.get(row).getFecha())));
     }
 
     private void handleGuardar() {
-        String idCurso = getInfoFromCurso(0);
-        if(dirtySesiones) getModel().updateSesiones(idCurso, sesiones);
+        CursoDTO curso = getDTO();
+        String idCurso = curso.getId();
 
-        if(dirtyInfo) {
-            if(!getModel().validatePlazas(idCurso, getView().getTxtPlazas().getText())) {
-                Dialog.showError("Número de plazas inválido.\n(Debe tener más plazas que alumnos ya inscritos)");
-                return;
-            }
-            getModel().updateCurso(getInfoFromCurso(0), getView().getTxtNombre(), getView().getTxtDescripcion(), getView().getTxtPlazas());
-        }
+        if(dirtySesiones) getModel().updateSesiones(curso, sesiones, getToday());
+
+        if(dirtyInfo) getModel().updateCurso(curso, getView().getTxtNombre().getText(),
+                getView().getTxtDescripcion().getText(), getView().getTxtPlazas().getText());
 
         if(dirtyProf) {
             // Compilar la tabla de profesores en una lista de docencias.
@@ -104,14 +104,15 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
             String idDocente;
             String remuneracion;
 
+            TableModel model = getView().getTableProfesores().getModel();
             for(int i = 0; i < getView().getTableProfesores().getRowCount(); i++) {
-                idDocente = getView().getTableProfesores().getModel().getValueAt(i, 0).toString();
-                remuneracion = getView().getTableProfesores().getModel().getValueAt(i, 4).toString();
+                idDocente = model.getValueAt(i, 0).toString();
+                remuneracion = model.getValueAt(i, 4).toString();
                 docencias.add(new DocenciaDTO(idCurso, idDocente, remuneracion));
             }
 
             // Actualizar la remuneración de los profesores.
-            getModel().updateDocencias(idCurso, docencias);
+            getModel().updateDocencias(curso, docencias);
         }
 
         if(dirtyCostes) {
@@ -120,14 +121,14 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
             String idColectivo;
             String coste;
 
+            TableModel model = getView().getTablaCostes().getModel();
             for(int i = 0; i < getView().getTablaCostes().getRowCount(); i++) {
-                idColectivo = getView().getTablaCostes().getModel().getValueAt(i, 0).toString();
-                coste = getView().getTablaCostes().getModel().getValueAt(i, 2).toString();
+                idColectivo = model.getValueAt(i, 0).toString();
+                coste = model.getValueAt(i, 2).toString();
                 costes.add(new CosteDTO(idCurso, idColectivo, coste));
             }
 
-            // Actualizar los costes.
-            getModel().updateCostes(idCurso, costes);
+            getModel().updateCostes(curso, costes); // Actualizar los costes.
         }
 
         // Actualizar dirty flags
@@ -136,13 +137,8 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
         dirtySesiones = false;
         dirtyProf = false;
 
-        // Actualizar la tabla de cursos.
         updateTable();
-
-        // Mostrar mensaje de éxito.
         Dialog.show("Curso actualizado correctamente.");
-
-        // Limpiar la vista.
         clear();
     }
 
@@ -184,22 +180,23 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
 
     @SuppressWarnings("unchecked")
     private void updateTable() {
+        cursos = getModel().getListaCursos(getToday());
+
         JTable tabla = getView().getTableCursos();
         tabla.setModel(SwingUtil.getTableModelFromPojos(
-            getModel().getListaCursos(getToday()),
-            new String[] { "id", "nombre", "estado", "plazas", "descripcion", "start_inscr", "end_inscr", "start", "end" },
-            new String[] { "", "Nombre", "Estado", "", "", "", "", "", "" },
+            cursos,
+            new String[] { "nombre", "state" },
+            new String[] { "Nombre", "Estado" },
             null
         ));
-        Util.removeColumn(tabla, 0, 2, 2, 2, 2, 2, 2);
+
         Util.sortTable(tabla, new Pair<>(1, SortOrder.ASCENDING), new Pair<>(0, SortOrder.ASCENDING));
         SwingUtil.autoAdjustColumns(tabla);
     }
 
-    private String getInfoFromCurso(int col) {
+    private CursoDTO getDTO() {
         JTable tabla = getView().getTableCursos();
-        TableModel model = tabla.getModel();
-        return model.getValueAt(tabla.convertRowIndexToModel(tabla.getSelectedRow()), col).toString();
+        return cursos.get(tabla.convertRowIndexToModel(tabla.getSelectedRow()));
     }
 
     private void clear() {
@@ -215,7 +212,8 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
 
     @SuppressWarnings("unchecked") // Evita warnings de creación de varargs en la llamada a Util.sortTable
     private void handleSelect() {
-        String cursoId = getInfoFromCurso(0);
+        CursoDTO curso = getDTO();
+        String cursoId = curso.getId();
 
         JTable tablaProfesores = getView().getTableProfesores();
         tablaProfesores.setModel(SwingUtil.getTableModelFromPojos(
@@ -250,17 +248,19 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
         );
         tablaCostes.removeColumn(tablaCostes.getColumnModel().getColumn(0));
 
-        getView().getTxtNombre().setText(getInfoFromCurso(1));
-        getView().getTxtPlazas().setText(getInfoFromCurso(3));
-        getView().getTxtDescripcion().setText(getInfoFromCurso(4));
+        getView().getTxtNombre().setText(curso.getNombre());
+        getView().getTxtPlazas().setText(curso.getPlazas());
+        getView().getTxtDescripcion().setText(curso.getDescripcion());
 
-        getView().getInfoNombre().setText(getInfoFromCurso(1));
-        getView().getInfoFechaInscr().setText(String.format("%s → %s", getInfoFromCurso(5), getInfoFromCurso(6)));
-        getView().getInfoFechaCurso().setText(String.format("%s → %s", getInfoFromCurso(7), getInfoFromCurso(8)));
+        start = LocalDate.parse(curso.getStart());
+        end = LocalDate.parse(curso.getEnd());
 
-        start = LocalDate.parse(getInfoFromCurso(7));
-        end = LocalDate.parse(getInfoFromCurso(8));
-        setControlStatus(CursoState.valueOf(getInfoFromCurso(2)));
+        getView().getInfoNombre().setText(curso.getNombre());
+        getView().getInfoFechaInscr().setText(String.format("%s → %s", curso.getStart_inscr(), curso.getEnd_inscr()));
+        getView().getInfoFechaCurso().setText(String.format("%s → %s", start, end));
+        getView().getInfoPlazasOcupadas().setText(String.valueOf(curso.getOcupadas()));
+
+        setControlStatus(curso.getState());
     }
 
     private void setControlStatus(CursoState status) {
@@ -286,7 +286,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
             case PLANEADO:
                 break;
             case EN_INSCRIPCION:
-                tablaCostes.setEnabled(getModel().checkIfCursoHasInscripciones(getInfoFromCurso(0)));
+                tablaCostes.setEnabled(getDTO().getOcupadas().equals("0"));
                 break;
             case INSCRIPCION_CERRADA:
                 tablaCostes.setEnabled(false);
