@@ -57,6 +57,7 @@ public class Database extends DbUtil {
 	 */
 	public Pair<String, Object[]> insertBulk (String tableName, String[] dataColumns, java.util.List<? extends DTO> data,
 			java.util.ArrayList<java.util.function.Function<DTO, Object>> dataSuppliers) {
+		if (data.isEmpty()) return new Pair<String, Object[]> ("", new Object[0]);
 		String sql = String.format("INSERT INTO %s (%s", tableName, dataColumns[0]);
 		String dataFields = "(?";
 		for (int i = 1 ; i < dataSuppliers.size(); i++) dataFields += ", ?";

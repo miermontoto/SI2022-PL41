@@ -6,10 +6,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import g41.si2022.dto.ColectivoDTO;
+import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.DTO;
 import g41.si2022.dto.EntidadDTO;
 import g41.si2022.dto.ProfesorDTO;
 import g41.si2022.dto.SesionDTO;
+import g41.si2022.util.ReturnValue;
 
 public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 
@@ -107,10 +109,18 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 * @param costes Diccionario de costes Colectivo, Coste
 	 * @return El ID del curso insertado
 	 */
-	public String insertCurso(
+	public ReturnValue<String> insertCurso(
 			String nombre, String descripcion,
 			String inscrStart, String inscrEnd, String start, String end,
 			String plazas, java.util.Map<String, Double> costes) {
+		if (start.compareTo(end) > 0 ||
+				inscrStart.compareTo(inscrEnd) > 0 ||
+				inscrEnd.compareTo(end) > 0 ||
+				inscrStart.compareTo(start) > 0 ||
+				Integer.parseInt(plazas) <= 0 ||
+				costes == null ||
+				costes.isEmpty() ||
+				(Double) costes.values().toArray()[0] < 0) return new ReturnValue<String>();
 		String sql = "INSERT INTO curso (nombre, descripcion, start_inscr, end_inscr, plazas, start, end, importe, entidad_id) "
 						+ " VALUES (?, ?, ?, ?, ?, ?, ?, null, null)";
 		this.getDatabase().executeUpdate(sql,
@@ -122,7 +132,7 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 		  nombre, inscrStart, start, plazas));
 
 		this.insertCostes(costes, idCurso);
-		return idCurso;
+		return new ReturnValue<String>(idCurso);
 	}
 
 	/**
@@ -139,11 +149,12 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 * @param idEntidad Entidad asociada al curso
 	 * @return El ID del curso insertado
 	 */
-	public String insertCursoExterno(
+	public ReturnValue<String> insertCursoExterno(
 			String nombre, String descripcion,
 			String inscrStart, String inscrEnd, String start, String end,
 			String plazas, java.util.Map<String, Double> costes, String idEntidad, String importe) {
 
+		if (importe.compareTo("0") <= 0) return new ReturnValue<String> (false);
 		String sql = "INSERT INTO curso(nombre, descripcion, start_inscr, end_inscr, plazas, start, end, entidad_id, importe)"
 					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -156,7 +167,7 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 
 		this.insertCostes(costes, idCurso);
 
-		return idCurso;
+		return new ReturnValue<String>(idCurso);
 	}
 
 	/**
@@ -174,19 +185,22 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 * @param docentes List of docentes that take part in the curso.
 	 * @param idCurso ID of the curso that they are taking part in.
 	 */
-	public void insertDocencia(List<ProfesorDTO> docentes, String idCurso) {
+	public ReturnValue<Integer> insertDocencia(List<ProfesorDTO> docentes, String idCurso) {
+		docentes.removeIf(profesor -> profesor.getRemuneracion().compareTo("0") < 0);
 		this.getDatabase().insertBulk(
-				"docencia",
-				new String[] { "remuneracion", "docente_id", "curso_id" },
-				docentes,
-				new java.util.ArrayList<Function<DTO, Object>> () {
-					private static final long serialVersionUID = 1L;
-					{
-						add(e -> ((ProfesorDTO) e).getRemuneracion());
-						add(e -> ((ProfesorDTO) e).getId());
-						add(e -> idCurso);
-					}
-				});
+			"docencia",
+			new String[] { "remuneracion", "docente_id", "curso_id" },
+			docentes,
+			new java.util.ArrayList<Function<DTO, Object>> () {
+				private static final long serialVersionUID = 1L;
+				{
+					add(e -> ((ProfesorDTO) e).getRemuneracion());
+					add(e -> ((ProfesorDTO) e).getId());
+					add(e -> idCurso);
+				}
+			}
+		);
+		return new ReturnValue<Integer>(docentes.size());
 	}
 
 	/**
@@ -195,8 +209,17 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 	 * @param eventos List of eventos that compose the curso.
 	 * @param cursoId ID of the curso that the eventos are part of.
 	 */
-	public void insertEvento(List<SesionDTO> eventos, String cursoId) {
-		this.getDatabase().insertBulk(
+	public ReturnValue<Integer> insertEvento(List<SesionDTO> eventos, String cursoId) {
+		CursoDTO curso = this.getDatabase().executeQueryPojo(
+			CursoDTO.class, "SELECT * FROM curso WHERE curso.id = ?", cursoId)
+			.get(0);
+		eventos.removeIf(sesion ->
+			sesion.getFecha().compareTo(curso.getEnd()) > 0 ||
+			sesion.getFecha().compareTo(curso.getStart()) < 0
+		);
+		
+		if (!eventos.isEmpty())
+			this.getDatabase().insertBulk(
 				"sesion",
 				new String[] {"loc", "fecha", "hora_ini", "hora_fin", "curso_id"},
 				eventos,
@@ -208,8 +231,10 @@ public class RegistrarCursoModel extends g41.si2022.mvc.Model {
 						add(e -> ((SesionDTO) e).getHoraIni());
 						add(e -> ((SesionDTO) e).getHoraFin());
 						add(e -> cursoId);
-					}}
-				);
+					}
+				}
+			);
+		return new ReturnValue<Integer> (eventos.size());
 	}
 
 	/**

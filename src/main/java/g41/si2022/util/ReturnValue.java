@@ -8,6 +8,10 @@ public class ReturnValue<T> {
 	public ReturnValue() {
 		this.state = false;
 	}
+	
+	public ReturnValue (boolean b) {
+		this.state = b;
+	}
 
 	public ReturnValue(T value) {
 		this.state = true;

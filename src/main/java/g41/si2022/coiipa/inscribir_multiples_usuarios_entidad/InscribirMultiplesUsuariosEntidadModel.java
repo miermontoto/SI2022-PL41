@@ -185,7 +185,6 @@ public class InscribirMultiplesUsuariosEntidadModel extends g41.si2022.mvc.Model
 
 		Map<String, AlumnoDTO> emailToAlumnoDictionary = alumnos.stream().collect(Collectors.toMap(AlumnoDTO::getEmail, Function.identity()));
 
-
 		List<AlumnoDTO> insertTheseAlumnos = this.insertAlumnos(alumnos).stream().collect(new g41.si2022.util.collector.HalfwayListCollector<AlumnoDTO, AlumnoDTO>() {
 
 			@Override
