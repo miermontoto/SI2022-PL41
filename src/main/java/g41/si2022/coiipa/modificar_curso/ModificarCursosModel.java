@@ -1,6 +1,7 @@
 package g41.si2022.coiipa.modificar_curso;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import g41.si2022.dto.ColectivoDTO;
@@ -18,7 +19,7 @@ public class ModificarCursosModel extends Model {
         String sql = "select c.*, count(i.id) as ocupadas"
             + " from curso as c"
             + " inner join inscripcion as i on i.curso_id = c.id"
-            + " where i.cancelada = 0 group by c.id ";
+            + " where i.cancelada = 0 group by c.id";
         List<CursoDTO> lista = getDatabase().executeQueryPojo(CursoDTO.class, sql);
         lista.forEach(c -> c.updateState(today)); // Actualizar todos los estados de los cursos.
         return lista;
@@ -134,8 +135,14 @@ public class ModificarCursosModel extends Model {
                 return false;
             case FINALIZADO:
                 oldDocencias = getListaProfesores(idCurso);
-                if(docencias.stream().anyMatch(d1 -> oldDocencias.stream().noneMatch(d2 -> d2.getDni().equals(d1.getDni())))) {
-                    Dialog.showError("No se puede añadir un docente a un curso finalizado.");
+                if(oldDocencias.size() != docencias.size()) {
+                    Dialog.showError("No se puede modificar el número de docentes de un curso finalizado.");
+                    return false;
+                }
+
+                if(oldDocencias.stream().noneMatch(d1 -> docencias.stream().anyMatch(d2 -> d2.getDni().equals(d1.getDni()))) ||
+                    docencias.stream().noneMatch(d1 -> oldDocencias.stream().anyMatch(d2 -> d2.getDni().equals(d1.getDni())))) {
+                    Dialog.showError("No se puede modificar los docentes de un curso finalizado.");
                     return false;
                 }
                 break;
@@ -178,8 +185,8 @@ public class ModificarCursosModel extends Model {
     public CursoDTO getCurso(String idCurso) {
         String sql = "select c.*, count(i.id) as ocupadas"
             + " from curso as c"
-            + " inner join inscripcion as i on i.curso_id = c.id"
-            + " where i.cancelada = 0 and c.id = ? group by c.id ";
+            + " left join inscripcion as i on i.curso_id = c.id"
+            + " where c.id = ? group by c.id ";
         CursoDTO ret = getDatabase().executeQueryPojo(CursoDTO.class, sql, idCurso).get(0);
         ret.updateState(LocalDate.now());
         return ret;

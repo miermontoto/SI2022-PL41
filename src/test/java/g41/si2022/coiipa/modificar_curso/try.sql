@@ -4,8 +4,7 @@ INSERT INTO curso (nombre, descripcion, start_inscr, end_inscr, plazas, start, e
 ('[G] Curso con inscripción cerrada', 'Curso generado que ya ha cerrado la inscripción pero no ha empezado', '2023-04-01', '2023-04-30', '203', '2023-06-01', '2023-06-30', '', ''),
 ('[G] Curso con inscripción abierta', 'Curso generado que está abierto a inscripciones', '2023-05-01', '2023-05-31', '134', '2023-06-01', '2023-06-30', '', ''),
 ('[G] Curso esperando a inscripción', 'Curso generado que está esperando a que se abra la inscripción', '2023-06-01', '2023-06-30', '133', '2023-03-01', '2023-03-31', '', ''),
-('[G] 2 sin inscripciones', 'ayuda por favor', '2023-04-01', '2023-04-30', '152', '2023-05-01', '2023-05-31', '', ''),
-
+('[G] 2 sin inscripciones', 'ayuda por favor', '2023-04-01', '2023-04-30', '152', '2023-05-01', '2023-05-31', '', '');
 
 INSERT INTO sesion (loc, fecha, hora_ini, hora_fin, curso_id, observaciones) VALUES
 ('AN-B3', '2023-04-04', '12:00:00', '15:00:00', '1', 'Sesion generado automáticamente'),

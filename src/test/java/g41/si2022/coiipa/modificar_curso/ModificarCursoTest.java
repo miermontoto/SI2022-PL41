@@ -18,7 +18,10 @@ public class ModificarCursoTest extends g41.si2022.coiipa.TestCase {
     @Override
     public void loadData() {
         try {this.getDatabase().executeScript("src/test/java/g41/si2022/coiipa/modificar_curso/try.sql");}
-        catch (Exception e) {System.exit(1);}
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     @BeforeClass
