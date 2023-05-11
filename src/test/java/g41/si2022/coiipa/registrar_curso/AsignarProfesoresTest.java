@@ -15,6 +15,10 @@ public class AsignarProfesoresTest extends g41.si2022.coiipa.TestCase {
 	private List<ProfesorDTO> profesores;
 	
 	@Test
+	/**
+	 * This test inserts a new Profesor to a Docencia.
+	 * In this test, only one Profesor is inserted with correct data, so no error is returned.
+	 */
 	public void test1 () {
 		profesores.get(0).setRemuneracion("250");
 		assertEquals(
@@ -24,6 +28,23 @@ public class AsignarProfesoresTest extends g41.si2022.coiipa.TestCase {
 	}
 	
 	@Test
+	/**
+	 * This test inserts a new Profesor to a Docencia.
+	 * In this test, only one Profesor is inserted with incorrect data, so none are inserted.
+	 */
+	public void test10 () {
+		profesores.get(0).setRemuneracion("-250");
+		assertEquals(
+			Integer.valueOf(0),
+			this.rcm.insertDocencia(profesores.subList(0, 1), cursoId).get()
+		);
+	}
+	
+	@Test
+	/**
+	 * This test inserts a new Profesor to a Docencia.
+	 * In this test, two Profesores are inserted, both of which contain correct data, so no error is returned.
+	 */
 	public void test2 () {
 		profesores.get(0).setRemuneracion("250");
 		profesores.get(1).setRemuneracion("200");
@@ -34,6 +55,10 @@ public class AsignarProfesoresTest extends g41.si2022.coiipa.TestCase {
 	}
 	
 	@Test
+	/**
+	 * This test inserts a new Profesor to a Docencia.
+	 * In this test, two Profesores are inserted, only one of which contain correct data, so only one is inserted.
+	 */
 	public void test3 () {
 		profesores.get(0).setRemuneracion("250");
 		profesores.get(1).setRemuneracion("-200");
@@ -44,6 +69,10 @@ public class AsignarProfesoresTest extends g41.si2022.coiipa.TestCase {
 	}
 	
 	@Test
+	/**
+	 * This test inserts a new Profesor to a Docencia.
+	 * In this test, two Profesores are inserted, both of which contain correct data, so none are inserted.
+	 */
 	public void test4 () {
 		profesores.get(0).setRemuneracion("-250");
 		profesores.get(1).setRemuneracion("-200");
