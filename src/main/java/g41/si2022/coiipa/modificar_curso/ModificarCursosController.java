@@ -128,7 +128,7 @@ public class ModificarCursosController extends Controller<ModificarCursosView, M
                 costes.add(new CosteDTO(idCurso, idColectivo, coste));
             }
 
-            getModel().updateCostes(idCurso, costes); // Actualizar los costes.
+            getModel().updateCostes(curso, costes); // Actualizar los costes.
         }
 
         // Actualizar dirty flags

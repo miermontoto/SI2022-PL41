@@ -1,11 +1,14 @@
 package g41.si2022.coiipa.modificar_curso;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.*;
 
+import g41.si2022.dto.ColectivoDTO;
+import g41.si2022.dto.CosteDTO;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.SesionDTO;
 
@@ -120,6 +123,20 @@ public class ModificarCursoTest extends g41.si2022.coiipa.TestCase {
         curso = getDTO("1");
         sesiones = model.getSesionesFromCurso(curso.getId());
         Assert.assertFalse("FINALIZADO (subset 0-1)", model.updateSesiones(curso, sesiones.stream().filter(s -> LocalDate.parse(s.getFecha()).isBefore(dateToTest)).collect(Collectors.toList()), LocalDate.now()));
+    }
+
+    @Test
+    public void testCostes() {
+        /*
+         * Los costes de un curso se pueden modificar:
+         *
+         * - Si el curso no tiene inscripciones, todo.
+         * - Si el curso tiene inscripciones o está cerrado, nada.
+         */
+
+        // Cursos con y sin inscripciones
+        Assert.assertTrue("Sin inscripciones", model.updateCostes(getDTO("6"), new LinkedList<>()));
+        Assert.assertFalse("Con inscripciones", model.updateCostes(getDTO("2"), new LinkedList<>()));
     }
 
 }

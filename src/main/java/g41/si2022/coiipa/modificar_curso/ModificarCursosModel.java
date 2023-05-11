@@ -121,7 +121,15 @@ public class ModificarCursosModel extends Model {
         }
     }
 
-    public void updateCostes(String idCurso, List<CosteDTO> costes) {
+    public boolean updateCostes(CursoDTO curso, List<CosteDTO> costes) {
+        String idCurso = curso.getId();
+
+        // Comprobar si ya existen inscripciones o si el curso está cerrado.
+        if (!curso.getOcupadas().equals("0") || curso.getState() == CursoState.CERRADO) {
+            Dialog.showError("No se puede modificar los costes de un curso con inscripciones o cerrado.");
+            return false;
+        }
+
         // Eliminar todos los costes del curso
         String sql = "delete from coste where curso_id = ?";
         getDatabase().executeUpdate(sql, idCurso);
@@ -131,6 +139,8 @@ public class ModificarCursosModel extends Model {
         for (CosteDTO coste : costes) {
             getDatabase().executeUpdate(sql, idCurso, coste.getColectivo_id(), coste.getCoste());
         }
+
+        return true;
     }
 
     public CursoDTO getCurso(String idCurso) {

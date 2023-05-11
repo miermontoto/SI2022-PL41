@@ -3,7 +3,9 @@ INSERT INTO curso (nombre, descripcion, start_inscr, end_inscr, plazas, start, e
 ('[G] Curso en progreso', 'Curso generado que está en progreso', '2023-04-01', '2023-04-30', '152', '2023-05-01', '2023-05-31', '', ''),
 ('[G] Curso con inscripción cerrada', 'Curso generado que ya ha cerrado la inscripción pero no ha empezado', '2023-04-01', '2023-04-30', '203', '2023-06-01', '2023-06-30', '', ''),
 ('[G] Curso con inscripción abierta', 'Curso generado que está abierto a inscripciones', '2023-05-01', '2023-05-31', '134', '2023-06-01', '2023-06-30', '', ''),
-('[G] Curso esperando a inscripción', 'Curso generado que está esperando a que se abra la inscripción', '2023-06-01', '2023-06-30', '133', '2023-03-01', '2023-03-31', '', '');
+('[G] Curso esperando a inscripción', 'Curso generado que está esperando a que se abra la inscripción', '2023-06-01', '2023-06-30', '133', '2023-03-01', '2023-03-31', '', ''),
+('[G] 2 sin inscripciones', 'ayuda por favor', '2023-04-01', '2023-04-30', '152', '2023-05-01', '2023-05-31', '', ''),
+
 
 INSERT INTO sesion (loc, fecha, hora_ini, hora_fin, curso_id, observaciones) VALUES
 ('AN-B3', '2023-04-04', '12:00:00', '15:00:00', '1', 'Sesion generado automáticamente'),
@@ -24,7 +26,10 @@ INSERT INTO sesion (loc, fecha, hora_ini, hora_fin, curso_id, observaciones) VAL
 ('DO-1.S.31', '2023-03-19', '10:00:00', '12:00:00', '5', 'Sesion generado automáticamente'),
 ('DO-1.S.31', '2023-03-01', '16:00:00', '18:00:00', '5', 'Sesion generado automáticamente'),
 ('AS-1', '2023-03-10', '15:00:00', '18:00:00', '5', 'Sesion generado automáticamente'),
-('DO-1.S.31', '2023-03-23', '14:00:00', '15:00:00', '5', 'Sesion generado automáticamente');
+('DO-1.S.31', '2023-03-23', '14:00:00', '15:00:00', '5', 'Sesion generado automáticamente'),
+('AN-E', '2023-05-18', '09:00:00', '10:00:00', '6', 'Sesion generado automáticamente'),
+('AN-B1', '2023-05-29', '15:00:00', '18:00:00', '6', 'Sesion generado automáticamente'),
+('AN-B6', '2023-05-28', '09:00:00', '11:00:00', '6', 'Sesion generado automáticamente');
 
 INSERT INTO docente (nombre, apellidos, email, telefono, direccion, dni) VALUES
 ('[G] Arturo', 'Aguayo', 'sharyl_moen@witting.co', '666949598', 'Edificio Carla Cadena 81 Esc. 584', '67102814-S'),
