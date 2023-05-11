@@ -82,7 +82,7 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model {
 	 * @return All the attributes of the specified course.
 	 */
 	public CursoDTO getCurso(String idCurso) {
-		String sql = "SELECT * FROM curso where id = ?";
+		String sql = "SELECT * FROM curso WHERE id = ?";
 		return getDatabase().executeQueryPojo(CursoDTO.class, sql, idCurso).get(0);
 	}
 
@@ -134,7 +134,6 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model {
 		return getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idCurso);
 	}
 
-
 	public void cancelarInscripcion(String idInscripcion) {
 		String sql = "UPDATE inscripcion SET cancelada = TRUE WHERE id = ?";
 		getDatabase().executeUpdate(sql, idInscripcion);
@@ -146,5 +145,89 @@ public class GestionarCursoModel extends g41.si2022.mvc.Model {
 			+ " WHERE dca.curso_id = ?";
 
 		return getDatabase().executeQueryPojo(String.class, sql, idCurso);
+	}
+
+	/**
+	 * Método implementado para tests.
+	 * 
+	 * @param curso id del curso
+	 * @return {@code true} si el curso se puede cancelar
+	 *         {@code false} si el curso no se puede cancelar
+	 */
+	public boolean cancelarCursoTest(CursoDTO curso) {
+		switch (curso.getEstado()) {
+			case EN_INSCRIPCION:
+				return true;
+				
+			case EN_CURSO:
+				Dialog.showError("No se puede cancelar un curso con estado EN_CURSO");
+				return false;
+				
+			case PLANEADO:
+				return true;
+				
+			case FINALIZADO:
+				Dialog.showError("No se puede cancelar un curso con estado FINALIZADO");
+				return false;
+				
+			case CANCELADO:
+				Dialog.showError("No se puede cancelar un curso con estado CANCELADO");
+				return false;
+
+			default:
+				// Nunca se debería de llegar aquí
+				Dialog.showError("Curso sin estado");
+				return false;
+		}
+	}
+
+	/**
+	 * Método implementado para test
+	 * 
+	 * @param curso 
+	 * @return {@code true} si se deben de cancelar las inscripciones del curso
+	 * 		   {@code false} si no se deben de cancelar las inscripciones del curso
+	 */
+	public boolean cancelarInscrCursoTest(CursoDTO curso) {
+		List<InscripcionDTO> inscripciones;
+		inscripciones = getCursoInscripciones(curso.getId());
+
+		if (inscripciones.isEmpty()) {
+			Dialog.showError("El curso no tiene inscripciones, no es necesario cancelar ninguna");
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * Métodod implementado para tests
+	 * 
+	 * @param inscripcion
+	 * @return {@code true} si la inscripción se puede cancelar
+	 * 		   {@code false} si la inscripción no se puede cancelar
+	 */
+	public boolean cancelarInscripcionTest(InscripcionDTO inscripcion) {
+		switch (inscripcion.getEstado()) {
+			case PAGADA:
+				// Se debe devolver el dinero
+				Dialog.show("Se debe de devolver el dinero pagado");
+				return true;
+
+			case PENDIENTE:
+				// No se debe de devolver dinero
+				Dialog.show("No se debe devolver dinero");
+				return true;
+
+			case CANCELADA:
+				// No se debe de cancelar la inscripción (ya está cancelada)
+				Dialog.showError("Inscripción ya cancelada previamente");
+				return false;
+
+			default:
+				// Nunca se debería llegar aquí
+				Dialog.showError("Inscripción sin estado");
+				return false;
+		}
 	}
 }

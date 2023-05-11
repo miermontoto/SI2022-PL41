@@ -6,6 +6,7 @@ import java.util.List;
 import g41.si2022.dto.CursoDTO;
 import g41.si2022.dto.InscripcionDTO;
 import g41.si2022.dto.PagoDTO;
+import g41.si2022.ui.util.Dialog;
 import g41.si2022.util.state.InscripcionState;
 
 public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
@@ -74,5 +75,92 @@ public class GestionarInscripcionesModel extends g41.si2022.mvc.Model {
 	public String getFechaCurso(String idCurso) {
 		String sql = "select start from curso where id=?";
 		return getDatabase().executeQuerySingle(sql, idCurso).toString();
+	}
+
+	/**
+	 * Método implementado para tests. Obtiene una inscripción dado su id
+	 * 
+	 * @param idInscr id de la inscripción
+	 * @return inscripción correspondiente a la id pasada por parámetro
+	 */
+	public InscripcionDTO getInscrById(String idInscr) {
+		String sql = "SELECT * FROM inscripcion WHERE id = ?";
+
+		return this.getDatabase().executeQueryPojo(InscripcionDTO.class, sql, idInscr).get(0);
+	}
+
+	/**
+	 * Método implementado para tests
+	 * @param inscripcion inscripción a cancelar
+	 * @return {@code true} si la inscripción se puede cancelar
+	 * 		   {@code false} si la inscripción no se puede cancelar 
+	 */
+	public boolean cancelarInscripcionTest(InscripcionDTO inscripcion) {
+		switch(inscripcion.getEstado()) {
+			case PENDIENTE:
+				Dialog.show("Inscripción con estado PENDIENTE. Se puede cancelar");
+				return true;
+
+			case EXCESO:
+				Dialog.show("Inscripción con estado EXCESO. Se puede cancelar");
+				return true;
+
+			case PAGADA:
+				Dialog.show("Inscripción con estado PAGADA. Se puede cancelar");
+				return true;
+
+			case RETRASADA:
+				Dialog.show("Inscripción con estado RETRASADA. Se puede cancelar");
+				return true;
+
+			case RETRASADA_EXCESO:
+				Dialog.show("Inscripción con estado RETRASADA_EXCESO. Se puede cancelar");
+				return true;
+
+			case EN_ESPERA:
+				Dialog.show("Inscripción con estado EN_ESPERA. Se puede cancelar");
+				return true;
+
+			case CANCELADA:
+				Dialog.showError("Inscripción ya cancelada");
+				return false;
+
+			default:
+				// Nunca se debe llegar aquí
+				return false;
+		}
+	}
+
+	/**
+	 * Obtener un curso mediante su id
+	 * @param idCurso id del curso
+	 * @return curso asociado a dicha id
+	 */
+	public CursoDTO getCursoFromInscr(String idCurso) {
+		String sql = "SELECT * FROM curso WHERE id = ?";
+
+		return this.getDatabase().executeQueryPojo(CursoDTO.class, sql, idCurso).get(0);
+	}
+
+	public boolean cancelarInscripcionEstadoCursoTest(CursoDTO curso) {
+		switch (curso.getEstado()) {
+			case EN_INSCRIPCION:
+				Dialog.show("Estado EN_INSCRIPCION. La inscrpción se puede cancelar");
+				return true;
+
+			case PLANEADO:
+				Dialog.showError("Estado PLANEADO. No tiene inscripciones");
+				return false;
+
+			case EN_CURSO:
+				Dialog.showError("Curso con estado EN_CURSO. La inscripción no se puede cancelar");
+				return false;
+
+			case FINALIZADO:
+				return false;
+
+			default:
+				return false;
+		}
 	}
 }
