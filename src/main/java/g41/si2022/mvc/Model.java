@@ -6,7 +6,7 @@ public abstract class Model {
 
 	private Database db = new Database();
 
-	public Database getDatabase () {
+	public Database getDatabase() {
 		return this.db;
 	}
 }

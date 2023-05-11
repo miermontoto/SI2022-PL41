@@ -80,7 +80,7 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		if (estadoDB.equals("null")) {
 			// Modificar estado del curso a CANCELADO. Se modifica el atributo en la database
 			getModel().updateCursoStateToCancelled(String.valueOf(CursoState.CANCELADO), selectedCurso.getId());
-			selectedCurso.setEstado(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
+			selectedCurso.setState(StateUtilities.getCursoState(selectedCurso, getTab().getMain().getToday()));
 
 			// Obtener emails de los alumnos para enviar un correo.
 			List<String> emailsAlumnos = getModel().getAlumnosEmail(String.valueOf(idCurso));
@@ -209,12 +209,12 @@ public class GestionarCursoController extends g41.si2022.mvc.Controller<Gestiona
 		JTable table = this.getView().getTableInscripciones();
 
 		for (CursoDTO curso: cursos)
-			curso.setEstado(StateUtilities.getCursoState(curso, getTab().getMain().getToday()));
+			curso.setState(StateUtilities.getCursoState(curso, getTab().getMain().getToday()));
 
 		table.setModel(
 			SwingUtil.getTableModelFromPojos(
 				cursos,
-				new String[] { "id", "nombre", "start_inscr", "end_inscr", "start", "end", "plazas", "plazas_libres", "estado"},
+				new String[] { "id", "nombre", "start_inscr", "end_inscr", "start", "end", "plazas", "plazas_libres", "state"},
 				new String[] { "Id", "Nombre", "Ini. inscr.", "Fin inscr.", "Ini. curso", "Fin curso",  "Plazas totales", "Plazas libres", "Estado"},
 				null
 			)

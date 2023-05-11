@@ -19,6 +19,7 @@ public class CursoDTO implements DTO {
 		nombre,
 		descripcion,
 		coste,
+		estado,
 		start_inscr,
 		end_inscr,
 		start,
@@ -26,6 +27,7 @@ public class CursoDTO implements DTO {
 		id,
 		plazas,
 		plazas_libres, // Annadido por InscribirUsuario
+		ocupadas,
 		ingresos, // Annadido por ConsultarIngresosGastos
 		gastos, // Annadido por ConsultarIngresosGastos
 		balance, // Annadido por ConsultarIngresosGastos
@@ -37,14 +39,14 @@ public class CursoDTO implements DTO {
 	private String e_nombre;
 	private String importe; // Necesario para almacenar importe (a pagar a empresa) al RegistrarCursos
 	private InscripcionState inscripcion_estado; // Annadido por consultarCursos
-	private CursoState estado; // Annadido por ?
+	private CursoState state; // Annadido por ?
 	private CursoType tipo;
 
 	// private boolean isCancelled = false; // Annadido por gestionarCursos
 
-	public CursoState updateEstado(LocalDate today) {
-		this.estado = StateUtilities.getCursoState(this, today);
-		return this.estado;
+	public CursoState updateState(LocalDate today) {
+		this.state = StateUtilities.getCursoState(this, today);
+		return this.state;
 	}
 
 	public CursoType updateType() {
